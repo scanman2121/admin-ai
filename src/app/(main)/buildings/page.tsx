@@ -20,21 +20,32 @@ const tabs = [
 
 const mockInsights = [
     {
-        title: "Occupancy Rate Increase",
-        description: "Building occupancy rates have increased significantly over the past month.",
-        impact: "positive" as const,
-        percentage: 15,
+        title: "Occupancy Rate",
+        value: "87.5%",
+        comparison: "vs. Industry Avg: 89.5%",
+        trend: "down" as const,
+        trendValue: 2,
     },
     {
-        title: "Energy Consumption Optimization",
-        description: "Smart building systems have reduced energy consumption in common areas.",
-        impact: "positive" as const,
-        percentage: 8,
+        title: "Tenant Satisfaction",
+        value: "4.4 / 5",
+        comparison: "vs. Industry Avg: 3.9",
+        trend: "up" as const,
+        trendValue: 12,
     },
     {
-        title: "Maintenance Schedule Alert",
-        description: "Three buildings require preventive maintenance in the next two weeks.",
-        impact: "neutral" as const,
+        title: "Amenity Usage",
+        value: "54.1%",
+        comparison: "vs. Industry Avg: 40.5%",
+        trend: "up" as const,
+        trendValue: 33,
+    },
+    {
+        title: "Average Revenue",
+        value: "$31.09",
+        comparison: "vs. Industry Avg: $34.00 per sqft",
+        trend: "down" as const,
+        trendValue: 8,
     },
 ]
 
@@ -43,26 +54,22 @@ export default function Buildings() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Buildings</h1>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                    Manage and monitor all your building properties in one place.
-                </p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Buildings</h1>
+                    <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                        Manage and monitor all your building properties in one place.
+                    </p>
+                </div>
+                <Button>
+                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
+                    Add Building
+                </Button>
             </div>
 
-            <AIInsights insights={mockInsights} className="my-6" />
+            <AIInsights insights={mockInsights} />
 
             <div className="flex flex-col gap-4 w-full">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                        Buildings
-                    </h1>
-                    <Button>
-                        <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
-                        Add Building
-                    </Button>
-                </div>
-
                 <TabNavigation>
                     {tabs.map((tab) => (
                         <TabNavigationLink

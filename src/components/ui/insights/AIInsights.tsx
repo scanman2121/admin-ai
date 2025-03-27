@@ -1,59 +1,98 @@
 "use client";
 
 import * as React from "react";
-import { RiArrowUpLine, RiArrowDownLine, RiInformationLine } from "@remixicon/react";
+import { RiRobot2Line, RiArrowDownSLine, RiArrowUpSLine } from "@remixicon/react";
 import { cn } from "@/lib/utils";
 
-interface AIInsight {
+interface MetricInsight {
   title: string;
-  description: string;
-  impact: "positive" | "negative" | "neutral";
-  percentage?: number;
+  value: string | number;
+  comparison: string;
+  trend?: "up" | "down";
+  trendValue?: number;
 }
 
 interface AIInsightsProps {
-  insights: AIInsight[];
+  insights: MetricInsight[];
   className?: string;
 }
 
 export function AIInsights({ insights, className }: AIInsightsProps) {
+  const [isExpanded, setIsExpanded] = React.useState(true);
+
   return (
-    <div className={cn("grid grid-cols-1 gap-4 md:grid-cols-3", className)}>
-      {insights.map((insight, index) => (
-        <div
-          key={index}
-          className="relative overflow-hidden rounded-lg border bg-white p-6 dark:border-gray-800 dark:bg-gray-900"
-        >
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white">
-              {insight.title}
-            </h3>
-            {insight.impact !== "neutral" && insight.percentage && (
-              <div
-                className={cn(
-                  "flex items-center gap-1 text-sm font-medium",
-                  insight.impact === "positive"
-                    ? "text-green-600 dark:text-green-400"
-                    : "text-red-600 dark:text-red-400"
-                )}
-              >
-                {insight.impact === "positive" ? (
-                  <RiArrowUpLine className="size-4" />
-                ) : (
-                  <RiArrowDownLine className="size-4" />
-                )}
-                {insight.percentage}%
-              </div>
-            )}
-            {insight.impact === "neutral" && (
-              <RiInformationLine className="size-4 text-gray-400" />
-            )}
+    <div className={cn("w-full space-y-4", className)}>
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="flex w-full items-center justify-between rounded-lg border border-gray-200 bg-white p-4 transition-colors hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800/50"
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400">
+            <RiRobot2Line className="h-5 w-5" />
           </div>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            {insight.description}
-          </p>
+          <div className="text-left">
+            <h3 className="font-semibold text-gray-900 dark:text-white">AI Insights</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {isExpanded ? "Click to collapse" : "Click to expand"}
+            </p>
+          </div>
         </div>
-      ))}
+        <div className="flex h-6 w-6 items-center justify-center">
+          {isExpanded ? (
+            <RiArrowUpSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+          ) : (
+            <RiArrowDownSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+          )}
+        </div>
+      </button>
+
+      <div
+        className={cn(
+          "grid gap-4 transition-all duration-300",
+          isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+          "md:grid-cols-4"
+        )}
+      >
+        {insights.map((insight, index) => (
+          <div
+            key={index}
+            className="overflow-hidden"
+          >
+            <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
+              <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                {insight.title}
+              </h4>
+              <div className="mt-2 flex items-baseline">
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                  {insight.value}
+                </p>
+              </div>
+              <div className="mt-2 flex items-center gap-2">
+                {insight.trend && (
+                  <span
+                    className={cn(
+                      "flex items-center text-sm font-medium",
+                      insight.trend === "up"
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-red-600 dark:text-red-400"
+                    )}
+                  >
+                    {insight.trend === "up" ? (
+                      <RiArrowUpSLine className="h-4 w-4" />
+                    ) : (
+                      <RiArrowDownSLine className="h-4 w-4" />
+                    )}
+                    {insight.trendValue}%
+                  </span>
+                )}
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {insight.comparison}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 } 
