@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { RiStarLine, RiArrowDownSLine, RiArrowUpSLine } from "@remixicon/react";
+import { RiSparklingLine, RiArrowDownSLine, RiArrowUpSLine } from "@remixicon/react";
 import { cn } from "@/lib/utils";
 
 interface MetricInsight {
@@ -24,20 +24,20 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
     <div className={cn("w-full space-y-4", className)}>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center justify-between"
+        className="flex w-full items-center"
       >
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full text-blue-600 dark:text-blue-400">
-            <RiStarLine className="h-5 w-5" />
+        <div className="flex items-center">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#6366F1] via-[#0EA5E9] to-[#10B981] text-white">
+            <RiSparklingLine className="h-5 w-5" />
           </div>
-          <h3 className="font-semibold text-gray-900 dark:text-white">AI Insights</h3>
-        </div>
-        <div className="flex h-6 w-6 items-center justify-center">
-          {isExpanded ? (
-            <RiArrowUpSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-          ) : (
-            <RiArrowDownSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-          )}
+          <h3 className="ml-3 font-semibold text-gray-900 dark:text-white">AI Insights</h3>
+          <div className="ml-3 flex h-6 w-6 items-center justify-center">
+            {isExpanded ? (
+              <RiArrowUpSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            ) : (
+              <RiArrowDownSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            )}
+          </div>
         </div>
       </button>
 
@@ -53,7 +53,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
             key={index}
             className="overflow-hidden"
           >
-            <div className="rounded-lg border bg-white p-4 dark:bg-gray-900 relative before:absolute before:inset-0 before:rounded-lg before:border before:border-transparent before:bg-gradient-to-r before:from-[#6366F1] before:via-[#0EA5E9] before:to-[#10B981] before:p-[1px] before:-m-[1px]">
+            <div className="rounded-lg bg-white p-4 dark:bg-gray-900 relative before:absolute before:inset-0 before:rounded-lg before:border-2 before:border-transparent before:bg-gradient-to-r before:from-[#6366F1] before:via-[#0EA5E9] before:to-[#10B981] before:p-[1px] before:-m-[1px] before:[mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)] before:[mask-composite:exclude]">
               <div className="relative">
                 <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   {insight.title}
