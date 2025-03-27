@@ -47,9 +47,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="rounded-md border dark:border-gray-800">
+      <div className="rounded-md border bg-white dark:bg-transparent dark:border-gray-800">
         <table className="w-full caption-bottom text-sm">
-          <thead className="[&_tr]:border-b dark:border-gray-800">
+          <thead className="border-b bg-white dark:bg-transparent dark:border-gray-800">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -77,7 +77,7 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className={cn(
-                    "border-b transition-colors hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800/50",
+                    "border-b transition-colors bg-white hover:bg-gray-50 dark:bg-transparent dark:border-gray-800 dark:hover:bg-gray-800/50",
                     onRowClick && "cursor-pointer"
                   )}
                   onClick={() => onRowClick?.({ original: row.original })}
