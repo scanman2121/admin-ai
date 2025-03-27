@@ -1,145 +1,112 @@
 "use client"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
-} from "@/components/Table"
-import { cn } from "@/lib/utils"
 import * as React from "react"
-
-import { DataTableBulkEditor } from "./DataTableBulkEditor"
-import { Filterbar } from "./DataTableFilterbar"
-import { DataTablePagination } from "./DataTablePagination"
-
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
+  getPaginationRowModel,
+  SortingState,
+  getSortedRowModel,
+  ColumnFiltersState,
+  getFilteredRowModel,
 } from "@tanstack/react-table"
+import { cn } from "@/lib/utils"
 
-interface DataTableProps<TData> {
-  columns: ColumnDef<TData>[]
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  className?: string
   onRowClick?: (row: { original: TData }) => void
 }
 
-export function DataTable<TData>({
+export function DataTable<TData, TValue>({
   columns,
   data,
+  className,
   onRowClick,
-}: DataTableProps<TData>) {
-  const pageSize = 20
-  const [rowSelection, setRowSelection] = React.useState({})
-  const [globalFilter, setGlobalFilter] = React.useState("")
+}: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
   const table = useReactTable({
     data,
     columns,
-    state: {
-      rowSelection,
-      globalFilter,
-    },
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: "includesString",
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: pageSize,
-      },
-    },
-    enableRowSelection: true,
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
   })
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
-      <div className="space-y-3 p-4">
-        <Filterbar table={table} />
-        <div className="relative overflow-x-auto">
-          <Table>
-            <TableHead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow
-                  key={headerGroup.id}
-                  className="border-y border-gray-200 dark:border-gray-800"
-                >
-                  {headerGroup.headers.map((header) => (
-                    <TableHeaderCell
+    <div className={cn("w-full", className)}>
+      <div className="rounded-md border dark:border-gray-800">
+        <table className="w-full caption-bottom text-sm">
+          <thead className="[&_tr]:border-b dark:border-gray-800">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <th
                       key={header.id}
-                      className={cn(
-                        "whitespace-nowrap py-4 text-sm sm:text-xs",
-                        header.column.columnDef.meta?.className,
-                      )}
+                      className="h-12 px-4 text-left align-middle font-medium text-gray-500 dark:text-gray-400 [&:has([role=checkbox])]:pr-0"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </th>
+                  )
+                })}
+              </tr>
+            ))}
+          </thead>
+          <tbody className="[&_tr:last-child]:border-0">
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <tr
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className={cn(
+                    "border-b transition-colors hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800/50",
+                    onRowClick && "cursor-pointer"
+                  )}
+                  onClick={() => onRowClick?.({ original: row.original })}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className="p-4 align-middle [&:has([role=checkbox])]:pr-0"
                     >
                       {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
-                    </TableHeaderCell>
+                    </td>
                   ))}
-                </TableRow>
-              ))}
-            </TableHead>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    onClick={() => onRowClick?.({ original: row.original })}
-                    className={cn(
-                      "group select-none hover:bg-gray-50 hover:dark:bg-gray-800",
-                      onRowClick && "cursor-pointer"
-                    )}
-                  >
-                    {row.getVisibleCells().map((cell, index) => (
-                      <TableCell
-                        key={cell.id}
-                        className={cn(
-                          row.getIsSelected()
-                            ? "bg-gray-50 dark:bg-gray-800"
-                            : "",
-                          "relative whitespace-nowrap py-4 text-gray-600 first:w-10 dark:text-gray-400",
-                          cell.column.columnDef.meta?.className,
-                        )}
-                      >
-                        {index === 0 && row.getIsSelected() && (
-                          <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600 dark:bg-indigo-500" />
-                        )}
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-          <DataTableBulkEditor table={table} rowSelection={rowSelection} />
-        </div>
-        <DataTablePagination table={table} pageSize={pageSize} />
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  className="h-24 text-center text-gray-500 dark:text-gray-400"
+                >
+                  No results.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   )
