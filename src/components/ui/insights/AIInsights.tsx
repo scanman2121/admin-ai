@@ -27,7 +27,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
         className="flex w-full items-center"
       >
         <div className="flex items-center">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-[#6366F1] via-[#0EA5E9] to-[#10B981] text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white dark:bg-blue-500">
             <RiSparklingLine className="h-5 w-5" />
           </div>
           <h3 className="ml-3 font-semibold text-gray-900 dark:text-white">AI Insights</h3>
@@ -53,7 +53,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
             key={index}
             className="overflow-hidden"
           >
-            <div className="rounded-lg bg-white p-4 dark:bg-gray-900 relative before:absolute before:inset-0 before:rounded-lg before:border-2 before:border-transparent before:bg-gradient-to-r before:from-[#6366F1] before:via-[#0EA5E9] before:to-[#10B981] before:p-[1px] before:-m-[1px] before:[mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)] before:[mask-composite:exclude]">
+            <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
               <div className="relative">
                 <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   {insight.title}
