@@ -22,7 +22,12 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
 
   return (
     <div className={cn("w-full", className)}>
-      <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
+      <div className={cn(
+        "rounded-lg border transition-all duration-300",
+        isExpanded 
+          ? "border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950" 
+          : "border-gray-200/80 bg-white/95 backdrop-blur-sm dark:border-gray-800/80 dark:bg-gray-950/95 insights-shimmer hover:border-gray-300 dark:hover:border-gray-700"
+      )}>
         <div className={cn("flex flex-col", isExpanded ? "space-y-2" : "space-y-0")}>
           <div className={cn(
             "flex w-full items-center justify-between px-4 pt-4",
@@ -30,26 +35,44 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
           )}>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center"
+              className="group flex items-center transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
               <div className="flex items-center">
-                <div className="flex h-8 w-8 items-center justify-center">
-                  <RiSparklingLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                <div className={cn(
+                  "flex h-8 w-8 items-center justify-center rounded-md transition-colors",
+                  isExpanded 
+                    ? "bg-gray-100 dark:bg-gray-900" 
+                    : "bg-blue-50 dark:bg-blue-950"
+                )}>
+                  <RiSparklingLine className={cn(
+                    "h-5 w-5 transition-colors",
+                    isExpanded 
+                      ? "text-gray-500 dark:text-gray-400" 
+                      : "text-blue-500 dark:text-blue-400"
+                  )} />
                 </div>
-                <h3 className="ml-2 text-sm text-gray-500 dark:text-gray-400">Insights</h3>
+                <h3 className={cn(
+                  "ml-2 text-sm transition-colors",
+                  isExpanded 
+                    ? "text-gray-500 dark:text-gray-400" 
+                    : "text-gray-700 dark:text-gray-200"
+                )}>Insights</h3>
                 <div className="ml-3 flex h-6 w-6 items-center justify-center">
                   {isExpanded ? (
-                    <RiArrowUpSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                    <RiArrowUpSLine className="h-5 w-5 text-gray-500 transition-transform group-hover:-translate-y-0.5 dark:text-gray-400" />
                   ) : (
-                    <RiArrowDownSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                    <RiArrowDownSLine className="h-5 w-5 text-gray-500 transition-transform group-hover:translate-y-0.5 dark:text-gray-400" />
                   )}
                 </div>
               </div>
             </button>
             {isExpanded && (
-              <a href="#" className="flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+              <a 
+                href="#" 
+                className="flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              >
                 View all insights
-                <RiArrowRightSLine className="ml-1 h-4 w-4" />
+                <RiArrowRightSLine className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </a>
             )}
           </div>
