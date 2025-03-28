@@ -59,7 +59,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
             key={index}
             className="overflow-hidden"
           >
-            <div className="rounded-lg border border-[#739CFD] bg-[#F6F7F8] p-4 dark:border-[#739CFD] dark:bg-gray-900">
+            <div className="rounded-lg border border-[#9BB8FD] bg-[#F6F7F8] p-4 dark:border-[#9BB8FD] dark:bg-gray-900">
               <div className="relative">
                 <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   {insight.title}
