@@ -6,7 +6,6 @@ import {
     RiArrowDownSLine,
     RiCalendarEventLine,
     RiCloseLine,
-    RiLineChartLine,
     RiSendPlaneFill,
     RiUserAddLine,
     RiVipCrownLine,
