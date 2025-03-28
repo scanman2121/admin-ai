@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { RiSparklingLine, RiArrowDownSLine, RiArrowUpSLine } from "@remixicon/react";
+import { RiSparklingLine, RiArrowDownSLine, RiArrowUpSLine, RiArrowRightSLine } from "@remixicon/react";
 import { cn } from "@/lib/utils";
 
 interface MetricInsight {
@@ -41,8 +41,9 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
             </div>
           </div>
         </button>
-        <a href="#" className="pr-4 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+        <a href="#" className="flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
           View all insights
+          <RiArrowRightSLine className="ml-1 h-4 w-4" />
         </a>
       </div>
 
