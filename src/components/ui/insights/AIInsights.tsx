@@ -22,24 +22,29 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
 
   return (
     <div className={cn("w-full space-y-4", className)}>
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center"
-      >
-        <div className="flex items-center">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white dark:bg-blue-500">
-            <RiSparklingLine className="h-5 w-5" />
+      <div className="flex w-full items-center justify-between">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center"
+        >
+          <div className="flex items-center">
+            <div className="flex h-8 w-8 items-center justify-center">
+              <RiSparklingLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+            </div>
+            <h3 className="ml-3 text-sm text-gray-500 dark:text-gray-400">AI Insights</h3>
+            <div className="ml-3 flex h-6 w-6 items-center justify-center">
+              {isExpanded ? (
+                <RiArrowUpSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+              ) : (
+                <RiArrowDownSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+              )}
+            </div>
           </div>
-          <h3 className="ml-3 font-semibold text-gray-900 dark:text-white">AI Insights</h3>
-          <div className="ml-3 flex h-6 w-6 items-center justify-center">
-            {isExpanded ? (
-              <RiArrowUpSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            ) : (
-              <RiArrowDownSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            )}
-          </div>
-        </div>
-      </button>
+        </button>
+        <a href="#" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+          View all insights
+        </a>
+      </div>
 
       <div
         className={cn(
