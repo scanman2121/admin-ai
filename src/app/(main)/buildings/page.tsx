@@ -56,10 +56,7 @@ export default function Buildings() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Buildings</h1>
-                    <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                        Manage and monitor all your building properties in one place.
-                    </p>
+                    <h1 className="text-2xl font-semibold tracking-tight">Buildings</h1>
                 </div>
                 <Button>
                     <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
