@@ -18,10 +18,10 @@ interface AIInsightsProps {
 }
 
 export function AIInsights({ insights, className }: AIInsightsProps) {
-  const [isExpanded, setIsExpanded] = React.useState(true);
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   return (
-    <div className={cn("w-full space-y-4", className)}>
+    <div className={cn("w-full space-y-6", className)}>
       <div className="flex w-full items-center justify-between">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
@@ -41,7 +41,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
             </div>
           </div>
         </button>
-        <a href="#" className="pr-6 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+        <a href="#" className="pr-4 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
           View all insights
         </a>
       </div>
