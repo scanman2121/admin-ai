@@ -50,7 +50,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
       <div
         className={cn(
           "grid gap-4 transition-all duration-300",
-          isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+          isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr] invisible h-0",
           "md:grid-cols-4"
         )}
       >
