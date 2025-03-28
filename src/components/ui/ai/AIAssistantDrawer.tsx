@@ -1,5 +1,6 @@
 "use client"
 
+import React from 'react'
 import { Button } from "@/components/Button"
 import { cn } from "@/lib/utils"
 import {
@@ -259,64 +260,23 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
                 )}
             >
                 {/* Header */}
-                <div className="flex items-center justify-between p-4">
-                    <h2 className="font-medium text-sm text-gray-900 dark:text-gray-50">Assistant</h2>
-                    <div className="flex items-center gap-2">
-                        {/* Always show the button group for testing */}
-                        <div className="relative inline-flex shadow-sm rounded-md">
-                            <Button
-                                variant="secondary"
-                                className="py-1 px-3 h-8 text-xs rounded-r-none border-r border-gray-300 dark:border-gray-700"
-                                onClick={handleNewChat}
-                            >
-                                New chat
-                            </Button>
-                            <Button
-                                variant="secondary"
-                                className="p-0 w-8 h-8 flex items-center justify-center rounded-l-none"
-                                onClick={togglePreviousChats}
-                            >
-                                <RiArrowDownSLine className="size-4" />
-                                <span className="sr-only">Show previous chats</span>
-                            </Button>
-
-                            {/* Previous chats dropdown */}
-                            {showPreviousChats && (
-                                <div
-                                    className="absolute top-full right-0 mt-1 w-56 rounded-md shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden z-10"
-                                >
-                                    <div className="py-1">
-                                        <div className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
-                                            Previous chats
-                                        </div>
-                                        {previousChats.map(chat => (
-                                            <button
-                                                key={chat.id}
-                                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                                                onClick={() => handleLoadPreviousChat(chat)}
-                                            >
-                                                <div className="font-medium truncate">{chat.title}</div>
-                                                <div className="text-xs text-gray-500 dark:text-gray-400">{chat.date}</div>
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+                    <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">AI Assistant</h2>
+                    <div className="flex items-center gap-x-1">
                         <Button
                             variant="ghost"
-                            className="p-1.5 h-8 w-8"
                             onClick={onFullScreen}
+                            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                         >
-                            <RiFullscreenLine className="size-5" />
+                            <RiFullscreenLine className="size-5" aria-hidden="true" />
                             <span className="sr-only">Full screen</span>
                         </Button>
                         <Button
                             variant="ghost"
-                            className="p-1.5 h-8 w-8"
                             onClick={onClose}
+                            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                         >
-                            <RiCloseLine className="size-5" />
+                            <RiCloseLine className="size-5" aria-hidden="true" />
                             <span className="sr-only">Close</span>
                         </Button>
                     </div>
