@@ -31,7 +31,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
             <div className="flex h-8 w-8 items-center justify-center">
               <RiSparklingLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
             </div>
-            <h3 className="ml-3 text-sm text-gray-500 dark:text-gray-400">AI Insights</h3>
+            <h3 className="ml-2 text-sm text-gray-500 dark:text-gray-400">AI Insights</h3>
             <div className="ml-3 flex h-6 w-6 items-center justify-center">
               {isExpanded ? (
                 <RiArrowUpSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -41,7 +41,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
             </div>
           </div>
         </button>
-        <a href="#" className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+        <a href="#" className="pr-6 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
           View all insights
         </a>
       </div>
