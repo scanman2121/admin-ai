@@ -72,15 +72,15 @@
 /* AI Drawer - Push Content */
 html.ai-drawer-open .main-content-wrapper {
     transition: margin-right 0.3s ease-in-out;
-    margin-right: 20rem;
-    /* 320px (drawer width) */
+    margin-right: 24rem;
+    /* 384px (drawer width) */
 }
 
 /* Move communications tab with content when AI drawer opens */
 html.ai-drawer-open .fixed.bottom-0.right-6 {
     transition: right 0.3s ease-in-out;
-    right: 21.5rem;
-    /* 20rem (drawer width) + 1.5rem (original right spacing) */
+    right: 25.5rem;
+    /* 24rem (drawer width) + 1.5rem (original right spacing) */
 }
 
 .main-content-wrapper {
