@@ -23,10 +23,10 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
   return (
     <div className={cn("w-full", className)}>
       <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
-        <div className={cn("flex flex-col", isExpanded ? "space-y-4" : "space-y-0")}>
+        <div className={cn("flex flex-col", isExpanded ? "space-y-2" : "space-y-0")}>
           <div className={cn(
-            "flex w-full items-center justify-between px-4",
-            isExpanded ? "py-4" : "py-3"
+            "flex w-full items-center justify-between px-4 pt-4",
+            isExpanded ? "pb-2" : "pb-3"
           )}>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
