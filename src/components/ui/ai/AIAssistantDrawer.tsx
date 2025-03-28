@@ -180,11 +180,6 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
         }, 1000)
     }
 
-    const handleNewChat = () => {
-        setMessages([])
-        setInput('')
-    }
-
     return (
         <>
             <div
