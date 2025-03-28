@@ -9,13 +9,22 @@ import {
     RiLineChartLine,
     RiSendPlaneFill,
     RiUserAddLine,
-    RiVipCrownLine
+    RiVipCrownLine,
+    RiFullscreenLine,
+    RiLightbulbLine,
+    RiBarChartBoxLine,
+    RiTaskLine,
+    RiMagicLine,
+    RiBuildingLine,
+    RiCalendarCheckLine,
+    RiFileChartLine
 } from "@remixicon/react"
 import { useEffect, useRef, useState } from "react"
 
 interface AIAssistantDrawerProps {
     isOpen: boolean
     onClose: () => void
+    onFullScreen: () => void
 }
 
 interface SuggestionCard {
@@ -23,6 +32,7 @@ interface SuggestionCard {
     title: string
     description: string
     icon: React.ReactNode
+    category: 'insights' | 'tasks' | 'generate'
 }
 
 interface ChatSession {
@@ -32,7 +42,7 @@ interface ChatSession {
     messages: { role: 'user' | 'assistant', content: string }[]
 }
 
-export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
+export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistantDrawerProps) {
     const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>([])
     const [input, setInput] = useState('')
     const [showPreviousChats, setShowPreviousChats] = useState(false)
@@ -70,29 +80,71 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
     ]
 
     const suggestionCards: SuggestionCard[] = [
-        {
-            id: 'add-user',
-            title: 'Add a user',
-            description: 'Add new user account',
-            icon: <RiUserAddLine className="size-5" />
-        },
+        // Insights
         {
             id: 'occupancy-trends',
             title: 'Find occupancy trends',
             description: 'Analyze building occupancy trends',
-            icon: <RiLineChartLine className="size-5" />
+            icon: <RiBarChartBoxLine className="size-5" />,
+            category: 'insights'
         },
         {
-            id: 'schedule-event',
-            title: 'Schedule an event',
-            description: 'Create events that tenants will love',
-            icon: <RiCalendarEventLine className="size-5" />
+            id: 'revenue-analysis',
+            title: 'Revenue insights',
+            description: 'View revenue patterns and forecasts',
+            icon: <RiFileChartLine className="size-5" />,
+            category: 'insights'
+        },
+        {
+            id: 'building-performance',
+            title: 'Building performance',
+            description: 'Get insights on building efficiency',
+            icon: <RiBuildingLine className="size-5" />,
+            category: 'insights'
+        },
+        // Tasks
+        {
+            id: 'add-user',
+            title: 'Add a user',
+            description: 'Add new user account',
+            icon: <RiUserAddLine className="size-5" />,
+            category: 'tasks'
+        },
+        {
+            id: 'schedule-maintenance',
+            title: 'Schedule maintenance',
+            description: 'Plan building maintenance tasks',
+            icon: <RiCalendarCheckLine className="size-5" />,
+            category: 'tasks'
         },
         {
             id: 'view-vips',
             title: 'View VIPs',
             description: 'See important visitors expected today',
-            icon: <RiVipCrownLine className="size-5" />
+            icon: <RiVipCrownLine className="size-5" />,
+            category: 'tasks'
+        },
+        // Generate
+        {
+            id: 'event-ideas',
+            title: 'Event ideas',
+            description: 'Generate creative event suggestions',
+            icon: <RiLightbulbLine className="size-5" />,
+            category: 'generate'
+        },
+        {
+            id: 'email-template',
+            title: 'Email template',
+            description: 'Create professional email templates',
+            icon: <RiMagicLine className="size-5" />,
+            category: 'generate'
+        },
+        {
+            id: 'schedule-event',
+            title: 'Schedule an event',
+            description: 'Create events that tenants will love',
+            icon: <RiCalendarEventLine className="size-5" />,
+            category: 'generate'
         }
     ]
 
@@ -255,6 +307,14 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
                         <Button
                             variant="ghost"
                             className="p-1.5 h-8 w-8"
+                            onClick={onFullScreen}
+                        >
+                            <RiFullscreenLine className="size-5" />
+                            <span className="sr-only">Full screen</span>
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            className="p-1.5 h-8 w-8"
                             onClick={onClose}
                         >
                             <RiCloseLine className="size-5" />
@@ -283,36 +343,114 @@ export function AIAssistantDrawer({ isOpen, onClose }: AIAssistantDrawerProps) {
                             ))}
                         </>
                     ) : (
-                        // Show suggestion cards if no messages yet
-                        <div className="py-2">
-                            <div className="grid grid-cols-1 gap-3">
-                                {suggestionCards.map((card) => (
-                                    <button
-                                        key={card.id}
-                                        onClick={() => handleSuggestionClick(card)}
-                                        className={cn(
-                                            "flex items-start gap-3 p-3 rounded-lg text-left transition-colors",
-                                            "bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800",
-                                            "border border-gray-200 dark:border-gray-800",
-                                            "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-gray-950"
-                                        )}
-                                    >
-                                        <div className={cn(
-                                            "flex-shrink-0 flex items-center justify-center size-10 rounded-full",
-                                            "bg-primary/10 text-primary dark:bg-primary/20"
-                                        )}>
-                                            {card.icon}
-                                        </div>
-                                        <div>
-                                            <h4 className="font-medium text-gray-900 dark:text-gray-50 text-xs">
-                                                {card.title}
-                                            </h4>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                {card.description}
-                                            </p>
-                                        </div>
-                                    </button>
-                                ))}
+                        // Show categorized suggestion cards if no messages yet
+                        <div className="space-y-6">
+                            {/* Insights Section */}
+                            <div>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <RiBarChartBoxLine className="size-5 text-blue-500" />
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Insights</h3>
+                                </div>
+                                <div className="grid grid-cols-1 gap-2">
+                                    {suggestionCards
+                                        .filter(card => card.category === 'insights')
+                                        .map((card) => (
+                                            <button
+                                                key={card.id}
+                                                onClick={() => handleSuggestionClick(card)}
+                                                className={cn(
+                                                    "flex items-start gap-3 p-3 rounded-lg text-left transition-all",
+                                                    "bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-950/80",
+                                                    "border border-blue-200 dark:border-blue-900",
+                                                    "group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950"
+                                                )}
+                                            >
+                                                <div className="flex-shrink-0 flex items-center justify-center size-10 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400">
+                                                    {card.icon}
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-medium text-gray-900 dark:text-gray-50 text-xs group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
+                                                        {card.title}
+                                                    </h4>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                        {card.description}
+                                                    </p>
+                                                </div>
+                                            </button>
+                                        ))}
+                                </div>
+                            </div>
+
+                            {/* Tasks Section */}
+                            <div>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <RiTaskLine className="size-5 text-purple-500" />
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Tasks</h3>
+                                </div>
+                                <div className="grid grid-cols-1 gap-2">
+                                    {suggestionCards
+                                        .filter(card => card.category === 'tasks')
+                                        .map((card) => (
+                                            <button
+                                                key={card.id}
+                                                onClick={() => handleSuggestionClick(card)}
+                                                className={cn(
+                                                    "flex items-start gap-3 p-3 rounded-lg text-left transition-all",
+                                                    "bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 dark:hover:bg-purple-950/80",
+                                                    "border border-purple-200 dark:border-purple-900",
+                                                    "group focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950"
+                                                )}
+                                            >
+                                                <div className="flex-shrink-0 flex items-center justify-center size-10 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400">
+                                                    {card.icon}
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-medium text-gray-900 dark:text-gray-50 text-xs group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
+                                                        {card.title}
+                                                    </h4>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                        {card.description}
+                                                    </p>
+                                                </div>
+                                            </button>
+                                        ))}
+                                </div>
+                            </div>
+
+                            {/* Generate Section */}
+                            <div>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <RiMagicLine className="size-5 text-amber-500" />
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Generate</h3>
+                                </div>
+                                <div className="grid grid-cols-1 gap-2">
+                                    {suggestionCards
+                                        .filter(card => card.category === 'generate')
+                                        .map((card) => (
+                                            <button
+                                                key={card.id}
+                                                onClick={() => handleSuggestionClick(card)}
+                                                className={cn(
+                                                    "flex items-start gap-3 p-3 rounded-lg text-left transition-all",
+                                                    "bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-950/80",
+                                                    "border border-amber-200 dark:border-amber-900",
+                                                    "group focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950"
+                                                )}
+                                            >
+                                                <div className="flex-shrink-0 flex items-center justify-center size-10 rounded-full bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400">
+                                                    {card.icon}
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-medium text-gray-900 dark:text-gray-50 text-xs group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
+                                                        {card.title}
+                                                    </h4>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                        {card.description}
+                                                    </p>
+                                                </div>
+                                            </button>
+                                        ))}
+                                </div>
                             </div>
                         </div>
                     )}
