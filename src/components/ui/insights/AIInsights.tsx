@@ -23,8 +23,8 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
   return (
     <div className={cn("w-full", className)}>
       <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
-        <div className={cn("flex flex-col", isExpanded ? "space-y-4" : "space-y-2")}>
-          <div className="flex w-full items-center justify-between px-4 py-3">
+        <div className={cn("flex flex-col", isExpanded ? "space-y-4" : "space-y-0")}>
+          <div className="flex w-full items-center justify-between p-4">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="flex items-center"
@@ -51,8 +51,8 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
 
           <div
             className={cn(
-              "grid gap-4 px-4 pb-4 transition-all duration-300",
-              isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr] invisible h-0",
+              "grid gap-4 transition-all duration-300",
+              isExpanded ? "px-4 pb-4 grid-rows-[1fr]" : "grid-rows-[0fr] invisible h-0",
               "md:grid-cols-4"
             )}
           >
