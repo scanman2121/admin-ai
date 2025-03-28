@@ -46,10 +46,12 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
                 </div>
               </div>
             </button>
-            <a href="#" className="flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
-              View all insights
-              <RiArrowRightSLine className="ml-1 h-4 w-4" />
-            </a>
+            {isExpanded && (
+              <a href="#" className="flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                View all insights
+                <RiArrowRightSLine className="ml-1 h-4 w-4" />
+              </a>
+            )}
           </div>
 
           <div
