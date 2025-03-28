@@ -34,49 +34,10 @@ interface SuggestionCard {
     category: 'insights' | 'tasks' | 'generate'
 }
 
-interface ChatSession {
-    id: string
-    title: string
-    date: string
-    messages: { role: 'user' | 'assistant', content: string }[]
-}
-
 export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistantDrawerProps) {
     const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>([])
     const [input, setInput] = useState('')
-    const [showPreviousChats, setShowPreviousChats] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
-
-    // Sample previous chat sessions
-    const previousChats: ChatSession[] = [
-        {
-            id: '1',
-            title: 'Adding new tenant users',
-            date: 'Today',
-            messages: [
-                { role: 'user', content: 'Help me add a user' },
-                { role: 'assistant', content: 'I\'d be happy to help you add a user. Here\'s how we can get started...' }
-            ]
-        },
-        {
-            id: '2',
-            title: 'Building occupancy analysis',
-            date: 'Yesterday',
-            messages: [
-                { role: 'user', content: 'Help me find occupancy trends' },
-                { role: 'assistant', content: 'I\'d be happy to help you find occupancy trends. Here\'s how we can get started...' }
-            ]
-        },
-        {
-            id: '3',
-            title: 'Summer event planning',
-            date: 'Jun 10',
-            messages: [
-                { role: 'user', content: 'Help me schedule an event' },
-                { role: 'assistant', content: 'I\'d be happy to help you schedule an event. Here\'s how we can get started...' }
-            ]
-        }
-    ]
 
     const suggestionCards: SuggestionCard[] = [
         // Insights
@@ -182,20 +143,6 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
         }
     }, [isOpen])
 
-    // Close previous chats dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = () => {
-            if (showPreviousChats) {
-                setShowPreviousChats(false)
-            }
-        }
-
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-    }, [showPreviousChats])
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         if (!input.trim()) return
@@ -236,17 +183,6 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
     const handleNewChat = () => {
         setMessages([])
         setInput('')
-        setShowPreviousChats(false)
-    }
-
-    const handleLoadPreviousChat = (chat: ChatSession) => {
-        setMessages(chat.messages)
-        setShowPreviousChats(false)
-    }
-
-    const togglePreviousChats = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        setShowPreviousChats(prev => !prev)
     }
 
     return (
