@@ -21,7 +21,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   return (
-    <div className={cn("w-full space-y-6", className)}>
+    <div className={cn("w-full", isExpanded ? "space-y-6" : "space-y-2", className)}>
       <div className="flex w-full items-center justify-between">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
@@ -59,7 +59,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
             key={index}
             className="overflow-hidden"
           >
-            <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
+            <div className="rounded-lg border border-[#739CFD] bg-[#F6F7F8] p-4 dark:border-[#739CFD] dark:bg-gray-900">
               <div className="relative">
                 <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   {insight.title}
