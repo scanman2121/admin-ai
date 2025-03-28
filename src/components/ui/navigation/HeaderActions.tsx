@@ -75,6 +75,12 @@ export function HeaderActions() {
         }
     }
 
+    // Handle switching from drawer to full screen
+    const handleAIFullScreen = () => {
+        setIsAIDrawerOpen(false)
+        setIsFullScreenAIOpen(true)
+    }
+
     // Handle notifications button click
     const handleNotificationsClick = () => {
         if (isMobile) {
@@ -168,6 +174,7 @@ export function HeaderActions() {
             <AIAssistantDrawer
                 isOpen={isAIDrawerOpen}
                 onClose={() => setIsAIDrawerOpen(false)}
+                onFullScreen={handleAIFullScreen}
             />
 
             {/* Mobile Full Screen Components */}
