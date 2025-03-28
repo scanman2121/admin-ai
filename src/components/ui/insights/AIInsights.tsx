@@ -23,8 +23,8 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
   return (
     <div className={cn("w-full", className)}>
       <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
-        <div className={cn("flex flex-col", isExpanded ? "space-y-6" : "space-y-2")}>
-          <div className="flex w-full items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+        <div className={cn("flex flex-col", isExpanded ? "space-y-4" : "space-y-2")}>
+          <div className="flex w-full items-center justify-between px-4 py-3">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="flex items-center"
@@ -33,7 +33,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
                 <div className="flex h-8 w-8 items-center justify-center">
                   <RiSparklingLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                 </div>
-                <h3 className="ml-2 text-sm text-gray-500 dark:text-gray-400">AI Insights</h3>
+                <h3 className="ml-2 text-sm text-gray-500 dark:text-gray-400">Insights</h3>
                 <div className="ml-3 flex h-6 w-6 items-center justify-center">
                   {isExpanded ? (
                     <RiArrowUpSLine className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -51,7 +51,7 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
 
           <div
             className={cn(
-              "grid gap-4 px-6 pb-6 transition-all duration-300",
+              "grid gap-4 px-4 pb-4 transition-all duration-300",
               isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr] invisible h-0",
               "md:grid-cols-4"
             )}
