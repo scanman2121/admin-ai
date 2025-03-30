@@ -47,6 +47,7 @@ export const siteConfig = {
       connectedApps: "/settings-and-setup/connected-apps",
       settings: "/settings-and-setup/settings",
       theme: "/settings-and-setup/theme",
+      documents: "/settings-and-setup/documents",
     },
     // Intelligence section
     intelligence: {

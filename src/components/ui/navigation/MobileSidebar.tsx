@@ -81,6 +81,7 @@ const settingsAndSetupItems = [
   { name: "Connected apps", href: siteConfig.baseLinks.settingsAndSetup.connectedApps },
   { name: "Settings", href: siteConfig.baseLinks.settingsAndSetup.settings },
   { name: "Theme", href: siteConfig.baseLinks.settingsAndSetup.theme },
+  { name: "Documents", href: siteConfig.baseLinks.settingsAndSetup.documents },
 ] as const
 
 // Intelligence sub-navigation items
