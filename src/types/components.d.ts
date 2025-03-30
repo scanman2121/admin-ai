@@ -22,6 +22,26 @@ declare module "@/components/Button" {
   }) => string;
 }
 
+declare module "@/components/Dialog" {
+  import { ComponentPropsWithoutRef, ElementRef, HTMLAttributes } from "react";
+  import * as DialogPrimitives from "@radix-ui/react-dialog";
+
+  export const Dialog: (props: ComponentPropsWithoutRef<typeof DialogPrimitives.Root>) => JSX.Element;
+  export const DialogTrigger: typeof DialogPrimitives.Trigger;
+  export const DialogClose: typeof DialogPrimitives.Close;
+  export const DialogContent: React.ForwardRefExoticComponent<
+    ComponentPropsWithoutRef<typeof DialogPrimitives.Content>
+  >;
+  export const DialogHeader: (props: HTMLAttributes<HTMLDivElement>) => JSX.Element;
+  export const DialogFooter: (props: HTMLAttributes<HTMLDivElement>) => JSX.Element;
+  export const DialogTitle: React.ForwardRefExoticComponent<
+    ComponentPropsWithoutRef<typeof DialogPrimitives.Title>
+  >;
+  export const DialogDescription: React.ForwardRefExoticComponent<
+    ComponentPropsWithoutRef<typeof DialogPrimitives.Description>
+  >;
+}
+
 declare module "@/components/Dropdown" {
   import { ComponentPropsWithoutRef, ElementRef, ForwardRefExoticComponent, RefAttributes } from "react";
   import * as DropdownMenuPrimitives from "@radix-ui/react-dropdown-menu";
