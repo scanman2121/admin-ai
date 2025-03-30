@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { RiUploadLine, RiCloseLine } from "@remixicon/react"
+import { RiUploadLine } from "@remixicon/react"
 
 import { Button } from "@/components/ui/button"
 import {
