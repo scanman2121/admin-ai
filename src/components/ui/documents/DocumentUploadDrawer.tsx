@@ -12,7 +12,6 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer"
 
 interface DocumentUploadDrawerProps {
@@ -36,17 +35,17 @@ export function DocumentUploadDrawer({ isOpen, onOpenChange }: DocumentUploadDra
   }
 
   return (
-    <Drawer open={isOpen} onOpenChange={onOpenChange}>
+    <Drawer open={isOpen} onOpenChange={onOpenChange} shouldScaleBackground>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-2xl">
+        <div className="mx-auto w-full max-w-4xl">
           <DrawerHeader>
             <DrawerTitle>Upload documents</DrawerTitle>
             <DrawerDescription>
               Add documents to your workspace. Supported formats: PDF, DOC, DOCX, TXT
             </DrawerDescription>
           </DrawerHeader>
-          <div className="p-4">
-            <div className="relative flex min-h-[200px] items-center justify-center rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-800">
+          <div className="p-6">
+            <div className="relative flex min-h-[300px] items-center justify-center rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-800">
               <div className="flex flex-col items-center justify-center text-center">
                 <RiUploadLine className="mb-4 h-12 w-12 text-gray-400" />
                 <p className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
