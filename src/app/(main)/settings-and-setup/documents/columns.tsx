@@ -3,13 +3,13 @@
 import * as React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { RiDownloadLine, RiMoreLine } from "@remixicon/react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/Dropdown";
 
 interface Document {
   id: string;
