@@ -28,14 +28,44 @@ declare module "@/components/Dropdown" {
 
   export const DropdownMenu: typeof DropdownMenuPrimitives.Root;
   export const DropdownMenuTrigger: typeof DropdownMenuPrimitives.Trigger;
+  export const DropdownMenuGroup: typeof DropdownMenuPrimitives.Group;
+  export const DropdownMenuSubMenu: typeof DropdownMenuPrimitives.Sub;
+  export const DropdownMenuRadioGroup: typeof DropdownMenuPrimitives.RadioGroup;
+  export const DropdownMenuLabel: typeof DropdownMenuPrimitives.Label;
+  export const DropdownMenuSeparator: typeof DropdownMenuPrimitives.Separator;
+
   export const DropdownMenuContent: ForwardRefExoticComponent<
     ComponentPropsWithoutRef<typeof DropdownMenuPrimitives.Content> &
       RefAttributes<ElementRef<typeof DropdownMenuPrimitives.Content>>
   >;
+
   export const DropdownMenuItem: ForwardRefExoticComponent<
     ComponentPropsWithoutRef<typeof DropdownMenuPrimitives.Item> & {
       shortcut?: string;
       hint?: string;
     } & RefAttributes<ElementRef<typeof DropdownMenuPrimitives.Item>>
+  >;
+
+  export const DropdownMenuSubMenuTrigger: ForwardRefExoticComponent<
+    ComponentPropsWithoutRef<typeof DropdownMenuPrimitives.SubTrigger> &
+      RefAttributes<ElementRef<typeof DropdownMenuPrimitives.SubTrigger>>
+  >;
+
+  export const DropdownMenuSubMenuContent: ForwardRefExoticComponent<
+    ComponentPropsWithoutRef<typeof DropdownMenuPrimitives.SubContent> &
+      RefAttributes<ElementRef<typeof DropdownMenuPrimitives.SubContent>>
+  >;
+
+  export const DropdownMenuCheckboxItem: ForwardRefExoticComponent<
+    ComponentPropsWithoutRef<typeof DropdownMenuPrimitives.CheckboxItem> & {
+      shortcut?: string;
+      hint?: string;
+    } & RefAttributes<ElementRef<typeof DropdownMenuPrimitives.CheckboxItem>>
+  >;
+
+  export const DropdownMenuRadioItem: ForwardRefExoticComponent<
+    ComponentPropsWithoutRef<typeof DropdownMenuPrimitives.RadioItem> & {
+      iconType?: "check";
+    } & RefAttributes<ElementRef<typeof DropdownMenuPrimitives.RadioItem>>
   >;
 } 
