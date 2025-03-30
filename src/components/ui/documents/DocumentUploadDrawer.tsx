@@ -1,68 +1,55 @@
-import * as React from "react";
+"use client"
+
+import * as React from "react"
+import { RiUploadLine, RiCloseLine } from "@remixicon/react"
+
+import { Button } from "@/components/ui/button"
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerBody,
-  DrawerFooter,
-} from "@/components/Drawer";
-import { Button } from "@/components/Button";
+  DrawerTrigger,
+} from "@/components/ui/drawer"
 
 interface DocumentUploadDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  description?: string;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function DocumentUploadDrawer({
-  isOpen,
-  onClose,
-  title = "Upload documents",
-  description,
-}: DocumentUploadDrawerProps) {
-  const [selectedFiles, setSelectedFiles] = React.useState<File[]>([]);
+export function DocumentUploadDrawer({ isOpen, onOpenChange }: DocumentUploadDrawerProps) {
+  const [selectedFiles, setSelectedFiles] = React.useState<File[]>([])
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setSelectedFiles(Array.from(event.target.files));
+      setSelectedFiles(Array.from(event.target.files))
     }
-  };
+  }
 
   const handleUpload = async () => {
     // TODO: Implement file upload logic
-    console.log("Uploading files:", selectedFiles);
-    onClose();
-  };
+    console.log("Uploading files:", selectedFiles)
+    onOpenChange?.(false)
+  }
 
   return (
-    <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="fixed inset-x-0 bottom-0 mt-24 h-[85vh] rounded-t-xl border-t border-gray-200">
-        <DrawerHeader>
-          <DrawerTitle>{title}</DrawerTitle>
-          {description && (
-            <p className="text-sm text-gray-500">{description}</p>
-          )}
-        </DrawerHeader>
-        <DrawerBody>
-          <div className="flex h-full flex-col gap-6">
-            <div className="relative flex-1 rounded-lg border-2 border-dashed border-gray-300 p-6">
-              <div className="flex h-full flex-col items-center justify-center text-center">
-                <svg
-                  className="mb-4 h-12 w-12 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  />
-                </svg>
-                <p className="mb-2 text-sm font-medium text-gray-900">
+    <Drawer open={isOpen} onOpenChange={onOpenChange}>
+      <DrawerContent>
+        <div className="mx-auto w-full max-w-2xl">
+          <DrawerHeader>
+            <DrawerTitle>Upload documents</DrawerTitle>
+            <DrawerDescription>
+              Add documents to your workspace. Supported formats: PDF, DOC, DOCX, TXT
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="p-4">
+            <div className="relative flex min-h-[200px] items-center justify-center rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-800">
+              <div className="flex flex-col items-center justify-center text-center">
+                <RiUploadLine className="mb-4 h-12 w-12 text-gray-400" />
+                <p className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                   Drag and drop your files here
                 </p>
                 <p className="text-xs text-gray-500">
@@ -79,15 +66,22 @@ export function DocumentUploadDrawer({
             </div>
 
             {selectedFiles.length > 0 && (
-              <div className="rounded-lg border border-gray-200 p-4">
-                <h3 className="mb-2 font-medium">Selected files</h3>
-                <ul className="space-y-2">
+              <div className="mt-6 rounded-lg border border-gray-200 p-4 dark:border-gray-800">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium">Selected files</h3>
+                  <span className="text-xs text-gray-500">
+                    {selectedFiles.length} file{selectedFiles.length !== 1 && "s"}
+                  </span>
+                </div>
+                <ul className="mt-2 divide-y divide-gray-200 dark:divide-gray-800">
                   {selectedFiles.map((file, index) => (
                     <li
                       key={index}
-                      className="flex items-center justify-between text-sm"
+                      className="flex items-center justify-between py-2 text-sm"
                     >
-                      <span className="truncate">{file.name}</span>
+                      <div className="flex items-center">
+                        <span className="truncate max-w-[300px]">{file.name}</span>
+                      </div>
                       <span className="text-gray-500">
                         {(file.size / 1024 / 1024).toFixed(2)} MB
                       </span>
@@ -97,19 +91,16 @@ export function DocumentUploadDrawer({
               </div>
             )}
           </div>
-        </DrawerBody>
-        <DrawerFooter>
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            onClick={handleUpload}
-            disabled={selectedFiles.length === 0}
-          >
-            Upload {selectedFiles.length > 0 && `(${selectedFiles.length})`}
-          </Button>
-        </DrawerFooter>
+          <DrawerFooter>
+            <Button onClick={handleUpload} disabled={selectedFiles.length === 0}>
+              Upload files
+            </Button>
+            <DrawerClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </div>
       </DrawerContent>
     </Drawer>
-  );
+  )
 } 

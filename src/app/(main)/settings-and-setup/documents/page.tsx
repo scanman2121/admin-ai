@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { RiUploadLine } from "@remixicon/react"
-import { Button } from "@/components/Button"
+import { Button } from "@/components/ui/button"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
@@ -53,7 +53,7 @@ const mockInsights = [
 
 export default function Documents() {
     const pathname = usePathname()
-    const [isUploadDrawerOpen, setIsUploadDrawerOpen] = React.useState(false)
+    const [isOpen, setIsOpen] = React.useState(false)
 
     return (
         <div className="space-y-6">
@@ -61,7 +61,7 @@ export default function Documents() {
                 <div>
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">Documents</h1>
                 </div>
-                <Button onClick={() => setIsUploadDrawerOpen(true)}>
+                <Button onClick={() => setIsOpen(true)}>
                     <RiUploadLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
                     Add document
                 </Button>
@@ -87,10 +87,9 @@ export default function Documents() {
                 </div>
             </div>
 
-            <DocumentUploadDrawer
-                isOpen={isUploadDrawerOpen}
-                onClose={() => setIsUploadDrawerOpen(false)}
-                description="Upload documents in PDF, DOC, DOCX, or TXT format"
+            <DocumentUploadDrawer 
+                isOpen={isOpen}
+                onOpenChange={setIsOpen}
             />
         </div>
     )
