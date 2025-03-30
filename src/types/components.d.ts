@@ -1,26 +1,25 @@
 declare module "@/components/Button" {
   import { ButtonHTMLAttributes } from "react";
-  import { VariantProps } from "class-variance-authority";
   
-  const buttonVariants: (props?: {
-    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "light" | "primary";
-    size?: "default" | "sm" | "lg" | "icon";
-    className?: string;
-  }) => string;
+  type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "light" | "primary";
+  type ButtonSize = "default" | "sm" | "lg" | "icon";
   
-  export interface ButtonProps
-    extends ButtonHTMLAttributes<HTMLButtonElement>,
-      VariantProps<typeof buttonVariants> {
+  export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     asChild?: boolean;
-    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "light" | "primary";
-    size?: "default" | "sm" | "lg" | "icon";
+    variant?: ButtonVariant;
+    size?: ButtonSize;
+    className?: string;
   }
   
   export const Button: React.ForwardRefExoticComponent<
     ButtonProps & React.RefAttributes<HTMLButtonElement>
   >;
   
-  export { buttonVariants };
+  export const buttonVariants: (props?: {
+    variant?: ButtonVariant;
+    size?: ButtonSize;
+    className?: string;
+  }) => string;
 }
 
 declare module "@/components/Dropdown" {
