@@ -88,4 +88,33 @@ declare module "@/components/Dropdown" {
       iconType?: "check";
     } & RefAttributes<ElementRef<typeof DropdownMenuPrimitives.RadioItem>>
   >;
+}
+
+declare module "@/components/Drawer" {
+  import * as React from "react";
+  import * as DrawerPrimitives from "@radix-ui/react-dialog";
+
+  export const Drawer: (props: React.ComponentPropsWithoutRef<typeof DrawerPrimitives.Root>) => JSX.Element;
+  export const DrawerTrigger: React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<typeof DrawerPrimitives.Trigger>
+  >;
+  export const DrawerClose: React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<typeof DrawerPrimitives.Close>
+  >;
+  export const DrawerContent: React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<typeof DrawerPrimitives.Content>
+  >;
+  export const DrawerHeader: React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<"div">
+  >;
+  export const DrawerBody: React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<"div">
+  >;
+  export const DrawerFooter: (props: React.HTMLAttributes<HTMLDivElement>) => JSX.Element;
+  export const DrawerTitle: React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<typeof DrawerPrimitives.Title>
+  >;
+  export const DrawerDescription: React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<typeof DrawerPrimitives.Description>
+  >;
 } 
