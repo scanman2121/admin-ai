@@ -71,7 +71,7 @@ export const documentsColumns: ColumnDef<Document>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: () => {
       return (
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon">

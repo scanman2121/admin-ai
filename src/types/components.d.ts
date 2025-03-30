@@ -2,12 +2,18 @@ declare module "@/components/Button" {
   import { ButtonHTMLAttributes } from "react";
   import { VariantProps } from "class-variance-authority";
   
-  const buttonVariants: (props?: any) => string;
+  const buttonVariants: (props?: {
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "light" | "primary";
+    size?: "default" | "sm" | "lg" | "icon";
+    className?: string;
+  }) => string;
   
   export interface ButtonProps
     extends ButtonHTMLAttributes<HTMLButtonElement>,
       VariantProps<typeof buttonVariants> {
     asChild?: boolean;
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "light" | "primary";
+    size?: "default" | "sm" | "lg" | "icon";
   }
   
   export const Button: React.ForwardRefExoticComponent<
