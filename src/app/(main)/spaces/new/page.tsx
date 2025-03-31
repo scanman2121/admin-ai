@@ -145,16 +145,6 @@ export default function NewSpace() {
     })
   }
 
-  const handleAccessControlChange = (field: string, value: string[]) => {
-    setSpaceData(prev => ({
-      ...prev,
-      accessControl: {
-        ...prev.accessControl,
-        [field]: value
-      }
-    }))
-  }
-
   const handleScheduleChange = (day: typeof daysOfWeek[number], field: 'start' | 'end', value: string) => {
     setSpaceData(prev => ({
       ...prev,
