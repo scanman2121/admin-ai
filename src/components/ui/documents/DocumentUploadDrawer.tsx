@@ -1,7 +1,7 @@
 "use client"
 
-import * as React from "react"
 import { RiUploadLine } from "@remixicon/react"
+import * as React from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -9,9 +9,8 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
-  DrawerTitle,
+  DrawerTitle
 } from "@/components/ui/drawer"
 
 interface DocumentUploadDrawerProps {
@@ -37,17 +36,17 @@ export function DocumentUploadDrawer({ isOpen, onOpenChange }: DocumentUploadDra
   return (
     <Drawer open={isOpen} onOpenChange={onOpenChange} shouldScaleBackground>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-4xl">
+        <div className="mx-auto w-full max-w-4xl flex flex-col h-full">
           <DrawerHeader>
             <DrawerTitle>Upload documents</DrawerTitle>
             <DrawerDescription>
               Add documents to your workspace. Supported formats: PDF, DOC, DOCX, TXT
             </DrawerDescription>
           </DrawerHeader>
-          <div className="p-6">
-            <div className="relative flex min-h-[300px] items-center justify-center rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-800">
+          <div className="p-6 flex-1 overflow-y-auto">
+            <div className="relative flex min-h-[200px] items-center justify-center rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-800">
               <div className="flex flex-col items-center justify-center text-center">
-                <RiUploadLine className="mb-4 h-12 w-12 text-gray-400" />
+                <RiUploadLine className="mb-4 h-8 w-8 text-gray-400" />
                 <p className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                   Drag and drop your files here
                 </p>
@@ -90,14 +89,16 @@ export function DocumentUploadDrawer({ isOpen, onOpenChange }: DocumentUploadDra
               </div>
             )}
           </div>
-          <DrawerFooter>
-            <Button onClick={handleUpload} disabled={selectedFiles.length === 0}>
-              Upload files
-            </Button>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
+          <div className="sticky bottom-0 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-background p-4 mt-auto">
+            <div className="flex flex-row-reverse gap-4 sm:justify-end">
+              <Button onClick={handleUpload} disabled={selectedFiles.length === 0}>
+                Upload files
+              </Button>
+              <DrawerClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DrawerClose>
+            </div>
+          </div>
         </div>
       </DrawerContent>
     </Drawer>

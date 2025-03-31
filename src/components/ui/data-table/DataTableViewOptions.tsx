@@ -2,7 +2,6 @@
 
 import React from "react"
 
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/Popover"
 import { Column, Table } from "@tanstack/react-table"
 
 import ReactDOM from "react-dom"
@@ -10,27 +9,30 @@ import invariant from "tiny-invariant"
 
 import { Button } from "@/components/Button"
 import { Checkbox } from "@/components/Checkbox"
-import { Label } from "@/components/Label"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
-import { triggerPostMoveFlash } from "@atlaskit/pragmatic-drag-and-drop-flourish/trigger-post-move-flash"
 import {
   attachClosestEdge,
   extractClosestEdge,
   type Edge,
 } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge"
-import { getReorderDestinationIndex } from "@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index"
-import * as liveRegion from "@atlaskit/pragmatic-drag-and-drop-live-region"
 import { DropIndicator } from "@atlaskit/pragmatic-drag-and-drop-react-drop-indicator/box"
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"
 import {
   draggable,
-  dropTargetForElements,
-  monitorForElements,
+  dropTargetForElements
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter"
 import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview"
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview"
-import { reorder } from "@atlaskit/pragmatic-drag-and-drop/reorder"
-import { RiDraggable, RiEqualizer2Line } from "@remixicon/react"
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
+import { MixerHorizontalIcon } from "@radix-ui/react-icons"
+import { RiDraggable } from "@remixicon/react"
 
 type CleanupFn = () => void
 
@@ -271,180 +273,43 @@ interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
 }
 
-function ViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
-  const tableColumns: Item[] = table.getAllColumns().map((column) => ({
-    id: column.id,
-    label: column.columnDef.meta?.displayName as string,
-  }))
-  const [{ items, lastCardMoved }, setListState] = React.useState<ListState>({
-    items: tableColumns,
-    lastCardMoved: null,
-  })
-  const [registry] = React.useState(getItemRegistry)
-
-  // Isolated instances of this component from one another
-  const [instanceId] = React.useState(() => Symbol("instance-id"))
-
-  React.useEffect(() => {
-    table.setColumnOrder(items.map((item) => item.id))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items])
-
-  const reorderItem = React.useCallback(
-    ({
-      startIndex,
-      indexOfTarget,
-      closestEdgeOfTarget,
-    }: {
-      startIndex: number
-      indexOfTarget: number
-      closestEdgeOfTarget: Edge | null
-    }) => {
-      const finishIndex = getReorderDestinationIndex({
-        startIndex,
-        closestEdgeOfTarget,
-        indexOfTarget,
-        axis: "vertical",
-      })
-
-      if (finishIndex === startIndex) {
-        return
-      }
-
-      setListState((listState) => {
-        const item = listState.items[startIndex]
-
-        return {
-          items: reorder({
-            list: listState.items,
-            startIndex,
-            finishIndex,
-          }),
-          lastCardMoved: {
-            item,
-            previousIndex: startIndex,
-            currentIndex: finishIndex,
-            numberOfItems: listState.items.length,
-          },
-        }
-      })
-    },
-    [],
-  )
-
-  React.useEffect(() => {
-    return monitorForElements({
-      canMonitor({ source }) {
-        return isItemData(source.data) && source.data.instanceId === instanceId
-      },
-      onDrop({ location, source }) {
-        const target = location.current.dropTargets[0]
-        if (!target) {
-          return
-        }
-
-        const sourceData = source.data
-        const targetData = target.data
-        if (!isItemData(sourceData) || !isItemData(targetData)) {
-          return
-        }
-
-        const indexOfTarget = items.findIndex(
-          (item) => item.id === targetData.item.id,
-        )
-        if (indexOfTarget < 0) {
-          return
-        }
-
-        const closestEdgeOfTarget = extractClosestEdge(targetData)
-
-        reorderItem({
-          startIndex: sourceData.index,
-          indexOfTarget,
-          closestEdgeOfTarget,
-        })
-      },
-    })
-  }, [instanceId, items, reorderItem])
-
-  // once a drag is finished, we have some post drop actions to take
-  React.useEffect(() => {
-    if (lastCardMoved === null) {
-      return
-    }
-
-    const { item, previousIndex, currentIndex, numberOfItems } = lastCardMoved
-    const element = registry.getElement(item.id)
-    if (element) {
-      triggerPostMoveFlash(element)
-    }
-
-    liveRegion.announce(
-      `You've moved ${item.label} from position ${previousIndex + 1
-      } to position ${currentIndex + 1} of ${numberOfItems}.`,
-    )
-  }, [lastCardMoved, registry])
-
-  // cleanup the live region when this component is finished
-  React.useEffect(() => {
-    return function cleanup() {
-      liveRegion.cleanup()
-    }
-  }, [])
-
-  const getListLength = React.useCallback(() => items.length, [items.length])
-
-  const contextValue: ListContextValue = React.useMemo(() => {
-    return {
-      registerItem: registry.register,
-      reorderItem,
-      instanceId,
-      getListLength,
-    }
-  }, [registry.register, reorderItem, instanceId, getListLength])
-
+export function DataTableViewOptions<TData>({
+  table,
+}: DataTableViewOptionsProps<TData>) {
   return (
-    <div>
-      <div className="flex justify-center">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="secondary"
-              className={cn(
-                "ml-auto hidden gap-x-2 px-2 py-1.5 text-sm sm:text-xs lg:flex",
-              )}
-            >
-              <RiEqualizer2Line className="size-4" aria-hidden="true" />
-              View
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent
-            align="end"
-            sideOffset={7}
-            className="z-50 w-fit space-y-2"
-          >
-            <Label className="font-medium">Display properties</Label>
-            <ListContext.Provider value={contextValue}>
-              <div className="flex flex-col">
-                {items.map((item, index) => {
-                  const column = table.getColumn(item.id)
-                  if (!column) return null
-                  return (
-                    <div
-                      key={column.id}
-                      className={cn(!column.getCanHide() && "hidden")}
-                    >
-                      <ListItem column={column} item={item} index={index} />
-                    </div>
-                  )
-                })}
-              </div>
-            </ListContext.Provider>
-          </PopoverContent>
-        </Popover>
-      </div>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="ml-auto hidden h-8 lg:flex"
+        >
+          <MixerHorizontalIcon className="mr-2 h-4 w-4" />
+          View
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-[150px]">
+        <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {table
+          .getAllColumns()
+          .filter(
+            (column) =>
+              typeof column.accessorFn !== "undefined" && column.getCanHide()
+          )
+          .map((column) => {
+            return (
+              <DropdownMenuCheckboxItem
+                key={column.id}
+                className="capitalize"
+                checked={column.getIsVisible()}
+                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+              >
+                {column.id}
+              </DropdownMenuCheckboxItem>
+            )
+          })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
-
-export { ViewOptions }
