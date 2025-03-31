@@ -43,6 +43,26 @@ const mockInsights = [
 export default function Documents() {
     const [isOpen, setIsOpen] = React.useState(false)
 
+    const handleUpload = async (files: File[], fields: Record<string, string>) => {
+        try {
+            // TODO: Implement actual file upload logic
+            console.log('Uploading files:', files)
+            console.log('With fields:', fields)
+
+            // Simulate upload delay
+            await new Promise(resolve => setTimeout(resolve, 1000))
+
+            // Show success message
+            // TODO: Add toast notification
+
+            return Promise.resolve()
+        } catch (error) {
+            console.error('Error uploading files:', error)
+            // TODO: Add error toast notification
+            return Promise.reject(error)
+        }
+    }
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -66,6 +86,7 @@ export default function Documents() {
             <DocumentUploadDrawer
                 isOpen={isOpen}
                 onOpenChange={setIsOpen}
+                onUpload={handleUpload}
             />
         </div>
     )

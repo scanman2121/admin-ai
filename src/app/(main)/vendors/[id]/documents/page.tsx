@@ -168,6 +168,27 @@ export default function VendorDocuments() {
     const baseUrl = `/vendors/${params.id}`
     const [isUploadDrawerOpen, setIsUploadDrawerOpen] = React.useState(false)
 
+    const handleUpload = async (files: File[], fields: Record<string, string>) => {
+        try {
+            // TODO: Implement actual file upload logic
+            console.log('Uploading files:', files)
+            console.log('With fields:', fields)
+            console.log('Vendor ID:', params.id)
+
+            // Simulate upload delay
+            await new Promise(resolve => setTimeout(resolve, 1000))
+
+            // Show success message
+            // TODO: Add toast notification
+
+            return Promise.resolve()
+        } catch (error) {
+            console.error('Error uploading files:', error)
+            // TODO: Add error toast notification
+            return Promise.reject(error)
+        }
+    }
+
     return (
         <div>
             {/* Header */}
@@ -241,6 +262,7 @@ export default function VendorDocuments() {
             <DocumentUploadDrawer
                 isOpen={isUploadDrawerOpen}
                 onOpenChange={setIsUploadDrawerOpen}
+                onUpload={handleUpload}
             />
         </div>
     )
