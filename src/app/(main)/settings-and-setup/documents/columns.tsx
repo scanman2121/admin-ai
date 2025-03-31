@@ -1,8 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { RiDownloadLine, RiMoreLine } from "@remixicon/react";
 import { Button } from "@/components/Button";
 import {
   DropdownMenu,
@@ -10,32 +7,79 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/Dropdown";
+import { cn } from "@/lib/utils";
+import { RiDownloadLine, RiMoreLine } from "@remixicon/react";
+import { ColumnDef } from "@tanstack/react-table";
 
 interface Document {
   id: string;
   name: string;
   type: string;
+  documentType:
+  | "Lease"
+  | "Certificate of Insurance (COI)"
+  | "Asset Valuation Report"
+  | "Capital Expenditure (CapEx) Request"
+  | "Financial Statements"
+  | "Work Order"
+  | "Maintenance Schedule"
+  | "Inspection Report"
+  | "Incident Report"
+  | "Tenant Communication"
+  | "Daily Activity Report (DAR)"
+  | "Visitor Log"
+  | "Access Control Records"
+  | "Security Alert Notice";
   size: string;
   uploadedBy: string;
   uploadDate: string;
   status: string;
+  building?: string;
+  tenant?: string;
 }
 
 export const documentsColumns: ColumnDef<Document>[] = [
   {
     accessorKey: "name",
-    header: "Document name",
+    header: "Name",
+  },
+  {
+    accessorKey: "documentType",
+    header: "Document type",
     cell: ({ row }) => {
-      const name = row.getValue("name") as string;
-      const type = row.getValue("type") as string;
-
+      const type = row.getValue("documentType") as string
       return (
-        <div className="flex flex-col">
-          <span className="font-medium">{name}</span>
-          <span className="text-sm text-gray-500">{type}</span>
-        </div>
-      );
+        <span className="whitespace-nowrap">{type}</span>
+      )
     },
+  },
+  {
+    accessorKey: "building",
+    header: "Building",
+    cell: ({ row }) => {
+      const building = row.getValue("building") as string | undefined
+      return (
+        <span className="text-gray-600 dark:text-gray-400">
+          {building || "N/A"}
+        </span>
+      )
+    },
+  },
+  {
+    accessorKey: "tenant",
+    header: "Tenant",
+    cell: ({ row }) => {
+      const tenant = row.getValue("tenant") as string | undefined
+      return (
+        <span className="text-gray-600 dark:text-gray-400">
+          {tenant || "N/A"}
+        </span>
+      )
+    },
+  },
+  {
+    accessorKey: "type",
+    header: "File type",
   },
   {
     accessorKey: "size",
@@ -53,20 +97,17 @@ export const documentsColumns: ColumnDef<Document>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as string;
+      const status = row.getValue("status") as string
       return (
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-            status === "Active"
-              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-              : status === "Pending"
-              ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
-              : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-          }`}
-        >
+        <span className={cn(
+          "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
+          status.toLowerCase() === "active" && "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+          status.toLowerCase() === "pending" && "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+          status.toLowerCase() === "inactive" && "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400"
+        )}>
           • {status}
         </span>
-      );
+      )
     },
   },
   {
