@@ -107,6 +107,83 @@ const SelectSeparator = React.forwardRef<
 ))
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
-export {
-  Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue
+interface MultiSelectProps {
+  value: string[]
+  onChange: (value: string[]) => void
+  options: string[]
+  className?: string
+  placeholder?: string
 }
+
+const MultiSelect = React.forwardRef<HTMLDivElement, MultiSelectProps>(
+  ({ value, onChange, options, className, placeholder = "Select options..." }, ref) => {
+    const [isOpen, setIsOpen] = React.useState(false)
+
+    const toggleOption = (option: string) => {
+      const newValue = value.includes(option)
+        ? value.filter(v => v !== option)
+        : [...value, option]
+      onChange(newValue)
+    }
+
+    return (
+      <div ref={ref} className="relative">
+        <div
+          className={cn(
+            "flex min-h-[40px] w-full cursor-pointer items-center rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            className
+          )}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <div className="flex flex-1 flex-wrap gap-1">
+            {value.length === 0 ? (
+              <span className="text-muted-foreground">{placeholder}</span>
+            ) : (
+              value.map((item) => (
+                <span
+                  key={item}
+                  className="inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground"
+                >
+                  {item}
+                </span>
+              ))
+            )}
+          </div>
+          <ChevronDown className={cn(
+            "h-4 w-4 shrink-0 opacity-50 transition-transform",
+            isOpen && "rotate-180"
+          )} />
+        </div>
+        {isOpen && (
+          <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md">
+            <div className="max-h-[200px] overflow-auto p-1">
+              {options.map((option) => (
+                <div
+                  key={option}
+                  className={cn(
+                    "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground",
+                    value.includes(option) && "bg-accent text-accent-foreground"
+                  )}
+                  onClick={() => toggleOption(option)}
+                >
+                  <div className="mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary">
+                    {value.includes(option) && (
+                      <Check className="h-3 w-3" />
+                    )}
+                  </div>
+                  {option}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+)
+MultiSelect.displayName = "MultiSelect"
+
+export {
+  MultiSelect, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue
+}
+
