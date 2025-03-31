@@ -1,12 +1,15 @@
 "use client"
 
-import { Button } from "@/components/Button"
-import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
+import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { RiAddLine } from "@remixicon/react"
+import { Input } from "@/components/ui/input"
+import { AIInsights } from "@/components/ui/insights/AIInsights"
+import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
+import { getPageInsights } from "@/lib/insights"
+import { RiAddLine, RiSearchLine, RiTeamLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 
 // Define tabs for the Tenants page
@@ -137,36 +140,64 @@ const tenantsColumns = [
     },
 ]
 
-export default function Tenants() {
+interface Tenant {
+    id: string;
+    [key: string]: any;
+}
+
+export default function TenantsPage() {
     const pathname = usePathname()
+    const router = useRouter()
     const [data] = useState(tenantsData)
+    const insights = getPageInsights("tenants")
 
     return (
-        <div>
+        <div className="flex h-full w-full flex-col space-y-8">
             <div className="flex items-center justify-between">
-                <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                    Tenants
-                </h1>
-                <Button>
-                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
-                    Add Tenant
+                <div className="flex items-center space-x-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-50 dark:bg-blue-950">
+                        <RiTeamLine className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+                    </div>
+                    <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Tenants</h1>
+                </div>
+                <Button onClick={() => router.push("/tenants/new")} size="sm">
+                    <RiAddLine className="mr-1 h-4 w-4" />
+                    Add tenant
                 </Button>
             </div>
 
-            <TabNavigation className="mt-4">
-                {tabs.map((tab) => (
-                    <TabNavigationLink
-                        key={tab.name}
-                        asChild
-                        active={pathname === tab.href}
-                    >
-                        <Link href={tab.href}>{tab.name}</Link>
-                    </TabNavigationLink>
-                ))}
-            </TabNavigation>
+            <AIInsights insights={insights} className="mt-6" />
 
-            <div className="pt-6">
-                <DataTable columns={tenantsColumns} data={data} />
+            <div className="flex flex-col gap-4 w-full">
+                <TabNavigation>
+                    {tabs.map((tab) => (
+                        <TabNavigationLink
+                            key={tab.name}
+                            asChild
+                            active={pathname === tab.href}
+                        >
+                            <Link href={tab.href}>{tab.name}</Link>
+                        </TabNavigationLink>
+                    ))}
+                </TabNavigation>
+
+                <div className="flex items-center space-x-2">
+                    <div className="relative flex-1">
+                        <RiSearchLine className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500 dark:text-gray-400" />
+                        <Input
+                            type="search"
+                            placeholder="Search tenants..."
+                            className="pl-9"
+                        />
+                    </div>
+                    <Button variant="outline">Filters</Button>
+                </div>
+
+                <DataTable
+                    columns={tenantsColumns}
+                    data={data}
+                    onRowClick={(row: Tenant) => router.push(`/tenants/${row.id}`)}
+                />
             </div>
         </div>
     )

@@ -1,9 +1,12 @@
 "use client"
 
-import { Button } from "@/components/Button"
-import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { DataTable } from "@/components/ui/data-table/data-table"
-import { RiAddLine } from "@remixicon/react"
+import { Button } from "@/components/ui/button"
+import { DataTable } from "@/components/ui/data-table/DataTable"
+import { Input } from "@/components/ui/input"
+import { AIInsights } from "@/components/ui/insights/AIInsights"
+import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
+import { getPageInsights } from "@/lib/insights"
+import { RiAddLine, RiLayoutLine, RiSearchLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -148,39 +151,57 @@ const spacesColumns = [
     },
 ]
 
-export default function Spaces() {
+export default function SpacesPage() {
     const pathname = usePathname()
     const router = useRouter()
+    const insights = getPageInsights("spaces")
 
     return (
-        <div className="flex flex-col gap-4 w-full">
+        <div className="flex h-full w-full flex-col space-y-8">
             <div className="flex items-center justify-between">
-                <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                    Spaces
-                </h1>
-                <Button onClick={() => router.push('/spaces/new')}>
-                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
-                    Add Space
+                <div className="flex items-center space-x-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-50 dark:bg-blue-950">
+                        <RiLayoutLine className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+                    </div>
+                    <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Spaces</h1>
+                </div>
+                <Button onClick={() => router.push("/spaces/new")} size="sm">
+                    <RiAddLine className="mr-1 h-4 w-4" />
+                    Add space
                 </Button>
             </div>
 
-            <TabNavigation>
-                {tabs.map((tab) => (
-                    <TabNavigationLink
-                        key={tab.name}
-                        asChild
-                        active={pathname === tab.href}
-                    >
-                        <Link href={tab.href}>{tab.name}</Link>
-                    </TabNavigationLink>
-                ))}
-            </TabNavigation>
+            <AIInsights insights={insights} className="mt-6" />
 
-            <div className="pt-4">
+            <div className="flex flex-col gap-4 w-full">
+                <TabNavigation>
+                    {tabs.map((tab) => (
+                        <TabNavigationLink
+                            key={tab.name}
+                            asChild
+                            active={pathname === tab.href}
+                        >
+                            <Link href={tab.href}>{tab.name}</Link>
+                        </TabNavigationLink>
+                    ))}
+                </TabNavigation>
+
+                <div className="flex items-center space-x-2">
+                    <div className="relative flex-1">
+                        <RiSearchLine className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500 dark:text-gray-400" />
+                        <Input
+                            type="search"
+                            placeholder="Search spaces..."
+                            className="pl-9"
+                        />
+                    </div>
+                    <Button variant="outline">Filters</Button>
+                </div>
+
                 <DataTable<Space, any>
                     columns={spacesColumns}
                     data={spacesData}
-                    onRowClick={(row) => router.push(`/spaces/${row.original.id}`)}
+                    onRowClick={(row) => router.push(`/spaces/${row.id}`)}
                 />
             </div>
         </div>
