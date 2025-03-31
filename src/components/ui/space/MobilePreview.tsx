@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card"
+import Image from "next/image"
 
 interface SpaceData {
   name: string
@@ -18,12 +19,14 @@ export function MobilePreview({ spaceData }: MobilePreviewProps) {
   return (
     <Card className="overflow-hidden">
       <div className="aspect-[9/16] w-full">
-        <div className="h-full w-full bg-gray-100">
+        <div className="relative h-full w-full bg-gray-100">
           {spaceData.images[0] && (
-            <img
+            <Image
               src={spaceData.images[0]}
               alt={spaceData.name}
-              className="h-full w-full object-cover"
+              className="object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           )}
         </div>

@@ -7,6 +7,7 @@ import { MultiSelect, Select, SelectContent, SelectItem, SelectTrigger, SelectVa
 import { MobilePreview } from "@/components/ui/space/MobilePreview"
 import { Textarea } from "@/components/ui/textarea"
 import { RiDeleteBinLine, RiImageAddLine } from "@remixicon/react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -188,10 +189,12 @@ export default function SpacePage({ params }: { params: { id: string } }) {
                         key={index}
                         className="group relative aspect-square overflow-hidden rounded-lg border"
                       >
-                        <img
+                        <Image
                           src={image}
                           alt={`Space image ${index + 1}`}
-                          className="h-full w-full object-cover"
+                          className="object-cover"
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                         <button
                           className="absolute right-2 top-2 rounded-full bg-white/80 p-1 opacity-0 transition-opacity group-hover:opacity-100"
