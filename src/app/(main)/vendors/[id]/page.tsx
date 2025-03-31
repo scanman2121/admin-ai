@@ -159,6 +159,25 @@ export default function VendorDetails() {
                         </div>
                     </div>
 
+                    {/* Building Access */}
+                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent overflow-hidden">
+                        <div className="border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+                            <h2 className="font-medium text-gray-900 dark:text-gray-50">Building Access</h2>
+                        </div>
+                        <div className="divide-y divide-gray-200 dark:divide-gray-800">
+                            {vendorData.buildings.map((building, index) => (
+                                <div key={index} className="flex items-center gap-3 p-4">
+                                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                                        <RiBuilding2Line className="size-4" />
+                                    </div>
+                                    <div className="text-gray-900 dark:text-gray-50">
+                                        {building}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                     {/* Team */}
                     <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent overflow-hidden">
                         <div className="border-b border-gray-200 dark:border-gray-800 px-4 py-3">
