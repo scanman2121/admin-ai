@@ -1,7 +1,7 @@
 "use client"
 
 import * as SelectPrimitive from "@radix-ui/react-select"
-import { Check, ChevronDown } from "lucide-react"
+import { Check, ChevronDown, ChevronUp } from "lucide-react"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -19,16 +19,53 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className
     )}
     {...props}
   >
     {children}
-    <ChevronDown className="h-4 w-4 opacity-50" />
+    <SelectPrimitive.Icon asChild>
+      <ChevronDown className="size-4 opacity-50" />
+    </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ))
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
+
+const SelectScrollUpButton = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.ScrollUpButton
+    ref={ref}
+    className={cn(
+      "flex cursor-default items-center justify-center py-1",
+      className
+    )}
+    {...props}
+  >
+    <ChevronUp className="size-4" />
+  </SelectPrimitive.ScrollUpButton>
+))
+SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
+
+const SelectScrollDownButton = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.ScrollDownButton
+    ref={ref}
+    className={cn(
+      "flex cursor-default items-center justify-center py-1",
+      className
+    )}
+    {...props}
+  >
+    <ChevronDown className="size-4" />
+  </SelectPrimitive.ScrollDownButton>
+))
+SelectScrollDownButton.displayName =
+  SelectPrimitive.ScrollDownButton.displayName
 
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
@@ -38,7 +75,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         position === "popper" &&
         "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
@@ -46,6 +83,7 @@ const SelectContent = React.forwardRef<
       position={position}
       {...props}
     >
+      <SelectScrollUpButton />
       <SelectPrimitive.Viewport
         className={cn(
           "p-1",
@@ -55,6 +93,7 @@ const SelectContent = React.forwardRef<
       >
         {children}
       </SelectPrimitive.Viewport>
+      <SelectScrollDownButton />
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
 ))
@@ -84,9 +123,9 @@ const SelectItem = React.forwardRef<
     )}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute left-2 flex size-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4" />
+        <Check className="size-4" />
       </SelectPrimitive.ItemIndicator>
     </span>
 
@@ -111,79 +150,52 @@ interface MultiSelectProps {
   value: string[]
   onChange: (value: string[]) => void
   options: string[]
-  className?: string
   placeholder?: string
 }
 
-const MultiSelect = React.forwardRef<HTMLDivElement, MultiSelectProps>(
-  ({ value, onChange, options, className, placeholder = "Select options..." }, ref) => {
-    const [isOpen, setIsOpen] = React.useState(false)
-
-    const toggleOption = (option: string) => {
-      const newValue = value.includes(option)
-        ? value.filter(v => v !== option)
-        : [...value, option]
-      onChange(newValue)
-    }
-
-    return (
-      <div ref={ref} className="relative">
+const MultiSelect: React.FC<MultiSelectProps> = ({
+  value,
+  onChange,
+  options,
+  placeholder = "Select options"
+}) => {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {value.map((item) => (
         <div
-          className={cn(
-            "flex min-h-[40px] w-full cursor-pointer items-center rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-            className
-          )}
-          onClick={() => setIsOpen(!isOpen)}
+          key={item}
+          className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-1 text-sm"
         >
-          <div className="flex flex-1 flex-wrap gap-1">
-            {value.length === 0 ? (
-              <span className="text-muted-foreground">{placeholder}</span>
-            ) : (
-              value.map((item) => (
-                <span
-                  key={item}
-                  className="inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground"
-                >
-                  {item}
-                </span>
-              ))
-            )}
-          </div>
-          <ChevronDown className={cn(
-            "h-4 w-4 shrink-0 opacity-50 transition-transform",
-            isOpen && "rotate-180"
-          )} />
+          <span>{item}</span>
+          <button
+            onClick={() => onChange(value.filter((i) => i !== item))}
+            className="text-primary hover:text-primary/80"
+          >
+            ×
+          </button>
         </div>
-        {isOpen && (
-          <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md">
-            <div className="max-h-[200px] overflow-auto p-1">
-              {options.map((option) => (
-                <div
-                  key={option}
-                  className={cn(
-                    "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground",
-                    value.includes(option) && "bg-accent text-accent-foreground"
-                  )}
-                  onClick={() => toggleOption(option)}
-                >
-                  <div className="mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary">
-                    {value.includes(option) && (
-                      <Check className="h-3 w-3" />
-                    )}
-                  </div>
-                  {option}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    )
-  }
-)
-MultiSelect.displayName = "MultiSelect"
+      ))}
+      <select
+        multiple
+        value={value}
+        onChange={(e) =>
+          onChange(
+            Array.from(e.target.selectedOptions, (option) => option.value)
+          )
+        }
+        className="w-full rounded-md border p-2"
+      >
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
 
 export {
-  MultiSelect, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue
+  MultiSelect, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue, type MultiSelectProps
 }
 
