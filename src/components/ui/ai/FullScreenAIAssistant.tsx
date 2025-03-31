@@ -174,7 +174,7 @@ export function FullScreenAIAssistant({ isOpen, onClose }: FullScreenAIAssistant
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-y-0 right-0 z-50 flex bg-white dark:bg-gray-950" style={{ width: 'calc(100% - 64px)' }}>
+        <div className="fixed inset-0 z-[100] flex bg-white dark:bg-gray-950">
             {/* Left Menu */}
             <div className={cn(
                 "border-r border-gray-200 dark:border-gray-800 transition-all duration-300",
