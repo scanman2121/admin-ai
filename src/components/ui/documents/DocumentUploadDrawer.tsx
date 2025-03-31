@@ -1,105 +1,146 @@
 "use client"
 
-import { RiUploadLine } from "@remixicon/react"
-import * as React from "react"
-
-import { Button } from "@/components/ui/button"
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle
-} from "@/components/ui/drawer"
+import { formatFileSize } from '@/lib/utils'
+import { DocumentType } from '@/types/documents'
+import { RiCloseLine, RiUploadCloud2Line } from '@remixicon/react'
+import { useCallback, useState } from 'react'
+import { useDropzone } from 'react-dropzone'
+import { Button } from '../button'
+import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from '../drawer'
+import DocumentFields from './DocumentFields'
 
 interface DocumentUploadDrawerProps {
-  isOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  onUpload: (files: File[], fields: Record<string, string>) => Promise<void>
 }
 
-export function DocumentUploadDrawer({ isOpen, onOpenChange }: DocumentUploadDrawerProps) {
-  const [selectedFiles, setSelectedFiles] = React.useState<File[]>([])
+export function DocumentUploadDrawer({
+  isOpen,
+  onOpenChange,
+  onUpload,
+}: DocumentUploadDrawerProps) {
+  const [files, setFiles] = useState<File[]>([])
+  const [documentType, setDocumentType] = useState<DocumentType>(DocumentType.Other)
+  const [fields, setFields] = useState<Record<string, string>>({})
+  const [isUploading, setIsUploading] = useState(false)
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setSelectedFiles(Array.from(event.target.files))
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    setFiles((prev) => [...prev, ...acceptedFiles])
+  }, [])
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'application/pdf': ['.pdf'],
+      'application/msword': ['.doc'],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+      'text/plain': ['.txt'],
+    },
+    multiple: true,
+  })
+
+  const removeFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const handleFieldChange = (field: string, value: string) => {
+    if (field === 'documentType') {
+      setDocumentType(value as DocumentType)
     }
+    setFields((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleUpload = async () => {
-    // TODO: Implement file upload logic
-    console.log("Uploading files:", selectedFiles)
-    onOpenChange?.(false)
+    try {
+      setIsUploading(true)
+      await onUpload(files, fields)
+      setFiles([])
+      setFields({})
+      onOpenChange(false)
+    } catch (error) {
+      console.error('Error uploading documents:', error)
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   return (
-    <Drawer open={isOpen} onOpenChange={onOpenChange} shouldScaleBackground>
-      <DrawerContent>
-        <div className="mx-auto w-full max-w-4xl flex flex-col h-full">
-          <DrawerHeader>
-            <DrawerTitle>Upload documents</DrawerTitle>
-            <DrawerDescription>
-              Add documents to your workspace. Supported formats: PDF, DOC, DOCX, TXT
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="p-6 flex-1 overflow-y-auto">
-            <div className="relative flex min-h-[200px] items-center justify-center rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-800">
-              <div className="flex flex-col items-center justify-center text-center">
-                <RiUploadLine className="mb-4 h-8 w-8 text-gray-400" />
-                <p className="mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                  Drag and drop your files here
-                </p>
-                <p className="text-xs text-gray-500">
-                  or click to browse from your computer
-                </p>
-                <input
-                  type="file"
-                  multiple
-                  className="absolute inset-0 cursor-pointer opacity-0"
-                  onChange={handleFileChange}
-                  accept=".pdf,.doc,.docx,.txt"
-                />
-              </div>
-            </div>
+    <Drawer open={isOpen} onOpenChange={onOpenChange}>
+      <DrawerContent className="max-w-3xl">
+        <DrawerHeader>
+          <DrawerTitle>Upload documents</DrawerTitle>
+          <DrawerDescription>
+            Drag and drop your documents or click to browse. Supported formats: PDF, DOC, DOCX, TXT.
+          </DrawerDescription>
+        </DrawerHeader>
+        <div className="p-6 space-y-6">
+          <div
+            {...getRootProps()}
+            className={`
+              border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors
+              ${isDragActive ? 'border-primary bg-primary/5' : 'border-border'}
+              hover:border-primary hover:bg-primary/5
+            `}
+          >
+            <input {...getInputProps()} />
+            <RiUploadCloud2Line className="mx-auto h-12 w-12 text-muted-foreground" />
+            <p className="mt-2 text-sm text-muted-foreground">
+              {isDragActive ? 'Drop your files here' : 'Drag & drop files here or click to browse'}
+            </p>
+          </div>
 
-            {selectedFiles.length > 0 && (
-              <div className="mt-6 rounded-lg border border-gray-200 p-4 dark:border-gray-800">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium">Selected files</h3>
-                  <span className="text-xs text-gray-500">
-                    {selectedFiles.length} file{selectedFiles.length !== 1 && "s"}
-                  </span>
-                </div>
-                <ul className="mt-2 divide-y divide-gray-200 dark:divide-gray-800">
-                  {selectedFiles.map((file, index) => (
-                    <li
-                      key={index}
-                      className="flex items-center justify-between py-2 text-sm"
-                    >
-                      <div className="flex items-center">
-                        <span className="truncate max-w-[300px]">{file.name}</span>
+          {files.length > 0 && (
+            <div className="space-y-4">
+              <h4 className="text-sm font-medium">Selected files</h4>
+              <div className="space-y-2">
+                {files.map((file, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-muted rounded-md"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">{file.name}</p>
+                        <p className="text-sm text-muted-foreground">{formatFileSize(file.size)}</p>
                       </div>
-                      <span className="text-gray-500">
-                        {(file.size / 1024 / 1024).toFixed(2)} MB
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeFile(index)}
+                      className="text-muted-foreground hover:text-foreground"
+                    >
+                      <RiCloseLine className="h-4 w-4" />
+                      <span className="sr-only">Remove file</span>
+                    </Button>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
-          <div className="sticky bottom-0 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-background p-4 mt-auto">
-            <div className="flex flex-row-reverse gap-4 sm:justify-end">
-              <Button onClick={handleUpload} disabled={selectedFiles.length === 0}>
-                Upload files
-              </Button>
-              <DrawerClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DrawerClose>
             </div>
-          </div>
+          )}
+
+          {files.length > 0 && (
+            <DocumentFields
+              documentType={documentType}
+              onFieldChange={handleFieldChange}
+              values={fields}
+            />
+          )}
         </div>
+        <DrawerFooter>
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpload}
+              disabled={files.length === 0 || isUploading}
+            >
+              {isUploading ? 'Uploading...' : 'Upload'}
+            </Button>
+          </div>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   )
