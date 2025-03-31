@@ -80,6 +80,47 @@ const communityInsights = {
     ],
 }
 
+function CreateExperience() {
+    return (
+        <div className="mb-8">
+            <h1 className="text-2xl font-semibold mb-2">Create a New Experience</h1>
+            <p className="text-gray-500 mb-6">Use AI to quickly create engaging events and experiences for your tenants</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="flex flex-col items-center text-center">
+                        <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                            <span className="text-xl">✨</span>
+                        </div>
+                        <h3 className="text-lg font-medium mb-2">AI-Assisted Event Creation</h3>
+                        <p className="text-gray-500 text-sm">Let AI help you create the perfect event in minutes</p>
+                    </div>
+                </Card>
+
+                <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="flex flex-col items-center text-center">
+                        <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                            <span className="text-xl">📢</span>
+                        </div>
+                        <h3 className="text-lg font-medium mb-2">Create Announcement</h3>
+                        <p className="text-gray-500 text-sm">Share important updates with your tenants</p>
+                    </div>
+                </Card>
+
+                <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                    <div className="flex flex-col items-center text-center">
+                        <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                            <span className="text-xl">📅</span>
+                        </div>
+                        <h3 className="text-lg font-medium mb-2">Schedule Communication</h3>
+                        <p className="text-gray-500 text-sm">Plan and schedule future communications</p>
+                    </div>
+                </Card>
+            </div>
+        </div>
+    )
+}
+
 function ExperiencePerformanceOverview() {
     return (
         <Card className="p-6">
@@ -347,6 +388,7 @@ export default function ExperienceManagerOverview() {
             tabs={tabs}
         >
             <div className="space-y-6">
+                <CreateExperience />
                 <ExperiencePerformanceOverview />
                 <EventPerformance />
                 <CommunityEngagementInsights />
