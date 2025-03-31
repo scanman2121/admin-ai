@@ -150,7 +150,7 @@ export default function VendorDetails() {
                 {/* Main Content */}
                 <div className="col-span-2 space-y-6">
                     {/* About */}
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent overflow-hidden">
                         <div className="border-b border-gray-200 dark:border-gray-800 px-4 py-3">
                             <h2 className="font-medium text-gray-900 dark:text-gray-50">About</h2>
                         </div>
@@ -160,7 +160,7 @@ export default function VendorDetails() {
                     </div>
 
                     {/* Team */}
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent overflow-hidden">
                         <div className="border-b border-gray-200 dark:border-gray-800 px-4 py-3">
                             <h2 className="font-medium text-gray-900 dark:text-gray-50">Team</h2>
                         </div>
@@ -189,7 +189,7 @@ export default function VendorDetails() {
                     </div>
 
                     {/* Upcoming Visits */}
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent overflow-hidden">
                         <div className="border-b border-gray-200 dark:border-gray-800 px-4 py-3">
                             <h2 className="font-medium text-gray-900 dark:text-gray-50">Upcoming Visits</h2>
                         </div>
@@ -222,7 +222,7 @@ export default function VendorDetails() {
                 {/* Sidebar */}
                 <div className="space-y-6">
                     {/* Contact Information */}
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent overflow-hidden">
                         <div className="border-b border-gray-200 dark:border-gray-800 px-4 py-3">
                             <h2 className="font-medium text-gray-900 dark:text-gray-50">Contact Information</h2>
                         </div>
@@ -259,7 +259,7 @@ export default function VendorDetails() {
                     </div>
 
                     {/* Additional Information */}
-                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+                    <div className="rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent overflow-hidden">
                         <div className="border-b border-gray-200 dark:border-gray-800 px-4 py-3">
                             <h2 className="font-medium text-gray-900 dark:text-gray-50">Additional Information</h2>
                         </div>
