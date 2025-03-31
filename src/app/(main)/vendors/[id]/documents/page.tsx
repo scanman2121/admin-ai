@@ -3,6 +3,7 @@
 import { Button } from "@/components/Button"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
+import { DocumentUploadDrawer } from "@/components/ui/documents/DocumentUploadDrawer"
 import { cn } from "@/lib/utils"
 import {
     RiAddLine,
@@ -15,6 +16,7 @@ import {
 import Image from "next/image"
 import Link from "next/link"
 import { useParams, usePathname } from "next/navigation"
+import * as React from "react"
 
 // Mock data for vendor details
 const vendorData = {
@@ -164,6 +166,7 @@ export default function VendorDocuments() {
     const pathname = usePathname()
     const params = useParams()
     const baseUrl = `/vendors/${params.id}`
+    const [isUploadDrawerOpen, setIsUploadDrawerOpen] = React.useState(false)
 
     return (
         <div>
@@ -205,9 +208,9 @@ export default function VendorDocuments() {
                             </div>
                         </div>
                     </div>
-                    <Button>
+                    <Button onClick={() => setIsUploadDrawerOpen(true)}>
                         <RiAddLine className="size-4 shrink-0 mr-1.5" />
-                        Add Document
+                        Add document
                     </Button>
                 </div>
             </div>
@@ -233,6 +236,12 @@ export default function VendorDocuments() {
                     searchKey="name"
                 />
             </div>
+
+            {/* Document Upload Drawer */}
+            <DocumentUploadDrawer
+                isOpen={isUploadDrawerOpen}
+                onOpenChange={setIsUploadDrawerOpen}
+            />
         </div>
     )
 } 
