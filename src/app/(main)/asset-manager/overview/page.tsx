@@ -4,12 +4,14 @@ import { PageTemplate } from "@/components/PageTemplate"
 import { Card } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { ArrowDownIcon, ArrowUpIcon, ClockIcon, DollarSignIcon, PercentIcon, UsersIcon } from "lucide-react"
+import Link from "next/link"
 
 // Define tabs for the Asset Manager Overview page
 const tabs = [
     { name: "Overview", href: "/asset-manager/overview" },
     { name: "Analysis", href: "/asset-manager/overview/analysis" },
     { name: "Reports", href: "/asset-manager/overview/reports" },
+    { name: "Prospects", href: "/asset-manager/overview/prospects" },
 ]
 
 // Metric card data
@@ -329,7 +331,9 @@ function ProspectiveTenants() {
         <Card className="col-span-1 p-6">
             <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold">Prospective Tenants</h3>
-                <button className="text-sm text-primary hover:underline">View All</button>
+                <Link href="/asset-manager/overview/prospects" className="text-sm text-primary hover:underline">
+                    View All
+                </Link>
             </div>
             <p className="text-sm text-gray-500">Recent inquiries and lease status</p>
             <div className="mt-6 space-y-4">
