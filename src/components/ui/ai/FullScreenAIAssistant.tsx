@@ -4,6 +4,8 @@ import { Button } from "@/components/Button"
 import { cn } from "@/lib/utils"
 import {
     RiArrowDownSLine,
+    RiArrowLeftLine,
+    RiArrowRightLine,
     RiCalendarEventLine,
     RiCloseLine,
     RiLineChartLine,
@@ -36,6 +38,7 @@ export function FullScreenAIAssistant({ isOpen, onClose }: FullScreenAIAssistant
     const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>([])
     const [input, setInput] = useState('')
     const [showPreviousChats, setShowPreviousChats] = useState(false)
+    const [isMenuCollapsed, setIsMenuCollapsed] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
     // Sample previous chat sessions
@@ -171,151 +174,171 @@ export function FullScreenAIAssistant({ isOpen, onClose }: FullScreenAIAssistant
     if (!isOpen) return null
 
     return (
-        <div className="fixed inset-0 z-50 bg-white dark:bg-gray-950 flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50">AI Assistant</h2>
-                <div className="flex items-center gap-2">
-                    {/* Always show the button group for testing */}
-                    <div className="relative inline-flex shadow-sm rounded-md">
-                        <Button
-                            variant="secondary"
-                            className="py-1 px-3 h-8 text-xs rounded-r-none border-r border-gray-300 dark:border-gray-700"
-                            onClick={handleNewChat}
-                        >
-                            New chat
-                        </Button>
-                        <Button
-                            variant="secondary"
-                            className="p-0 w-8 h-8 flex items-center justify-center rounded-l-none"
-                            onClick={togglePreviousChats}
-                        >
-                            <RiArrowDownSLine className="size-4" />
-                            <span className="sr-only">Show previous chats</span>
-                        </Button>
-
-                        {/* Previous chats dropdown */}
-                        {showPreviousChats && (
-                            <div
-                                className="absolute top-full right-0 mt-1 w-56 rounded-md shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden z-10"
-                            >
-                                <div className="py-1">
-                                    <div className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
-                                        Previous chats
-                                    </div>
-                                    {previousChats.map(chat => (
-                                        <button
-                                            key={chat.id}
-                                            className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                                            onClick={() => handleLoadPreviousChat(chat)}
-                                        >
-                                            <div className="font-medium truncate">{chat.title}</div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">{chat.date}</div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+        <div className="fixed inset-y-0 right-0 z-50 flex bg-white dark:bg-gray-950" style={{ width: 'calc(100% - 64px)' }}>
+            {/* Left Menu */}
+            <div className={cn(
+                "border-r border-gray-200 dark:border-gray-800 transition-all duration-300",
+                isMenuCollapsed ? "w-16" : "w-64"
+            )}>
+                <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+                    {!isMenuCollapsed && (
+                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Suggestions</h3>
+                    )}
                     <Button
                         variant="ghost"
-                        className="p-1.5 h-8 w-8"
-                        onClick={onClose}
+                        className="p-1.5 h-8 w-8 ml-auto"
+                        onClick={() => setIsMenuCollapsed(!isMenuCollapsed)}
                     >
-                        <RiCloseLine className="size-5" />
-                        <span className="sr-only">Close</span>
+                        {isMenuCollapsed ? (
+                            <RiArrowRightLine className="size-4" />
+                        ) : (
+                            <RiArrowLeftLine className="size-4" />
+                        )}
+                        <span className="sr-only">
+                            {isMenuCollapsed ? "Expand menu" : "Collapse menu"}
+                        </span>
                     </Button>
+                </div>
+                <div className="p-4">
+                    <div className="space-y-2">
+                        {suggestionCards.map((card) => (
+                            <button
+                                key={card.id}
+                                onClick={() => handleSuggestionClick(card)}
+                                className={cn(
+                                    "w-full flex items-center gap-3 rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
+                                    "hover:bg-gray-50 dark:hover:bg-gray-900"
+                                )}
+                            >
+                                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                                    {card.icon}
+                                </div>
+                                {!isMenuCollapsed && (
+                                    <div>
+                                        <div className="font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400">{card.description}</div>
+                                    </div>
+                                )}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
-            {/* Messages or Suggestions */}
-            <div className="flex-1 overflow-y-auto p-4">
-                {messages.length > 0 ? (
-                    // Show message history if there are messages
-                    <>
-                        {messages.map((message, index) => (
-                            <div
-                                key={index}
-                                className={cn(
-                                    "mb-4 max-w-[85%] rounded-lg p-3 text-sm",
-                                    message.role === 'user'
-                                        ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-100 self-end rounded-br-none"
-                                        : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50 self-start rounded-bl-none"
-                                )}
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col">
+                {/* Header */}
+                <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50">AI Assistant</h2>
+                    <div className="flex items-center gap-2">
+                        {/* New chat button group */}
+                        <div className="relative inline-flex shadow-sm rounded-md">
+                            <Button
+                                variant="secondary"
+                                className="py-1 px-3 h-8 text-xs rounded-r-none border-r border-gray-300 dark:border-gray-700"
+                                onClick={handleNewChat}
                             >
-                                {message.content}
-                            </div>
-                        ))}
-                    </>
-                ) : (
-                    // Show suggestion cards if no messages yet
-                    <div className="py-2">
-                        <div className="grid grid-cols-1 gap-3">
-                            {suggestionCards.map((card) => (
-                                <button
-                                    key={card.id}
-                                    onClick={() => handleSuggestionClick(card)}
+                                New chat
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                className="p-0 w-8 h-8 flex items-center justify-center rounded-l-none"
+                                onClick={togglePreviousChats}
+                            >
+                                <RiArrowDownSLine className="size-4" />
+                                <span className="sr-only">Show previous chats</span>
+                            </Button>
+
+                            {/* Previous chats dropdown */}
+                            {showPreviousChats && (
+                                <div className="absolute top-full right-0 mt-1 w-56 rounded-md shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden z-10">
+                                    <div className="py-1">
+                                        <div className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+                                            Previous chats
+                                        </div>
+                                        {previousChats.map(chat => (
+                                            <button
+                                                key={chat.id}
+                                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                                onClick={() => handleLoadPreviousChat(chat)}
+                                            >
+                                                <div className="font-medium truncate">{chat.title}</div>
+                                                <div className="text-xs text-gray-500 dark:text-gray-400">{chat.date}</div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        <Button
+                            variant="ghost"
+                            className="p-1.5 h-8 w-8"
+                            onClick={onClose}
+                        >
+                            <RiCloseLine className="size-5" />
+                            <span className="sr-only">Close</span>
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto p-4">
+                    {messages.length > 0 ? (
+                        // Show message history if there are messages
+                        <>
+                            {messages.map((message, index) => (
+                                <div
+                                    key={index}
                                     className={cn(
-                                        "flex items-start gap-3 p-3 rounded-lg text-left transition-colors",
-                                        "bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800",
-                                        "border border-gray-200 dark:border-gray-800",
-                                        "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-gray-950"
+                                        "mb-4 max-w-[85%] rounded-lg p-3 text-sm",
+                                        message.role === 'user'
+                                            ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-100 self-end rounded-br-none"
+                                            : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50 self-start rounded-bl-none"
                                     )}
                                 >
-                                    <div className={cn(
-                                        "flex-shrink-0 flex items-center justify-center size-10 rounded-full",
-                                        "bg-primary/10 text-primary dark:bg-primary/20"
-                                    )}>
-                                        {card.icon}
-                                    </div>
-                                    <div>
-                                        <h4 className="font-medium text-gray-900 dark:text-gray-50 text-xs">
-                                            {card.title}
-                                        </h4>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                            {card.description}
-                                        </p>
-                                    </div>
-                                </button>
+                                    {message.content}
+                                </div>
                             ))}
+                            <div ref={messagesEndRef} />
+                        </>
+                    ) : (
+                        // Show welcome message if no messages yet
+                        <div className="text-center mt-8">
+                            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
+                                Welcome to AI Assistant
+                            </h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                Choose a suggestion from the menu or type your question below to get started.
+                            </p>
                         </div>
-                    </div>
-                )}
-                <div ref={messagesEndRef} />
-            </div>
+                    )}
+                </div>
 
-            {/* Input */}
-            <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-                <form onSubmit={handleSubmit} className="relative">
-                    <input
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="Ask me anything"
-                        className={cn(
-                            "w-full rounded-full border border-gray-300 dark:border-gray-700 pl-4 pr-12 py-2.5 text-sm",
-                            "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50",
-                            "shadow-sm",
-                            "focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        )}
-                    />
-                    <Button
-                        type="submit"
-                        disabled={!input.trim()}
-                        className={cn(
-                            "absolute right-1 top-1/2 -translate-y-1/2 p-1.5 h-8 w-8 rounded-full transition-colors",
-                            input.trim()
-                                ? "bg-primary hover:bg-primary-dark text-white"
-                                : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-                        )}
-                    >
-                        <RiSendPlaneFill className={cn(
-                            "size-4",
-                            input.trim() ? "text-white" : "text-gray-500 dark:text-gray-400"
-                        )} />
-                        <span className="sr-only">Send</span>
-                    </Button>
-                </form>
+                {/* Input */}
+                <div className="border-t border-gray-200 dark:border-gray-800 p-4">
+                    <form onSubmit={handleSubmit} className="flex gap-2">
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="Type your message..."
+                            className={cn(
+                                "flex-1 rounded-lg border border-gray-200 dark:border-gray-800 bg-transparent px-3 py-2 text-sm",
+                                "placeholder:text-gray-500 dark:placeholder:text-gray-400",
+                                "focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                            )}
+                        />
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            className="h-9 w-9 shrink-0 p-0"
+                            disabled={!input.trim()}
+                        >
+                            <RiSendPlaneFill className="size-4" />
+                            <span className="sr-only">Send message</span>
+                        </Button>
+                    </form>
+                </div>
             </div>
         </div>
     )
