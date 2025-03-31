@@ -2,16 +2,17 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { ReactNode } from 'react';
 import type { Tenant } from './KanbanBoard';
-import { KanbanCard } from './KanbanCard';
 
 interface KanbanColumnProps {
     stage: string;
     tenants: Tenant[];
     className?: string;
+    children?: ReactNode;
 }
 
-export function KanbanColumn({ stage, tenants, className }: KanbanColumnProps) {
+export function KanbanColumn({ stage, tenants, className, children }: KanbanColumnProps) {
     const { setNodeRef, isOver } = useDroppable({
         id: stage,
     });
@@ -40,9 +41,7 @@ export function KanbanColumn({ stage, tenants, className }: KanbanColumnProps) {
                         "space-y-3 min-h-[100px]",
                         isOver && "scale-[0.98] transition-transform duration-200"
                     )}>
-                        {tenants.map(tenant => (
-                            <KanbanCard key={tenant.id} tenant={tenant} />
-                        ))}
+                        {children}
                         {tenants.length === 0 && (
                             <div className="h-24 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-800 flex items-center justify-center">
                                 <p className="text-sm text-gray-500">Drop here</p>

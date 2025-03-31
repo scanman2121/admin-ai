@@ -1,21 +1,23 @@
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { cn } from '@/lib/utils';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripHorizontal } from 'lucide-react';
 import type { Tenant } from './KanbanBoard';
+import { User, UserSelect } from './UserSelect';
 
 interface KanbanCardProps {
     tenant: Tenant;
     className?: string;
+    onUpdateContact?: (tenantId: string, contact: User | undefined) => void;
+    onUpdateBroker?: (tenantId: string, broker: User | undefined) => void;
 }
 
-export function KanbanCard({ tenant, className }: KanbanCardProps) {
+export function KanbanCard({
+    tenant,
+    className,
+    onUpdateContact,
+    onUpdateBroker
+}: KanbanCardProps) {
     const {
         attributes,
         listeners,
@@ -34,11 +36,12 @@ export function KanbanCard({ tenant, className }: KanbanCardProps) {
         zIndex: isDragging ? 50 : undefined
     };
 
+    const showMoveInDate = ['Fit out', 'Onboard', 'Active tenant'].includes(tenant.stage);
+
+    // Generate logo URL based on whether it's a valid URL or use UI Avatars
     const logoUrl = tenant.logo.startsWith('http')
         ? tenant.logo
         : `https://ui-avatars.com/api/?name=${encodeURIComponent(tenant.name)}&background=random`;
-
-    const showMoveInDate = ['Fit out', 'Onboard', 'Active tenant'].includes(tenant.stage);
 
     return (
         <div
@@ -72,38 +75,19 @@ export function KanbanCard({ tenant, className }: KanbanCardProps) {
                 </button>
             </div>
 
-            <div className="space-y-3">
-                {tenant.contact && (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger className="text-sm text-gray-600 hover:text-gray-900">
-                            Contact: {tenant.contact.name}
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem>
-                                <div>
-                                    <div className="font-medium">{tenant.contact.role}</div>
-                                    <div className="text-sm text-gray-500">{tenant.contact.email}</div>
-                                </div>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                )}
-
-                {tenant.broker && (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger className="text-sm text-gray-600 hover:text-gray-900">
-                            Broker: {tenant.broker.name}
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem>
-                                <div>
-                                    <div className="font-medium">{tenant.broker.role}</div>
-                                    <div className="text-sm text-gray-500">{tenant.broker.email}</div>
-                                </div>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                )}
+            <div className="space-y-2">
+                <UserSelect
+                    label="Contact"
+                    selectedUser={tenant.contact}
+                    onSelect={(user) => onUpdateContact?.(tenant.id, user)}
+                    userType="contact"
+                />
+                <UserSelect
+                    label="Broker"
+                    selectedUser={tenant.broker}
+                    onSelect={(user) => onUpdateBroker?.(tenant.id, user)}
+                    userType="broker"
+                />
             </div>
 
             {showMoveInDate && tenant.moveInDate && (

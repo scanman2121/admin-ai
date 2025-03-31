@@ -162,13 +162,13 @@ export function KanbanBoard() {
     const sensors = useSensors(
         useSensor(MouseSensor, {
             activationConstraint: {
-                distance: 5, // Minimum drag distance in pixels
+                distance: 5,
             },
         }),
         useSensor(TouchSensor, {
             activationConstraint: {
-                delay: 250, // Delay before touch activation
-                tolerance: 5, // Touch movement tolerance
+                delay: 250,
+                tolerance: 5,
             },
         })
     )
@@ -205,6 +205,26 @@ export function KanbanBoard() {
         setActiveId(null)
     }
 
+    const handleUpdateContact = (tenantId: string, contact: Contact | undefined) => {
+        setTenants(current =>
+            current.map(t =>
+                t.id === tenantId
+                    ? { ...t, contact }
+                    : t
+            )
+        )
+    }
+
+    const handleUpdateBroker = (tenantId: string, broker: Contact | undefined) => {
+        setTenants(current =>
+            current.map(t =>
+                t.id === tenantId
+                    ? { ...t, broker }
+                    : t
+            )
+        )
+    }
+
     const activeTenant = activeId ? tenants.find(t => t.id === activeId) : null
 
     return (
@@ -223,13 +243,26 @@ export function KanbanBoard() {
                                 stage={stage}
                                 tenants={tenants.filter(t => t.stage === stage)}
                                 className={getStageColor(stage)}
-                            />
+                            >
+                                {tenants
+                                    .filter(t => t.stage === stage)
+                                    .map(tenant => (
+                                        <KanbanCard
+                                            key={tenant.id}
+                                            tenant={tenant}
+                                            onUpdateContact={handleUpdateContact}
+                                            onUpdateBroker={handleUpdateBroker}
+                                        />
+                                    ))}
+                            </KanbanColumn>
                         ))}
                         <DragOverlay>
                             {activeTenant ? (
                                 <KanbanCard
                                     tenant={activeTenant}
                                     className="rotate-3 cursor-grabbing"
+                                    onUpdateContact={handleUpdateContact}
+                                    onUpdateBroker={handleUpdateBroker}
                                 />
                             ) : null}
                         </DragOverlay>
