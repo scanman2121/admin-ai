@@ -5,9 +5,10 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from '@/lib/utils';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Building2, ChevronDown } from 'lucide-react';
+import { Building2, ChevronDown, GripHorizontal } from 'lucide-react';
 import Image from 'next/image';
 import type { Tenant } from './KanbanBoard';
 
@@ -29,8 +30,8 @@ export function KanbanCard({ tenant }: KanbanCardProps) {
 
     const style = {
         transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.5 : 1,
+        transition: transition || 'transform 200ms cubic-bezier(0.2, 0, 0, 1)',
+        zIndex: isDragging ? 50 : undefined,
     };
 
     const logoUrl = tenant.logo.startsWith('http')
@@ -44,13 +45,22 @@ export function KanbanCard({ tenant }: KanbanCardProps) {
             ref={setNodeRef}
             style={style}
             {...attributes}
-            {...listeners}
-            className="touch-none cursor-grab active:cursor-grabbing"
+            className={cn(
+                "touch-none relative transition-colors",
+                isDragging ? "z-50" : "hover:z-30"
+            )}
         >
-            <Card className="p-4 hover:bg-accent/5 transition-colors">
+            <Card className={cn(
+                "p-4 bg-white dark:bg-gray-900 transition-all duration-200",
+                "hover:shadow-md hover:scale-[1.02]",
+                isDragging && "shadow-xl scale-[1.02] cursor-grabbing ring-2 ring-primary/20"
+            )}>
+                <div className="absolute right-3 top-3 opacity-0 group-hover:opacity-100 transition-opacity" {...listeners}>
+                    <GripHorizontal className="h-4 w-4 text-gray-400 cursor-grab active:cursor-grabbing" />
+                </div>
                 <div className="flex items-start gap-3">
                     <div className="relative shrink-0">
-                        <div className="size-10 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden">
+                        <div className="size-10 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden border border-gray-100 dark:border-gray-800">
                             <Image
                                 src={logoUrl}
                                 alt={tenant.name}
@@ -65,18 +75,18 @@ export function KanbanCard({ tenant }: KanbanCardProps) {
                         </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 dark:text-gray-50 truncate">
+                        <p className="font-medium text-gray-900 dark:text-gray-50 truncate pr-6">
                             {tenant.name}
                         </p>
                         <div className="mt-3 space-y-2">
                             {tenant.contact && (
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50">
+                                    <DropdownMenuTrigger className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 transition-colors">
                                         <span>Contact: {tenant.contact.name}</span>
-                                        <ChevronDown className="size-4" />
+                                        <ChevronDown className="size-4 opacity-50" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        <DropdownMenuItem className="flex flex-col items-start">
+                                        <DropdownMenuItem className="flex flex-col items-start gap-0.5">
                                             <span className="font-medium">{tenant.contact.role}</span>
                                             <span className="text-sm text-gray-500">{tenant.contact.email}</span>
                                         </DropdownMenuItem>
@@ -85,12 +95,12 @@ export function KanbanCard({ tenant }: KanbanCardProps) {
                             )}
                             {tenant.broker && (
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50">
+                                    <DropdownMenuTrigger className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 transition-colors">
                                         <span>Broker: {tenant.broker.name}</span>
-                                        <ChevronDown className="size-4" />
+                                        <ChevronDown className="size-4 opacity-50" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent>
-                                        <DropdownMenuItem className="flex flex-col items-start">
+                                        <DropdownMenuItem className="flex flex-col items-start gap-0.5">
                                             <span className="font-medium">{tenant.broker.role}</span>
                                             <span className="text-sm text-gray-500">{tenant.broker.email}</span>
                                         </DropdownMenuItem>
@@ -110,7 +120,7 @@ export function KanbanCard({ tenant }: KanbanCardProps) {
                                 <p className="text-xs font-medium text-gray-500 mb-2">Spaces of Interest</p>
                                 <div className="space-y-2">
                                     {tenant.spaces.map(space => (
-                                        <div key={space.id} className="text-sm">
+                                        <div key={space.id} className="text-sm group">
                                             <p className="font-medium text-gray-900 dark:text-gray-50">{space.name}</p>
                                             <p className="text-gray-500">{space.floor} • {space.sqft}</p>
                                         </div>

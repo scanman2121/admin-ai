@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import type { Tenant } from './KanbanBoard';
@@ -11,7 +12,7 @@ interface KanbanColumnProps {
 }
 
 export function KanbanColumn({ stage, tenants, className }: KanbanColumnProps) {
-    const { setNodeRef } = useDroppable({
+    const { setNodeRef, isOver } = useDroppable({
         id: stage,
     });
 
@@ -25,16 +26,28 @@ export function KanbanColumn({ stage, tenants, className }: KanbanColumnProps) {
             </div>
             <div
                 ref={setNodeRef}
-                className={`rounded-lg p-4 ${className} flex-1 overflow-y-auto`}
+                className={cn(
+                    "rounded-lg p-4 flex-1 overflow-y-auto transition-colors duration-200",
+                    className,
+                    isOver && "ring-2 ring-primary/20 shadow-lg"
+                )}
             >
                 <SortableContext
                     items={tenants.map(t => t.id)}
                     strategy={verticalListSortingStrategy}
                 >
-                    <div className="space-y-3">
+                    <div className={cn(
+                        "space-y-3 min-h-[100px]",
+                        isOver && "scale-[0.98] transition-transform duration-200"
+                    )}>
                         {tenants.map(tenant => (
                             <KanbanCard key={tenant.id} tenant={tenant} />
                         ))}
+                        {tenants.length === 0 && (
+                            <div className="h-24 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-800 flex items-center justify-center">
+                                <p className="text-sm text-gray-500">Drop here</p>
+                            </div>
+                        )}
                     </div>
                 </SortableContext>
             </div>
