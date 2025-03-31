@@ -8,52 +8,123 @@ import { RiArrowLeftLine, RiBuilding4Line, RiCalendarEventLine, RiMapPinLine, Ri
 import Image from "next/image"
 import Link from "next/link"
 
-// Mock tenant data
-const tenant = {
-    id: "1",
-    name: "Acme Corporation",
-    industry: "Technology",
-    space: "5,000 sqft",
-    floor: "15th Floor",
-    moveInDate: "April 15, 2024",
-    status: "Active",
-    logo: "https://ui-avatars.com/api/?name=Acme+Corporation&background=0D9488&color=fff",
-    primaryContact: {
-        name: "John Smith",
-        role: "Office Manager",
-        email: "john.smith@acme.com",
-        phone: "(555) 123-4567"
-    },
-    stats: {
-        totalEmployees: 150,
-        activeUsers: 142,
-        pendingUsers: 8,
-        totalVisits: 3245,
-        avgDailyVisits: 85
-    },
-    recentActivity: [
-        {
-            type: "Event",
-            title: "Team Building Workshop",
-            date: "2024-03-25",
-            status: "Upcoming"
+// Mock data for tenants
+const tenantsData = {
+    "1": {
+        id: "1",
+        name: "Acme Corporation",
+        industry: "Technology",
+        space: "5,000 sqft",
+        floor: "15th Floor",
+        building: "125 Highland Ave",
+        moveInDate: "April 15, 2024",
+        leaseStart: "2024-04-15",
+        leaseEnd: "2027-04-14",
+        status: "Active",
+        logo: "https://ui-avatars.com/api/?name=Acme+Corporation&background=0D9488&color=fff",
+        primaryContact: {
+            name: "John Smith",
+            role: "Office Manager",
+            email: "john.smith@acme.com",
+            phone: "(555) 123-4567"
         },
-        {
-            type: "Marketplace",
-            title: "Catering Order",
-            date: "2024-03-24",
-            status: "Completed"
+        stats: {
+            totalEmployees: 150,
+            activeUsers: 142,
+            pendingUsers: 8,
+            totalVisits: 3245,
+            avgDailyVisits: 85
         },
-        {
-            type: "Access",
-            title: "After Hours Access Request",
-            date: "2024-03-23",
-            status: "Approved"
-        }
-    ]
-}
+        recentActivity: [
+            {
+                type: "Event",
+                title: "Team Building Workshop",
+                date: "2024-03-25",
+                status: "Upcoming"
+            },
+            {
+                type: "Marketplace",
+                title: "Catering Order",
+                date: "2024-03-24",
+                status: "Completed"
+            },
+            {
+                type: "Access",
+                title: "After Hours Access Request",
+                date: "2024-03-23",
+                status: "Approved"
+            }
+        ]
+    },
+    "2": {
+        id: "2",
+        name: "Global Enterprises",
+        industry: "Finance",
+        space: "8,000 sqft",
+        floor: "20th Floor",
+        building: "400 Market Street",
+        moveInDate: "May 1, 2024",
+        leaseStart: "2024-05-01",
+        leaseEnd: "2027-04-30",
+        status: "Active",
+        logo: "https://ui-avatars.com/api/?name=Global+Enterprises&background=6366F1&color=fff",
+        primaryContact: {
+            name: "Sarah Johnson",
+            role: "Facilities Manager",
+            email: "sarah.j@globalent.com",
+            phone: "(555) 234-5678"
+        },
+        stats: {
+            totalEmployees: 200,
+            activeUsers: 185,
+            pendingUsers: 15,
+            totalVisits: 4500,
+            avgDailyVisits: 120
+        },
+        recentActivity: [
+            {
+                type: "Event",
+                title: "Office Expansion Meeting",
+                date: "2024-03-26",
+                status: "Upcoming"
+            },
+            {
+                type: "Access",
+                title: "Weekend Access Approval",
+                date: "2024-03-23",
+                status: "Completed"
+            },
+            {
+                type: "Marketplace",
+                title: "Office Supplies Order",
+                date: "2024-03-22",
+                status: "Completed"
+            }
+        ]
+    }
+} as const
+
+// Type for tenant data
+type TenantData = typeof tenantsData[keyof typeof tenantsData]
 
 export default function TenantDetailPage({ params }: { params: { id: string } }) {
+    // Get tenant data based on ID
+    const tenant = tenantsData[params.id as keyof typeof tenantsData]
+
+    if (!tenant) {
+        return (
+            <div className="flex h-[50vh] items-center justify-center">
+                <div className="text-center">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50">Tenant not found</h2>
+                    <p className="mt-2 text-gray-600 dark:text-gray-400">The tenant you're looking for doesn't exist or has been removed.</p>
+                    <Link href="/tenants" className="mt-4 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                        Back to tenants
+                    </Link>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="space-y-6">
             {/* Header with back button */}
