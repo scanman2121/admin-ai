@@ -11,6 +11,7 @@ const tabs = [
     { name: "Overview", href: "/asset-manager/overview" },
     { name: "Analysis", href: "/asset-manager/overview/analysis" },
     { name: "Reports", href: "/asset-manager/overview/reports" },
+    { name: "Lifecycle", href: "/asset-manager/overview/lifecycle" },
     { name: "Prospects", href: "/asset-manager/overview/prospects" },
 ]
 
