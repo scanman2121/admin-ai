@@ -12,9 +12,9 @@ import {
 import { detectDocumentType, formatFileSize, validateFile } from "@/lib/documentUtils";
 import { cn } from "@/lib/utils";
 import { DocumentType } from "@/types/documents";
+import { RiCloseLine, RiUploadCloud2Line } from "@remixicon/react";
 import { useState } from "react";
-import { RiCloseLine, RiUploadCloud2Line } from "react-icons/ri";
-import { DocumentFields } from "./DocumentFields";
+import DocumentFields from "./DocumentFields";
 
 interface DocumentUploadFormProps {
     onSubmit: (data: FormData) => Promise<void>;
@@ -228,8 +228,8 @@ export function DocumentUploadForm({
                                     {documentTypes[index] && (
                                         <DocumentFields
                                             documentType={documentTypes[index]!}
-                                            index={index}
-                                            onChange={(field, value) => handleFieldChange(index, field, value)}
+                                            onFieldChange={(field: string, value: string | string[]) => handleFieldChange(index, field, value)}
+                                            values={documentFields[index] || {}}
                                         />
                                     )}
                                 </div>

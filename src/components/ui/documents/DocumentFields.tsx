@@ -1,4 +1,4 @@
-import { DocumentType, documentTypeLabels } from '@/types/documents'
+import { DocumentType } from '@/types/documents'
 import React from 'react'
 import { Input } from '../input'
 import { Label } from '../label'
@@ -6,8 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 
 interface DocumentFieldsProps {
     documentType: DocumentType
-    onFieldChange: (field: string, value: string) => void
-    values: Record<string, string>
+    onFieldChange: (field: string, value: string | string[]) => void
+    values: Record<string, string | string[]>
 }
 
 const DocumentFields: React.FC<DocumentFieldsProps> = ({
@@ -15,6 +15,12 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
     onFieldChange,
     values,
 }) => {
+    // Helper function to safely get string value
+    const getStringValue = (key: string): string => {
+        const value = values[key]
+        return typeof value === 'string' ? value : ''
+    }
+
     const renderFields = () => {
         switch (documentType) {
             case DocumentType.Lease:
@@ -24,7 +30,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Label htmlFor="tenant">Tenant name</Label>
                             <Input
                                 id="tenant"
-                                value={values.tenant || ''}
+                                value={getStringValue('tenant')}
                                 onChange={(e) => onFieldChange('tenant', e.target.value)}
                                 placeholder="Enter tenant name"
                             />
@@ -34,7 +40,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Input
                                 id="startDate"
                                 type="date"
-                                value={values.startDate || ''}
+                                value={getStringValue('startDate')}
                                 onChange={(e) => onFieldChange('startDate', e.target.value)}
                             />
                         </div>
@@ -43,7 +49,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Input
                                 id="endDate"
                                 type="date"
-                                value={values.endDate || ''}
+                                value={getStringValue('endDate')}
                                 onChange={(e) => onFieldChange('endDate', e.target.value)}
                             />
                         </div>
@@ -52,7 +58,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Input
                                 id="rentAmount"
                                 type="number"
-                                value={values.rentAmount || ''}
+                                value={getStringValue('rentAmount')}
                                 onChange={(e) => onFieldChange('rentAmount', e.target.value)}
                                 placeholder="Enter amount"
                             />
@@ -67,7 +73,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Label htmlFor="insuranceProvider">Insurance provider</Label>
                             <Input
                                 id="insuranceProvider"
-                                value={values.insuranceProvider || ''}
+                                value={getStringValue('insuranceProvider')}
                                 onChange={(e) => onFieldChange('insuranceProvider', e.target.value)}
                                 placeholder="Enter provider name"
                             />
@@ -76,7 +82,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Label htmlFor="policyNumber">Policy number</Label>
                             <Input
                                 id="policyNumber"
-                                value={values.policyNumber || ''}
+                                value={getStringValue('policyNumber')}
                                 onChange={(e) => onFieldChange('policyNumber', e.target.value)}
                                 placeholder="Enter policy number"
                             />
@@ -86,7 +92,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Input
                                 id="expirationDate"
                                 type="date"
-                                value={values.expirationDate || ''}
+                                value={getStringValue('expirationDate')}
                                 onChange={(e) => onFieldChange('expirationDate', e.target.value)}
                             />
                         </div>
@@ -95,7 +101,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Input
                                 id="coverageAmount"
                                 type="number"
-                                value={values.coverageAmount || ''}
+                                value={getStringValue('coverageAmount')}
                                 onChange={(e) => onFieldChange('coverageAmount', e.target.value)}
                                 placeholder="Enter amount"
                             />
@@ -110,7 +116,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Label htmlFor="appraiser">Appraiser name</Label>
                             <Input
                                 id="appraiser"
-                                value={values.appraiser || ''}
+                                value={getStringValue('appraiser')}
                                 onChange={(e) => onFieldChange('appraiser', e.target.value)}
                                 placeholder="Enter appraiser name"
                             />
@@ -120,7 +126,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Input
                                 id="valuationDate"
                                 type="date"
-                                value={values.valuationDate || ''}
+                                value={getStringValue('valuationDate')}
                                 onChange={(e) => onFieldChange('valuationDate', e.target.value)}
                             />
                         </div>
@@ -129,7 +135,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Input
                                 id="propertyValue"
                                 type="number"
-                                value={values.propertyValue || ''}
+                                value={getStringValue('propertyValue')}
                                 onChange={(e) => onFieldChange('propertyValue', e.target.value)}
                                 placeholder="Enter value"
                             />
@@ -137,7 +143,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                         <div className="space-y-2">
                             <Label htmlFor="methodology">Valuation methodology</Label>
                             <Select
-                                value={values.methodology || ''}
+                                value={getStringValue('methodology')}
                                 onValueChange={(value) => onFieldChange('methodology', value)}
                             >
                                 <SelectTrigger id="methodology">
@@ -160,7 +166,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Label htmlFor="title">Document title</Label>
                             <Input
                                 id="title"
-                                value={values.title || ''}
+                                value={getStringValue('title')}
                                 onChange={(e) => onFieldChange('title', e.target.value)}
                                 placeholder="Enter document title"
                             />
@@ -169,7 +175,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Label htmlFor="description">Description</Label>
                             <Input
                                 id="description"
-                                value={values.description || ''}
+                                value={getStringValue('description')}
                                 onChange={(e) => onFieldChange('description', e.target.value)}
                                 placeholder="Enter description"
                             />
@@ -179,7 +185,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Input
                                 id="effectiveDate"
                                 type="date"
-                                value={values.effectiveDate || ''}
+                                value={getStringValue('effectiveDate')}
                                 onChange={(e) => onFieldChange('effectiveDate', e.target.value)}
                             />
                         </div>
@@ -187,7 +193,7 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                             <Label htmlFor="tags">Tags</Label>
                             <Input
                                 id="tags"
-                                value={values.tags || ''}
+                                value={getStringValue('tags')}
                                 onChange={(e) => onFieldChange('tags', e.target.value)}
                                 placeholder="Enter tags (comma separated)"
                             />
@@ -203,15 +209,15 @@ const DocumentFields: React.FC<DocumentFieldsProps> = ({
                 <Label htmlFor="documentType">Document type</Label>
                 <Select
                     value={documentType}
-                    onValueChange={(value) => onFieldChange('documentType', value)}
+                    onValueChange={(value: string) => onFieldChange('documentType', value)}
                 >
                     <SelectTrigger id="documentType">
-                        <SelectValue placeholder="Select document type" />
+                        <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
-                        {Object.entries(documentTypeLabels).map(([value, label]) => (
-                            <SelectItem key={value} value={value}>
-                                {label}
+                        {Object.values(DocumentType).map((type) => (
+                            <SelectItem key={type} value={type}>
+                                {type}
                             </SelectItem>
                         ))}
                     </SelectContent>
