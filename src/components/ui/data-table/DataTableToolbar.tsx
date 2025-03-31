@@ -1,11 +1,11 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { DataTableFacetedFilter } from "@/components/ui/data-table/DataTableFacetedFilter"
+import { DataTableViewOptions } from "@/components/ui/data-table/DataTableViewOptions"
 import { Input } from "@/components/ui/input"
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
-import { DataTableFacetedFilter } from "./DataTableFacetedFilter"
-import { DataTableViewOptions } from "./DataTableViewOptions"
 
 const documentTypes = [
     { label: "PDF", value: "pdf" },
