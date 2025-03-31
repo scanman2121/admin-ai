@@ -1,24 +1,24 @@
 "use client"
 
-import React from 'react'
 import { Button } from "@/components/Button"
 import { cn } from "@/lib/utils"
 import {
-    RiCalendarEventLine,
-    RiCloseLine,
-    RiSendPlaneFill,
-    RiUserAddLine,
-    RiVipCrownLine,
-    RiFullscreenLine,
-    RiLightbulbLine,
+    RiArrowDownSLine,
     RiBarChartBoxLine,
-    RiTaskLine,
-    RiMagicLine,
     RiBuildingLine,
     RiCalendarCheckLine,
-    RiFileChartLine
+    RiCalendarEventLine,
+    RiCloseLine,
+    RiFileChartLine,
+    RiFullscreenLine,
+    RiLightbulbLine,
+    RiMagicLine,
+    RiSendPlaneFill,
+    RiTaskLine,
+    RiUserAddLine,
+    RiVipCrownLine
 } from "@remixicon/react"
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from 'react'
 
 interface AIAssistantDrawerProps {
     isOpen: boolean
@@ -34,10 +34,49 @@ interface SuggestionCard {
     category: 'insights' | 'tasks' | 'generate'
 }
 
+interface ChatSession {
+    id: string
+    title: string
+    date: string
+    messages: { role: 'user' | 'assistant', content: string }[]
+}
+
 export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistantDrawerProps) {
     const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>([])
     const [input, setInput] = useState('')
+    const [showPreviousChats, setShowPreviousChats] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
+
+    // Sample previous chat sessions
+    const previousChats: ChatSession[] = [
+        {
+            id: '1',
+            title: 'Adding new tenant users',
+            date: 'Today',
+            messages: [
+                { role: 'user', content: 'Help me add a user' },
+                { role: 'assistant', content: 'I\'d be happy to help you add a user. Here\'s how we can get started...' }
+            ]
+        },
+        {
+            id: '2',
+            title: 'Building occupancy analysis',
+            date: 'Yesterday',
+            messages: [
+                { role: 'user', content: 'Help me find occupancy trends' },
+                { role: 'assistant', content: 'I\'d be happy to help you find occupancy trends. Here\'s how we can get started...' }
+            ]
+        },
+        {
+            id: '3',
+            title: 'Summer event planning',
+            date: 'Jun 10',
+            messages: [
+                { role: 'user', content: 'Help me schedule an event' },
+                { role: 'assistant', content: 'I\'d be happy to help you schedule an event. Here\'s how we can get started...' }
+            ]
+        }
+    ]
 
     const suggestionCards: SuggestionCard[] = [
         // Insights
@@ -180,6 +219,22 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
         }, 1000)
     }
 
+    const handleNewChat = () => {
+        setMessages([])
+        setInput('')
+        setShowPreviousChats(false)
+    }
+
+    const handleLoadPreviousChat = (chat: ChatSession) => {
+        setMessages(chat.messages)
+        setShowPreviousChats(false)
+    }
+
+    const togglePreviousChats = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setShowPreviousChats(prev => !prev)
+    }
+
     return (
         <>
             <div
@@ -193,6 +248,47 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
                 <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 px-4 py-3">
                     <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">AI Assistant</h2>
                     <div className="flex items-center gap-x-1">
+                        {/* New chat button group */}
+                        <div className="relative inline-flex shadow-sm rounded-md mr-1">
+                            <Button
+                                variant="secondary"
+                                className="py-1 px-3 h-8 text-xs rounded-r-none border-r border-gray-300 dark:border-gray-700"
+                                onClick={handleNewChat}
+                            >
+                                New chat
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                className="p-0 w-8 h-8 flex items-center justify-center rounded-l-none"
+                                onClick={togglePreviousChats}
+                            >
+                                <RiArrowDownSLine className="size-4" />
+                                <span className="sr-only">Show previous chats</span>
+                            </Button>
+
+                            {/* Previous chats dropdown */}
+                            {showPreviousChats && (
+                                <div
+                                    className="absolute top-full right-0 mt-1 w-56 rounded-md shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden z-10"
+                                >
+                                    <div className="py-1">
+                                        <div className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+                                            Previous chats
+                                        </div>
+                                        {previousChats.map(chat => (
+                                            <button
+                                                key={chat.id}
+                                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                                onClick={() => handleLoadPreviousChat(chat)}
+                                            >
+                                                <div className="font-medium truncate">{chat.title}</div>
+                                                <div className="text-xs text-gray-500 dark:text-gray-400">{chat.date}</div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                         <Button
                             variant="ghost"
                             onClick={onFullScreen}
@@ -230,6 +326,7 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
                                     {message.content}
                                 </div>
                             ))}
+                            <div ref={messagesEndRef} />
                         </>
                     ) : (
                         // Show categorized suggestion cards if no messages yet
@@ -248,22 +345,16 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
                                                 key={card.id}
                                                 onClick={() => handleSuggestionClick(card)}
                                                 className={cn(
-                                                    "flex items-start gap-3 p-3 rounded-lg text-left transition-all",
-                                                    "bg-blue-50 dark:bg-blue-950/50 hover:bg-blue-100 dark:hover:bg-blue-950/80",
-                                                    "border border-blue-200 dark:border-blue-900",
-                                                    "group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950"
+                                                    "flex items-start gap-3 rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
+                                                    "hover:bg-gray-50 dark:hover:bg-gray-900"
                                                 )}
                                             >
-                                                <div className="flex-shrink-0 flex items-center justify-center size-10 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400">
+                                                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
                                                     {card.icon}
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-medium text-gray-900 dark:text-gray-50 text-xs group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
-                                                        {card.title}
-                                                    </h4>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                        {card.description}
-                                                    </p>
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400">{card.description}</div>
                                                 </div>
                                             </button>
                                         ))}
@@ -284,22 +375,16 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
                                                 key={card.id}
                                                 onClick={() => handleSuggestionClick(card)}
                                                 className={cn(
-                                                    "flex items-start gap-3 p-3 rounded-lg text-left transition-all",
-                                                    "bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 dark:hover:bg-purple-950/80",
-                                                    "border border-purple-200 dark:border-purple-900",
-                                                    "group focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950"
+                                                    "flex items-start gap-3 rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
+                                                    "hover:bg-gray-50 dark:hover:bg-gray-900"
                                                 )}
                                             >
-                                                <div className="flex-shrink-0 flex items-center justify-center size-10 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400">
+                                                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
                                                     {card.icon}
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-medium text-gray-900 dark:text-gray-50 text-xs group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
-                                                        {card.title}
-                                                    </h4>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                        {card.description}
-                                                    </p>
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400">{card.description}</div>
                                                 </div>
                                             </button>
                                         ))}
@@ -309,7 +394,7 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
                             {/* Generate Section */}
                             <div>
                                 <div className="flex items-center gap-2 mb-3">
-                                    <RiMagicLine className="size-5 text-amber-500" />
+                                    <RiMagicLine className="size-5 text-green-500" />
                                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Generate</h3>
                                 </div>
                                 <div className="grid grid-cols-1 gap-2">
@@ -320,22 +405,16 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
                                                 key={card.id}
                                                 onClick={() => handleSuggestionClick(card)}
                                                 className={cn(
-                                                    "flex items-start gap-3 p-3 rounded-lg text-left transition-all",
-                                                    "bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 dark:hover:bg-amber-950/80",
-                                                    "border border-amber-200 dark:border-amber-900",
-                                                    "group focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950"
+                                                    "flex items-start gap-3 rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
+                                                    "hover:bg-gray-50 dark:hover:bg-gray-900"
                                                 )}
                                             >
-                                                <div className="flex-shrink-0 flex items-center justify-center size-10 rounded-full bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400">
+                                                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400">
                                                     {card.icon}
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-medium text-gray-900 dark:text-gray-50 text-xs group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
-                                                        {card.title}
-                                                    </h4>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                        {card.description}
-                                                    </p>
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400">{card.description}</div>
                                                 </div>
                                             </button>
                                         ))}
@@ -343,39 +422,30 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
                             </div>
                         </div>
                     )}
-                    <div ref={messagesEndRef} />
                 </div>
 
                 {/* Input */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-950">
-                    <form onSubmit={handleSubmit} className="relative">
+                <div className="border-t border-gray-200 dark:border-gray-800 p-4">
+                    <form onSubmit={handleSubmit} className="flex gap-2">
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Ask me anything"
+                            placeholder="Type your message..."
                             className={cn(
-                                "w-full rounded-full border border-gray-300 dark:border-gray-700 pl-4 pr-12 py-2.5 text-sm",
-                                "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50",
-                                "shadow-sm",
-                                "focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                "flex-1 rounded-lg border border-gray-200 dark:border-gray-800 bg-transparent px-3 py-2 text-sm",
+                                "placeholder:text-gray-500 dark:placeholder:text-gray-400",
+                                "focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                             )}
                         />
                         <Button
                             type="submit"
+                            variant="primary"
+                            className="h-9 w-9 shrink-0 p-0"
                             disabled={!input.trim()}
-                            className={cn(
-                                "absolute right-1 top-1/2 -translate-y-1/2 p-1.5 h-8 w-8 rounded-full transition-colors",
-                                input.trim()
-                                    ? "bg-primary hover:bg-primary-dark text-white"
-                                    : "bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
-                            )}
                         >
-                            <RiSendPlaneFill className={cn(
-                                "size-4",
-                                input.trim() ? "text-white" : "text-gray-500 dark:text-gray-400"
-                            )} />
-                            <span className="sr-only">Send</span>
+                            <RiSendPlaneFill className="size-4" />
+                            <span className="sr-only">Send message</span>
                         </Button>
                     </form>
                 </div>
