@@ -58,6 +58,7 @@ export const siteConfig = {
       dashboard: "/intelligence/dashboard",
       assessments: "/intelligence/assessments",
       aboutIntelligence: "/intelligence/about",
+      portfolioBenchmarks: "/intelligence/portfolio-benchmarks",
     },
   },
 }
