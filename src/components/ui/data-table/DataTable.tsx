@@ -1,5 +1,7 @@
 "use client"
 
+import { DataTablePagination } from "@/components/ui/data-table/DataTablePagination"
+import { DataTableToolbar } from "@/components/ui/data-table/DataTableToolbar"
 import {
   Table,
   TableBody,
@@ -23,8 +25,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import * as React from "react"
-import { DataTablePagination } from "./DataTablePagination"
-import { DataTableToolbar } from "./DataTableToolbar"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -67,7 +67,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} searchKey={searchKey} />
-      <div className="rounded-md border">
+      <div className="rounded-md border bg-white dark:bg-transparent">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
