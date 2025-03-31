@@ -26,6 +26,7 @@ export const siteConfig = {
     },
     // Experience Manager section
     experienceManager: {
+      overview: "/experience-manager/overview",
       content: "/experience-manager/content",
       amenityPosts: "/experience-manager/amenity-posts",
       events: "/experience-manager/events",

@@ -55,6 +55,7 @@ const paymentsItems = [
 
 // Experience Manager sub-navigation items
 const experienceManagerItems = [
+  { name: "Overview", href: siteConfig.baseLinks.experienceManager.overview },
   { name: "Content", href: siteConfig.baseLinks.experienceManager.content },
   { name: "Amenity posts", href: siteConfig.baseLinks.experienceManager.amenityPosts },
   { name: "Events", href: siteConfig.baseLinks.experienceManager.events },
