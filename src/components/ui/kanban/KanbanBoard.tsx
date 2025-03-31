@@ -160,8 +160,17 @@ export function KanbanBoard() {
     const [activeId, setActiveId] = useState<string | null>(null)
 
     const sensors = useSensors(
-        useSensor(MouseSensor),
-        useSensor(TouchSensor)
+        useSensor(MouseSensor, {
+            activationConstraint: {
+                distance: 5, // Minimum drag distance in pixels
+            },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 250, // Delay before touch activation
+                tolerance: 5, // Touch movement tolerance
+            },
+        })
     )
 
     const handleDragStart = (event: DragStartEvent) => {
@@ -171,7 +180,10 @@ export function KanbanBoard() {
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event
 
-        if (!over) return
+        if (!over) {
+            setActiveId(null)
+            return
+        }
 
         const activeTenant = tenants.find(t => t.id === active.id)
         const overStage = over.id as Stage
@@ -189,6 +201,10 @@ export function KanbanBoard() {
         setActiveId(null)
     }
 
+    const handleDragCancel = () => {
+        setActiveId(null)
+    }
+
     const activeTenant = activeId ? tenants.find(t => t.id === activeId) : null
 
     return (
@@ -199,6 +215,7 @@ export function KanbanBoard() {
                         sensors={sensors}
                         onDragStart={handleDragStart}
                         onDragEnd={handleDragEnd}
+                        onDragCancel={handleDragCancel}
                     >
                         {stages.map(stage => (
                             <KanbanColumn
@@ -208,10 +225,12 @@ export function KanbanBoard() {
                                 className={getStageColor(stage)}
                             />
                         ))}
-
                         <DragOverlay>
-                            {activeId && activeTenant ? (
-                                <KanbanCard tenant={activeTenant} />
+                            {activeTenant ? (
+                                <KanbanCard
+                                    tenant={activeTenant}
+                                    className="rotate-3 cursor-grabbing"
+                                />
                             ) : null}
                         </DragOverlay>
                     </DndContext>
