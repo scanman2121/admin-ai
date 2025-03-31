@@ -28,6 +28,10 @@ export function KanbanCard({ tenant }: KanbanCardProps) {
         opacity: isDragging ? 0.5 : 1,
     };
 
+    const logoUrl = tenant.logo.startsWith('http')
+        ? tenant.logo
+        : `https://ui-avatars.com/api/?name=${encodeURIComponent(tenant.name)}&background=0D9488&color=fff`;
+
     return (
         <div
             ref={setNodeRef}
@@ -40,13 +44,14 @@ export function KanbanCard({ tenant }: KanbanCardProps) {
                 <Card className="p-4 hover:bg-accent/5 transition-colors">
                     <div className="flex items-start gap-3">
                         <div className="relative shrink-0">
-                            <div className="size-10 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center">
+                            <div className="size-10 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden">
                                 <Image
-                                    src={tenant.logo}
+                                    src={logoUrl}
                                     alt={tenant.name}
                                     width={24}
                                     height={24}
                                     className="rounded object-contain"
+                                    unoptimized
                                 />
                             </div>
                             <div className="absolute -bottom-1 -right-1 size-4 bg-green-500 rounded-full flex items-center justify-center">

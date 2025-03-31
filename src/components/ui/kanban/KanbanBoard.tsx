@@ -117,28 +117,30 @@ export function KanbanBoard() {
     const activeTenant = activeId ? tenants.find(t => t.id === activeId) : null
 
     return (
-        <div className="w-full overflow-x-auto pb-4">
-            <div className="flex gap-4 min-w-full p-4">
-                <DndContext
-                    sensors={sensors}
-                    onDragStart={handleDragStart}
-                    onDragEnd={handleDragEnd}
-                >
-                    {stages.map(stage => (
-                        <KanbanColumn
-                            key={stage}
-                            stage={stage}
-                            tenants={tenants.filter(t => t.stage === stage)}
-                            className={getStageColor(stage)}
-                        />
-                    ))}
+        <div className="relative w-full">
+            <div className="absolute inset-0 overflow-x-auto">
+                <div className="inline-flex gap-4 p-4 min-w-max">
+                    <DndContext
+                        sensors={sensors}
+                        onDragStart={handleDragStart}
+                        onDragEnd={handleDragEnd}
+                    >
+                        {stages.map(stage => (
+                            <KanbanColumn
+                                key={stage}
+                                stage={stage}
+                                tenants={tenants.filter(t => t.stage === stage)}
+                                className={getStageColor(stage)}
+                            />
+                        ))}
 
-                    <DragOverlay>
-                        {activeId && activeTenant ? (
-                            <KanbanCard tenant={activeTenant} />
-                        ) : null}
-                    </DragOverlay>
-                </DndContext>
+                        <DragOverlay>
+                            {activeId && activeTenant ? (
+                                <KanbanCard tenant={activeTenant} />
+                            ) : null}
+                        </DragOverlay>
+                    </DndContext>
+                </div>
             </div>
         </div>
     )
