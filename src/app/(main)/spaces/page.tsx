@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
-import { RiAddLine, RiLayoutLine, RiSearchLine } from "@remixicon/react"
+import { RiAddLine, RiSearchLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -159,15 +159,10 @@ export default function SpacesPage() {
     return (
         <div className="flex h-full w-full flex-col space-y-8">
             <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-50 dark:bg-blue-950">
-                        <RiLayoutLine className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-                    </div>
-                    <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Spaces</h1>
-                </div>
-                <Button onClick={() => router.push("/spaces/new")} size="sm">
-                    <RiAddLine className="mr-1 h-4 w-4" />
-                    Add space
+                <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">Spaces</h1>
+                <Button onClick={() => router.push("/spaces/new")}>
+                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
+                    Add Space
                 </Button>
             </div>
 
