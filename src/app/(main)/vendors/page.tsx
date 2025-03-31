@@ -3,6 +3,8 @@
 import { Button } from "@/components/Button"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
+import { AIInsights } from "@/components/ui/insights/AIInsights"
+import { getPageInsights } from "@/lib/insights"
 import { RiAddLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
@@ -165,32 +167,35 @@ export default function Vendors() {
     const pathname = usePathname()
     const router = useRouter()
     const [data] = useState<Vendor[]>(vendorsData)
+    const insights = getPageInsights("vendors")
 
     return (
-        <div>
+        <div className="flex h-full w-full flex-col space-y-8">
             <div className="flex items-center justify-between">
                 <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
                     Vendors
                 </h1>
                 <Button>
                     <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
-                    Add Vendor
+                    Add vendor
                 </Button>
             </div>
 
-            <TabNavigation className="mt-4">
-                {tabs.map((tab) => (
-                    <TabNavigationLink
-                        key={tab.name}
-                        asChild
-                        active={pathname === tab.href}
-                    >
-                        <Link href={tab.href}>{tab.name}</Link>
-                    </TabNavigationLink>
-                ))}
-            </TabNavigation>
+            <AIInsights insights={insights} className="mt-6" />
 
-            <div className="pt-6">
+            <div className="flex flex-col gap-4 w-full">
+                <TabNavigation>
+                    {tabs.map((tab) => (
+                        <TabNavigationLink
+                            key={tab.name}
+                            asChild
+                            active={pathname === tab.href}
+                        >
+                            <Link href={tab.href}>{tab.name}</Link>
+                        </TabNavigationLink>
+                    ))}
+                </TabNavigation>
+
                 <DataTable
                     columns={vendorsColumns}
                     data={data}

@@ -2,7 +2,9 @@
 
 import { Button } from "@/components/Button"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
+import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { ModalAddUser } from "@/components/ui/settings/ModalAddUser"
+import { getPageInsights } from "@/lib/insights"
 import { RiAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -20,8 +22,10 @@ export default function UsersLayout({
     children: React.ReactNode
 }>) {
     const pathname = usePathname()
+    const insights = getPageInsights("users")
+
     return (
-        <div>
+        <div className="flex h-full w-full flex-col space-y-8">
             <div className="flex items-center justify-between">
                 <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
                     Users
@@ -29,22 +33,27 @@ export default function UsersLayout({
                 <ModalAddUser>
                     <Button>
                         <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
-                        Add users
+                        Add user
                     </Button>
                 </ModalAddUser>
             </div>
-            <TabNavigation className="mt-4">
-                {tabs.map((tab) => (
-                    <TabNavigationLink
-                        key={tab.name}
-                        asChild
-                        active={pathname === tab.href}
-                    >
-                        <Link href={tab.href}>{tab.name}</Link>
-                    </TabNavigationLink>
-                ))}
-            </TabNavigation>
-            <div className="pt-6">{children}</div>
+
+            <AIInsights insights={insights} className="mt-6" />
+
+            <div className="flex flex-col gap-4 w-full">
+                <TabNavigation>
+                    {tabs.map((tab) => (
+                        <TabNavigationLink
+                            key={tab.name}
+                            asChild
+                            active={pathname === tab.href}
+                        >
+                            <Link href={tab.href}>{tab.name}</Link>
+                        </TabNavigationLink>
+                    ))}
+                </TabNavigation>
+                <div className="pt-6">{children}</div>
+            </div>
         </div>
     )
 } 
