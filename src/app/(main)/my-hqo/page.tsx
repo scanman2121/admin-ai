@@ -430,16 +430,17 @@ export default function MyHqO() {
               <p className="text-3xl font-semibold">{trafficMetrics.totalBadgeIns}</p>
               <p className="text-sm text-gray-500">Total badge-ins</p>
             </div>
-            <div className="h-48">
+            <div className="h-40">
               <AreaChart
                 data={trafficMetrics.hourlyData}
                 index="hour"
                 categories={["count"]}
-                colors={["blue"]}
+                colors={["#3B82F6"]}
                 showLegend={false}
                 showGridLines={false}
                 showAnimation={true}
                 valueFormatter={(value) => `${value}`}
+                className="h-full"
               />
             </div>
           </div>
@@ -490,7 +491,7 @@ export default function MyHqO() {
               data={performanceData}
               index="date"
               categories={["Tenant Satisfaction", "Tenant Engagement"]}
-              colors={["primary", "indigo"]}
+              colors={["#2563EB", "#8B5CF6"]}
               valueFormatter={(value) => `${value}%`}
               showLegend={true}
               showGridLines={false}
@@ -507,7 +508,7 @@ export default function MyHqO() {
               data={usageData}
               index="date"
               categories={["Mobile App", "Web Portal", "Kiosk"]}
-              colors={["primary", "indigo", "cyan"]}
+              colors={["#2563EB", "#8B5CF6", "#06B6D4"]}
               valueFormatter={(value) => `${value}%`}
               showLegend={true}
               showGridLines={false}
@@ -534,7 +535,7 @@ export default function MyHqO() {
                   data={performanceData}
                   index="date"
                   categories={["Tenant Satisfaction", "Tenant Engagement"]}
-                  colors={["primary", "indigo"]}
+                  colors={["#2563EB", "#8B5CF6"]}
                   valueFormatter={(value) => `${value}%`}
                   showLegend={true}
                   showGridLines={false}
@@ -547,7 +548,7 @@ export default function MyHqO() {
                   data={usageData}
                   index="date"
                   categories={["Mobile App", "Web Portal", "Kiosk"]}
-                  colors={["primary", "indigo", "cyan"]}
+                  colors={["#2563EB", "#8B5CF6", "#06B6D4"]}
                   valueFormatter={(value) => `${value}%`}
                   showLegend={true}
                   showGridLines={false}
@@ -563,7 +564,7 @@ export default function MyHqO() {
                       data={featureUsageData}
                       category="value"
                       index="name"
-                      colors={["primary", "indigo", "cyan", "violet", "slate"]}
+                      colors={["#2563EB", "#8B5CF6", "#06B6D4", "#7C3AED", "#64748B"]}
                       valueFormatter={(value) => `${value}%`}
                       showLabel={true}
                       showAnimation={true}
@@ -576,7 +577,7 @@ export default function MyHqO() {
                       data={tenantBreakdownData}
                       category="value"
                       index="name"
-                      colors={["primary", "amber", "slate"]}
+                      colors={["#2563EB", "#F59E0B", "#64748B"]}
                       valueFormatter={(value) => `${value}%`}
                       showLabel={true}
                       showAnimation={true}
