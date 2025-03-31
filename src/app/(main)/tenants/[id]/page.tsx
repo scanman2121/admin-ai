@@ -109,7 +109,7 @@ type TenantData = typeof tenantsData[keyof typeof tenantsData]
 
 export default function TenantDetailPage({ params }: { params: { id: string } }) {
     // Get tenant data based on ID
-    const tenant = tenantsData[params.id as keyof typeof tenantsData]
+    const tenant: TenantData | undefined = tenantsData[params.id as keyof typeof tenantsData]
 
     if (!tenant) {
         return (
