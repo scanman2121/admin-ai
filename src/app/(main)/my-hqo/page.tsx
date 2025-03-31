@@ -1,9 +1,10 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { RiArrowLeftSLine, RiArrowRightSLine, RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMapPinLine, RiSearchLine, RiShoppingBag3Line, RiUserAddLine, RiUserLine } from "@remixicon/react";
+import { RiArrowLeftSLine, RiArrowRightLine, RiArrowRightSLine, RiBuilding4Line, RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMapPinLine, RiSearchLine, RiShoppingBag3Line, RiUserAddLine } from "@remixicon/react";
 import { AreaChart, Badge, Button, Card, DonutChart, Grid, Icon, Select, SelectItem, Tab, TabGroup, TabList, TabPanel, TabPanels, Text, TextInput, Title } from "@tremor/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 // Type definitions
@@ -321,6 +322,16 @@ const summaryMetrics: SummaryMetrics = {
   checkedOut: 12,
 };
 
+// Mock data for new tenant
+const newTenant = {
+  name: "Acme Corporation",
+  industry: "Technology",
+  space: "5,000 sqft",
+  floor: "15th Floor",
+  moveInDate: "April 15, 2024",
+  logo: "https://placehold.co/100x100"
+};
+
 export default function MyHqO() {
   const [selectedTenant, setSelectedTenant] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -360,14 +371,61 @@ export default function MyHqO() {
         Welcome back, Ellie
       </h1>
 
+      {/* New Tenant Alert Card */}
+      <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 border-none">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <div className="relative shrink-0">
+              <div className="size-16 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center">
+                <Image
+                  src={newTenant.logo}
+                  alt={newTenant.name}
+                  width={48}
+                  height={48}
+                  className="rounded"
+                />
+              </div>
+              <div className="absolute -bottom-1 -right-1 size-6 bg-green-500 rounded-full flex items-center justify-center">
+                <RiBuilding4Line className="size-3.5 text-white" />
+              </div>
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-3">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+                  New tenant ready for onboarding
+                </h2>
+                <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                  Just signed
+                </Badge>
+              </div>
+              <p className="text-gray-600 dark:text-gray-300">
+                {newTenant.name} has signed a lease for {newTenant.space} on the {newTenant.floor}. Move-in date is scheduled for {newTenant.moveInDate}.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/tenants/onboarding"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+            >
+              View lease details
+            </Link>
+            <Link
+              href="/tenants/onboarding"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2"
+            >
+              Start onboarding
+              <RiArrowRightLine className="size-4" />
+            </Link>
+          </div>
+        </div>
+      </Card>
+
       <Grid numItemsMd={2} numItemsLg={2} className="gap-6">
         {/* Users Overview Card */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <RiUserLine className="size-5 text-gray-500" />
-              <h2 className="text-lg font-medium">Users</h2>
-            </div>
+            <h2 className="text-lg font-medium">Users</h2>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
