@@ -148,14 +148,14 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
 interface MultiSelectProps {
   value: string[]
-  onChange: (value: string[]) => void
+  onValueChange: (value: string[]) => void
   options: string[]
   placeholder?: string
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({
   value,
-  onChange,
+  onValueChange,
   options,
   placeholder = "Select options"
 }) => {
@@ -168,29 +168,34 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         >
           <span>{item}</span>
           <button
-            onClick={() => onChange(value.filter((i) => i !== item))}
+            onClick={() => onValueChange(value.filter((i) => i !== item))}
             className="text-primary hover:text-primary/80"
           >
             ×
           </button>
         </div>
       ))}
-      <select
-        multiple
-        value={value}
-        onChange={(e) =>
-          onChange(
-            Array.from(e.target.selectedOptions, (option) => option.value)
-          )
-        }
-        className="w-full rounded-md border p-2"
-      >
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
+      <div className="w-full">
+        <Select
+          value={value.length === 0 ? "" : value[value.length - 1]}
+          onValueChange={(newValue) => {
+            if (!value.includes(newValue)) {
+              onValueChange([...value, newValue])
+            }
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder={placeholder} />
+          </SelectTrigger>
+          <SelectContent>
+            {options.filter(option => !value.includes(option)).map((option) => (
+              <SelectItem key={option} value={option}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   )
 }

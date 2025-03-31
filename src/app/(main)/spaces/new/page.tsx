@@ -1,15 +1,15 @@
 "use client"
 
 import { InteriorDetailsLayout } from "@/components/layouts/InteriorDetailsLayout"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, MultiSelect } from "@/components/ui/select"
-import { Card } from "@/components/ui/card"
-import { useState, ChangeEvent } from "react"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { MultiSelect, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { RiAddLine, RiDeleteBinLine, RiDragMoveLine, RiImageAddLine } from "@remixicon/react"
 import Image from "next/image"
-import { RiAddLine, RiDeleteBinLine, RiImageAddLine, RiDragMoveLine } from "@remixicon/react"
 import { useRouter } from "next/navigation"
+import { ChangeEvent, useState } from "react"
 
 // Available buildings
 const buildings = [
@@ -318,31 +318,37 @@ export default function NewSpace() {
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-500">Building</label>
                 <Select
-                  name="building"
                   value={spaceData.building}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('building', e.target.value)}
+                  onValueChange={(value) => handleInputChange('building', value)}
                 >
-                  <option value="">Select building</option>
-                  {buildings.map((building) => (
-                    <option key={building.value} value={building.value}>
-                      {building.label}
-                    </option>
-                  ))}
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select building" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {buildings.map((building) => (
+                      <SelectItem key={building.value} value={building.value}>
+                        {building.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-gray-500">Type</label>
+                <label className="mb-2 block text-sm font-medium text-gray-500">Space type</label>
                 <Select
-                  name="type"
                   value={spaceData.type}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleInputChange('type', e.target.value)}
+                  onValueChange={(value) => handleInputChange('type', value)}
                 >
-                  <option value="">Select type</option>
-                  {spaceTypes.map((type) => (
-                    <option key={type.value} value={type.value}>
-                      {type.label}
-                    </option>
-                  ))}
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select space type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {spaceTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
               <div>
@@ -363,15 +369,15 @@ export default function NewSpace() {
                 <label className="text-sm font-medium text-gray-500">Space Images</label>
                 <span className="text-xs text-gray-400">{spaceData.images.length}/5 images</span>
               </div>
-              
+
               <div className="grid grid-cols-5 gap-4">
                 {/* Image Upload Slots */}
                 {Array.from({ length: 5 }).map((_, index) => {
                   const image = spaceData.images[index]
-                  
+
                   if (image) {
                     return (
-                      <div 
+                      <div
                         key={index}
                         className="group relative aspect-square overflow-hidden rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900"
                       >
@@ -417,11 +423,10 @@ export default function NewSpace() {
                   return (
                     <div
                       key={index}
-                      className={`relative aspect-square overflow-hidden rounded-lg border-2 border-dashed transition-colors ${
-                        isDragging
-                          ? "border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950"
-                          : "border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900"
-                      }`}
+                      className={`relative aspect-square overflow-hidden rounded-lg border-2 border-dashed transition-colors ${isDragging
+                        ? "border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950"
+                        : "border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900"
+                        }`}
                       onDragOver={handleDragOver}
                       onDragLeave={handleDragLeave}
                       onDrop={handleDrop}
@@ -456,15 +461,15 @@ export default function NewSpace() {
           <h2 className="mb-6 text-lg font-medium text-gray-900 dark:text-white">Access Control</h2>
           <div className="grid gap-6">
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-500">Access Groups</label>
+              <label className="mb-2 block text-sm font-medium text-gray-500">Access groups</label>
               <MultiSelect
                 value={spaceData.accessControl.accessGroups}
-                onChange={(value: string[]) => handleAccessControlChange('accessGroups', value)}
+                onValueChange={(value) => handleInputChange('accessControl.accessGroups', value)}
                 options={accessGroups}
-                className="w-full"
+                placeholder="Select access groups"
               />
             </div>
-            
+
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-500">Hours of Operation</label>
               <div className="space-y-4">
@@ -490,6 +495,23 @@ export default function NewSpace() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-500">Access method</label>
+              <Select
+                value={spaceData.accessControl.accessMethod}
+                onValueChange={(value) => handleInputChange('accessControl.accessMethod', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select access method" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="keycard">Keycard</SelectItem>
+                  <SelectItem value="code">Access Code</SelectItem>
+                  <SelectItem value="biometric">Biometric</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
