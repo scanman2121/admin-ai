@@ -2,11 +2,10 @@
 
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { Input } from "@/components/ui/input"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
-import { RiAddLine, RiSearchLine } from "@remixicon/react"
+import { RiAddLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -175,18 +174,6 @@ export default function TenantsPage() {
                         </TabNavigationLink>
                     ))}
                 </TabNavigation>
-
-                <div className="flex items-center space-x-2">
-                    <div className="relative flex-1">
-                        <RiSearchLine className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500 dark:text-gray-400" />
-                        <Input
-                            type="search"
-                            placeholder="Search tenants..."
-                            className="pl-9"
-                        />
-                    </div>
-                    <Button variant="outline">Filters</Button>
-                </div>
 
                 <DataTable
                     columns={tenantsColumns}
