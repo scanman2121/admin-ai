@@ -6,7 +6,7 @@ import { DataTable } from "@/components/ui/data-table/DataTable"
 import { RiAddLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 
 // Define tabs for the Vendors page
@@ -16,8 +16,21 @@ const tabs = [
     { name: "Inactive", href: "/vendors/inactive" },
 ] as const
 
+// Define the vendor type
+interface Vendor {
+    id: string
+    name: string
+    logoUrl: string
+    category: string
+    contact: string
+    email: string
+    phone: string
+    buildings: string[]
+    status: string
+}
+
 // Mock data for vendors
-const vendorsData = [
+const vendorsData: Vendor[] = [
     {
         id: "1",
         name: "Maintenance Pro",
@@ -150,7 +163,8 @@ const vendorsColumns = [
 
 export default function Vendors() {
     const pathname = usePathname()
-    const [data] = useState(vendorsData)
+    const router = useRouter()
+    const [data] = useState<Vendor[]>(vendorsData)
 
     return (
         <div>
@@ -177,7 +191,11 @@ export default function Vendors() {
             </TabNavigation>
 
             <div className="pt-6">
-                <DataTable columns={vendorsColumns} data={data} />
+                <DataTable
+                    columns={vendorsColumns}
+                    data={data}
+                    onRowClick={(row: Vendor) => router.push(`/vendors/${row.id}`)}
+                />
             </div>
         </div>
     )
