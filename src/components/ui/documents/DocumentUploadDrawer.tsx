@@ -22,7 +22,7 @@ export function DocumentUploadDrawer({
 }: DocumentUploadDrawerProps) {
   const [files, setFiles] = useState<File[]>([])
   const [documentType, setDocumentType] = useState<DocumentType>(DocumentType.Other)
-  const [fields, setFields] = useState<Record<string, string>>({})
+  const [fields, setFields] = useState<Record<string, string | string[]>>({})
   const [isUploading, setIsUploading] = useState(false)
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -44,7 +44,7 @@ export function DocumentUploadDrawer({
     setFiles((prev) => prev.filter((_, i) => i !== index))
   }
 
-  const handleFieldChange = (field: string, value: string) => {
+  const handleFieldChange = (field: string, value: string | string[]) => {
     if (field === 'documentType') {
       setDocumentType(value as DocumentType)
     }
@@ -54,7 +54,13 @@ export function DocumentUploadDrawer({
   const handleUpload = async () => {
     try {
       setIsUploading(true)
-      await onUpload(files, fields)
+      // Convert array values to comma-separated strings before upload
+      const stringFields = Object.entries(fields).reduce((acc, [key, value]) => {
+        acc[key] = Array.isArray(value) ? value.join(',') : value
+        return acc
+      }, {} as Record<string, string>)
+
+      await onUpload(files, stringFields)
       setFiles([])
       setFields({})
       onOpenChange(false)
