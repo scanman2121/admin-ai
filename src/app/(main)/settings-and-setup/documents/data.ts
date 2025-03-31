@@ -1,4 +1,6 @@
-export const data = [
+import { Document } from "./columns";
+
+export const data: Document[] = [
   {
     id: "1",
     name: "Q4-2023 Financial Report.pdf",

@@ -38,6 +38,8 @@ interface Document {
   tenant?: string;
 }
 
+export type { Document };
+
 export const documentsColumns: ColumnDef<Document>[] = [
   {
     accessorKey: "name",
