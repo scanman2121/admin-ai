@@ -10,7 +10,8 @@ type PageType =
     | "documents"
     | "users"
     | "vendors"
-    | "transactions";
+    | "transactions"
+    | "assetManager";
 
 export function getPageInsights(pageType: PageType): MetricInsight[] {
     switch (pageType) {
@@ -327,6 +328,38 @@ export function getPageInsights(pageType: PageType): MetricInsight[] {
                     comparison: "vs. Industry Avg: 1.8 sec",
                     trend: "up",
                     trendValue: 33,
+                },
+            ];
+
+        case "assetManager":
+            return [
+                {
+                    title: "Total Properties",
+                    value: "12",
+                    comparison: "across all regions",
+                    trend: "up",
+                    trendValue: 2,
+                },
+                {
+                    title: "Occupancy Rate",
+                    value: "94%",
+                    comparison: "vs. Target: 90%",
+                    trend: "up",
+                    trendValue: 4,
+                },
+                {
+                    title: "Revenue Growth",
+                    value: "$2.4M",
+                    comparison: "vs. Last Quarter",
+                    trend: "up",
+                    trendValue: 12,
+                },
+                {
+                    title: "Tenant Satisfaction",
+                    value: "4.7/5",
+                    comparison: "from 2,456 reviews",
+                    trend: "up",
+                    trendValue: 5,
                 },
             ];
 

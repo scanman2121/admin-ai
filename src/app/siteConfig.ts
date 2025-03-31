@@ -20,6 +20,10 @@ export const siteConfig = {
       general: "/settings/general",
       billing: "/settings/billing",
     },
+    // Asset Manager section
+    assetManager: {
+      overview: "/asset-manager/overview",
+    },
     // Experience Manager section
     experienceManager: {
       content: "/experience-manager/content",

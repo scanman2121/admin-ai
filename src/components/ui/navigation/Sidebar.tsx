@@ -21,6 +21,7 @@ import { UserProfileDesktop } from "./UserProfile"
 
 // Asset Manager sub-navigation items
 const assetManagerItems = [
+  { name: "Overview", href: siteConfig.baseLinks.assetManager.overview },
   { name: "Buildings", href: siteConfig.baseLinks.buildings },
   { name: "Spaces", href: siteConfig.baseLinks.spaces },
   { name: "Tenants", href: siteConfig.baseLinks.tenants },
