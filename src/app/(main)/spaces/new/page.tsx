@@ -126,11 +126,23 @@ export default function NewSpace() {
     { name: "New Space", href: "/spaces/new" },
   ]
 
-  const handleInputChange = (field: string, value: string | number) => {
-    setSpaceData(prev => ({
-      ...prev,
-      [field]: value
-    }))
+  const handleInputChange = (field: string, value: string | number | string[]) => {
+    setSpaceData(prev => {
+      const fields = field.split('.')
+      if (fields.length === 1) {
+        return {
+          ...prev,
+          [field]: value
+        }
+      }
+
+      let current = prev as any
+      for (let i = 0; i < fields.length - 1; i++) {
+        current = current[fields[i]]
+      }
+      current[fields[fields.length - 1]] = value
+      return { ...prev }
+    })
   }
 
   const handleAccessControlChange = (field: string, value: string[]) => {
@@ -354,10 +366,9 @@ export default function NewSpace() {
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-500">Capacity</label>
                 <Input
-                  name="capacity"
                   type="number"
                   value={spaceData.capacity}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('capacity', parseInt(e.target.value))}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => handleInputChange('capacity', parseInt(e.target.value))}
                   placeholder="Enter capacity"
                 />
               </div>
@@ -540,13 +551,18 @@ export default function NewSpace() {
                 <div className="w-48">
                   <Select
                     value={amenity.icon}
-                    onChange={(e: ChangeEvent<HTMLSelectElement>) => handleAmenityChange(index, 'icon', e.target.value)}
+                    onValueChange={(value) => handleAmenityChange(index, 'icon', value)}
                   >
-                    {amenityIcons.map((icon) => (
-                      <option key={icon.value} value={icon.value}>
-                        {icon.label}
-                      </option>
-                    ))}
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select icon" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {amenityIcons.map((icon) => (
+                        <SelectItem key={icon.value} value={icon.value}>
+                          {icon.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
                   </Select>
                 </div>
                 <Button

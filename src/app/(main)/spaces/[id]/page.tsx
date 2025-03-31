@@ -172,7 +172,7 @@ export default function SpacePage({ params }: { params: { id: string } }) {
                 </label>
                 <MultiSelect
                   value={spaceData.amenities}
-                  onChange={(value) => handleInputChange("amenities", value)}
+                  onValueChange={(value) => handleInputChange("amenities", value)}
                   options={amenityOptions}
                   placeholder="Select amenities"
                 />
