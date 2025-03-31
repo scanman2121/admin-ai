@@ -86,7 +86,7 @@ const industryOptions = [
 export default function ProspectsPage() {
     return (
         <PageTemplate
-            title="Prospective Tenants"
+            title="Asset Manager Overview"
             tabs={[
                 { name: "Overview", href: "/asset-manager/overview" },
                 { name: "Analysis", href: "/asset-manager/overview/analysis" },
