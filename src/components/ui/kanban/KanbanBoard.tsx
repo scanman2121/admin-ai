@@ -117,9 +117,9 @@ export function KanbanBoard() {
     const activeTenant = activeId ? tenants.find(t => t.id === activeId) : null
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-full h-[calc(100vh-13rem)]">
             <div className="absolute inset-0 overflow-x-auto">
-                <div className="inline-flex gap-4 p-4 min-w-max">
+                <div className="inline-flex gap-4 p-4 h-full">
                     <DndContext
                         sensors={sensors}
                         onDragStart={handleDragStart}

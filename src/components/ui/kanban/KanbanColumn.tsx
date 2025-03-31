@@ -16,7 +16,7 @@ export function KanbanColumn({ stage, tenants, className }: KanbanColumnProps) {
     });
 
     return (
-        <div className="w-[350px] shrink-0">
+        <div className="flex flex-col w-[350px] shrink-0 h-full">
             <div className="mb-3 flex items-center justify-between">
                 <h3 className="font-medium text-gray-900 dark:text-gray-50">{stage}</h3>
                 <Badge variant="outline" className="font-normal">
@@ -25,7 +25,7 @@ export function KanbanColumn({ stage, tenants, className }: KanbanColumnProps) {
             </div>
             <div
                 ref={setNodeRef}
-                className={`rounded-lg p-4 ${className} min-h-[200px] transition-colors`}
+                className={`rounded-lg p-4 ${className} flex-1 overflow-y-auto`}
             >
                 <SortableContext
                     items={tenants.map(t => t.id)}
