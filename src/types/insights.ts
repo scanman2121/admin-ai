@@ -248,7 +248,6 @@ export const userInsights: MetricInsight[] = [
         title: "Admin Users",
         value: "12",
         comparison: "with full access",
-        trend: "neutral",
     },
     {
         title: "New Users",
