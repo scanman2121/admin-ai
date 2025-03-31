@@ -5,16 +5,30 @@ import { useState } from 'react'
 import { KanbanCard } from './KanbanCard'
 import { KanbanColumn } from './KanbanColumn'
 
+export interface Space {
+    id: string
+    name: string
+    floor: string
+    sqft: string
+}
+
+export interface Contact {
+    id: string
+    name: string
+    role: string
+    email: string
+}
+
 export interface Tenant {
     id: string
     name: string
     industry: string
-    space: string
-    floor: string
-    moveInDate: string
     stage: Stage
-    assignedTo: string
     logo: string
+    moveInDate?: string
+    contact?: Contact
+    broker?: Contact
+    spaces: Space[]
 }
 
 const stages = [
@@ -35,34 +49,95 @@ const mockTenants: Tenant[] = [
         id: '1',
         name: 'Acme Corp',
         industry: 'Technology',
-        space: '5,000 sqft',
-        floor: '3rd Floor',
-        moveInDate: '2024/06/01',
         stage: 'New prospect',
-        assignedTo: 'John Smith',
-        logo: '/tenant-logos/acme.png'
+        logo: '/tenant-logos/acme.png',
+        contact: {
+            id: 'c1',
+            name: 'John Smith',
+            role: 'CTO',
+            email: 'john@acme.com'
+        },
+        broker: {
+            id: 'b1',
+            name: 'Sarah Johnson',
+            role: 'Senior Broker',
+            email: 'sarah@brokerage.com'
+        },
+        spaces: [
+            {
+                id: 's1',
+                name: 'North Wing',
+                floor: '3rd Floor',
+                sqft: '5,000 sqft'
+            },
+            {
+                id: 's2',
+                name: 'South Wing',
+                floor: '3rd Floor',
+                sqft: '3,500 sqft'
+            }
+        ]
     },
     {
         id: '2',
         name: 'Globex Corp',
         industry: 'Finance',
-        space: '8,000 sqft',
-        floor: '5th Floor',
+        stage: 'Fit out',
         moveInDate: '2024/07/15',
-        stage: 'Tour',
-        assignedTo: 'Sarah Johnson',
-        logo: '/tenant-logos/globex.png'
+        logo: '/tenant-logos/globex.png',
+        contact: {
+            id: 'c2',
+            name: 'Emily Chen',
+            role: 'Facilities Manager',
+            email: 'emily@globex.com'
+        },
+        broker: {
+            id: 'b2',
+            name: 'Michael Brown',
+            role: 'Principal Broker',
+            email: 'michael@brokerage.com'
+        },
+        spaces: [
+            {
+                id: 's3',
+                name: 'Executive Suite',
+                floor: '5th Floor',
+                sqft: '8,000 sqft'
+            }
+        ]
     },
     {
         id: '3',
         name: 'Initech',
         industry: 'Software',
-        space: '3,500 sqft',
-        floor: '2nd Floor',
-        moveInDate: '2024/08/01',
-        stage: 'Negotiation',
-        assignedTo: 'Mike Wilson',
-        logo: '/tenant-logos/initech.png'
+        stage: 'Tour',
+        logo: '/tenant-logos/initech.png',
+        contact: {
+            id: 'c3',
+            name: 'Peter Gibbons',
+            role: 'Office Manager',
+            email: 'peter@initech.com'
+        },
+        broker: {
+            id: 'b3',
+            name: 'Lisa Wilson',
+            role: 'Associate Broker',
+            email: 'lisa@brokerage.com'
+        },
+        spaces: [
+            {
+                id: 's4',
+                name: 'Tech Hub',
+                floor: '2nd Floor',
+                sqft: '3,500 sqft'
+            },
+            {
+                id: 's5',
+                name: 'Innovation Center',
+                floor: '2nd Floor',
+                sqft: '2,500 sqft'
+            }
+        ]
     }
 ]
 
