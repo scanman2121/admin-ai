@@ -6,7 +6,6 @@ import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
 import { RiAddLine } from "@remixicon/react"
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
@@ -78,82 +77,6 @@ const tenantsData = [
     },
 ]
 
-// Extended prospective tenants data
-const prospectiveTenants = [
-    {
-        id: "A",
-        name: "Acme Corporation",
-        email: "contact@acmecorp.com",
-        space: "5,000 sqft",
-        rate: "$28/sqft",
-        quarter: "Q3 2023",
-        status: "Hot Lead",
-        industry: "Technology",
-        contact: "John Smith",
-        phone: "(555) 123-4567",
-        lastContact: "2024-03-15",
-        notes: "Interested in expanding office space",
-    },
-    {
-        id: "T",
-        name: "TechStart Inc.",
-        email: "leasing@techstart.com",
-        space: "2,500 sqft",
-        rate: "$32/sqft",
-        quarter: "Q2 2023",
-        status: "Initial Contact",
-        industry: "Software",
-        contact: "Sarah Johnson",
-        phone: "(555) 234-5678",
-        lastContact: "2024-03-10",
-        notes: "Looking for startup-friendly space",
-    },
-    {
-        id: "G",
-        name: "Global Services LLC",
-        email: "real.estate@globalservices.com",
-        space: "10,000 sqft",
-        rate: "$25/sqft",
-        quarter: "Q4 2023",
-        status: "Tour Scheduled",
-        industry: "Consulting",
-        contact: "Michael Brown",
-        phone: "(555) 345-6789",
-        lastContact: "2024-03-18",
-        notes: "Tour scheduled for next week",
-    },
-    {
-        id: "C",
-        name: "Creative Design Co.",
-        email: "space@creativedesign.co",
-        space: "1,800 sqft",
-        rate: "$35/sqft",
-        quarter: "Q3 2023",
-        status: "Initial Inquiry",
-        industry: "Design",
-        contact: "Emma Wilson",
-        phone: "(555) 456-7890",
-        lastContact: "2024-03-12",
-        notes: "Requires creative studio space",
-    },
-]
-
-const statusOptions = [
-    { value: "all", label: "All Statuses" },
-    { value: "hot-lead", label: "Hot Lead" },
-    { value: "tour-scheduled", label: "Tour Scheduled" },
-    { value: "initial-inquiry", label: "Initial Inquiry" },
-    { value: "initial-contact", label: "Initial Contact" },
-]
-
-const industryOptions = [
-    { value: "all", label: "All Industries" },
-    { value: "technology", label: "Technology" },
-    { value: "software", label: "Software" },
-    { value: "consulting", label: "Consulting" },
-    { value: "design", label: "Design" },
-]
-
 // Define columns for the tenants table
 const tenantsColumns = [
     {
@@ -216,6 +139,7 @@ const tenantsColumns = [
     },
 ]
 
+// Define the Tenant type
 interface Tenant {
     id: string;
     [key: string]: any;
