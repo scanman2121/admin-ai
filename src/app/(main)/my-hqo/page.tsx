@@ -1,10 +1,10 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { RiArrowLeftSLine, RiArrowRightSLine, RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMapPinLine, RiSearchLine, RiShoppingBag3Line, RiUserAddLine } from "@remixicon/react";
+import { RiArrowLeftSLine, RiArrowRightSLine, RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMapPinLine, RiSearchLine, RiShoppingBag3Line, RiUserAddLine, RiUserLine } from "@remixicon/react";
 import { AreaChart, Badge, Button, Card, DonutChart, Grid, Icon, Select, SelectItem, Tab, TabGroup, TabList, TabPanel, TabPanels, Text, TextInput, Title } from "@tremor/react";
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 
 // Type definitions
 export type PeriodValue = "previous-period" | "last-year" | "no-comparison";
@@ -26,6 +26,33 @@ export type KpiEntryExtended = {
   color: string;
   percentage: number;
   value: number | string;
+};
+
+// Type definitions for metrics
+type UserMetrics = {
+  total: number;
+  lastThirtyDays: number;
+  active: number;
+  pending: number;
+};
+
+type CommunicationMetrics = {
+  totalSent: number;
+  openRate: number;
+  openChange: number;
+  emailCTR: number;
+};
+
+type TrafficMetrics = {
+  totalBadgeIns: number;
+  hourlyData: { hour: number; count: number }[];
+};
+
+type SummaryMetrics = {
+  totalVisits: number;
+  expected: number;
+  checkedIn: number;
+  checkedOut: number;
 };
 
 // Mock data for charts and metrics
@@ -264,6 +291,36 @@ const tenants = [
   { value: "Tech Innovators", label: "Tech Innovators" },
 ];
 
+// Mock data
+const userMetrics: UserMetrics = {
+  total: 42,
+  lastThirtyDays: 18,
+  active: 36,
+  pending: 6,
+};
+
+const communicationMetrics: CommunicationMetrics = {
+  totalSent: 4,
+  openRate: 86,
+  openChange: 8,
+  emailCTR: 42,
+};
+
+const trafficMetrics: TrafficMetrics = {
+  totalBadgeIns: 3692,
+  hourlyData: Array.from({ length: 24 }, (_, i) => ({
+    hour: i,
+    count: Math.floor(Math.random() * 300),
+  })),
+};
+
+const summaryMetrics: SummaryMetrics = {
+  totalVisits: 201,
+  expected: 102,
+  checkedIn: 87,
+  checkedOut: 12,
+};
+
 export default function MyHqO() {
   const [selectedTenant, setSelectedTenant] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -302,6 +359,124 @@ export default function MyHqO() {
       <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
         Welcome back, Ellie
       </h1>
+
+      <Grid numItemsMd={2} numItemsLg={2} className="gap-6">
+        {/* Users Overview Card */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <RiUserLine className="size-5 text-gray-500" />
+              <h2 className="text-lg font-medium">Users</h2>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <p className="text-3xl font-semibold">{userMetrics.total}</p>
+              <p className="text-sm text-gray-500">Total users</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-3xl font-semibold">{userMetrics.lastThirtyDays}</p>
+              <p className="text-sm text-gray-500">In last 30 days</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-3xl font-semibold text-green-600">{userMetrics.active}</p>
+              <p className="text-sm text-gray-500">Active</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-3xl font-semibold text-amber-600">{userMetrics.pending}</p>
+              <p className="text-sm text-gray-500">Pending</p>
+            </div>
+          </div>
+        </Card>
+
+        {/* 30-day Communication Performance Card */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-medium">30-day communication performance</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <p className="text-3xl font-semibold">{communicationMetrics.totalSent}</p>
+              <p className="text-sm text-gray-500">Total sent</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-3xl font-semibold">{communicationMetrics.openRate}%</p>
+              <p className="text-sm text-gray-500">Open rate</p>
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-1">
+                <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                  +{communicationMetrics.openChange}%
+                </Badge>
+              </div>
+              <p className="text-sm text-gray-500">Opens</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-3xl font-semibold">{communicationMetrics.emailCTR}%</p>
+              <p className="text-sm text-gray-500">Email CTR</p>
+            </div>
+          </div>
+        </Card>
+      </Grid>
+
+      <Grid numItemsMd={2} numItemsLg={2} className="gap-6">
+        {/* Today's Traffic Report Card */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-medium">Today's traffic report</h2>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <p className="text-3xl font-semibold">{trafficMetrics.totalBadgeIns}</p>
+              <p className="text-sm text-gray-500">Total badge-ins</p>
+            </div>
+            <div className="h-48">
+              <AreaChart
+                data={trafficMetrics.hourlyData}
+                index="hour"
+                categories={["count"]}
+                colors={["blue"]}
+                showLegend={false}
+                showGridLines={false}
+                showAnimation={true}
+                valueFormatter={(value) => `${value}`}
+              />
+            </div>
+          </div>
+        </Card>
+
+        {/* Today's Summary Card */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-medium">Today's summary</h2>
+          </div>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <p className="text-3xl font-semibold">{summaryMetrics.totalVisits}</p>
+                <p className="text-sm text-gray-500">Total visits</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-3xl font-semibold text-purple-600">{summaryMetrics.expected}</p>
+                <p className="text-sm text-gray-500">Expected</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-3xl font-semibold text-green-600">{summaryMetrics.checkedIn}</p>
+                <p className="text-sm text-gray-500">Checked-in</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-3xl font-semibold text-red-600">{summaryMetrics.checkedOut}</p>
+                <p className="text-sm text-gray-500">Checked-out</p>
+              </div>
+            </div>
+            <div className="pt-2">
+              <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                +11% higher activity than previous Mondays
+              </Badge>
+            </div>
+          </div>
+        </Card>
+      </Grid>
 
       {/* Area Charts Section */}
       <section>
