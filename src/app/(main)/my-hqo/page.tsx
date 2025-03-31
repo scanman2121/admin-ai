@@ -329,7 +329,7 @@ const newTenant = {
   space: "5,000 sqft",
   floor: "15th Floor",
   moveInDate: "April 15, 2024",
-  logo: "https://placehold.co/100x100"
+  logo: "https://ui-avatars.com/api/?name=Acme+Corporation&background=0D9488&color=fff"
 };
 
 export default function MyHqO() {
@@ -382,7 +382,10 @@ export default function MyHqO() {
                   alt={newTenant.name}
                   width={48}
                   height={48}
-                  className="rounded"
+                  className="rounded object-contain"
+                  onError={(e) => {
+                    e.currentTarget.src = "/images/placeholder-logo.png";
+                  }}
                 />
               </div>
               <div className="absolute -bottom-1 -right-1 size-6 bg-green-500 rounded-full flex items-center justify-center">
