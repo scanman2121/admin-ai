@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/Button"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { DataTable } from "@/components/ui/data-table/DataTable"
+import { DataTable } from "@/components/ui/data-table/data-table"
 import { RiAddLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
@@ -74,6 +74,19 @@ const allSpacesData = [
         lastUpdated: "2024-03-05",
     },
 ]
+
+// Define the type for space data
+interface Space {
+    id: string
+    name: string
+    imageUrl: string
+    building: string
+    type: string
+    capacity: number
+    accessGroup: string
+    status: string
+    lastUpdated: string
+}
 
 // Define columns for the spaces table
 const spacesColumns = [
@@ -172,7 +185,7 @@ export default function SpacesActive() {
             </TabNavigation>
 
             <div className="pt-4">
-                <DataTable
+                <DataTable<Space, any>
                     columns={spacesColumns}
                     data={data}
                     onRowClick={(row) => router.push(`/spaces/${row.original.id}`)}
