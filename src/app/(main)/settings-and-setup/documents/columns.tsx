@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/Dropdown";
-import { cn } from "@/lib/utils";
 import { RiDownloadLine, RiMoreLine } from "@remixicon/react";
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -33,7 +32,6 @@ interface Document {
   size: string;
   uploadedBy: string;
   uploadDate: string;
-  status: string;
   building?: string;
   tenant?: string;
 }
@@ -94,23 +92,6 @@ export const documentsColumns: ColumnDef<Document>[] = [
   {
     accessorKey: "uploadDate",
     header: "Upload date",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const status = row.getValue("status") as string
-      return (
-        <span className={cn(
-          "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium",
-          status.toLowerCase() === "active" && "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-          status.toLowerCase() === "pending" && "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-          status.toLowerCase() === "inactive" && "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400"
-        )}>
-          • {status}
-        </span>
-      )
-    },
   },
   {
     id: "actions",

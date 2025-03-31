@@ -1,24 +1,13 @@
 "use client"
 
-import * as React from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { RiUploadLine } from "@remixicon/react"
 import { Button } from "@/components/ui/button"
-import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
+import { DocumentUploadDrawer } from "@/components/ui/documents/DocumentUploadDrawer"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
+import { RiUploadLine } from "@remixicon/react"
+import * as React from "react"
 import { documentsColumns } from "./columns"
 import { data } from "./data"
-import { DocumentUploadDrawer } from "@/components/ui/documents/DocumentUploadDrawer"
-
-// Define tabs for the Documents page
-const tabs = [
-    { name: "All documents", href: "/settings-and-setup/documents" },
-    { name: "Active", href: "/settings-and-setup/documents/active" },
-    { name: "Pending", href: "/settings-and-setup/documents/pending" },
-    { name: "Inactive", href: "/settings-and-setup/documents/inactive" },
-] as const
 
 const mockInsights = [
     {
@@ -52,7 +41,6 @@ const mockInsights = [
 ]
 
 export default function Documents() {
-    const pathname = usePathname()
     const [isOpen, setIsOpen] = React.useState(false)
 
     return (
@@ -70,24 +58,12 @@ export default function Documents() {
             <AIInsights insights={mockInsights} />
 
             <div className="flex flex-col gap-4 w-full">
-                <TabNavigation>
-                    {tabs.map((tab) => (
-                        <TabNavigationLink
-                            key={tab.name}
-                            asChild
-                            active={pathname === tab.href}
-                        >
-                            <Link href={tab.href}>{tab.name}</Link>
-                        </TabNavigationLink>
-                    ))}
-                </TabNavigation>
-
                 <div className="pt-4">
                     <DataTable columns={documentsColumns} data={data} />
                 </div>
             </div>
 
-            <DocumentUploadDrawer 
+            <DocumentUploadDrawer
                 isOpen={isOpen}
                 onOpenChange={setIsOpen}
             />

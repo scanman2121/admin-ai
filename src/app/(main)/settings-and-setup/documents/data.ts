@@ -9,7 +9,6 @@ export const data: Document[] = [
     size: "2.4 MB",
     uploadedBy: "Sarah Chen",
     uploadDate: "2024-01-15",
-    status: "Active",
     building: "N/A",
     tenant: "N/A"
   },
@@ -21,7 +20,6 @@ export const data: Document[] = [
     size: "1.8 MB",
     uploadedBy: "Michael Johnson",
     uploadDate: "2024-01-14",
-    status: "Active",
     building: "Tower A",
     tenant: "Acme Corp"
   },
@@ -33,7 +31,6 @@ export const data: Document[] = [
     size: "856 KB",
     uploadedBy: "David Wilson",
     uploadDate: "2024-01-13",
-    status: "Pending",
     building: "Building B",
     tenant: "N/A"
   },
@@ -45,7 +42,6 @@ export const data: Document[] = [
     size: "1.2 MB",
     uploadedBy: "Emily Brown",
     uploadDate: "2024-01-12",
-    status: "Active",
     building: "Innovation Center",
     tenant: "TechStart Inc"
   },
@@ -57,7 +53,6 @@ export const data: Document[] = [
     size: "945 KB",
     uploadedBy: "Robert Taylor",
     uploadDate: "2024-01-11",
-    status: "Active",
     building: "All Buildings",
     tenant: "N/A"
   },
@@ -69,7 +64,6 @@ export const data: Document[] = [
     size: "1.1 MB",
     uploadedBy: "Lisa Anderson",
     uploadDate: "2024-01-10",
-    status: "Active",
     building: "Tower B",
     tenant: "N/A"
   },
@@ -81,7 +75,6 @@ export const data: Document[] = [
     size: "3.2 MB",
     uploadedBy: "James Martinez",
     uploadDate: "2024-01-09",
-    status: "Pending",
     building: "Tower A",
     tenant: "N/A"
   },
@@ -93,7 +86,6 @@ export const data: Document[] = [
     size: "1.5 MB",
     uploadedBy: "Patricia Lee",
     uploadDate: "2024-01-08",
-    status: "Inactive",
     building: "All Buildings",
     tenant: "N/A"
   }
