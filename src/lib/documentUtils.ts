@@ -7,7 +7,7 @@ interface DocumentTypeDetectionResult {
 
 // Keywords associated with each document type
 const documentTypeKeywords: Record<DocumentType, string[]> = {
-    "Lease": [
+    [DocumentType.Lease]: [
         "lease",
         "tenant",
         "landlord",
@@ -18,7 +18,7 @@ const documentTypeKeywords: Record<DocumentType, string[]> = {
         "property",
         "agreement",
     ],
-    "Certificate of Insurance (COI)": [
+    [DocumentType.COI]: [
         "certificate",
         "insurance",
         "policy",
@@ -28,7 +28,7 @@ const documentTypeKeywords: Record<DocumentType, string[]> = {
         "coi",
         "insurer",
     ],
-    "Asset Valuation Report": [
+    [DocumentType.AssetValuation]: [
         "valuation",
         "appraisal",
         "asset",
@@ -37,99 +37,12 @@ const documentTypeKeywords: Record<DocumentType, string[]> = {
         "assessment",
         "market value",
     ],
-    "Capital Expenditure (CapEx) Request": [
-        "capex",
-        "capital",
-        "expenditure",
-        "request",
-        "budget",
-        "project",
-        "investment",
-    ],
-    "Financial Statements": [
-        "financial",
-        "statement",
-        "balance",
-        "income",
-        "cash flow",
-        "profit",
-        "loss",
-        "revenue",
-    ],
-    "Work Order": [
-        "work order",
-        "maintenance",
-        "repair",
-        "service",
-        "task",
-        "job",
-        "request",
-    ],
-    "Maintenance Schedule": [
-        "maintenance",
-        "schedule",
-        "preventive",
-        "routine",
-        "service",
-        "periodic",
-    ],
-    "Inspection Report": [
-        "inspection",
+    [DocumentType.Other]: [
+        "document",
+        "file",
         "report",
-        "audit",
-        "check",
-        "assessment",
-        "review",
-        "findings",
-    ],
-    "Incident Report": [
-        "incident",
-        "report",
-        "occurrence",
-        "event",
-        "accident",
-        "security",
-    ],
-    "Tenant Communication": [
-        "tenant",
-        "communication",
-        "notice",
-        "memo",
-        "letter",
-        "correspondence",
-    ],
-    "Daily Activity Report (DAR)": [
-        "daily",
-        "activity",
-        "report",
-        "dar",
-        "log",
-        "shift",
-        "patrol",
-    ],
-    "Visitor Log": [
-        "visitor",
-        "log",
-        "guest",
-        "entry",
-        "sign-in",
-        "check-in",
-    ],
-    "Access Control Records": [
-        "access",
-        "control",
-        "entry",
-        "security",
-        "permission",
-        "authorization",
-    ],
-    "Security Alert Notice": [
-        "security",
-        "alert",
-        "notice",
-        "warning",
-        "threat",
-        "emergency",
+        "form",
+        "record",
     ],
 };
 
