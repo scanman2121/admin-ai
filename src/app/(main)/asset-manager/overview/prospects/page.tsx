@@ -1,11 +1,8 @@
 "use client"
 
 import { PageTemplate } from "@/components/PageTemplate"
-import { Card } from "@/components/ui/card"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { RiSearchLine } from "@remixicon/react"
 import Image from "next/image"
 
 // Extended prospective tenants data
@@ -99,6 +96,25 @@ const industryOptions = [
     { value: "design", label: "Design" },
 ]
 
+interface ProspectiveTenant {
+    id: string;
+    name: string;
+    email: string;
+    space: string;
+    rate: string;
+    quarter: string;
+    status: string;
+    industry: string;
+    contact: string;
+    phone: string;
+    broker: {
+        name: string;
+        avatar: string;
+    } | null;
+    logoUrl: string;
+    notes: string;
+}
+
 const columns = [
     {
         accessorKey: "name",
@@ -125,6 +141,9 @@ const columns = [
                     </div>
                 </div>
             );
+        },
+        filterFn: (row: { getValue: (id: string) => string }, id: string, value: string) => {
+            return row.getValue(id).toLowerCase().includes(value.toLowerCase())
         },
     },
     {
@@ -190,6 +209,13 @@ const columns = [
         },
     },
     {
+        accessorKey: "industry",
+        header: "Industry",
+        filterFn: (row: { getValue: (id: string) => string }, id: string, value: string[]) => {
+            return value.includes(row.getValue(id))
+        },
+    },
+    {
         accessorKey: "status",
         header: "Status",
         cell: ({ row }: { row: any }) => {
@@ -207,6 +233,9 @@ const columns = [
                     </SelectContent>
                 </Select>
             );
+        },
+        filterFn: (row: { getValue: (id: string) => string }, id: string, value: string[]) => {
+            return value.includes(row.getValue(id))
         },
     },
     {
@@ -232,46 +261,10 @@ export default function ProspectsPage() {
             ]}
         >
             <div className="space-y-6">
-                {/* Filters */}
-                <Card className="p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="relative">
-                            <RiSearchLine className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
-                            <Input
-                                placeholder="Search prospects..."
-                                className="pl-9"
-                            />
-                        </div>
-                        <Select>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Filter by status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {statusOptions.map((option) => (
-                                    <SelectItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <Select>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Filter by industry" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {industryOptions.map((option) => (
-                                    <SelectItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </Card>
-
                 <DataTable
                     columns={columns}
                     data={prospectiveTenants}
+                    searchKey="name"
                 />
             </div>
         </PageTemplate>

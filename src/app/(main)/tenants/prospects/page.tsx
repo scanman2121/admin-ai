@@ -1,14 +1,12 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { Input } from "@/components/ui/input"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
-import { RiAddLine, RiSearchLine } from "@remixicon/react"
+import { RiAddLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -112,6 +110,25 @@ const industryOptions = [
     { value: "design", label: "Design" },
 ]
 
+interface ProspectiveTenant {
+    id: string;
+    name: string;
+    email: string;
+    space: string;
+    rate: string;
+    quarter: string;
+    status: string;
+    industry: string;
+    contact: string;
+    phone: string;
+    broker: {
+        name: string;
+        avatar: string;
+    } | null;
+    logoUrl: string;
+    notes: string;
+}
+
 function ProspectsTable() {
     const columns = [
         {
@@ -139,6 +156,9 @@ function ProspectsTable() {
                         </div>
                     </div>
                 );
+            },
+            filterFn: (row: { getValue: (id: string) => string }, id: string, value: string) => {
+                return row.getValue(id).toLowerCase().includes(value.toLowerCase())
             },
         },
         {
@@ -204,6 +224,13 @@ function ProspectsTable() {
             },
         },
         {
+            accessorKey: "industry",
+            header: "Industry",
+            filterFn: (row: { getValue: (id: string) => string }, id: string, value: string[]) => {
+                return value.includes(row.getValue(id))
+            },
+        },
+        {
             accessorKey: "status",
             header: "Status",
             cell: ({ row }: { row: any }) => {
@@ -222,6 +249,9 @@ function ProspectsTable() {
                     </Select>
                 );
             },
+            filterFn: (row: { getValue: (id: string) => string }, id: string, value: string[]) => {
+                return value.includes(row.getValue(id))
+            },
         },
         {
             accessorKey: "notes",
@@ -235,46 +265,10 @@ function ProspectsTable() {
 
     return (
         <div className="space-y-6">
-            {/* Filters */}
-            <Card className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="relative">
-                        <RiSearchLine className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
-                        <Input
-                            placeholder="Search prospects..."
-                            className="pl-9"
-                        />
-                    </div>
-                    <Select>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Filter by status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {statusOptions.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <Select>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Filter by industry" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {industryOptions.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-            </Card>
-
             <DataTable
                 columns={columns}
                 data={prospectiveTenants}
+                searchKey="name"
             />
         </div>
     )
