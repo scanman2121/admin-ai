@@ -66,11 +66,15 @@ const prospectiveTenants = [
         space: "10,000 sqft",
         rate: "$25/sqft",
         quarter: "Q4 2023",
-        status: "Tour Scheduled",
+        status: "Tour",
         industry: "Consulting",
         contact: "Michael Brown",
         phone: "(555) 345-6789",
-        lastContact: "2024-03-18",
+        broker: {
+            name: "Lisa Chen",
+            avatar: "https://cdn-icons-png.flaticon.com/512/5969/5969113.png"
+        },
+        logoUrl: "https://cdn-icons-png.flaticon.com/512/5969/5969113.png",
         notes: "Tour scheduled for next week",
     },
     {
@@ -84,7 +88,8 @@ const prospectiveTenants = [
         industry: "Design",
         contact: "Emma Wilson",
         phone: "(555) 456-7890",
-        lastContact: "2024-03-12",
+        broker: null,
+        logoUrl: "https://cdn-icons-png.flaticon.com/512/5969/5969007.png",
         notes: "Requires creative studio space",
     },
 ]
@@ -158,16 +163,23 @@ function ProspectsTable() {
             header: "Broker",
             cell: ({ row }: { row: any }) => {
                 const broker = row.original.broker;
+                if (!broker) {
+                    return <div className="text-sm text-gray-500">No broker assigned</div>;
+                }
                 return (
                     <div className="flex items-center gap-3">
                         <div className="relative size-8 overflow-hidden rounded-full bg-gray-100 flex items-center justify-center">
-                            <Image
-                                src={broker.avatar}
-                                alt={broker.name}
-                                width={24}
-                                height={24}
-                                className="object-contain"
-                            />
+                            {broker.avatar ? (
+                                <Image
+                                    src={broker.avatar}
+                                    alt={broker.name}
+                                    width={24}
+                                    height={24}
+                                    className="object-contain"
+                                />
+                            ) : (
+                                <span className="text-sm text-gray-400">?</span>
+                            )}
                         </div>
                         <span>{broker.name}</span>
                     </div>
