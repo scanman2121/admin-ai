@@ -30,7 +30,6 @@ const prospectiveTenants = [
         rate: "$28/sqft",
         quarter: "Q3 2024",
         status: "new-prospect",
-        industry: "Technology",
         contact: "John Smith",
         phone: "(555) 123-4567",
         broker: {
@@ -39,6 +38,10 @@ const prospectiveTenants = [
         },
         logoUrl: "/tenant-logos/acme.png",
         notes: "Interested in expanding office space",
+        spaces: [
+            { id: "s1", name: "North Wing", floor: "3rd Floor", sqft: "3,000 sqft" },
+            { id: "s2", name: "South Wing", floor: "3rd Floor", sqft: "2,000 sqft" }
+        ]
     },
     {
         id: "2",
@@ -48,7 +51,6 @@ const prospectiveTenants = [
         rate: "$32/sqft",
         quarter: "Q3 2024",
         status: "fit-out",
-        industry: "Finance",
         contact: "Emily Chen",
         phone: "(555) 234-5678",
         broker: {
@@ -57,6 +59,9 @@ const prospectiveTenants = [
         },
         logoUrl: "/tenant-logos/globex.png",
         notes: "Moving in July 15th, 2024",
+        spaces: [
+            { id: "s3", name: "Executive Suite", floor: "5th Floor", sqft: "8,000 sqft" }
+        ]
     },
     {
         id: "3",
@@ -66,7 +71,6 @@ const prospectiveTenants = [
         rate: "$25/sqft",
         quarter: "Q4 2024",
         status: "tour",
-        industry: "Software",
         contact: "Peter Gibbons",
         phone: "(555) 345-6789",
         broker: {
@@ -75,6 +79,10 @@ const prospectiveTenants = [
         },
         logoUrl: "/tenant-logos/initech.png",
         notes: "Tour scheduled for next week",
+        spaces: [
+            { id: "s4", name: "Tech Hub", floor: "2nd Floor", sqft: "3,500 sqft" },
+            { id: "s5", name: "Innovation Center", floor: "2nd Floor", sqft: "2,500 sqft" }
+        ]
     }
 ]
 
@@ -88,6 +96,13 @@ const statusOptions = [
     { value: "active-tenant", label: "Active tenant" }
 ] as const
 
+interface Space {
+    id: string;
+    name: string;
+    floor: string;
+    sqft: string;
+}
+
 interface ProspectiveTenant {
     id: string;
     name: string;
@@ -96,7 +111,6 @@ interface ProspectiveTenant {
     rate: string;
     quarter: string;
     status: string;
-    industry: string;
     contact: string;
     phone: string;
     broker: {
@@ -105,6 +119,7 @@ interface ProspectiveTenant {
     } | null;
     logoUrl: string;
     notes: string;
+    spaces: Space[];
 }
 
 interface ColumnMeta {
@@ -121,7 +136,6 @@ function ProspectsTable() {
             cell: ({ row }: { row: any }) => {
                 const name = row.getValue("name") as string;
                 const logoUrl = row.original.logoUrl as string;
-                const industry = row.original.industry as string;
 
                 return (
                     <div className="flex items-center gap-3">
@@ -133,7 +147,6 @@ function ProspectsTable() {
                                 height={24}
                                 className="object-contain"
                                 onError={(e) => {
-                                    // Fallback to a colored circle with company initial
                                     const target = e.target as HTMLImageElement;
                                     target.style.display = 'none';
                                     const initial = name.charAt(0).toUpperCase();
@@ -146,7 +159,6 @@ function ProspectsTable() {
                         </div>
                         <div>
                             <div className="font-medium">{name}</div>
-                            <div className="text-sm text-gray-500">{industry}</div>
                         </div>
                     </div>
                 );
@@ -233,6 +245,28 @@ function ProspectsTable() {
                     </div>
                 );
             },
+        },
+        {
+            accessorKey: "spaces",
+            header: "Space",
+            cell: ({ row }: { row: any }) => {
+                const spaces = row.getValue("spaces") as Space[];
+
+                return (
+                    <div className="space-y-2">
+                        {spaces.map(space => (
+                            <div key={space.id} className="text-sm">
+                                <div className="font-medium text-gray-900">{space.name}</div>
+                                <div className="text-gray-500">{space.floor} • {space.sqft}</div>
+                            </div>
+                        ))}
+                    </div>
+                );
+            },
+            meta: {
+                className: "text-left",
+                displayName: "Space"
+            } as ColumnMeta
         },
         {
             accessorKey: "industry",
