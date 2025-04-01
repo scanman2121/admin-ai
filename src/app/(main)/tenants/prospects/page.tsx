@@ -23,74 +23,59 @@ const tabs = [
 // Extended prospective tenants data
 const prospectiveTenants = [
     {
-        id: "A",
-        name: "Acme Corporation",
-        email: "contact@acmecorp.com",
+        id: "1",
+        name: "Acme Corp",
+        email: "john@acme.com",
         space: "5,000 sqft",
         rate: "$28/sqft",
-        quarter: "Q3 2023",
+        quarter: "Q3 2024",
         status: "New prospect",
         industry: "Technology",
         contact: "John Smith",
         phone: "(555) 123-4567",
         broker: {
-            name: "Sarah Wilson",
-            avatar: "https://cdn-icons-png.flaticon.com/512/5969/5969043.png"
+            name: "Sarah Johnson",
+            avatar: "/avatars/default-avatar.png"
         },
-        logoUrl: "https://cdn-icons-png.flaticon.com/512/5969/5969043.png",
+        logoUrl: "/tenant-logos/acme.png",
         notes: "Interested in expanding office space",
     },
     {
-        id: "T",
-        name: "TechStart Inc.",
-        email: "leasing@techstart.com",
-        space: "2,500 sqft",
+        id: "2",
+        name: "Globex Corp",
+        email: "emily@globex.com",
+        space: "8,000 sqft",
         rate: "$32/sqft",
-        quarter: "Q2 2023",
-        status: "Tour",
-        industry: "Software",
-        contact: "Sarah Johnson",
+        quarter: "Q3 2024",
+        status: "Fit out",
+        industry: "Finance",
+        contact: "Emily Chen",
         phone: "(555) 234-5678",
         broker: {
-            name: "Michael Chang",
-            avatar: "https://cdn-icons-png.flaticon.com/512/5969/5969184.png"
+            name: "Michael Brown",
+            avatar: "/avatars/default-avatar.png"
         },
-        logoUrl: "https://cdn-icons-png.flaticon.com/512/5969/5969184.png",
-        notes: "Looking for startup-friendly space",
+        logoUrl: "/tenant-logos/globex.png",
+        notes: "Moving in July 15th, 2024",
     },
     {
-        id: "G",
-        name: "Global Services LLC",
-        email: "real.estate@globalservices.com",
-        space: "10,000 sqft",
+        id: "3",
+        name: "Initech",
+        email: "peter@initech.com",
+        space: "6,000 sqft",
         rate: "$25/sqft",
-        quarter: "Q4 2023",
+        quarter: "Q4 2024",
         status: "Tour",
-        industry: "Consulting",
-        contact: "Michael Brown",
+        industry: "Software",
+        contact: "Peter Gibbons",
         phone: "(555) 345-6789",
         broker: {
-            name: "Lisa Chen",
-            avatar: "https://cdn-icons-png.flaticon.com/512/5969/5969113.png"
+            name: "Lisa Wilson",
+            avatar: "/avatars/default-avatar.png"
         },
-        logoUrl: "https://cdn-icons-png.flaticon.com/512/5969/5969113.png",
+        logoUrl: "/tenant-logos/initech.png",
         notes: "Tour scheduled for next week",
-    },
-    {
-        id: "C",
-        name: "Creative Design Co.",
-        email: "space@creativedesign.co",
-        space: "1,800 sqft",
-        rate: "$35/sqft",
-        quarter: "Q3 2023",
-        status: "Initial Inquiry",
-        industry: "Design",
-        contact: "Emma Wilson",
-        phone: "(555) 456-7890",
-        broker: null,
-        logoUrl: "https://cdn-icons-png.flaticon.com/512/5969/5969007.png",
-        notes: "Requires creative studio space",
-    },
+    }
 ]
 
 const statusOptions = [
@@ -100,7 +85,7 @@ const statusOptions = [
     { value: "sign-off", label: "Sign off" },
     { value: "fit-out", label: "Fit out" },
     { value: "onboard", label: "Onboard" },
-    { value: "active-tenant", label: "Active tenant" },
+    { value: "active-tenant", label: "Active tenant" }
 ] as const
 
 interface ProspectiveTenant {
