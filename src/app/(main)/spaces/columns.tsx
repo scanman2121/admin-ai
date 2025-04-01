@@ -7,6 +7,24 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Space } from "./data";
 
+// Create a separate component for the actions cell
+const ActionCell = ({ space }: { space: Space }) => {
+    const router = useRouter();
+
+    if (space.occupancyStatus === "Vacant") {
+        return (
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push(`/asset-manager/overview/prospects?space=${space.id}`)}
+            >
+                View prospects
+            </Button>
+        );
+    }
+    return null;
+};
+
 export const spacesColumns: ColumnDef<Space>[] = [
     {
         accessorKey: "name",
@@ -117,22 +135,6 @@ export const spacesColumns: ColumnDef<Space>[] = [
     },
     {
         id: "actions",
-        cell: ({ row }) => {
-            const router = useRouter();
-            const space = row.original;
-
-            if (space.occupancyStatus === "Vacant") {
-                return (
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => router.push(`/asset-manager/overview/prospects?space=${space.id}`)}
-                    >
-                        View prospects
-                    </Button>
-                );
-            }
-            return null;
-        },
+        cell: ({ row }) => <ActionCell space={row.original} />,
     },
 ]; 
