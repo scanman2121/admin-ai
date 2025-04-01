@@ -7,26 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
 
-const documentTypes = [
-    { label: "PDF", value: "pdf" },
-    { label: "Word", value: "doc" },
-    { label: "Excel", value: "xls" },
-    { label: "Image", value: "img" },
-    { label: "Other", value: "other" }
-]
-
-const buildings = [
-    { label: "125 Highland Ave", value: "125-highland" },
-    { label: "200 Broadway", value: "200-broadway" },
-    { label: "500 Tech Square", value: "500-tech-square" }
-]
-
-const tenants = [
-    { label: "Acme Corp", value: "acme" },
-    { label: "Globex Corp", value: "globex" },
-    { label: "Initech", value: "initech" }
-]
-
 interface DataTableToolbarProps<TData> {
     table: Table<TData>
     searchKey: string
