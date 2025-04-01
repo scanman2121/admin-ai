@@ -184,30 +184,33 @@ function ProspectsTable() {
         {
             accessorKey: "broker",
             header: "Broker",
-            cell: ({ row }: { row: any }) => {
-                const broker = row.original.broker;
-                if (!broker) {
-                    return <div className="text-sm text-gray-500">No broker assigned</div>;
-                }
+            cell: ({ row }) => {
+                const broker = row.getValue("broker") as { name: string; avatar?: string } | null;
                 return (
-                    <div className="flex items-center gap-3">
-                        <div className="relative size-8 overflow-hidden rounded-full bg-gray-100 flex items-center justify-center">
-                            {broker.avatar ? (
-                                <Image
+                    <div className="flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full overflow-hidden bg-gray-100">
+                            {broker?.avatar ? (
+                                <img
                                     src={broker.avatar}
-                                    alt={broker.name}
-                                    width={24}
-                                    height={24}
-                                    className="object-contain"
+                                    alt={`${broker.name}'s avatar`}
+                                    className="h-full w-full object-cover"
                                 />
                             ) : (
-                                <span className="text-sm text-gray-400">?</span>
+                                <img
+                                    src="/avatars/default-avatar.png"
+                                    alt="Default avatar"
+                                    className="h-full w-full object-cover"
+                                />
                             )}
                         </div>
-                        <span>{broker.name}</span>
+                        <span className="text-sm">{broker?.name || 'Unassigned'}</span>
                     </div>
-                );
+                )
             },
+            meta: {
+                className: "text-left",
+                displayName: "Broker"
+            } as ColumnMeta
         },
         {
             accessorKey: "space",
