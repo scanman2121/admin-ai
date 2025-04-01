@@ -89,14 +89,6 @@ const statusOptions = [
     { value: "active-tenant", label: "Active tenant" },
 ] as const
 
-const industryOptions = [
-    { value: "all", label: "All Industries" },
-    { value: "technology", label: "Technology" },
-    { value: "software", label: "Software" },
-    { value: "consulting", label: "Consulting" },
-    { value: "design", label: "Design" },
-]
-
 interface ProspectiveTenant {
     id: string;
     name: string;
