@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
 import { RiAddLine } from "@remixicon/react"
+import { ColumnDef } from "@tanstack/react-table"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -130,7 +131,7 @@ interface ProspectiveTenant {
 }
 
 function ProspectsTable() {
-    const columns = [
+    const columns: ColumnDef<ProspectiveTenant, unknown>[] = [
         {
             accessorKey: "name",
             header: "Company",
@@ -160,6 +161,10 @@ function ProspectsTable() {
             filterFn: (row: { getValue: (id: string) => string }, id: string, value: string) => {
                 return row.getValue(id).toLowerCase().includes(value.toLowerCase())
             },
+            meta: {
+                className: "text-left",
+                displayName: "Company Name"
+            }
         },
         {
             accessorKey: "contact",
@@ -229,6 +234,10 @@ function ProspectsTable() {
             filterFn: (row: { getValue: (id: string) => string }, id: string, value: string[]) => {
                 return value.includes(row.getValue(id))
             },
+            meta: {
+                className: "text-left",
+                displayName: "Industry"
+            }
         },
         {
             accessorKey: "status",
@@ -252,6 +261,10 @@ function ProspectsTable() {
             filterFn: (row: { getValue: (id: string) => string }, id: string, value: string[]) => {
                 return value.includes(row.getValue(id))
             },
+            meta: {
+                className: "text-left",
+                displayName: "Status"
+            }
         },
         {
             accessorKey: "notes",

@@ -3,6 +3,7 @@
 import { PageTemplate } from "@/components/PageTemplate"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ColumnDef } from "@tanstack/react-table"
 import Image from "next/image"
 
 // Extended prospective tenants data
@@ -115,7 +116,13 @@ interface ProspectiveTenant {
     notes: string;
 }
 
-const columns = [
+interface ColumnMeta {
+    className: string;
+    displayName: string;
+    filterOptions?: { value: string; label: string; }[];
+}
+
+const columns: ColumnDef<ProspectiveTenant, unknown>[] = [
     {
         accessorKey: "name",
         header: "Company",
@@ -145,6 +152,10 @@ const columns = [
         filterFn: (row: { getValue: (id: string) => string }, id: string, value: string) => {
             return row.getValue(id).toLowerCase().includes(value.toLowerCase())
         },
+        meta: {
+            className: "text-left",
+            displayName: "Company Name"
+        }
     },
     {
         accessorKey: "contact",
@@ -214,6 +225,10 @@ const columns = [
         filterFn: (row: { getValue: (id: string) => string }, id: string, value: string[]) => {
             return value.includes(row.getValue(id))
         },
+        meta: {
+            className: "text-left",
+            displayName: "Industry"
+        }
     },
     {
         accessorKey: "status",
@@ -237,6 +252,10 @@ const columns = [
         filterFn: (row: { getValue: (id: string) => string }, id: string, value: string[]) => {
             return value.includes(row.getValue(id))
         },
+        meta: {
+            className: "text-left",
+            displayName: "Status"
+        }
     },
     {
         accessorKey: "notes",

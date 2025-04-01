@@ -49,25 +49,34 @@ export function DataTableToolbar<TData>({
                     }
                     className="h-8 w-[150px] lg:w-[250px]"
                 />
-                {table.getColumn("documentType") && (
+                {table.getColumn("industry") && (
                     <DataTableFacetedFilter
-                        column={table.getColumn("documentType")}
-                        title="Document Type"
-                        options={documentTypes}
+                        column={table.getColumn("industry")}
+                        title="Industry"
+                        options={[
+                            { value: "technology", label: "Technology" },
+                            { value: "software", label: "Software" },
+                            { value: "healthcare", label: "Healthcare" },
+                            { value: "finance", label: "Finance" },
+                            { value: "retail", label: "Retail" },
+                            { value: "manufacturing", label: "Manufacturing" },
+                            { value: "design", label: "Design" }
+                        ]}
                     />
                 )}
-                {table.getColumn("building") && (
+                {table.getColumn("status") && (
                     <DataTableFacetedFilter
-                        column={table.getColumn("building")}
-                        title="Building"
-                        options={buildings}
-                    />
-                )}
-                {table.getColumn("tenant") && (
-                    <DataTableFacetedFilter
-                        column={table.getColumn("tenant")}
-                        title="Tenant"
-                        options={tenants}
+                        column={table.getColumn("status")}
+                        title="Status"
+                        options={[
+                            { value: "new-prospect", label: "New prospect" },
+                            { value: "tour", label: "Tour" },
+                            { value: "negotiation", label: "Negotiation" },
+                            { value: "proposal", label: "Proposal" },
+                            { value: "contract", label: "Contract" },
+                            { value: "closed", label: "Closed" },
+                            { value: "lost", label: "Lost" }
+                        ]}
                     />
                 )}
                 {isFiltered && (
