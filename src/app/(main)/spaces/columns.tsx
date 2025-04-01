@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -56,8 +57,8 @@ export const spacesColumns: ColumnDef<Space>[] = [
             const status = row.getValue("occupancyStatus") as "Occupied" | "Vacant";
             return (
                 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${status === "Occupied"
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                        : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                    : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
                     }`}>
                     {status}
                 </span>
@@ -78,6 +79,40 @@ export const spacesColumns: ColumnDef<Space>[] = [
         cell: ({ row }) => {
             const monthlyRate = row.getValue("monthlyRate") as number;
             return <span>${monthlyRate.toLocaleString()}</span>;
+        },
+    },
+    {
+        accessorKey: "isBookable",
+        header: "Bookable",
+        cell: ({ row }) => {
+            const isBookable = row.getValue("isBookable") as boolean;
+            return (
+                <Switch
+                    checked={isBookable}
+                    onCheckedChange={(checked: boolean) => {
+                        // Handle toggle change
+                        console.log(`Toggled bookable for ${row.original.name} to ${checked}`);
+                    }}
+                    aria-label="Toggle bookable"
+                />
+            );
+        },
+    },
+    {
+        accessorKey: "isPublic",
+        header: "Public",
+        cell: ({ row }) => {
+            const isPublic = row.getValue("isPublic") as boolean;
+            return (
+                <Switch
+                    checked={isPublic}
+                    onCheckedChange={(checked: boolean) => {
+                        // Handle toggle change
+                        console.log(`Toggled public for ${row.original.name} to ${checked}`);
+                    }}
+                    aria-label="Toggle public"
+                />
+            );
         },
     },
     {

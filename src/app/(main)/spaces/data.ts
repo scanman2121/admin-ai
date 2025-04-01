@@ -11,6 +11,8 @@ export interface Space {
     leaseEnd?: string;
     monthlyRate?: number;
     lastUpdated: string;
+    isBookable: boolean;
+    isPublic: boolean;
 }
 
 export const data: Space[] = [
@@ -27,6 +29,8 @@ export const data: Space[] = [
         leaseEnd: "2025-06-30",
         monthlyRate: 12500,
         lastUpdated: "2024-03-01",
+        isBookable: false,
+        isPublic: false
     },
     {
         id: "2",
@@ -39,6 +43,8 @@ export const data: Space[] = [
         occupancyStatus: "Vacant",
         monthlyRate: 15000,
         lastUpdated: "2024-03-10",
+        isBookable: true,
+        isPublic: false
     },
     {
         id: "3",
@@ -51,6 +57,8 @@ export const data: Space[] = [
         occupancyStatus: "Vacant",
         monthlyRate: 25000,
         lastUpdated: "2024-01-15",
+        isBookable: true,
+        isPublic: true
     },
     {
         id: "4",
@@ -65,6 +73,8 @@ export const data: Space[] = [
         leaseEnd: "2024-12-31",
         monthlyRate: 20000,
         lastUpdated: "2024-02-20",
+        isBookable: false,
+        isPublic: true
     },
     {
         id: "5",
@@ -79,6 +89,8 @@ export const data: Space[] = [
         leaseEnd: "2025-03-31",
         monthlyRate: 10000,
         lastUpdated: "2024-03-05",
+        isBookable: false,
+        isPublic: false
     },
     {
         id: "6",
@@ -91,6 +103,8 @@ export const data: Space[] = [
         occupancyStatus: "Vacant",
         monthlyRate: 9000,
         lastUpdated: "2024-03-15",
+        isBookable: true,
+        isPublic: true
     },
     {
         id: "7",
@@ -105,6 +119,8 @@ export const data: Space[] = [
         leaseEnd: "2025-08-31",
         monthlyRate: 17500,
         lastUpdated: "2024-03-12",
+        isBookable: false,
+        isPublic: false
     },
     {
         id: "8",
@@ -117,5 +133,7 @@ export const data: Space[] = [
         occupancyStatus: "Vacant",
         monthlyRate: 16000,
         lastUpdated: "2024-03-08",
+        isBookable: true,
+        isPublic: false
     },
 ]; 
