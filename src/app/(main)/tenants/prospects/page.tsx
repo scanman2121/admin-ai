@@ -181,6 +181,14 @@ function ProspectsTable() {
             header: "Broker",
             cell: ({ row }) => {
                 const broker = row.getValue("broker") as { name: string; avatar?: string } | null;
+
+                const getInitials = (name: string) => {
+                    return name.split(' ')
+                        .map(part => part[0])
+                        .join('')
+                        .toUpperCase();
+                };
+
                 return (
                     <div className="flex items-center gap-2">
                         <div className="h-8 w-8 rounded-full overflow-hidden bg-gray-100">
@@ -190,12 +198,14 @@ function ProspectsTable() {
                                     alt={`${broker.name}'s avatar`}
                                     className="h-full w-full object-cover"
                                 />
+                            ) : broker ? (
+                                <div className="h-full w-full flex items-center justify-center bg-blue-500 text-white font-medium">
+                                    {getInitials(broker.name)}
+                                </div>
                             ) : (
-                                <img
-                                    src="/avatars/default-avatar.png"
-                                    alt="Default avatar"
-                                    className="h-full w-full object-cover"
-                                />
+                                <div className="h-full w-full flex items-center justify-center bg-gray-300 text-gray-600 font-medium">
+                                    ?
+                                </div>
                             )}
                         </div>
                         <span className="text-sm">{broker?.name || 'Unassigned'}</span>
