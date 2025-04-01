@@ -2,13 +2,14 @@
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { DataTable } from "@/components/ui/data-table/DataTable"
 import { Input } from "@/components/ui/input"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { getPageInsights } from "@/lib/insights"
 import { RiAddLine, RiSearchLine } from "@remixicon/react"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
@@ -29,11 +30,15 @@ const prospectiveTenants = [
         space: "5,000 sqft",
         rate: "$28/sqft",
         quarter: "Q3 2023",
-        status: "Hot Lead",
+        status: "New prospect",
         industry: "Technology",
         contact: "John Smith",
         phone: "(555) 123-4567",
-        lastContact: "2024-03-15",
+        broker: {
+            name: "Sarah Wilson",
+            avatar: "https://cdn-icons-png.flaticon.com/512/5969/5969043.png"
+        },
+        logoUrl: "https://cdn-icons-png.flaticon.com/512/5969/5969043.png",
         notes: "Interested in expanding office space",
     },
     {
@@ -43,11 +48,15 @@ const prospectiveTenants = [
         space: "2,500 sqft",
         rate: "$32/sqft",
         quarter: "Q2 2023",
-        status: "Initial Contact",
+        status: "Tour",
         industry: "Software",
         contact: "Sarah Johnson",
         phone: "(555) 234-5678",
-        lastContact: "2024-03-10",
+        broker: {
+            name: "Michael Chang",
+            avatar: "https://cdn-icons-png.flaticon.com/512/5969/5969184.png"
+        },
+        logoUrl: "https://cdn-icons-png.flaticon.com/512/5969/5969184.png",
         notes: "Looking for startup-friendly space",
     },
     {
@@ -81,12 +90,14 @@ const prospectiveTenants = [
 ]
 
 const statusOptions = [
-    { value: "all", label: "All Statuses" },
-    { value: "hot-lead", label: "Hot Lead" },
-    { value: "tour-scheduled", label: "Tour Scheduled" },
-    { value: "initial-inquiry", label: "Initial Inquiry" },
-    { value: "initial-contact", label: "Initial Contact" },
-]
+    { value: "new-prospect", label: "New prospect" },
+    { value: "tour", label: "Tour" },
+    { value: "negotiation", label: "Negotiation" },
+    { value: "sign-off", label: "Sign off" },
+    { value: "fit-out", label: "Fit out" },
+    { value: "onboard", label: "Onboard" },
+    { value: "active-tenant", label: "Active tenant" },
+] as const
 
 const industryOptions = [
     { value: "all", label: "All Industries" },
@@ -97,6 +108,119 @@ const industryOptions = [
 ]
 
 function ProspectsTable() {
+    const columns = [
+        {
+            accessorKey: "name",
+            header: "Company",
+            cell: ({ row }: { row: any }) => {
+                const name = row.getValue("name") as string;
+                const logoUrl = row.original.logoUrl as string;
+                const industry = row.original.industry as string;
+
+                return (
+                    <div className="flex items-center gap-3">
+                        <div className="relative size-8 overflow-hidden rounded-full bg-gray-100 flex items-center justify-center">
+                            <Image
+                                src={logoUrl}
+                                alt={name}
+                                width={24}
+                                height={24}
+                                className="object-contain"
+                            />
+                        </div>
+                        <div>
+                            <div className="font-medium">{name}</div>
+                            <div className="text-sm text-gray-500">{industry}</div>
+                        </div>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "contact",
+            header: "Contact",
+            cell: ({ row }: { row: any }) => {
+                const contact = row.getValue("contact") as string;
+                const email = row.original.email as string;
+                const phone = row.original.phone as string;
+
+                return (
+                    <div>
+                        <div>{contact}</div>
+                        <div className="text-sm text-gray-500">{email}</div>
+                        <div className="text-sm text-gray-500">{phone}</div>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "broker",
+            header: "Broker",
+            cell: ({ row }: { row: any }) => {
+                const broker = row.original.broker;
+                return (
+                    <div className="flex items-center gap-3">
+                        <div className="relative size-8 overflow-hidden rounded-full bg-gray-100 flex items-center justify-center">
+                            <Image
+                                src={broker.avatar}
+                                alt={broker.name}
+                                width={24}
+                                height={24}
+                                className="object-contain"
+                            />
+                        </div>
+                        <span>{broker.name}</span>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "space",
+            header: "Space Requirements",
+            cell: ({ row }: { row: any }) => {
+                const space = row.getValue("space") as string;
+                const rate = row.original.rate as string;
+                const quarter = row.original.quarter as string;
+
+                return (
+                    <div>
+                        <div>{space}</div>
+                        <div className="text-sm text-gray-500">{rate}</div>
+                        <div className="text-sm text-gray-500">Target: {quarter}</div>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorKey: "status",
+            header: "Status",
+            cell: ({ row }: { row: any }) => {
+                return (
+                    <Select defaultValue={row.getValue("status")}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {statusOptions.map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                );
+            },
+        },
+        {
+            accessorKey: "notes",
+            header: "Notes",
+            cell: ({ row }: { row: any }) => {
+                const notes = row.getValue("notes") as string;
+                return <div className="max-w-xs truncate">{notes}</div>;
+            },
+        },
+    ];
+
     return (
         <div className="space-y-6">
             {/* Filters */}
@@ -136,60 +260,10 @@ function ProspectsTable() {
                 </div>
             </Card>
 
-            {/* Prospects Table */}
-            <Card className="p-6">
-                <div className="rounded-md border">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Company</TableHead>
-                                <TableHead>Contact</TableHead>
-                                <TableHead>Space Requirements</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Last Contact</TableHead>
-                                <TableHead>Notes</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {prospectiveTenants.map((tenant) => (
-                                <TableRow key={tenant.id}>
-                                    <TableCell>
-                                        <div>
-                                            <div className="font-medium">{tenant.name}</div>
-                                            <div className="text-sm text-gray-500">{tenant.industry}</div>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div>
-                                            <div>{tenant.contact}</div>
-                                            <div className="text-sm text-gray-500">{tenant.phone}</div>
-                                            <div className="text-sm text-gray-500">{tenant.email}</div>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div>
-                                            <div>{tenant.space}</div>
-                                            <div className="text-sm text-gray-500">{tenant.rate}</div>
-                                            <div className="text-sm text-gray-500">Target: {tenant.quarter}</div>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                                            {tenant.status}
-                                        </span>
-                                    </TableCell>
-                                    <TableCell>
-                                        {new Date(tenant.lastContact).toLocaleDateString()}
-                                    </TableCell>
-                                    <TableCell className="max-w-xs truncate">
-                                        {tenant.notes}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
-            </Card>
+            <DataTable
+                columns={columns}
+                data={prospectiveTenants}
+            />
         </div>
     )
 }
