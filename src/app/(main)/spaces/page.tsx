@@ -6,9 +6,10 @@ import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
 import { RiAddLine } from "@remixicon/react"
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { spacesColumns } from "./columns"
+import { data } from "./data"
 
 // Define tabs for the Spaces page
 const tabs = [
@@ -16,139 +17,6 @@ const tabs = [
     { name: "Active", href: "/spaces/active" },
     { name: "Inactive", href: "/spaces/inactive" },
 ] as const
-
-// Define the type for space data
-interface Space {
-    id: string
-    name: string
-    imageUrl: string
-    building: string
-    type: string
-    capacity: number
-    accessGroup: string
-    status: string
-    lastUpdated: string
-}
-
-// Mock data for spaces
-const spacesData = [
-    {
-        id: "1",
-        name: "Executive Conference Room",
-        imageUrl: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2669&auto=format&fit=crop",
-        building: "125 Highland Ave",
-        type: "Conference Room",
-        capacity: 20,
-        accessGroup: "Executive Team",
-        status: "Active",
-        lastUpdated: "2024-03-01",
-    },
-    {
-        id: "2",
-        name: "75 Varick Roof Deck",
-        imageUrl: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        building: "75 Varick",
-        type: "Outdoor Space",
-        capacity: 200,
-        accessGroup: "All Tenants",
-        status: "Active",
-        lastUpdated: "2024-03-10",
-    },
-    {
-        id: "3",
-        name: "Innovation Lab",
-        imageUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2670&auto=format&fit=crop",
-        building: "75 State Street",
-        type: "Workshop",
-        capacity: 30,
-        accessGroup: "Tech Teams",
-        status: "Inactive",
-        lastUpdated: "2024-01-15",
-    },
-    {
-        id: "4",
-        name: "Wellness Center",
-        imageUrl: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2670&auto=format&fit=crop",
-        building: "200 Congress Ave",
-        type: "Fitness Space",
-        capacity: 40,
-        accessGroup: "All Tenants",
-        status: "Active",
-        lastUpdated: "2024-02-20",
-    },
-    {
-        id: "5",
-        name: "Library & Study Area",
-        imageUrl: "https://images.unsplash.com/photo-1568667256549-094345857637?q=80&w=2670&auto=format&fit=crop",
-        building: "500 Boylston Street",
-        type: "Quiet Space",
-        capacity: 25,
-        accessGroup: "All Tenants",
-        status: "Active",
-        lastUpdated: "2024-03-05",
-    },
-]
-
-// Define columns for the spaces table
-const spacesColumns = [
-    {
-        accessorKey: "name",
-        header: "Space Name",
-        cell: ({ row }: { row: any }) => {
-            const name = row.getValue("name") as string;
-            const imageUrl = row.original.imageUrl as string;
-
-            return (
-                <div className="flex items-center gap-3">
-                    <div className="relative size-8 overflow-hidden rounded-md">
-                        <Image
-                            src={imageUrl}
-                            alt={name}
-                            fill
-                            className="object-cover"
-                        />
-                    </div>
-                    <span>{name}</span>
-                </div>
-            );
-        },
-    },
-    {
-        accessorKey: "building",
-        header: "Building",
-    },
-    {
-        accessorKey: "type",
-        header: "Type",
-    },
-    {
-        accessorKey: "capacity",
-        header: "Capacity",
-    },
-    {
-        accessorKey: "accessGroup",
-        header: "Access Group",
-    },
-    {
-        accessorKey: "status",
-        header: "Status",
-        cell: ({ row }: { row: any }) => {
-            const status = row.getValue("status") as string
-            return (
-                <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${status === "Active"
-                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                    : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-                    }`}>
-                    {status}
-                </span>
-            )
-        },
-    },
-    {
-        accessorKey: "lastUpdated",
-        header: "Last Updated",
-    },
-]
 
 export default function SpacesPage() {
     const pathname = usePathname()
@@ -180,10 +48,9 @@ export default function SpacesPage() {
                     ))}
                 </TabNavigation>
 
-                <DataTable<Space, any>
+                <DataTable
                     columns={spacesColumns}
-                    data={spacesData}
-                    onRowClick={(row) => router.push(`/spaces/${row.id}`)}
+                    data={data}
                 />
             </div>
         </div>
