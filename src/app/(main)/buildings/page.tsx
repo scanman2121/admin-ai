@@ -18,11 +18,6 @@ const tabs = [
     { name: "Inactive", href: "/buildings/inactive" },
 ] as const
 
-interface Building {
-    id: string;
-    [key: string]: any;
-}
-
 export default function Buildings() {
     const pathname = usePathname()
     const router = useRouter()
@@ -56,7 +51,6 @@ export default function Buildings() {
                 <DataTable
                     columns={buildingsColumns}
                     data={data}
-                    onRowClick={(row: Building) => router.push(`/buildings/${row.id}`)}
                 />
             </div>
         </div>
