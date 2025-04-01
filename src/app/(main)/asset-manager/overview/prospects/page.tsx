@@ -147,7 +147,7 @@ const columns: ColumnDef<ProspectiveTenant, unknown>[] = [
         meta: {
             className: "text-left",
             displayName: "Company Name"
-        }
+        } as ColumnMeta
     },
     {
         accessorKey: "contact",
@@ -220,7 +220,7 @@ const columns: ColumnDef<ProspectiveTenant, unknown>[] = [
         meta: {
             className: "text-left",
             displayName: "Industry"
-        }
+        } as ColumnMeta
     },
     {
         accessorKey: "status",
@@ -247,7 +247,7 @@ const columns: ColumnDef<ProspectiveTenant, unknown>[] = [
         meta: {
             className: "text-left",
             displayName: "Status"
-        }
+        } as ColumnMeta
     },
     {
         accessorKey: "notes",

@@ -122,6 +122,12 @@ interface ProspectiveTenant {
     notes: string;
 }
 
+interface ColumnMeta {
+    className: string;
+    displayName: string;
+    filterOptions?: { value: string; label: string; }[];
+}
+
 function ProspectsTable() {
     const columns: ColumnDef<ProspectiveTenant, unknown>[] = [
         {
@@ -156,7 +162,7 @@ function ProspectsTable() {
             meta: {
                 className: "text-left",
                 displayName: "Company Name"
-            }
+            } as ColumnMeta
         },
         {
             accessorKey: "contact",
@@ -229,7 +235,7 @@ function ProspectsTable() {
             meta: {
                 className: "text-left",
                 displayName: "Industry"
-            }
+            } as ColumnMeta
         },
         {
             accessorKey: "status",
@@ -256,7 +262,7 @@ function ProspectsTable() {
             meta: {
                 className: "text-left",
                 displayName: "Status"
-            }
+            } as ColumnMeta
         },
         {
             accessorKey: "notes",
