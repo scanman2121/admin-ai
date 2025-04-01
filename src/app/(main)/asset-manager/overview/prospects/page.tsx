@@ -117,6 +117,16 @@ const columns: ColumnDef<ProspectiveTenant, unknown>[] = [
                             width={24}
                             height={24}
                             className="object-contain"
+                            onError={(e) => {
+                                // Fallback to a colored circle with company initial
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                const initial = name.charAt(0).toUpperCase();
+                                const parent = target.parentElement;
+                                if (parent) {
+                                    parent.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-blue-500 text-white font-medium">${initial}</div>`;
+                                }
+                            }}
                         />
                     </div>
                     <div>
