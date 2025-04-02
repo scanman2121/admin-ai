@@ -1,118 +1,241 @@
+"use client";
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { useSortable } from '@dnd-kit/sortable';
+import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { GripHorizontal } from 'lucide-react';
-import type { Tenant } from './KanbanBoard';
-import { User, UserSelect } from './UserSelect';
+import { format } from 'date-fns';
+import { CalendarIcon, GripVertical, PlusIcon, TrashIcon } from 'lucide-react';
+import { Contact, Space, Tenant } from './KanbanBoard';
 
 interface KanbanCardProps {
-    tenant: Tenant;
-    className?: string;
-    onUpdateContact?: (tenantId: string, contact: User | undefined) => void;
-    onUpdateBroker?: (tenantId: string, broker: User | undefined) => void;
+    tenant: Tenant
+    className?: string
+    onUpdateContact?: (tenantId: string, contact: Contact | undefined) => void
+    onUpdateBroker?: (tenantId: string, broker: Contact | undefined) => void
+    onUpdateSpaces?: (tenantId: string, spaces: Space[]) => void
 }
 
-export function KanbanCard({
-    tenant,
-    className,
-    onUpdateContact,
-    onUpdateBroker
-}: KanbanCardProps) {
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition,
-        isDragging
-    } = useSortable({
+const contacts: Contact[] = [
+    {
+        id: 'c1',
+        name: 'John Smith',
+        role: 'CTO',
+        email: 'john@acme.com'
+    },
+    {
+        id: 'c2',
+        name: 'Emily Chen',
+        role: 'Facilities Manager',
+        email: 'emily@globex.com'
+    },
+    {
+        id: 'c3',
+        name: 'Peter Gibbons',
+        role: 'Office Manager',
+        email: 'peter@initech.com'
+    }
+]
+
+const brokers: Contact[] = [
+    {
+        id: 'b1',
+        name: 'Sarah Johnson',
+        role: 'Senior Broker',
+        email: 'sarah@brokerage.com'
+    },
+    {
+        id: 'b2',
+        name: 'Michael Brown',
+        role: 'Principal Broker',
+        email: 'michael@brokerage.com'
+    },
+    {
+        id: 'b3',
+        name: 'Lisa Wilson',
+        role: 'Associate Broker',
+        email: 'lisa@brokerage.com'
+    }
+]
+
+const availableSpaces: Space[] = [
+    {
+        id: 's1',
+        name: 'North Wing',
+        floor: '3rd Floor',
+        sqft: '5,000 sqft'
+    },
+    {
+        id: 's2',
+        name: 'South Wing',
+        floor: '3rd Floor',
+        sqft: '3,500 sqft'
+    },
+    {
+        id: 's3',
+        name: 'Executive Suite',
+        floor: '5th Floor',
+        sqft: '8,000 sqft'
+    },
+    {
+        id: 's4',
+        name: 'Tech Hub',
+        floor: '2nd Floor',
+        sqft: '3,500 sqft'
+    },
+    {
+        id: 's5',
+        name: 'Innovation Center',
+        floor: '2nd Floor',
+        sqft: '2,500 sqft'
+    },
+    {
+        id: 's6',
+        name: 'Creative Studio',
+        floor: '4th Floor',
+        sqft: '4,000 sqft'
+    }
+]
+
+export function KanbanCard({ tenant, className, onUpdateContact, onUpdateBroker, onUpdateSpaces }: KanbanCardProps) {
+    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: tenant.id,
-        data: tenant
-    });
+    })
 
-    const style = {
+    const style = transform ? {
         transform: CSS.Transform.toString(transform),
-        transition,
-        zIndex: isDragging ? 50 : undefined
-    };
+    } : undefined
 
-    const showMoveInDate = ['Fit out', 'Onboard', 'Active tenant'].includes(tenant.stage);
+    const handleContactChange = (contactId: string) => {
+        if (!onUpdateContact) return
+        const contact = contacts.find(c => c.id === contactId)
+        onUpdateContact(tenant.id, contact)
+    }
 
-    // Generate logo URL based on whether it's a valid URL or use UI Avatars
-    const logoUrl = tenant.logo.startsWith('http')
-        ? tenant.logo
-        : `https://ui-avatars.com/api/?name=${encodeURIComponent(tenant.name)}&background=random`;
+    const handleBrokerChange = (brokerId: string) => {
+        if (!onUpdateBroker) return
+        const broker = brokers.find(b => b.id === brokerId)
+        onUpdateBroker(tenant.id, broker)
+    }
+
+    const handleAddSpace = (spaceId: string) => {
+        if (!onUpdateSpaces) return
+        const space = availableSpaces.find(s => s.id === spaceId)
+        if (!space || tenant.spaces.some(s => s.id === spaceId)) return
+        onUpdateSpaces(tenant.id, [...tenant.spaces, space])
+    }
+
+    const handleRemoveSpace = (spaceId: string) => {
+        if (!onUpdateSpaces) return
+        onUpdateSpaces(tenant.id, tenant.spaces.filter(s => s.id !== spaceId))
+    }
 
     return (
-        <div
+        <Card
             ref={setNodeRef}
             style={style}
-            {...attributes}
             className={cn(
-                "bg-white rounded-lg p-4 shadow-sm border border-gray-100",
-                "hover:shadow-md transition-shadow duration-200",
-                isDragging && "shadow-lg opacity-90",
+                'relative w-[300px] p-4 cursor-grab active:cursor-grabbing',
+                isDragging && 'opacity-50',
                 className
             )}
         >
-            <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    <img
-                        src={logoUrl}
-                        alt={`${tenant.name} logo`}
-                        className="w-10 h-10 rounded-full object-cover"
-                    />
-                    <div>
-                        <h3 className="font-medium text-gray-900">{tenant.name}</h3>
-                        <p className="text-sm text-gray-500">{tenant.industry}</p>
-                    </div>
+            <div {...attributes} {...listeners} className="absolute top-4 right-4 text-muted-foreground">
+                <GripVertical className="h-4 w-4" />
+            </div>
+
+            <div className="flex items-center gap-3 mb-4">
+                <Avatar className="h-10 w-10">
+                    <AvatarImage src={tenant.logo} alt={tenant.name} />
+                    <AvatarFallback>{tenant.name.slice(0, 2)}</AvatarFallback>
+                </Avatar>
+                <div>
+                    <h3 className="font-medium">{tenant.name}</h3>
+                    <p className="text-sm text-muted-foreground">{tenant.industry}</p>
                 </div>
-                <button
-                    {...listeners}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                    <GripHorizontal className="h-5 w-5" />
-                </button>
             </div>
 
-            <div className="space-y-2">
-                <UserSelect
-                    label="Contact"
-                    selectedUser={tenant.contact}
-                    onSelect={(user) => onUpdateContact?.(tenant.id, user)}
-                    userType="contact"
-                />
-                <UserSelect
-                    label="Broker"
-                    selectedUser={tenant.broker}
-                    onSelect={(user) => onUpdateBroker?.(tenant.id, user)}
-                    userType="broker"
-                />
-            </div>
-
-            {showMoveInDate && tenant.moveInDate && (
-                <div className="mt-3 text-sm text-gray-500">
-                    Move in: {tenant.moveInDate}
+            {tenant.moveInDate && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                    <CalendarIcon className="h-4 w-4" />
+                    <span>Move in {format(new Date(tenant.moveInDate), 'MMM d, yyyy')}</span>
                 </div>
             )}
 
-            {tenant.spaces.length > 0 && (
-                <>
-                    <div className="mt-4 pt-3 border-t">
-                        <h4 className="text-sm font-medium text-gray-900 mb-2">Spaces of Interest</h4>
-                        <div className="space-y-2">
-                            {tenant.spaces.map(space => (
-                                <div key={space.id} className="text-sm">
-                                    <div className="font-medium text-gray-700">{space.name}</div>
-                                    <div className="text-gray-500">
-                                        {space.floor} • {space.sqft}
-                                    </div>
-                                </div>
+            <div className="space-y-4 py-2">
+                <div>
+                    <label className="text-sm font-medium mb-1.5 block">Contact</label>
+                    <Select value={tenant.contact?.id} onValueChange={handleContactChange}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select contact" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {contacts.map(contact => (
+                                <SelectItem key={contact.id} value={contact.id}>
+                                    {contact.name}
+                                </SelectItem>
                             ))}
-                        </div>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div>
+                    <label className="text-sm font-medium mb-1.5 block">Broker</label>
+                    <Select value={tenant.broker?.id} onValueChange={handleBrokerChange}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select broker" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {brokers.map(broker => (
+                                <SelectItem key={broker.id} value={broker.id}>
+                                    {broker.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                        <label className="text-sm font-medium">Spaces of interest</label>
+                        <Select onValueChange={handleAddSpace}>
+                            <SelectTrigger className="w-8 h-8 p-0">
+                                <PlusIcon className="h-4 w-4" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {availableSpaces
+                                    .filter(space => !tenant.spaces.some(s => s.id === space.id))
+                                    .map(space => (
+                                        <SelectItem key={space.id} value={space.id}>
+                                            {space.name} • {space.floor}
+                                        </SelectItem>
+                                    ))}
+                            </SelectContent>
+                        </Select>
                     </div>
-                </>
-            )}
-        </div>
-    );
+                    <div className="space-y-2">
+                        {tenant.spaces.map(space => (
+                            <div key={space.id} className="flex items-center justify-between bg-muted/50 rounded-md p-2">
+                                <div>
+                                    <p className="text-sm font-medium">{space.name}</p>
+                                    <p className="text-xs text-muted-foreground">{space.floor} • {space.sqft}</p>
+                                </div>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6"
+                                    onClick={() => handleRemoveSpace(space.id)}
+                                >
+                                    <TrashIcon className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </Card>
+    )
 } 

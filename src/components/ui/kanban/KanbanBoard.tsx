@@ -225,6 +225,16 @@ export function KanbanBoard() {
         )
     }
 
+    const handleUpdateSpaces = (tenantId: string, spaces: Space[]) => {
+        setTenants(current =>
+            current.map(t =>
+                t.id === tenantId
+                    ? { ...t, spaces }
+                    : t
+            )
+        )
+    }
+
     const activeTenant = activeId ? tenants.find(t => t.id === activeId) : null
 
     return (
@@ -252,6 +262,7 @@ export function KanbanBoard() {
                                             tenant={tenant}
                                             onUpdateContact={handleUpdateContact}
                                             onUpdateBroker={handleUpdateBroker}
+                                            onUpdateSpaces={handleUpdateSpaces}
                                         />
                                     ))}
                             </KanbanColumn>
@@ -263,6 +274,7 @@ export function KanbanBoard() {
                                     className="rotate-3 cursor-grabbing"
                                     onUpdateContact={handleUpdateContact}
                                     onUpdateBroker={handleUpdateBroker}
+                                    onUpdateSpaces={handleUpdateSpaces}
                                 />
                             ) : null}
                         </DragOverlay>
