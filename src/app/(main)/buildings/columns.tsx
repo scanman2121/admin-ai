@@ -95,14 +95,14 @@ export const buildingsColumns: ColumnDef<Building>[] = [
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">Complete assessment</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[1000px] sm:h-[800px] p-6">
-              <DialogHeader className="pb-2">
+            <DialogContent className="sm:max-w-[1000px] sm:h-[800px] p-4">
+              <DialogHeader className="pb-2 mb-0">
                 <DialogTitle>Building Assessment</DialogTitle>
-                <DialogDescription>
+                <DialogDescription className="mt-1">
                   Complete the assessment for 75 State Street to reactivate the building.
                 </DialogDescription>
               </DialogHeader>
-              <div className="h-full w-full">
+              <div className="h-[calc(100%-80px)] w-full mt-2">
                 <iframe
                   src="https://hqo.leesmananalytics.com/assessment"
                   style={{ border: "none" }}
