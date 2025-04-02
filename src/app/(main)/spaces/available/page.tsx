@@ -8,8 +8,8 @@ import { getPageInsights } from "@/lib/insights"
 import { RiAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { spacesColumns } from "./columns"
-import { data } from "./data"
+import { spacesColumns } from "../columns"
+import { data } from "../data"
 
 // Define tabs for the Spaces page
 const tabs = [
@@ -19,15 +19,18 @@ const tabs = [
     { name: "Inactive", href: "/spaces/inactive" },
 ] as const
 
-export default function SpacesPage() {
+export default function AvailableSpacesPage() {
     const pathname = usePathname()
     const router = useRouter()
     const insights = getPageInsights("spaces")
 
+    // Filter for vacant spaces only
+    const availableSpaces = data.filter(space => space.occupancyStatus === "Vacant")
+
     return (
         <div className="flex h-full w-full flex-col space-y-8">
             <div className="flex items-center justify-between">
-                <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">Spaces</h1>
+                <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">Available Space</h1>
                 <Button onClick={() => router.push("/spaces/new")}>
                     <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
                     Add Space
@@ -51,7 +54,7 @@ export default function SpacesPage() {
 
                 <DataTable
                     columns={spacesColumns}
-                    data={data}
+                    data={availableSpaces}
                 />
             </div>
         </div>
