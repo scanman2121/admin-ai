@@ -332,6 +332,34 @@ const newTenant = {
   logo: "/tenant-logos/acme.png"
 };
 
+// Mock data for upcoming tours
+const upcomingTours = [
+  {
+    id: "1",
+    companyName: "TechStart Inc.",
+    contactName: "Sarah Chen",
+    date: "Today, 2:30 PM",
+    space: "15th Floor, North Wing",
+    broker: {
+      name: "Michael Brown",
+      avatar: "/avatars/default-avatar.png"
+    },
+    status: "Confirmed"
+  },
+  {
+    id: "2",
+    companyName: "Quantum Solutions",
+    contactName: "James Wilson",
+    date: "Tomorrow, 11:00 AM",
+    space: "12th Floor, East Wing",
+    broker: {
+      name: "Lisa Anderson",
+      avatar: "/avatars/default-avatar.png"
+    },
+    status: "Pending Confirmation"
+  }
+];
+
 export default function MyHqO() {
   const [selectedTenant, setSelectedTenant] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -451,6 +479,84 @@ export default function MyHqO() {
               <RiArrowRightLine className="size-4" />
             </Link>
           </div>
+        </div>
+      </Card>
+
+      {/* Upcoming Tours Card */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Upcoming Tours</h2>
+            <p className="text-sm text-gray-500">Prospect visits scheduled for tours</p>
+          </div>
+          <Link
+            href="/asset-manager/overview/prospects"
+            className="text-sm text-primary hover:underline"
+          >
+            View all prospects
+          </Link>
+        </div>
+
+        <div className="space-y-4">
+          {upcomingTours.map((tour) => (
+            <div
+              key={tour.id}
+              className="flex items-start gap-4 p-4 rounded-lg border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+            >
+              <div className="flex-shrink-0">
+                <div className="size-10 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
+                  <RiMapPinLine className="size-5 text-purple-600 dark:text-purple-300" />
+                </div>
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-50">{tour.companyName}</h3>
+                  <Badge className={cn(
+                    "capitalize",
+                    tour.status === "Confirmed"
+                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                      : "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
+                  )}>
+                    {tour.status}
+                  </Badge>
+                </div>
+
+                <div className="mt-1 text-sm text-gray-500">
+                  <div className="flex items-center gap-2">
+                    <span>{tour.contactName}</span>
+                    <span>•</span>
+                    <span>{tour.date}</span>
+                  </div>
+                  <div className="mt-1">{tour.space}</div>
+                </div>
+
+                <div className="mt-3 flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className="h-6 w-6 rounded-full overflow-hidden">
+                      <div className={cn(
+                        "h-full w-full flex items-center justify-center text-white font-medium",
+                        getBackgroundColor(tour.broker.name)
+                      )}>
+                        {getInitials(tour.broker.name)}
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {tour.broker.name}
+                    </span>
+                  </div>
+
+                  <Button
+                    variant="light"
+                    size="xs"
+                    className="ml-auto"
+                  >
+                    View details
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </Card>
 
