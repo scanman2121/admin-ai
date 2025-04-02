@@ -3,6 +3,7 @@
 import { PageTemplate } from "@/components/PageTemplate"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { cn } from "@/lib/utils"
 import { ColumnDef } from "@tanstack/react-table"
 import Image from "next/image"
 
@@ -193,17 +194,27 @@ const columns: ColumnDef<ProspectiveTenant, unknown>[] = [
                     .toUpperCase();
             };
 
+            // Generate a consistent color based on broker name
+            const getBackgroundColor = (name: string) => {
+                const colors = [
+                    'bg-blue-500',
+                    'bg-green-500',
+                    'bg-purple-500',
+                    'bg-pink-500',
+                    'bg-indigo-500',
+                    'bg-orange-500',
+                    'bg-teal-500',
+                    'bg-cyan-500'
+                ];
+                const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+                return colors[index];
+            };
+
             return (
                 <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full overflow-hidden bg-gray-100">
-                        {broker?.avatar ? (
-                            <img
-                                src={broker.avatar}
-                                alt={`${broker.name}'s avatar`}
-                                className="h-full w-full object-cover"
-                            />
-                        ) : broker ? (
-                            <div className="h-full w-full flex items-center justify-center bg-blue-500 text-white font-medium">
+                    <div className="h-8 w-8 rounded-full overflow-hidden">
+                        {broker ? (
+                            <div className={cn("h-full w-full flex items-center justify-center text-white font-medium", getBackgroundColor(broker.name))}>
                                 {getInitials(broker.name)}
                             </div>
                         ) : (
