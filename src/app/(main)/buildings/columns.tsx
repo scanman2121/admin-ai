@@ -95,8 +95,8 @@ export const buildingsColumns: ColumnDef<Building>[] = [
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">Complete assessment</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[800px] sm:h-[600px]">
-              <DialogHeader>
+            <DialogContent className="sm:max-w-[1000px] sm:h-[800px] p-6">
+              <DialogHeader className="pb-2">
                 <DialogTitle>Building Assessment</DialogTitle>
                 <DialogDescription>
                   Complete the assessment for 75 State Street to reactivate the building.
