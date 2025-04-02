@@ -4,6 +4,7 @@ import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, MouseSensor, Tou
 import { useState } from 'react'
 import { KanbanCard } from './KanbanCard'
 import { KanbanColumn } from './KanbanColumn'
+import { KanbanToolbar } from './KanbanToolbar'
 
 export interface Space {
     id: string
@@ -158,6 +159,10 @@ const getStageColor = (stage: Stage): string => {
 export function KanbanBoard() {
     const [tenants, setTenants] = useState<Tenant[]>(mockTenants)
     const [activeId, setActiveId] = useState<string | null>(null)
+    const [searchQuery, setSearchQuery] = useState("")
+    const [selectedBrokers, setSelectedBrokers] = useState<string[]>([])
+    const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
+    const [selectedSpaces, setSelectedSpaces] = useState<string[]>([])
 
     const sensors = useSensors(
         useSensor(MouseSensor, {
@@ -235,50 +240,86 @@ export function KanbanBoard() {
         )
     }
 
+    const filteredTenants = tenants.filter(tenant => {
+        const matchesSearch = searchQuery === "" ||
+            tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            tenant.industry.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            tenant.contact?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            tenant.broker?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            tenant.spaces.some(space =>
+                space.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                space.floor.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+
+        const matchesBroker = selectedBrokers.length === 0 ||
+            (tenant.broker && selectedBrokers.includes(tenant.broker.id))
+
+        const matchesCompany = selectedCompanies.length === 0 ||
+            selectedCompanies.includes(tenant.id)
+
+        const matchesSpace = selectedSpaces.length === 0 ||
+            tenant.spaces.some(space => selectedSpaces.includes(space.id))
+
+        return matchesSearch && matchesBroker && matchesCompany && matchesSpace
+    })
+
     const activeTenant = activeId ? tenants.find(t => t.id === activeId) : null
 
     return (
-        <div className="relative w-full h-[calc(100vh-13rem)]">
-            <div className="absolute inset-0 overflow-x-auto">
-                <div className="inline-flex gap-4 p-4 h-full">
-                    <DndContext
-                        sensors={sensors}
-                        onDragStart={handleDragStart}
-                        onDragEnd={handleDragEnd}
-                        onDragCancel={handleDragCancel}
-                    >
-                        {stages.map(stage => (
-                            <KanbanColumn
-                                key={stage}
-                                stage={stage}
-                                tenants={tenants.filter(t => t.stage === stage)}
-                                className={getStageColor(stage)}
-                            >
-                                {tenants
-                                    .filter(t => t.stage === stage)
-                                    .map(tenant => (
-                                        <KanbanCard
-                                            key={tenant.id}
-                                            tenant={tenant}
-                                            onUpdateContact={handleUpdateContact}
-                                            onUpdateBroker={handleUpdateBroker}
-                                            onUpdateSpaces={handleUpdateSpaces}
-                                        />
-                                    ))}
-                            </KanbanColumn>
-                        ))}
-                        <DragOverlay>
-                            {activeTenant ? (
-                                <KanbanCard
-                                    tenant={activeTenant}
-                                    className="rotate-3 cursor-grabbing"
-                                    onUpdateContact={handleUpdateContact}
-                                    onUpdateBroker={handleUpdateBroker}
-                                    onUpdateSpaces={handleUpdateSpaces}
-                                />
-                            ) : null}
-                        </DragOverlay>
-                    </DndContext>
+        <div className="space-y-4">
+            <KanbanToolbar
+                tenants={tenants}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                selectedBrokers={selectedBrokers}
+                onBrokersChange={setSelectedBrokers}
+                selectedCompanies={selectedCompanies}
+                onCompaniesChange={setSelectedCompanies}
+                selectedSpaces={selectedSpaces}
+                onSpacesChange={setSelectedSpaces}
+            />
+            <div className="relative w-full h-[calc(100vh-13rem)]">
+                <div className="absolute inset-0 overflow-x-auto">
+                    <div className="inline-flex gap-4 p-4 h-full">
+                        <DndContext
+                            sensors={sensors}
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}
+                            onDragCancel={handleDragCancel}
+                        >
+                            {stages.map(stage => (
+                                <KanbanColumn
+                                    key={stage}
+                                    stage={stage}
+                                    tenants={filteredTenants.filter(t => t.stage === stage)}
+                                    className={getStageColor(stage)}
+                                >
+                                    {filteredTenants
+                                        .filter(t => t.stage === stage)
+                                        .map(tenant => (
+                                            <KanbanCard
+                                                key={tenant.id}
+                                                tenant={tenant}
+                                                onUpdateContact={handleUpdateContact}
+                                                onUpdateBroker={handleUpdateBroker}
+                                                onUpdateSpaces={handleUpdateSpaces}
+                                            />
+                                        ))}
+                                </KanbanColumn>
+                            ))}
+                            <DragOverlay>
+                                {activeTenant ? (
+                                    <KanbanCard
+                                        tenant={activeTenant}
+                                        className="rotate-3 cursor-grabbing"
+                                        onUpdateContact={handleUpdateContact}
+                                        onUpdateBroker={handleUpdateBroker}
+                                        onUpdateSpaces={handleUpdateSpaces}
+                                    />
+                                ) : null}
+                            </DragOverlay>
+                        </DndContext>
+                    </div>
                 </div>
             </div>
         </div>
