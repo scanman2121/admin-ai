@@ -329,12 +329,37 @@ const newTenant = {
   space: "5,000 sqft",
   floor: "15th Floor",
   moveInDate: "April 15, 2024",
-  logo: "https://ui-avatars.com/api/?name=Acme+Corporation&background=0D9488&color=fff"
+  logo: "/tenant-logos/acme.png"
 };
 
 export default function MyHqO() {
   const [selectedTenant, setSelectedTenant] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Get initials from company name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .toUpperCase();
+  };
+
+  // Generate a consistent color based on company name
+  const getBackgroundColor = (name: string) => {
+    const colors = [
+      'bg-blue-500',
+      'bg-green-500',
+      'bg-purple-500',
+      'bg-pink-500',
+      'bg-indigo-500',
+      'bg-orange-500',
+      'bg-teal-500',
+      'bg-cyan-500'
+    ];
+    const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+    return colors[index];
+  };
 
   // Filter activities based on tenant selection and search query
   const filteredActivities = recentActivityData.filter(activity => {
@@ -376,7 +401,7 @@ export default function MyHqO() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="relative shrink-0">
-              <div className="size-16 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center">
+              <div className="size-16 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden">
                 <Image
                   src={newTenant.logo}
                   alt={newTenant.name}
@@ -384,7 +409,12 @@ export default function MyHqO() {
                   height={48}
                   className="rounded object-contain"
                   onError={(e) => {
-                    e.currentTarget.src = "/images/placeholder-logo.png";
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const parent = target.parentElement;
+                    if (parent) {
+                      parent.innerHTML = `<div class="w-full h-full flex items-center justify-center ${getBackgroundColor(newTenant.name)} text-white font-medium">${getInitials(newTenant.name)}</div>`;
+                    }
                   }}
                 />
               </div>
