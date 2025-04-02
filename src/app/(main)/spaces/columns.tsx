@@ -104,6 +104,12 @@ export const spacesColumns: ColumnDef<Space>[] = [
         header: "Bookable",
         cell: ({ row }) => {
             const isBookable = row.getValue("isBookable") as boolean;
+            const status = row.original.occupancyStatus;
+
+            if (status === "Vacant") {
+                return <span className="text-muted-foreground">N/A</span>;
+            }
+
             return (
                 <Switch
                     checked={isBookable}
