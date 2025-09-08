@@ -3,14 +3,15 @@ import { SidebarContext } from "@/app/(main)/layout"
 import { siteConfig } from "@/app/siteConfig"
 import { cn, focusRing } from "@/lib/utils"
 import {
-  RiArrowDownSLine,
-  RiBuilding2Line,
-  RiBuildingLine,
-  RiDashboardLine,
-  RiLineChartLine,
-  RiMegaphoneLine,
-  RiReceiptLine,
-  RiSettings5Line
+    RiArrowDownSLine,
+    RiBuilding2Line,
+    RiBuildingLine,
+    RiDashboardLine,
+    RiFolderLine,
+    RiLineChartLine,
+    RiMegaphoneLine,
+    RiReceiptLine,
+    RiSettings5Line
 } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -19,9 +20,9 @@ import { HqOLogo } from "./HqOLogo"
 import { SidebarPopover } from "./SidebarPopover"
 import { UserProfileDesktop } from "./UserProfile"
 
-// Asset Manager sub-navigation items
-const assetManagerItems = [
-  { name: "Overview", href: siteConfig.baseLinks.assetManager.overview },
+// Portfolio sub-navigation items
+const portfolioItems = [
+  { name: "Overview", href: siteConfig.baseLinks.portfolio.overview },
   { name: "Buildings", href: siteConfig.baseLinks.buildings },
   { name: "Spaces", href: siteConfig.baseLinks.spaces },
   { name: "Tenants", href: siteConfig.baseLinks.tenants },
@@ -67,7 +68,6 @@ const settingsAndSetupItems = [
   { name: "Connected apps", href: siteConfig.baseLinks.settingsAndSetup.connectedApps },
   { name: "Settings", href: siteConfig.baseLinks.settingsAndSetup.settings },
   { name: "Theme", href: siteConfig.baseLinks.settingsAndSetup.theme },
-  { name: "Documents", href: siteConfig.baseLinks.settingsAndSetup.documents },
 ] as const
 
 // Intelligence sub-navigation items
@@ -79,7 +79,7 @@ const intelligenceItems = [
 ] as const
 
 // Type for section IDs to ensure type safety
-type SectionId = 'assetManager' | 'payments' | 'experienceManager' | 'operations' | 'settingsAndSetup' | 'intelligence';
+type SectionId = 'portfolio' | 'payments' | 'experienceManager' | 'operations' | 'settingsAndSetup' | 'intelligence';
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -87,7 +87,7 @@ export function Sidebar() {
   const { collapsed } = useContext(SidebarContext)
 
   // Check if current path is in each section
-  const isInAssetManager = assetManagerItems.some(item =>
+  const isInPortfolio = portfolioItems.some(item =>
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
@@ -119,8 +119,8 @@ export function Sidebar() {
     if (isInMyHqO) {
       // Collapse all sections when My HqO is active
       setOpenSection(null)
-    } else if (isInAssetManager) {
-      setOpenSection('assetManager')
+    } else if (isInPortfolio) {
+      setOpenSection('portfolio')
     } else if (isInPayments) {
       setOpenSection('payments')
     } else if (isInExperienceManager) {
@@ -132,7 +132,7 @@ export function Sidebar() {
     } else if (isInIntelligence) {
       setOpenSection('intelligence')
     }
-  }, [isInMyHqO, isInAssetManager, isInPayments, isInExperienceManager, isInOperations, isInSettingsAndSetup, isInIntelligence])
+  }, [isInMyHqO, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInSettingsAndSetup, isInIntelligence])
 
   const isActive = (itemHref: string) => {
     if (itemHref === siteConfig.baseLinks.settings.general) {
@@ -190,42 +190,42 @@ export function Sidebar() {
                   </Link>
                 </li>
 
-                {/* Asset Manager accordion */}
+                {/* Portfolio accordion */}
                 <li className={cn(
-                  (openSection === 'assetManager' || isInAssetManager) && !collapsed
+                  (openSection === 'portfolio' || isInPortfolio) && !collapsed
                     ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1"
                     : ""
                 )}>
                   {collapsed ? (
                     <SidebarPopover
                       icon={<RiBuildingLine className="size-4 shrink-0" aria-hidden="true" />}
-                      title="Asset manager"
-                      items={assetManagerItems}
+                      title="Portfolio"
+                      items={portfolioItems}
                       isActive={isActive}
-                      isInSection={isInAssetManager}
+                      isInSection={isInPortfolio}
                     />
                   ) : (
                     <button
-                      onClick={() => toggleSection('assetManager')}
+                      onClick={() => toggleSection('portfolio')}
                       className={cn(
                         "flex w-full items-center gap-x-2.5 py-2 text-[13px] transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
-                        (openSection === 'assetManager' || isInAssetManager)
+                        (openSection === 'portfolio' || isInPortfolio)
                           ? "text-gray-900 dark:text-gray-50"
                           : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
                         focusRing,
                       )}
-                      aria-expanded={openSection === 'assetManager'}
+                      aria-expanded={openSection === 'portfolio'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
                         <RiBuildingLine className="size-4 shrink-0" aria-hidden="true" />
-                        {!collapsed && "Asset manager"}
+                        {!collapsed && "Portfolio"}
                       </span>
                       {!collapsed && (
                         <RiArrowDownSLine
                           className={cn(
                             "size-4 shrink-0 transition-transform duration-300 ease-in-out",
-                            openSection === 'assetManager' ? "rotate-0" : "-rotate-90"
+                            openSection === 'portfolio' ? "rotate-0" : "-rotate-90"
                           )}
                           aria-hidden="true"
                         />
@@ -234,9 +234,9 @@ export function Sidebar() {
                   )}
 
                   {/* Sub-navigation items with animation */}
-                  {!collapsed && openSection === 'assetManager' && (
+                  {!collapsed && openSection === 'portfolio' && (
                     <ul className="mt-1 space-y-1">
-                      {assetManagerItems.map((item) => (
+                      {portfolioItems.map((item) => (
                         <li key={item.name}>
                           <Link
                             href={item.href}
@@ -452,6 +452,32 @@ export function Sidebar() {
                       ))}
                     </ul>
                   )}
+                </li>
+
+                {/* File Repository */}
+                <li>
+                  <Link
+                    href={siteConfig.baseLinks.fileRepository}
+                    className={cn(
+                      "group flex items-center gap-x-3 rounded-md py-2 text-[13px] transition",
+                      collapsed ? "px-2 justify-center" : "px-3",
+                      isActive(siteConfig.baseLinks.fileRepository)
+                        ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary-400 shadow-sm mx-1"
+                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                      focusRing,
+                    )}
+                  >
+                    <RiFolderLine
+                      className={cn(
+                        "size-4 shrink-0",
+                        isActive(siteConfig.baseLinks.fileRepository)
+                          ? "text-primary dark:text-primary-400"
+                          : "text-[#696E72] group-hover:text-gray-500 dark:group-hover:text-gray-400",
+                      )}
+                      aria-hidden="true"
+                    />
+                    {!collapsed && <span>File Repository</span>}
+                  </Link>
                 </li>
 
                 {/* Intelligence accordion */}

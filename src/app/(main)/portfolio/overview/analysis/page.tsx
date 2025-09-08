@@ -1,8 +1,8 @@
 "use client"
 
-import { PageTemplate } from "@/components/PageTemplate"
-import { Card } from "@/components/ui/card"
-import { AreaChart, BarChart, DonutChart, Grid, Text, Title } from "@tremor/react"
+import { PageTemplate } from "@/components/PageTemplate";
+import { Card } from "@/components/ui/card";
+import { AreaChart, BarChart, DonutChart, Grid, Text, Title } from "@tremor/react";
 
 // Mock data for performance trends
 const performanceData = [
@@ -75,13 +75,13 @@ const revenueDistributionData = [
 export default function AnalysisPage() {
     return (
         <PageTemplate
-            title="Asset Manager Overview"
+            title="Portfolio Overview"
             tabs={[
-                { name: "Overview", href: "/asset-manager/overview" },
-                { name: "Analysis", href: "/asset-manager/overview/analysis" },
-                { name: "Reports", href: "/asset-manager/overview/reports" },
-                { name: "Lifecycle", href: "/asset-manager/overview/lifecycle" },
-                { name: "Prospects", href: "/asset-manager/overview/prospects" },
+                { name: "Overview", href: "/portfolio/overview" },
+                { name: "Analysis", href: "/portfolio/overview/analysis" },
+                { name: "Reports", href: "/portfolio/overview/reports" },
+                { name: "Lifecycle", href: "/portfolio/overview/lifecycle" },
+                { name: "Prospects", href: "/portfolio/overview/prospects" },
             ]}
         >
             <div className="space-y-6">

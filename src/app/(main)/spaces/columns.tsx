@@ -16,7 +16,7 @@ const ActionCell = ({ space }: { space: Space }) => {
             <Button
                 variant="outline"
                 size="sm"
-                onClick={() => router.push(`/asset-manager/overview/prospects?space=${space.id}`)}
+                onClick={() => router.push(`/portfolio/overview/prospects?space=${space.id}`)}
             >
                 View prospects
             </Button>

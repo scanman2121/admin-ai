@@ -490,7 +490,7 @@ export default function MyHqO() {
             <p className="text-sm text-gray-500">Prospect visits scheduled for tours</p>
           </div>
           <Link
-            href="/asset-manager/overview/prospects"
+            href="/portfolio/overview/prospects"
             className="text-sm text-primary hover:underline"
           >
             View all prospects

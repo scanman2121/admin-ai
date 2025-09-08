@@ -3,25 +3,26 @@
 import { siteConfig } from "@/app/siteConfig"
 import { Button } from "@/components/Button"
 import {
-  Drawer,
-  DrawerBody,
-  DrawerClose,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTrigger
+    Drawer,
+    DrawerBody,
+    DrawerClose,
+    DrawerContent,
+    DrawerHeader,
+    DrawerTrigger
 } from "@/components/Drawer"
 import { cn, focusRing } from "@/lib/utils"
 import {
-  RiArrowDownSLine,
-  RiArrowRightSLine,
-  RiBuilding2Line,
-  RiBuildingLine,
-  RiDashboardLine,
-  RiLineChartLine,
-  RiMegaphoneLine,
-  RiMenuLine,
-  RiReceiptLine,
-  RiSettings5Line
+    RiArrowDownSLine,
+    RiArrowRightSLine,
+    RiBuilding2Line,
+    RiBuildingLine,
+    RiDashboardLine,
+    RiFolderLine,
+    RiLineChartLine,
+    RiMegaphoneLine,
+    RiMenuLine,
+    RiReceiptLine,
+    RiSettings5Line
 } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -29,14 +30,14 @@ import { useEffect, useState } from "react"
 import { HqOLogo } from "./HqOLogo"
 import { UserProfileMobile } from "./UserProfile"
 
-// Main navigation items excluding the ones that will go into the Asset Manager section
+// Main navigation items excluding the ones that will go into the Portfolio section
 const navigation = [
   { name: "My HqO", href: siteConfig.baseLinks.overview, icon: RiBuilding2Line },
 ] as const
 
-// Asset Manager sub-navigation items
-const assetManagerItems = [
-  { name: "Overview", href: siteConfig.baseLinks.assetManager.overview },
+// Portfolio sub-navigation items
+const portfolioItems = [
+  { name: "Overview", href: siteConfig.baseLinks.portfolio.overview },
   { name: "Buildings", href: siteConfig.baseLinks.buildings },
   { name: "Spaces", href: siteConfig.baseLinks.spaces },
   { name: "Tenants", href: siteConfig.baseLinks.tenants },
@@ -83,7 +84,6 @@ const settingsAndSetupItems = [
   { name: "Connected apps", href: siteConfig.baseLinks.settingsAndSetup.connectedApps },
   { name: "Settings", href: siteConfig.baseLinks.settingsAndSetup.settings },
   { name: "Theme", href: siteConfig.baseLinks.settingsAndSetup.theme },
-  { name: "Documents", href: siteConfig.baseLinks.settingsAndSetup.documents },
 ] as const
 
 // Intelligence sub-navigation items
@@ -96,15 +96,15 @@ const intelligenceItems = [
 
 export default function MobileSidebar() {
   const pathname = usePathname()
-  const [isAssetManagerOpen, setIsAssetManagerOpen] = useState(false)
+  const [isPortfolioOpen, setIsPortfolioOpen] = useState(false)
   const [isPaymentsOpen, setIsPaymentsOpen] = useState(false)
   const [isExperienceManagerOpen, setIsExperienceManagerOpen] = useState(false)
   const [isOperationsOpen, setIsOperationsOpen] = useState(false)
   const [isIntelligenceOpen, setIsIntelligenceOpen] = useState(false)
   const [isSettingsAndSetupOpen, setIsSettingsAndSetupOpen] = useState(false)
 
-  // Check if current path is in Asset Manager section
-  const isInAssetManager = assetManagerItems.some(item =>
+  // Check if current path is in Portfolio section
+  const isInPortfolio = portfolioItems.some(item =>
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
@@ -140,15 +140,15 @@ export default function MobileSidebar() {
   useEffect(() => {
     if (isInMyHqO) {
       // Collapse all sections when My HqO is active
-      setIsAssetManagerOpen(false)
+      setIsPortfolioOpen(false)
       setIsPaymentsOpen(false)
       setIsExperienceManagerOpen(false)
       setIsOperationsOpen(false)
       setIsIntelligenceOpen(false)
       setIsSettingsAndSetupOpen(false)
     } else {
-      if (isInAssetManager) {
-        setIsAssetManagerOpen(true)
+      if (isInPortfolio) {
+        setIsPortfolioOpen(true)
       }
       if (isInPayments) {
         setIsPaymentsOpen(true)
@@ -166,7 +166,7 @@ export default function MobileSidebar() {
         setIsSettingsAndSetupOpen(true)
       }
     }
-  }, [isInMyHqO, isInAssetManager, isInPayments, isInExperienceManager, isInOperations, isInIntelligence, isInSettingsAndSetup])
+  }, [isInMyHqO, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInIntelligence, isInSettingsAndSetup])
 
   const isActive = (itemHref: string) => {
     if (itemHref === siteConfig.baseLinks.settings.general) {
@@ -225,26 +225,26 @@ export default function MobileSidebar() {
                 </li>
               ))}
 
-              {/* Asset Manager accordion */}
+              {/* Portfolio accordion */}
               <li className={cn(
-                isInAssetManager ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1" : ""
+                isInPortfolio ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1" : ""
               )}>
                 <button
-                  onClick={() => setIsAssetManagerOpen(!isAssetManagerOpen)}
+                  onClick={() => setIsPortfolioOpen(!isPortfolioOpen)}
                   className={cn(
                     "flex w-full items-center justify-between gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
-                    isInAssetManager
+                    isInPortfolio
                       ? "text-gray-900 dark:text-gray-50"
                       : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}
-                  aria-expanded={isAssetManagerOpen}
+                  aria-expanded={isPortfolioOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
                     <RiBuildingLine className="size-4 shrink-0" aria-hidden="true" />
-                    Asset Manager
+                    Portfolio
                   </span>
-                  {isAssetManagerOpen ? (
+                  {isPortfolioOpen ? (
                     <RiArrowDownSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   ) : (
                     <RiArrowRightSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
@@ -255,11 +255,11 @@ export default function MobileSidebar() {
                 <div
                   className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    isAssetManagerOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+                    isPortfolioOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
                   )}
                 >
                   <ul className="mt-1 space-y-0.5 px-1">
-                    {assetManagerItems.map((item) => (
+                    {portfolioItems.map((item) => (
                       <li key={item.name}>
                         <DrawerClose asChild>
                           <Link
@@ -335,6 +335,25 @@ export default function MobileSidebar() {
                     ))}
                   </ul>
                 </div>
+              </li>
+
+              {/* File Repository */}
+              <li>
+                <DrawerClose asChild>
+                  <Link
+                    href={siteConfig.baseLinks.fileRepository}
+                    className={cn(
+                      "flex w-full items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
+                      isActive(siteConfig.baseLinks.fileRepository)
+                        ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary-400 shadow-sm"
+                        : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
+                      focusRing,
+                    )}
+                  >
+                    <RiFolderLine className="size-4 shrink-0" aria-hidden="true" />
+                    File Repository
+                  </Link>
+                </DrawerClose>
               </li>
 
               {/* Experience Manager accordion */}

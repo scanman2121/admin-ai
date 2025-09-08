@@ -10,6 +10,7 @@ export const siteConfig = {
     credits: "/credits",
     discounts: "/discounts",
     analytics: "/analytics",
+    fileRepository: "/file-repository",
     users: "/users",
     buildings: "/buildings",
     spaces: "/spaces",
@@ -20,9 +21,9 @@ export const siteConfig = {
       general: "/settings/general",
       billing: "/settings/billing",
     },
-    // Asset Manager section
-    assetManager: {
-      overview: "/asset-manager/overview",
+    // Portfolio section
+    portfolio: {
+      overview: "/portfolio/overview",
     },
     // Experience Manager section
     experienceManager: {
@@ -52,7 +53,6 @@ export const siteConfig = {
       connectedApps: "/settings-and-setup/connected-apps",
       settings: "/settings-and-setup/settings",
       theme: "/settings-and-setup/theme",
-      documents: "/settings-and-setup/documents",
     },
     // Intelligence section
     intelligence: {

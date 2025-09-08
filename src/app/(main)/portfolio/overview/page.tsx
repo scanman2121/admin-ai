@@ -6,13 +6,13 @@ import { cn } from "@/lib/utils"
 import { ArrowDownIcon, ArrowUpIcon, ClockIcon, DollarSignIcon, PercentIcon, UsersIcon } from "lucide-react"
 import Link from "next/link"
 
-// Define tabs for the Asset Manager Overview page
+// Define tabs for the Portfolio Overview page
 const tabs = [
-    { name: "Overview", href: "/asset-manager/overview" },
-    { name: "Analysis", href: "/asset-manager/overview/analysis" },
-    { name: "Reports", href: "/asset-manager/overview/reports" },
-    { name: "Lifecycle", href: "/asset-manager/overview/lifecycle" },
-    { name: "Prospects", href: "/asset-manager/overview/prospects" },
+    { name: "Overview", href: "/portfolio/overview" },
+    { name: "Analysis", href: "/portfolio/overview/analysis" },
+    { name: "Reports", href: "/portfolio/overview/reports" },
+    { name: "Lifecycle", href: "/portfolio/overview/lifecycle" },
+    { name: "Prospects", href: "/portfolio/overview/prospects" },
 ]
 
 // Metric card data
@@ -332,7 +332,7 @@ function ProspectiveTenants() {
         <Card className="col-span-1 p-6">
             <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold">Prospective Tenants</h3>
-                <Link href="/asset-manager/overview/prospects" className="text-sm text-primary hover:underline">
+                <Link href="/portfolio/overview/prospects" className="text-sm text-primary hover:underline">
                     View All
                 </Link>
             </div>
@@ -406,10 +406,10 @@ function ExistingTenants() {
     )
 }
 
-export default function AssetManagerOverview() {
+export default function PortfolioOverview() {
     return (
         <PageTemplate
-            title="Asset Manager Overview"
+            title="Portfolio Overview"
             tabs={tabs}
         >
             {/* Metrics */}

@@ -1,20 +1,20 @@
 "use client"
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/Dropdown"
 import { CustomSwitch } from "@/components/ui/CustomSwitch"
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { cn, focusInput } from "@/lib/utils"
 import { RiBuildingLine, RiExpandUpDownLine, RiInformationLine } from "@remixicon/react"
@@ -66,7 +66,7 @@ const isPortfolioViewAllowed = (pathname: string): boolean => {
   // Portfolio view is allowed for My HqO
   if (pathname === '/my-hqo') return true;
 
-  // Portfolio view is allowed for all pages under Asset Manager
+  // Portfolio view is allowed for all pages under Portfolio
   if (
     pathname === '/buildings' ||
     pathname === '/buildings/active' ||

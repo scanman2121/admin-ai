@@ -11,7 +11,7 @@ type PageType =
     | "users"
     | "vendors"
     | "transactions"
-    | "assetManager";
+    | "portfolio";
 
 export function getPageInsights(pageType: PageType): MetricInsight[] {
     switch (pageType) {
@@ -331,7 +331,7 @@ export function getPageInsights(pageType: PageType): MetricInsight[] {
                 },
             ];
 
-        case "assetManager":
+        case "portfolio":
             return [
                 {
                     title: "Total Properties",
