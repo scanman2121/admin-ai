@@ -113,10 +113,13 @@ export function Sidebar() {
   // Check if we're on the My HqO page
   const isInMyHqO = pathname === siteConfig.baseLinks.overview || pathname.startsWith(siteConfig.baseLinks.overview + "/")
 
+  // Check if we're on the File Repository page
+  const isInFileRepository = pathname === siteConfig.baseLinks.fileRepository || pathname.startsWith(siteConfig.baseLinks.fileRepository + "/")
+
   // Auto-expand the section that contains the current path
   useEffect(() => {
-    if (isInMyHqO) {
-      // Collapse all sections when My HqO is active
+    if (isInMyHqO || isInFileRepository) {
+      // Collapse all sections when My HqO or File Repository is active
       setOpenSection(null)
     } else if (isInPortfolio) {
       setOpenSection('portfolio')
@@ -131,7 +134,7 @@ export function Sidebar() {
     } else if (isInIntelligence) {
       setOpenSection('intelligence')
     }
-  }, [isInMyHqO, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInSettingsAndSetup, isInIntelligence])
+  }, [isInMyHqO, isInFileRepository, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInSettingsAndSetup, isInIntelligence])
 
   const isActive = (itemHref: string) => {
     if (itemHref === siteConfig.baseLinks.settings.general) {
