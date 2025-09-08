@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/Button"
+import { Tooltip } from "@/components/Tooltip"
 import { cn, focusRing } from "@/lib/utils"
 import { RiNotification3Line, /* RiQrCodeLine, RiSearchLine, */ RiSparkling2Line, RiQuestionLine } from "@remixicon/react"
 import { useEffect, useState } from "react"
@@ -95,19 +96,23 @@ export function HeaderActions() {
     if (isMobile) {
         return (
             <div className="flex items-center gap-x-1">
-                <Button
-                    variant="ghost"
-                    onClick={handleNotificationsClick}
-                    className={cn(
-                        "group relative flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
-                        focusRing
-                    )}
-                >
-                    <RiNotification3Line className="size-5" aria-hidden="true" />
-                    <span className="sr-only">Notifications</span>
-                </Button>
+                <Tooltip content="Notifications" side="bottom">
+                    <Button
+                        variant="ghost"
+                        onClick={handleNotificationsClick}
+                        className={cn(
+                            "group relative flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
+                            focusRing
+                        )}
+                    >
+                        <RiNotification3Line className="size-5" aria-hidden="true" />
+                        <span className="sr-only">Notifications</span>
+                    </Button>
+                </Tooltip>
                 
-                <UserProfileHeader />
+                <Tooltip content="User profile" side="bottom">
+                    <UserProfileHeader />
+                </Tooltip>
             </div>
         );
     }
@@ -141,37 +146,47 @@ export function HeaderActions() {
                     <span className="sr-only">Search</span>
                 </Button> */}
 
-                <SupportDropdown align="end">
+                <Tooltip content="Support" side="bottom">
+                    <SupportDropdown align="end">
+                        <Button
+                            variant="ghost"
+                            className={cn(
+                                "group flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
+                                focusRing
+                            )}
+                        >
+                            <RiQuestionLine className="size-5" aria-hidden="true" />
+                            <span className="sr-only">Support</span>
+                        </Button>
+                    </SupportDropdown>
+                </Tooltip>
+
+                <Tooltip content="AI Assistant" side="bottom">
                     <Button
                         variant="ghost"
+                        onClick={handleAIAssistantClick}
                         className={cn(
                             "group flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
-                            focusRing
+                            focusRing,
+                            (isAIDrawerOpen || isFullScreenAIOpen) && "text-primary dark:text-primary-400"
                         )}
                     >
-                        <RiQuestionLine className="size-5" aria-hidden="true" />
-                        <span className="sr-only">Support</span>
+                        <RiSparkling2Line className="size-5" aria-hidden="true" />
+                        <span className="sr-only">AI Assistant</span>
                     </Button>
-                </SupportDropdown>
+                </Tooltip>
 
-                <Button
-                    variant="ghost"
-                    onClick={handleAIAssistantClick}
-                    className={cn(
-                        "group flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
-                        focusRing,
-                        (isAIDrawerOpen || isFullScreenAIOpen) && "text-primary dark:text-primary-400"
-                    )}
-                >
-                    <RiSparkling2Line className="size-5" aria-hidden="true" />
-                    <span className="sr-only">AI Assistant</span>
-                </Button>
+                <Tooltip content="Create" side="bottom">
+                    <CreatePopover />
+                </Tooltip>
 
-                <CreatePopover />
-
-                <NotificationsPopover />
+                <Tooltip content="Notifications" side="bottom">
+                    <NotificationsPopover />
+                </Tooltip>
                 
-                <UserProfileHeader />
+                <Tooltip content="User profile" side="bottom">
+                    <UserProfileHeader />
+                </Tooltip>
             </div>
 
 
