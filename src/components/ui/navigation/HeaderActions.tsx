@@ -179,7 +179,7 @@ export function HeaderActions() {
                 onClose={() => setIsFullScreenNotificationsOpen(false)}
             />
 
-            {/* Search and QR Modals - Hidden for now */}
+            {/* Search and QR Modals - Hidden for now - Build fix */}
             {/* {FullScreenSearch && isSearchOpen && (
                 <FullScreenSearch
                     isOpen={isSearchOpen}
