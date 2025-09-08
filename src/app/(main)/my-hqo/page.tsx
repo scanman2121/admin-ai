@@ -1,422 +1,12 @@
 "use client"
 
-import { cn } from "@/lib/utils";
-import { RiArrowLeftSLine, RiArrowRightLine, RiArrowRightSLine, RiBuilding4Line, RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMapPinLine, RiMegaphoneLine, RiSearchLine, RiShoppingBag3Line, RiUserAddLine } from "@remixicon/react";
-import { AreaChart, Badge, Button, Card, DonutChart, Grid, Icon, Select, SelectItem, Tab, TabGroup, TabList, TabPanel, TabPanels, Text, TextInput, Title } from "@tremor/react";
+import { RiArrowRightLine, RiBuilding4Line, RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMegaphoneLine, RiShoppingBag3Line } from "@remixicon/react";
+import { Badge, Button, Card, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@tremor/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
-// Type definitions
-export type PeriodValue = "previous-period" | "last-year" | "no-comparison";
-
-// Type definition for KpiEntry
-export type KpiEntry = {
-  title: string;
-  value: number | string;
-  target: number;
-  percentage: number;
-  current: number | string;
-  allowed: number | string;
-  unit: string;
-};
-
-// Type definition for KpiEntryExtended
-export type KpiEntryExtended = {
-  title: string;
-  color: string;
-  percentage: number;
-  value: number | string;
-};
-
-// Type definitions for metrics
-type UserMetrics = {
-  total: number;
-  lastThirtyDays: number;
-  active: number;
-  pending: number;
-};
-
-type CommunicationMetrics = {
-  totalSent: number;
-  openRate: number;
-  openChange: number;
-  emailCTR: number;
-};
-
-type TrafficMetrics = {
-  totalBadgeIns: number;
-  hourlyData: { hour: number; count: number }[];
-};
-
-type SummaryMetrics = {
-  totalVisits: number;
-  expected: number;
-  checkedIn: number;
-  checkedOut: number;
-};
-
-// Mock data for charts and metrics
-const performanceData = [
-  {
-    date: "Jan 2025",
-    "Tenant Satisfaction": 85,
-    "Tenant Engagement": 75,
-  },
-  {
-    date: "Feb 2025",
-    "Tenant Satisfaction": 83,
-    "Tenant Engagement": 76,
-  },
-  {
-    date: "Mar 2025",
-    "Tenant Satisfaction": 86,
-    "Tenant Engagement": 78,
-  },
-  {
-    date: "Apr 2025",
-    "Tenant Satisfaction": 87,
-    "Tenant Engagement": 80,
-  },
-  {
-    date: "May 2025",
-    "Tenant Satisfaction": 89,
-    "Tenant Engagement": 82,
-  },
-  {
-    date: "Jun 2025",
-    "Tenant Satisfaction": 90,
-    "Tenant Engagement": 85,
-  },
-  {
-    date: "Jul 2025",
-    "Tenant Satisfaction": 91,
-    "Tenant Engagement": 87,
-  },
-  {
-    date: "Aug 2025",
-    "Tenant Satisfaction": 92,
-    "Tenant Engagement": 88,
-  },
-  {
-    date: "Sep 2025",
-    "Tenant Satisfaction": 93,
-    "Tenant Engagement": 89,
-  },
-  {
-    date: "Oct 2025",
-    "Tenant Satisfaction": 94,
-    "Tenant Engagement": 90,
-  },
-  {
-    date: "Nov 2025",
-    "Tenant Satisfaction": 95,
-    "Tenant Engagement": 91,
-  },
-  {
-    date: "Dec 2025",
-    "Tenant Satisfaction": 96,
-    "Tenant Engagement": 92,
-  },
-]
-
-const usageData = [
-  {
-    date: "Jan 2025",
-    "Mobile App": 65,
-    "Web Portal": 40,
-    "Kiosk": 20,
-  },
-  {
-    date: "Feb 2025",
-    "Mobile App": 68,
-    "Web Portal": 42,
-    "Kiosk": 22,
-  },
-  {
-    date: "Mar 2025",
-    "Mobile App": 70,
-    "Web Portal": 45,
-    "Kiosk": 25,
-  },
-  {
-    date: "Apr 2025",
-    "Mobile App": 72,
-    "Web Portal": 48,
-    "Kiosk": 28,
-  },
-  {
-    date: "May 2025",
-    "Mobile App": 75,
-    "Web Portal": 50,
-    "Kiosk": 30,
-  },
-  {
-    date: "Jun 2025",
-    "Mobile App": 78,
-    "Web Portal": 52,
-    "Kiosk": 32,
-  },
-  {
-    date: "Jul 2025",
-    "Mobile App": 80,
-    "Web Portal": 55,
-    "Kiosk": 35,
-  },
-  {
-    date: "Aug 2025",
-    "Mobile App": 82,
-    "Web Portal": 58,
-    "Kiosk": 38,
-  },
-  {
-    date: "Sep 2025",
-    "Mobile App": 85,
-    "Web Portal": 60,
-    "Kiosk": 40,
-  },
-  {
-    date: "Oct 2025",
-    "Mobile App": 88,
-    "Web Portal": 62,
-    "Kiosk": 42,
-  },
-  {
-    date: "Nov 2025",
-    "Mobile App": 90,
-    "Web Portal": 65,
-    "Kiosk": 45,
-  },
-  {
-    date: "Dec 2025",
-    "Mobile App": 92,
-    "Web Portal": 68,
-    "Kiosk": 48,
-  },
-]
-
-const featureUsageData = [
-  { name: "Events", value: 35 },
-  { name: "Marketplace", value: 25 },
-  { name: "Bookings", value: 20 },
-  { name: "Access", value: 15 },
-  { name: "Other", value: 5 },
-]
-
-const tenantBreakdownData = [
-  { name: "Active", value: 85 },
-  { name: "Inactive", value: 10 },
-  { name: "Pending", value: 5 },
-]
-
-// Enhanced recentActivityData with tenant information and avatars
-const recentActivityData = [
-  {
-    id: 1,
-    type: "Event",
-    title: "Wellness Wednesday",
-    date: "Today, 2:30 PM",
-    status: "Active",
-    registrations: 45,
-    capacity: 50,
-    tenant: "Acme Inc",
-    user: {
-      name: "Lucy Mitchell",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    description: "Registered for the weekly wellness session"
-  },
-  {
-    id: 2,
-    type: "Booking",
-    title: "Conference Room A",
-    date: "Today, 10:00 AM",
-    status: "Completed",
-    bookedBy: "John Smith",
-    tenant: "Global Tech",
-    user: {
-      name: "John Smith",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    description: "Booked a meeting room for team standup"
-  },
-  {
-    id: 3,
-    type: "Marketplace",
-    title: "Lunch Special Order",
-    date: "Yesterday",
-    status: "Delivered",
-    orders: 12,
-    tenant: "Innovate Solutions",
-    user: {
-      name: "Emily Bernacle",
-      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2961&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    description: "Placed a group order for the design team lunch"
-  },
-  {
-    id: 4,
-    type: "Access",
-    title: "After-hours Access",
-    date: "Yesterday",
-    status: "Approved",
-    requestedBy: "Sarah Johnson",
-    tenant: "Tech Innovators",
-    user: {
-      name: "Sarah Johnson",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=2864&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    description: "Requested weekend access to the office"
-  },
-  {
-    id: 5,
-    type: "Visitor",
-    title: "Client Meeting",
-    date: "Jun 15, 2025",
-    status: "Scheduled",
-    tenant: "Acme Inc",
-    user: {
-      name: "Thomas Palstein",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    },
-    description: "Invited 3 external visitors for a product demo"
-  },
-];
-
-// List of tenants for the filter
-const tenants = [
-  { value: "all", label: "All Tenants" },
-  { value: "Acme Inc", label: "Acme Inc" },
-  { value: "Global Tech", label: "Global Tech" },
-  { value: "Innovate Solutions", label: "Innovate Solutions" },
-  { value: "Tech Innovators", label: "Tech Innovators" },
-];
-
-// Mock data
-const userMetrics: UserMetrics = {
-  total: 42,
-  lastThirtyDays: 18,
-  active: 36,
-  pending: 6,
-};
-
-const communicationMetrics: CommunicationMetrics = {
-  totalSent: 4,
-  openRate: 86,
-  openChange: 8,
-  emailCTR: 42,
-};
-
-const trafficMetrics: TrafficMetrics = {
-  totalBadgeIns: 3692,
-  hourlyData: Array.from({ length: 24 }, (_, i) => ({
-    hour: i,
-    count: Math.floor(Math.random() * 300),
-  })),
-};
-
-const summaryMetrics: SummaryMetrics = {
-  totalVisits: 201,
-  expected: 102,
-  checkedIn: 87,
-  checkedOut: 12,
-};
-
-// Mock data for new tenant
-const newTenant = {
-  name: "Acme Corporation",
-  industry: "Technology",
-  space: "5,000 sqft",
-  floor: "15th Floor",
-  moveInDate: "April 15, 2024",
-  logo: "/tenant-logos/acme.png"
-};
-
-// Mock data for upcoming tours
-const upcomingTours = [
-  {
-    id: "1",
-    companyName: "TechStart Inc.",
-    contactName: "Sarah Chen",
-    date: "Today, 2:30 PM",
-    space: "15th Floor, North Wing",
-    broker: {
-      name: "Michael Brown",
-      avatar: "/avatars/default-avatar.png"
-    },
-    status: "Confirmed"
-  },
-  {
-    id: "2",
-    companyName: "Quantum Solutions",
-    contactName: "James Wilson",
-    date: "Tomorrow, 11:00 AM",
-    space: "12th Floor, East Wing",
-    broker: {
-      name: "Lisa Anderson",
-      avatar: "/avatars/default-avatar.png"
-    },
-    status: "Pending Confirmation"
-  }
-];
 
 export default function MyHqO() {
-  const [selectedTenant, setSelectedTenant] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  // Get initials from company name
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
-      .toUpperCase();
-  };
-
-  // Generate a consistent color based on company name
-  const getBackgroundColor = (name: string) => {
-    const colors = [
-      'bg-blue-500',
-      'bg-green-500',
-      'bg-purple-500',
-      'bg-pink-500',
-      'bg-indigo-500',
-      'bg-orange-500',
-      'bg-teal-500',
-      'bg-cyan-500'
-    ];
-    const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
-    return colors[index];
-  };
-
-  // Filter activities based on tenant selection and search query
-  const filteredActivities = recentActivityData.filter(activity => {
-    const matchesTenant = selectedTenant === "all" || activity.tenant === selectedTenant;
-    const matchesSearch = searchQuery === "" ||
-      activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      activity.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      activity.user.name.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesTenant && matchesSearch;
-  });
-
-  // Function to get the appropriate icon for each activity type
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case "Event":
-        return RiCalendarEventLine;
-      case "Booking":
-        return RiMapPinLine;
-      case "Marketplace":
-        return RiShoppingBag3Line;
-      case "Access":
-        return RiDoorOpenLine;
-      case "Visitor":
-        return RiUserAddLine;
-      default:
-        return RiInformationLine;
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -431,19 +21,11 @@ export default function MyHqO() {
             <div className="relative shrink-0">
               <div className="size-16 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden">
                 <Image
-                  src={newTenant.logo}
-                  alt={newTenant.name}
+                  src="/tenant-logos/acme.png"
+                  alt="Acme Corporation"
                   width={48}
                   height={48}
                   className="rounded object-contain"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const parent = target.parentElement;
-                    if (parent) {
-                      parent.innerHTML = `<div class="w-full h-full flex items-center justify-center ${getBackgroundColor(newTenant.name)} text-white font-medium">${getInitials(newTenant.name)}</div>`;
-                    }
-                  }}
                 />
               </div>
               <div className="absolute -bottom-1 -right-1 size-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -460,7 +42,7 @@ export default function MyHqO() {
                 </Badge>
               </div>
               <p className="text-gray-600 dark:text-gray-300">
-                {newTenant.name} has signed a lease for {newTenant.space} on the {newTenant.floor}. Move-in date is scheduled for {newTenant.moveInDate}.
+                Acme Corporation has signed a lease for 5,000 sqft on the 15th Floor. Move-in date is scheduled for April 15, 2024.
               </p>
             </div>
           </div>
@@ -486,9 +68,9 @@ export default function MyHqO() {
       {/* Dashboard Cards Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Users Card */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2">
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Users</h2>
               <RiInformationLine className="size-4 text-gray-400" />
             </div>
@@ -668,9 +250,9 @@ export default function MyHqO() {
                 <Button variant="light" className="text-gray-600 hover:text-gray-900">
                   Add event
                 </Button>
-              </div>
-            </div>
-          </div>
+                          </div>
+                        </div>
+                      </div>
         </Card>
 
         {/* Outreach Card */}
@@ -680,7 +262,7 @@ export default function MyHqO() {
             <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
               View all
             </Button>
-          </div>
+                      </div>
 
           <TabGroup>
             <TabList className="mb-6">
@@ -704,15 +286,15 @@ export default function MyHqO() {
                     <div className="size-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
                       <RiInformationLine className="size-4 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <div className="flex-1 min-w-0">
+                      <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
                         <h4 className="font-medium text-gray-900 dark:text-gray-50">
                           Drag Me Downtown ICA San Francisco
                         </h4>
                         <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
                           Scheduled
-                        </Badge>
-                      </div>
+                            </Badge>
+                          </div>
                       <div className="flex items-center gap-1 text-xs text-gray-500">
                         <span>Scheduled for 06/16/2025, 12:00 PM</span>
                         <span>•</span>
@@ -720,10 +302,10 @@ export default function MyHqO() {
                         <span className="flex items-center gap-1 ml-2">
                           <RiCalendarEventLine className="size-3" />
                           4 days
-                        </span>
+                              </span>
                       </div>
                     </div>
-                  </div>
+            </div>
 
                   <div className="flex items-center justify-center py-8 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
                     <div className="text-center">
@@ -732,10 +314,10 @@ export default function MyHqO() {
                       </div>
                       <Button variant="light" className="text-gray-600 hover:text-gray-900">
                         Add communications
-                      </Button>
+                </Button>
                     </div>
-                  </div>
-                </div>
+                          </div>
+                        </div>
               </TabPanel>
               <TabPanel>
                 <div className="text-center py-8">
@@ -746,7 +328,7 @@ export default function MyHqO() {
                   <Button variant="light" className="text-gray-600 hover:text-gray-900">
                     Create survey
                   </Button>
-                </div>
+                      </div>
               </TabPanel>
               <TabPanel>
                 <div className="text-center py-8">
@@ -756,17 +338,14 @@ export default function MyHqO() {
                   <p className="text-sm text-gray-500 mb-4">Trending content will appear here</p>
                   <Button variant="light" className="text-gray-600 hover:text-gray-900">
                     View content
-                  </Button>
-                </div>
+              </Button>
+            </div>
               </TabPanel>
             </TabPanels>
           </TabGroup>
-        </Card>
+          </Card>
       </div>
 
     </div>
   )
 }
-
-{/* Add extra spacing at the bottom of the page */ }
-<div className="h-24"></div>
