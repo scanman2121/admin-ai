@@ -13,11 +13,11 @@ import { QRScannerModal } from "../qr/QRScannerModal"
 import { UserProfileMobile as UserProfileHeader } from "./UserProfile"
 
 export function HeaderActions() {
-    const [isSearchOpen, setIsSearchOpen] = useState(false)
+    // const [isSearchOpen, setIsSearchOpen] = useState(false) // Hidden for now
     const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false)
     const [isFullScreenAIOpen, setIsFullScreenAIOpen] = useState(false)
     const [isFullScreenNotificationsOpen, setIsFullScreenNotificationsOpen] = useState(false)
-    const [isQRScannerOpen, setIsQRScannerOpen] = useState(false)
+    // const [isQRScannerOpen, setIsQRScannerOpen] = useState(false) // Hidden for now
     const [isMobile, setIsMobile] = useState(false)
 
     // Check if we're on mobile
@@ -62,10 +62,10 @@ export function HeaderActions() {
         })
     }, [])
 
-    // Handle QR scanner button click
-    const handleQRScannerClick = () => {
-        setIsQRScannerOpen(true)
-    }
+    // Handle QR scanner button click - Hidden for now
+    // const handleQRScannerClick = () => {
+    //     setIsQRScannerOpen(true)
+    // }
 
     // Handle AI assistant button click
     const handleAIAssistantClick = () => {
