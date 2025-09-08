@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/Button"
 import { cn, focusRing } from "@/lib/utils"
-import { RiNotification3Line, /* RiQrCodeLine, RiSearchLine, */ RiSparkling2Line } from "@remixicon/react"
+import { RiNotification3Line, /* RiQrCodeLine, RiSearchLine, */ RiSparkling2Line, RiQuestionLine } from "@remixicon/react"
 import { useEffect, useState } from "react"
 import { AIAssistantDrawer } from "../ai/AIAssistantDrawer"
 import { FullScreenAIAssistant } from "../ai/FullScreenAIAssistant"
@@ -10,6 +10,7 @@ import { CreatePopover } from "../create/CreatePopover"
 import { FullScreenNotifications } from "../notifications/FullScreenNotifications"
 import { NotificationsPopover } from "../notifications/NotificationsPopover"
 // import { QRScannerModal } from "../qr/QRScannerModal" // Hidden for now
+import { SupportDropdown } from "./SupportDropdown"
 import { UserProfileMobile as UserProfileHeader } from "./UserProfile"
 
 export function HeaderActions() {
@@ -139,6 +140,19 @@ export function HeaderActions() {
                     <RiSearchLine className="size-5" aria-hidden="true" />
                     <span className="sr-only">Search</span>
                 </Button> */}
+
+                <SupportDropdown align="end">
+                    <Button
+                        variant="ghost"
+                        className={cn(
+                            "group flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
+                            focusRing
+                        )}
+                    >
+                        <RiQuestionLine className="size-5" aria-hidden="true" />
+                        <span className="sr-only">Support</span>
+                    </Button>
+                </SupportDropdown>
 
                 <Button
                     variant="ghost"
