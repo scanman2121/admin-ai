@@ -14,55 +14,6 @@ export default function MyHqO() {
         Welcome back, Ellie
       </h1>
 
-      {/* New Tenant Alert Card */}
-      <Card className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 border-none">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="relative shrink-0">
-              <div className="size-16 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center overflow-hidden">
-                <Image
-                  src="/tenant-logos/acme.png"
-                  alt="Acme Corporation"
-                  width={48}
-                  height={48}
-                  className="rounded object-contain"
-                />
-              </div>
-              <div className="absolute -bottom-1 -right-1 size-6 bg-green-500 rounded-full flex items-center justify-center">
-                <RiBuilding4Line className="size-3.5 text-white" />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-3">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-                  New tenant ready for onboarding
-                </h2>
-                <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                  Just signed
-                </Badge>
-              </div>
-              <p className="text-gray-600 dark:text-gray-300">
-                Acme Corporation has signed a lease for 5,000 sqft on the 15th Floor. Move-in date is scheduled for April 15, 2024.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/tenants/onboarding"
-              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
-            >
-              View lease details
-            </Link>
-            <Link
-              href="/tenants/onboarding"
-              className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2"
-            >
-              Start onboarding
-              <RiArrowRightLine className="size-4" />
-            </Link>
-          </div>
-        </div>
-      </Card>
 
 
       {/* Dashboard Cards Grid */}
