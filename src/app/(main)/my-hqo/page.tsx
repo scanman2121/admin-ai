@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils";
-import { RiArrowLeftSLine, RiArrowRightLine, RiArrowRightSLine, RiBuilding4Line, RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMapPinLine, RiSearchLine, RiShoppingBag3Line, RiUserAddLine } from "@remixicon/react";
+import { RiArrowLeftSLine, RiArrowRightLine, RiArrowRightSLine, RiBuilding4Line, RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMapPinLine, RiMegaphoneLine, RiSearchLine, RiShoppingBag3Line, RiUserAddLine } from "@remixicon/react";
 import { AreaChart, Badge, Button, Card, DonutChart, Grid, Icon, Select, SelectItem, Tab, TabGroup, TabList, TabPanel, TabPanels, Text, TextInput, Title } from "@tremor/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -482,105 +482,37 @@ export default function MyHqO() {
         </div>
       </Card>
 
-      {/* Upcoming Tours Card */}
-      <Card className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Upcoming Tours</h2>
-            <p className="text-sm text-gray-500">Prospect visits scheduled for tours</p>
-          </div>
-          <Link
-            href="/portfolio/overview/prospects"
-            className="text-sm text-primary hover:underline"
-          >
-            View all prospects
-          </Link>
-        </div>
 
-        <div className="space-y-4">
-          {upcomingTours.map((tour) => (
-            <div
-              key={tour.id}
-              className="flex items-start gap-4 p-4 rounded-lg border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-            >
-              <div className="flex-shrink-0">
-                <div className="size-10 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                  <RiMapPinLine className="size-5 text-purple-600 dark:text-purple-300" />
-                </div>
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-medium text-gray-900 dark:text-gray-50">{tour.companyName}</h3>
-                  <Badge className={cn(
-                    "capitalize",
-                    tour.status === "Confirmed"
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                      : "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
-                  )}>
-                    {tour.status}
-                  </Badge>
-                </div>
-
-                <div className="mt-1 text-sm text-gray-500">
-                  <div className="flex items-center gap-2">
-                    <span>{tour.contactName}</span>
-                    <span>•</span>
-                    <span>{tour.date}</span>
-                  </div>
-                  <div className="mt-1">{tour.space}</div>
-                </div>
-
-                <div className="mt-3 flex items-center gap-3">
-                  <div className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-full overflow-hidden">
-                      <div className={cn(
-                        "h-full w-full flex items-center justify-center text-white font-medium",
-                        getBackgroundColor(tour.broker.name)
-                      )}>
-                        {getInitials(tour.broker.name)}
-                      </div>
-                    </div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {tour.broker.name}
-                    </span>
-                  </div>
-
-                  <Button
-                    variant="light"
-                    size="xs"
-                    className="ml-auto"
-                  >
-                    View details
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      <Grid numItemsMd={2} numItemsLg={2} className="gap-6">
-        {/* Users Overview Card */}
+      {/* Dashboard Cards Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Users Card */}
         <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium">Users</h2>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Users</h2>
+              <RiInformationLine className="size-4 text-gray-400" />
+            </div>
+            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+              View
+            </Button>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          
+          <div className="grid grid-cols-4 gap-6">
             <div className="space-y-1">
-              <p className="text-3xl font-semibold">{userMetrics.total}</p>
+              <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">44,116</p>
               <p className="text-sm text-gray-500">Total users</p>
             </div>
             <div className="space-y-1">
-              <p className="text-3xl font-semibold">{userMetrics.lastThirtyDays}</p>
-              <p className="text-sm text-gray-500">In last 30 days</p>
+              <p className="text-2xl font-semibold text-blue-600">982</p>
+              <p className="text-sm text-gray-500">New</p>
+              <p className="text-xs text-gray-400">In last 30 days</p>
             </div>
             <div className="space-y-1">
-              <p className="text-3xl font-semibold text-green-600">{userMetrics.active}</p>
+              <p className="text-2xl font-semibold text-green-600">42,579</p>
               <p className="text-sm text-gray-500">Active</p>
             </div>
             <div className="space-y-1">
-              <p className="text-3xl font-semibold text-amber-600">{userMetrics.pending}</p>
+              <p className="text-2xl font-semibold text-orange-600">1,537</p>
               <p className="text-sm text-gray-500">Pending</p>
             </div>
           </div>
@@ -588,453 +520,250 @@ export default function MyHqO() {
 
         {/* 30-day Communication Performance Card */}
         <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium">30-day communication performance</h2>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">30-day Communication Performance</h2>
+              <RiInformationLine className="size-4 text-gray-400" />
+            </div>
+            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+              View
+            </Button>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          
+          <div className="grid grid-cols-4 gap-6">
             <div className="space-y-1">
-              <p className="text-3xl font-semibold">{communicationMetrics.totalSent}</p>
+              <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">11</p>
               <p className="text-sm text-gray-500">Total sent</p>
             </div>
             <div className="space-y-1">
-              <p className="text-3xl font-semibold">{communicationMetrics.openRate}%</p>
+              <p className="text-2xl font-semibold text-purple-600">29%</p>
+              <p className="text-sm text-gray-500">Reach rate</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-2xl font-semibold text-blue-600">3%</p>
               <p className="text-sm text-gray-500">Open rate</p>
             </div>
             <div className="space-y-1">
-              <div className="flex items-center gap-1">
-                <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                  +{communicationMetrics.openChange}%
-                </Badge>
-              </div>
-              <p className="text-sm text-gray-500">Opens</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-3xl font-semibold">{communicationMetrics.emailCTR}%</p>
+              <p className="text-2xl font-semibold text-green-600">0.0%</p>
               <p className="text-sm text-gray-500">Email CTR</p>
             </div>
           </div>
         </Card>
-      </Grid>
 
-      <Grid numItemsMd={2} numItemsLg={2} className="gap-6">
         {/* Today's Traffic Report Card */}
         <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium">Today's traffic report</h2>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Today's Traffic Report</h2>
+              <RiInformationLine className="size-4 text-gray-400" />
+            </div>
+            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+              View activity
+            </Button>
           </div>
-          <div className="space-y-4">
-            <div>
-              <p className="text-3xl font-semibold">{trafficMetrics.totalBadgeIns}</p>
-              <p className="text-sm text-gray-500">Total badge-ins</p>
+          
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <div className="size-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+              <RiDoorOpenLine className="size-6 text-gray-400" />
             </div>
-            <div className="h-40">
-              <AreaChart
-                data={trafficMetrics.hourlyData}
-                index="hour"
-                categories={["count"]}
-                colors={["#3B82F6"]}
-                showLegend={false}
-                showGridLines={false}
-                showAnimation={true}
-                valueFormatter={(value) => `${value}`}
-                className="h-full"
-              />
-            </div>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
+              Unlock smarter building security
+            </h3>
+            <p className="text-sm text-gray-500 mb-6 max-w-xs">
+              Centralize your access control and say goodbye to key chaos
+            </p>
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              Get started
+            </Button>
           </div>
         </Card>
 
         {/* Today's Summary Card */}
         <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium">Today's summary</h2>
-          </div>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <p className="text-3xl font-semibold">{summaryMetrics.totalVisits}</p>
-                <p className="text-sm text-gray-500">Total visits</p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-3xl font-semibold text-purple-600">{summaryMetrics.expected}</p>
-                <p className="text-sm text-gray-500">Expected</p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-3xl font-semibold text-green-600">{summaryMetrics.checkedIn}</p>
-                <p className="text-sm text-gray-500">Checked-in</p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-3xl font-semibold text-red-600">{summaryMetrics.checkedOut}</p>
-                <p className="text-sm text-gray-500">Checked-out</p>
-              </div>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Today's Summary</h2>
+              <RiInformationLine className="size-4 text-gray-400" />
             </div>
-            <div className="pt-2">
-              <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                +11% higher activity than previous Mondays
-              </Badge>
-            </div>
+            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+              Manage visitors
+            </Button>
           </div>
-        </Card>
-      </Grid>
 
-      {/* Area Charts Section */}
-      <section>
-        <Grid numItemsMd={1} numItemsLg={2} className="gap-6">
-          {/* Area Chart 1 */}
-          <Card>
-            <Title className="text-text-primary mb-2">Tenant Engagement</Title>
-            <Text className="text-text-secondary mb-4">Monthly trends over time</Text>
-            <AreaChart
-              className="h-72"
-              data={performanceData}
-              index="date"
-              categories={["Tenant Satisfaction", "Tenant Engagement"]}
-              colors={["#2563EB", "#8B5CF6"]}
-              valueFormatter={(value) => `${value}%`}
-              showLegend={true}
-              showGridLines={false}
-              showAnimation={true}
-            />
-          </Card>
-
-          {/* Area Chart 2 */}
-          <Card>
-            <Title className="text-text-primary mb-2">Platform Usage</Title>
-            <Text className="text-text-secondary mb-4">Distribution by channel</Text>
-            <AreaChart
-              className="h-72"
-              data={usageData}
-              index="date"
-              categories={["Mobile App", "Web Portal", "Kiosk"]}
-              colors={["#2563EB", "#8B5CF6", "#06B6D4"]}
-              valueFormatter={(value) => `${value}%`}
-              showLegend={true}
-              showGridLines={false}
-              showAnimation={true}
-            />
-          </Card>
-        </Grid>
-      </section>
-
-      {/* Performance Insights Section */}
-      <section>
-        <Card>
-          <Title className="text-text-primary mb-4">Performance Insights</Title>
           <TabGroup>
-            <TabList>
-              <Tab>Tenant Satisfaction</Tab>
-              <Tab>Platform Usage</Tab>
-              <Tab>Feature Breakdown</Tab>
+            <TabList className="mb-6">
+              <Tab>Visitors</Tab>
+              <Tab>Bookings</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
-                <AreaChart
-                  className="mt-4 h-72"
-                  data={performanceData}
-                  index="date"
-                  categories={["Tenant Satisfaction", "Tenant Engagement"]}
-                  colors={["#2563EB", "#8B5CF6"]}
-                  valueFormatter={(value) => `${value}%`}
-                  showLegend={true}
-                  showGridLines={false}
-                  showAnimation={true}
-                />
+                <div className="text-center py-8">
+                  <h3 className="text-base font-medium text-gray-900 dark:text-gray-50 mb-2">
+                    Your visitor summary is ready for action
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-6">
+                    Data will appear here once people start checking in
+                  </p>
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                    Create visit
+                  </Button>
+                </div>
               </TabPanel>
               <TabPanel>
-                <AreaChart
-                  className="mt-4 h-72"
-                  data={usageData}
-                  index="date"
-                  categories={["Mobile App", "Web Portal", "Kiosk"]}
-                  colors={["#2563EB", "#8B5CF6", "#06B6D4"]}
-                  valueFormatter={(value) => `${value}%`}
-                  showLegend={true}
-                  showGridLines={false}
-                  showAnimation={true}
-                />
-              </TabPanel>
-              <TabPanel>
-                <Grid numItemsMd={2} className="gap-6 mt-4">
-                  <Card>
-                    <Title className="text-text-primary">Feature Usage</Title>
-                    <DonutChart
-                      className="mt-4 h-60"
-                      data={featureUsageData}
-                      category="value"
-                      index="name"
-                      colors={["#2563EB", "#8B5CF6", "#06B6D4", "#7C3AED", "#64748B"]}
-                      valueFormatter={(value) => `${value}%`}
-                      showLabel={true}
-                      showAnimation={true}
-                    />
-                  </Card>
-                  <Card>
-                    <Title className="text-text-primary">Tenant Breakdown</Title>
-                    <DonutChart
-                      className="mt-4 h-60"
-                      data={tenantBreakdownData}
-                      category="value"
-                      index="name"
-                      colors={["#2563EB", "#F59E0B", "#64748B"]}
-                      valueFormatter={(value) => `${value}%`}
-                      showLabel={true}
-                      showAnimation={true}
-                    />
-                  </Card>
-                </Grid>
+                <div className="text-center py-8">
+                  <h3 className="text-base font-medium text-gray-900 dark:text-gray-50 mb-2">
+                    No bookings scheduled for today
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-6">
+                    Check back later or create a new booking
+                  </p>
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                    Create booking
+                  </Button>
+                </div>
               </TabPanel>
             </TabPanels>
           </TabGroup>
         </Card>
-      </section>
+      </div>
 
-      {/* Recent Activity Section */}
-      <section>
-        <Grid numItemsMd={1} numItemsLg={2} className="gap-6">
-          {/* Activity Stream - Left Column */}
-          <Card>
-            <Title className="text-text-primary mb-4">Tenant Activity Stream</Title>
+      {/* Events and Outreach Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Events Card */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Events</h2>
+            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+              View all
+            </Button>
+          </div>
 
-            {/* Filters and Search */}
-            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="w-full sm:w-64">
-                <Select
-                  value={selectedTenant}
-                  onValueChange={setSelectedTenant}
-                  icon={RiFilterLine}
-                  placeholder="Filter by tenant"
-                >
-                  {tenants.map((tenant) => (
-                    <SelectItem key={tenant.value} value={tenant.value}>
-                      {tenant.label}
-                    </SelectItem>
-                  ))}
-                </Select>
+          <div className="space-y-4">
+            <div className="flex items-start gap-4 p-4 rounded-lg border border-gray-100 dark:border-gray-800">
+              <div className="flex flex-col items-center">
+                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">JUN</div>
+                <div className="text-xl font-semibold text-gray-900 dark:text-gray-50">12</div>
               </div>
-              <div className="w-full sm:w-72">
-                <TextInput
-                  icon={RiSearchLine}
-                  placeholder="Search activities..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
-
-            {/* Activity Stream */}
-            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1">
-              {filteredActivities.length === 0 ? (
-                <div className="py-12 text-center">
-                  <Text className="text-text-secondary">No activities found matching your criteria.</Text>
+              
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-50">Tenant Appreciation Party</h3>
+                  <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                    Scheduled
+                  </Badge>
                 </div>
-              ) : (
-                filteredActivities.map((activity) => {
-                  const ActivityIcon = getActivityIcon(activity.type);
-                  return (
-                    <div key={activity.id} className="flex gap-4 p-4 rounded-lg border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
-                      {/* User Avatar with Activity Icon - Redesigned */}
-                      <div className="flex-shrink-0">
-                        <div className="relative flex items-center justify-center">
-                          {/* Activity type indicator ring */}
-                          <div className={cn(
-                            "absolute inset-0 rounded-full border-2",
-                            activity.type === "Event" ? "border-blue-400 dark:border-blue-500" :
-                              activity.type === "Booking" ? "border-green-400 dark:border-green-500" :
-                                activity.type === "Marketplace" ? "border-amber-400 dark:border-amber-500" :
-                                  activity.type === "Access" ? "border-violet-400 dark:border-violet-500" :
-                                    "border-rose-400 dark:border-rose-500"
-                          )}></div>
-
-                          {/* User avatar */}
-                          <Image
-                            src={activity.user.avatar}
-                            alt={activity.user.name}
-                            width={40}
-                            height={40}
-                            className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-gray-900 z-10"
-                          />
-
-                          {/* Activity icon badge */}
-                          <div className={cn(
-                            "absolute -top-1 -right-1 rounded-full p-1.5 shadow-md z-20",
-                            activity.type === "Event" ? "bg-blue-500 text-white" :
-                              activity.type === "Booking" ? "bg-green-500 text-white" :
-                                activity.type === "Marketplace" ? "bg-amber-500 text-white" :
-                                  activity.type === "Access" ? "bg-violet-500 text-white" :
-                                    "bg-rose-500 text-white"
-                          )}>
-                            <Icon
-                              icon={ActivityIcon}
-                              size="xs"
-                              className="text-white"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Activity Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                          <div>
-                            <p className="font-medium text-text-primary truncate">
-                              {activity.user.name}
-                              <span className="font-normal text-text-secondary"> · {activity.tenant}</span>
-                            </p>
-                            <p className="text-sm text-text-secondary">{activity.description}</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Badge color={
-                              activity.status === "Active" || activity.status === "Approved" ? "green" :
-                                activity.status === "Completed" || activity.status === "Delivered" ? "blue" :
-                                  activity.status === "Scheduled" ? "amber" : "gray"
-                            }>
-                              {activity.status}
-                            </Badge>
-                            <Text className="text-xs text-text-secondary whitespace-nowrap">{activity.date}</Text>
-                          </div>
-                        </div>
-
-                        {/* Activity Details - Simplified badges */}
-                        <div className="mt-2">
-                          <Text className="text-sm text-text-primary font-medium">
-                            {activity.title}
-                            {activity.registrations && (
-                              <span className="ml-2 text-blue-500 font-normal">
-                                {activity.registrations}/{activity.capacity} registered
-                              </span>
-                            )}
-                            {activity.orders && (
-                              <span className="ml-2 text-amber-500 font-normal">
-                                {activity.orders} orders
-                              </span>
-                            )}
-                          </Text>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })
-              )}
+                <p className="text-sm text-gray-500">4–7 PM</p>
+                <div className="mt-2 flex items-center gap-4 text-sm text-gray-600">
+                  <span className="font-medium">687 registered</span>
+                  <span>Unlimited capacity</span>
+                </div>
+              </div>
             </div>
 
-            {/* Load More Button */}
-            {filteredActivities.length > 0 && (
-              <div className="mt-6 text-center">
-                <Button variant="light" className="text-text-primary">
-                  Load more activities
+            <div className="flex items-center justify-center py-8 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
+              <div className="text-center">
+                <div className="size-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <RiCalendarEventLine className="size-4 text-gray-400" />
+                </div>
+                <Button variant="light" className="text-gray-600 hover:text-gray-900">
+                  Add event
                 </Button>
               </div>
-            )}
-          </Card>
-
-          {/* Day View Calendar - Right Column */}
-          <Card>
-            <div className="flex items-center justify-between mb-4">
-              <Title className="text-text-primary">Today's Schedule</Title>
-              <div className="flex items-center gap-2">
-                <Button variant="light" size="xs" icon={RiArrowLeftSLine} />
-                <Text className="text-text-primary font-medium">{new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</Text>
-                <Button variant="light" size="xs" icon={RiArrowRightSLine} />
-              </div>
             </div>
+          </div>
+        </Card>
 
-            {/* Time slots */}
-            <div className="space-y-1 max-h-[600px] overflow-y-auto pr-1">
-              {Array.from({ length: 12 }).map((_, index) => {
-                const hour = index + 8; // Start from 8 AM
-                const isPast = new Date().getHours() > hour;
-                const isCurrent = new Date().getHours() === hour;
-                const hasEvent = [9, 11, 14, 16].includes(hour);
+        {/* Outreach Card */}
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Outreach</h2>
+            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+              View all
+            </Button>
+          </div>
 
-                return (
-                  <div key={hour} className={cn(
-                    "flex gap-3 py-3 border-l-2 pl-3 pr-2 rounded-r-md transition-colors",
-                    isPast ? "border-gray-200 dark:border-gray-800 text-gray-400 dark:text-gray-600" :
-                      isCurrent ? "border-primary bg-primary/5 dark:bg-primary/10" :
-                        "border-gray-300 dark:border-gray-700"
-                  )}>
-                    {/* Time */}
-                    <div className="w-16 flex-shrink-0">
-                      <Text className={cn(
-                        "font-medium",
-                        isPast ? "text-gray-400 dark:text-gray-600" :
-                          isCurrent ? "text-primary dark:text-primary-400" :
-                            "text-gray-700 dark:text-gray-300"
-                      )}>
-                        {hour > 12 ? `${hour - 12}:00 PM` : hour === 12 ? `12:00 PM` : `${hour}:00 AM`}
-                      </Text>
+          <TabGroup>
+            <TabList className="mb-6">
+              <Tab>
+                <span>Communications</span>
+                <Badge className="ml-2 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">1</Badge>
+              </Tab>
+              <Tab>
+                <span>Surveys</span>
+                <Badge className="ml-2 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">0</Badge>
+              </Tab>
+              <Tab>
+                <span>Trending content</span>
+                <Badge className="ml-2 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">4</Badge>
+              </Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 dark:border-gray-800">
+                    <div className="size-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
+                      <RiInformationLine className="size-4 text-blue-600 dark:text-blue-400" />
                     </div>
-
-                    {/* Event */}
-                    {hasEvent && (
-                      <div className={cn(
-                        "flex-1 rounded-md p-2 border",
-                        hour === 9 ? "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800" :
-                          hour === 11 ? "bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800" :
-                            hour === 14 ? "bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800" :
-                              "bg-violet-50 border-violet-200 dark:bg-violet-900/20 dark:border-violet-800"
-                      )}>
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <Text className={cn(
-                              "font-medium",
-                              hour === 9 ? "text-blue-700 dark:text-blue-400" :
-                                hour === 11 ? "text-green-700 dark:text-green-400" :
-                                  hour === 14 ? "text-amber-700 dark:text-amber-400" :
-                                    "text-violet-700 dark:text-violet-400"
-                            )}>
-                              {hour === 9 ? "Team Standup" :
-                                hour === 11 ? "Client Meeting" :
-                                  hour === 14 ? "Wellness Workshop" :
-                                    "Product Demo"}
-                            </Text>
-                            <Text className="text-xs text-gray-600 dark:text-gray-400">
-                              {hour === 9 ? "Conference Room B • 30 min" :
-                                hour === 11 ? "Zoom Call • 1 hour" :
-                                  hour === 14 ? "Yoga Studio • 45 min" :
-                                    "Main Auditorium • 1 hour"}
-                            </Text>
-                          </div>
-                          <div className="flex -space-x-2">
-                            <Image
-                              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                              alt="Attendee"
-                              width={24}
-                              height={24}
-                              className="w-6 h-6 rounded-full border border-white dark:border-gray-900"
-                            />
-                            <Image
-                              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                              alt="Attendee"
-                              width={24}
-                              height={24}
-                              className="w-6 h-6 rounded-full border border-white dark:border-gray-900"
-                            />
-                            {hour !== 9 && (
-                              <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-gray-300 border border-white dark:border-gray-900">
-                                +{hour === 11 ? 3 : hour === 14 ? 8 : 5}
-                              </div>
-                            )}
-                          </div>
-                        </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-medium text-gray-900 dark:text-gray-50">
+                          Drag Me Downtown ICA San Francisco
+                        </h4>
+                        <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                          Scheduled
+                        </Badge>
                       </div>
-                    )}
+                      <div className="flex items-center gap-1 text-xs text-gray-500">
+                        <span>Scheduled for 06/16/2025, 12:00 PM</span>
+                        <span>•</span>
+                        <span>Push, In app</span>
+                        <span className="flex items-center gap-1 ml-2">
+                          <RiCalendarEventLine className="size-3" />
+                          4 days
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                );
-              })}
-            </div>
 
-            <div className="mt-6 flex justify-between">
-              <Button variant="light" className="text-text-primary">
-                <RiCalendarEventLine className="size-4 mr-1" />
-                Add event
-              </Button>
-              <Button variant="light" className="text-text-primary">
-                View full calendar
-              </Button>
-            </div>
-          </Card>
-        </Grid>
-      </section>
+                  <div className="flex items-center justify-center py-8 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div className="text-center">
+                      <div className="size-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <RiMegaphoneLine className="size-4 text-gray-400" />
+                      </div>
+                      <Button variant="light" className="text-gray-600 hover:text-gray-900">
+                        Add communications
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <div className="text-center py-8">
+                  <div className="size-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <RiFilterLine className="size-4 text-gray-400" />
+                  </div>
+                  <p className="text-sm text-gray-500 mb-4">No surveys created yet</p>
+                  <Button variant="light" className="text-gray-600 hover:text-gray-900">
+                    Create survey
+                  </Button>
+                </div>
+              </TabPanel>
+              <TabPanel>
+                <div className="text-center py-8">
+                  <div className="size-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <RiShoppingBag3Line className="size-4 text-gray-400" />
+                  </div>
+                  <p className="text-sm text-gray-500 mb-4">Trending content will appear here</p>
+                  <Button variant="light" className="text-gray-600 hover:text-gray-900">
+                    View content
+                  </Button>
+                </div>
+              </TabPanel>
+            </TabPanels>
+          </TabGroup>
+        </Card>
+      </div>
+
     </div>
   )
 }
