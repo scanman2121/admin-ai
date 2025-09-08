@@ -1,7 +1,13 @@
 import { Badge } from "@/components/Badge"
 import { cn } from "@/lib/utils"
 
-import type { KpiEntryExtended } from "@/app/(main)/my-hqo/page"
+// Type definition for KpiEntryExtended
+export type KpiEntryExtended = {
+  title: string;
+  color: string;
+  percentage: number;
+  value: number | string;
+};
 
 export type CardProps = {
   title: string

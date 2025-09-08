@@ -21,7 +21,9 @@ import {
   DialogTrigger,
 } from "@/components/Dialog"
 
-import { PeriodValue } from "@/app/(main)/my-hqo/page"
+// Type definition for PeriodValue
+export type PeriodValue = "previous-period" | "last-year" | "no-comparison";
+
 import { Button } from "@/components/Button"
 import { Checkbox } from "@/components/Checkbox"
 import { DateRangePicker } from "@/components/DatePicker"

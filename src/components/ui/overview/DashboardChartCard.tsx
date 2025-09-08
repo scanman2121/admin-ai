@@ -1,4 +1,3 @@
-import { PeriodValue } from "@/app/(main)/my-hqo/page"
 import { Badge } from "@/components/Badge"
 import { LineChart } from "@/components/LineChart"
 import { overviews } from "@/data/overview-data"
@@ -11,7 +10,7 @@ import {
   isWithinInterval,
 } from "date-fns"
 import { DateRange } from "react-day-picker"
-import { getPeriod } from "./DashboardFilterbar"
+import { getPeriod, PeriodValue } from "./DashboardFilterbar"
 
 export type CardProps = {
   title: keyof OverviewData

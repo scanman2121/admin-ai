@@ -1,7 +1,16 @@
 import { Badge } from "@/components/Badge"
 import { ProgressBar } from "@/components/ProgressBar"
 
-import { KpiEntry } from "@/app/(main)/my-hqo/page"
+// Type definition for KpiEntry
+export type KpiEntry = {
+  title: string;
+  value: number | string;
+  target: number;
+  percentage: number;
+  current: number | string;
+  allowed: number | string;
+  unit: string;
+};
 
 export type CardProps = {
   title: string
