@@ -114,8 +114,8 @@ export function HeaderActions() {
     return (
         <>
             <div className="flex items-center gap-x-1">
-                {/* QR Scanner Button - First icon on the left */}
-                <Button
+                {/* QR Scanner Button - Hidden for now */}
+                {/* <Button
                     variant="ghost"
                     onClick={handleQRScannerClick}
                     className={cn(
@@ -125,9 +125,10 @@ export function HeaderActions() {
                 >
                     <RiQrCodeLine className="size-5" aria-hidden="true" />
                     <span className="sr-only">Scan QR Code</span>
-                </Button>
+                </Button> */}
 
-                <Button
+                {/* Search Button - Hidden for now */}
+                {/* <Button
                     variant="ghost"
                     onClick={() => setIsSearchOpen(true)}
                     className={cn(
@@ -137,7 +138,7 @@ export function HeaderActions() {
                 >
                     <RiSearchLine className="size-5" aria-hidden="true" />
                     <span className="sr-only">Search</span>
-                </Button>
+                </Button> */}
 
                 <Button
                     variant="ghost"
