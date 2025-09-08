@@ -160,22 +160,6 @@ export function HeaderActions() {
                 <UserProfileHeader />
             </div>
 
-            {/* QR Scanner Modal */}
-            <QRScannerModal
-                isOpen={isQRScannerOpen}
-                onClose={() => setIsQRScannerOpen(false)}
-                onScan={(url) => {
-                    console.log('QR Code scanned:', url);
-                    setIsQRScannerOpen(false);
-                }}
-            />
-
-            {FullScreenSearch && (
-                <FullScreenSearch
-                    isOpen={isSearchOpen}
-                    onClose={() => setIsSearchOpen(false)}
-                />
-            )}
 
             {/* Desktop AI Drawer */}
             <AIAssistantDrawer
