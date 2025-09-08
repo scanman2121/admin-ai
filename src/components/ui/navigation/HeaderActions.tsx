@@ -9,7 +9,7 @@ import { FullScreenAIAssistant } from "../ai/FullScreenAIAssistant"
 import { CreatePopover } from "../create/CreatePopover"
 import { FullScreenNotifications } from "../notifications/FullScreenNotifications"
 import { NotificationsPopover } from "../notifications/NotificationsPopover"
-import { QRScannerModal } from "../qr/QRScannerModal"
+// import { QRScannerModal } from "../qr/QRScannerModal" // Hidden for now
 import { UserProfileMobile as UserProfileHeader } from "./UserProfile"
 
 export function HeaderActions() {
