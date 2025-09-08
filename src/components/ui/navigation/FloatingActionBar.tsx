@@ -6,9 +6,9 @@ import {
     RiAiGenerate,
     RiCloseLine,
     RiMessage2Line,
-    RiQrScanLine,
-    RiSearchLine,
-    RiQrCodeLine,
+    // RiQrScanLine, // Hidden for now
+    // RiSearchLine, // Hidden for now
+    // RiQrCodeLine, // Hidden for now
     RiMapPinLine,
     RiBuilding2Line,
     RiUserLine,

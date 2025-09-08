@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/Button"
 import { cn, focusRing } from "@/lib/utils"
-import { RiNotification3Line, RiQrCodeLine, RiSearchLine, RiSparkling2Line } from "@remixicon/react"
+import { RiNotification3Line, /* RiQrCodeLine, RiSearchLine, */ RiSparkling2Line } from "@remixicon/react"
 import { useEffect, useState } from "react"
 import { AIAssistantDrawer } from "../ai/AIAssistantDrawer"
 import { FullScreenAIAssistant } from "../ai/FullScreenAIAssistant"
