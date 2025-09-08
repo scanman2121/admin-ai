@@ -36,31 +36,31 @@ export function HeaderActions() {
         return () => window.removeEventListener('resize', checkIfMobile)
     }, [])
 
-    // Set up global keyboard shortcuts
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            // Open search on Cmd+K or Ctrl+K
-            if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-                event.preventDefault()
-                setIsSearchOpen(true)
-            }
-        }
+    // Set up global keyboard shortcuts - Search hidden for now
+    // useEffect(() => {
+    //     const handleKeyDown = (event: KeyboardEvent) => {
+    //         // Open search on Cmd+K or Ctrl+K
+    //         if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+    //             event.preventDefault()
+    //             setIsSearchOpen(true)
+    //         }
+    //     }
 
-        document.addEventListener("keydown", handleKeyDown)
+    //     document.addEventListener("keydown", handleKeyDown)
 
-        return () => {
-            document.removeEventListener("keydown", handleKeyDown)
-        }
-    }, [])
+    //     return () => {
+    //         document.removeEventListener("keydown", handleKeyDown)
+    //     }
+    // }, [])
 
-    // Dynamically import the FullScreenSearch component to avoid server/client mismatch
-    const [FullScreenSearch, setFullScreenSearch] = useState<any>(null)
+    // Dynamically import the FullScreenSearch component to avoid server/client mismatch - Hidden for now
+    // const [FullScreenSearch, setFullScreenSearch] = useState<any>(null)
 
-    useEffect(() => {
-        import("../search/FullScreenSearch").then((module) => {
-            setFullScreenSearch(() => module.FullScreenSearch)
-        })
-    }, [])
+    // useEffect(() => {
+    //     import("../search/FullScreenSearch").then((module) => {
+    //         setFullScreenSearch(() => module.FullScreenSearch)
+    //     })
+    // }, [])
 
     // Handle QR scanner button click - Hidden for now
     // const handleQRScannerClick = () => {
@@ -194,6 +194,25 @@ export function HeaderActions() {
                 isOpen={isFullScreenNotificationsOpen}
                 onClose={() => setIsFullScreenNotificationsOpen(false)}
             />
+
+            {/* Search and QR Modals - Hidden for now */}
+            {/* {FullScreenSearch && isSearchOpen && (
+                <FullScreenSearch
+                    isOpen={isSearchOpen}
+                    onClose={() => setIsSearchOpen(false)}
+                />
+            )}
+
+            {isQRScannerOpen && (
+                <QRScannerModal
+                    isOpen={isQRScannerOpen}
+                    onClose={() => setIsQRScannerOpen(false)}
+                    onScan={(url) => {
+                        console.log('QR Code scanned:', url);
+                        setIsQRScannerOpen(false);
+                    }}
+                />
+            )} */}
         </>
     )
 } 
