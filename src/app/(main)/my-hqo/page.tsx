@@ -2,7 +2,6 @@
 
 import { RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMegaphoneLine, RiShoppingBag3Line } from "@remixicon/react";
 import { Badge, Button, Card, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@tremor/react";
-import Link from "next/link";
 
 
 export default function MyHqO() {
