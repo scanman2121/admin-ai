@@ -91,8 +91,8 @@ export function FloatingActionBar() {
             {/* Floating Action Bar */}
             <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
                 <div className="flex items-center gap-2 p-2 bg-white dark:bg-gray-900 rounded-full shadow-lg border border-gray-200 dark:border-gray-800">
-                    {/* QR Scanner Button */}
-                    <Button
+                    {/* QR Scanner Button - Hidden for now */}
+                    {/* <Button
                         variant="ghost"
                         className="flex flex-col items-center gap-1 text-gray-500 hover:text-gray-900"
                         onClick={() => setIsQRScannerOpen(true)}
@@ -107,7 +107,7 @@ export function FloatingActionBar() {
                     >
                         <RiQrCodeLine className="h-6 w-6" />
                         <span className="text-xs">Generate QR</span>
-                    </Button>
+                    </Button> */}
                     <Button
                         variant="ghost"
                         className="flex flex-col items-center gap-1 text-gray-500 hover:text-gray-900"
@@ -141,15 +141,15 @@ export function FloatingActionBar() {
                         <span className="text-xs">Settings</span>
                     </Button>
 
-                    {/* Search Button */}
-                    <Button
+                    {/* Search Button - Hidden for now */}
+                    {/* <Button
                         variant="ghost"
                         className="rounded-full p-2"
                         onClick={() => setIsSearchOpen(true)}
                     >
                         <RiSearchLine className="size-6" />
                         <span className="sr-only">Search</span>
-                    </Button>
+                    </Button> */}
 
                     {/* Create Button */}
                     <Button
