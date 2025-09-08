@@ -475,7 +475,7 @@ export function Sidebar() {
                       )}
                       aria-hidden="true"
                     />
-                    {!collapsed && <span>File Repository</span>}
+                    {!collapsed && <span>File repository</span>}
                   </Link>
                 </li>
 

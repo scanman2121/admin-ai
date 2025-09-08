@@ -40,14 +40,14 @@ const mockInsights = [
     },
 ]
 
-export default function Documents() {
+export default function FileRepository() {
     const [isOpen, setIsOpen] = React.useState(false)
 
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">Documents</h1>
+                    <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">File repository</h1>
                 </div>
                 <Button onClick={() => setIsOpen(true)}>
                     <RiUploadLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />

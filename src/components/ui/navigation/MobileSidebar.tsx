@@ -350,7 +350,7 @@ export default function MobileSidebar() {
                     )}
                   >
                     <RiFolderLine className="size-4 shrink-0" aria-hidden="true" />
-                    File Repository
+                    File repository
                   </Link>
                 </DrawerClose>
               </li>
