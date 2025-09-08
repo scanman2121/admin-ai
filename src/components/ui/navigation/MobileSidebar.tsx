@@ -28,7 +28,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { HqOLogo } from "./HqOLogo"
-import { UserProfileMobile } from "./UserProfile"
 
 // Main navigation items excluding the ones that will go into the Portfolio section
 const navigation = [
@@ -581,9 +580,7 @@ export default function MobileSidebar() {
               </li>
             </ul>
           </nav>
-          <div className="pb-4">
-            <UserProfileMobile />
-          </div>
+          {/* User profile moved to header */}
         </DrawerBody>
       </DrawerContent>
     </Drawer>

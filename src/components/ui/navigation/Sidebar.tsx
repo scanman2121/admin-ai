@@ -18,7 +18,6 @@ import { usePathname } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
 import { HqOLogo } from "./HqOLogo"
 import { SidebarPopover } from "./SidebarPopover"
-import { UserProfileDesktop } from "./UserProfile"
 
 // Portfolio sub-navigation items
 const portfolioItems = [
@@ -614,9 +613,9 @@ export function Sidebar() {
               </ul>
             </li>
 
-            {/* User profile at the bottom */}
+            {/* Space for future bottom content */}
             <li className="mt-auto">
-              <UserProfileDesktop isCollapsed={collapsed} />
+              {/* User profile moved to header */}
             </li>
           </ul>
         </nav>
