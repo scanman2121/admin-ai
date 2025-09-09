@@ -14,10 +14,10 @@ import { cn, focusRing } from "@/lib/utils"
 import {
     RiArrowDownSLine,
     RiArrowRightSLine,
-    RiBuilding2Line,
     RiBuildingLine,
     RiDashboardLine,
     RiFolderLine,
+    RiHomeLine,
     RiLineChartLine,
     RiMegaphoneLine,
     RiMenuLine,
@@ -31,7 +31,7 @@ import { HqOLogo } from "./HqOLogo"
 
 // Main navigation items excluding the ones that will go into the Portfolio section
 const navigation = [
-  { name: "My HqO", href: siteConfig.baseLinks.overview, icon: RiBuilding2Line },
+  { name: "My HqO", href: siteConfig.baseLinks.overview, icon: RiHomeLine },
 ] as const
 
 // Portfolio sub-navigation items

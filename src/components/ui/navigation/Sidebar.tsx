@@ -4,10 +4,10 @@ import { siteConfig } from "@/app/siteConfig"
 import { cn, focusRing } from "@/lib/utils"
 import {
     RiArrowDownSLine,
-    RiBuilding2Line,
     RiBuildingLine,
     RiDashboardLine,
     RiFolderLine,
+    RiHomeLine,
     RiLineChartLine,
     RiMegaphoneLine,
     RiReceiptLine,
@@ -179,7 +179,7 @@ export function Sidebar() {
                       focusRing,
                     )}
                   >
-                    <RiBuilding2Line
+                    <RiHomeLine
                       className={cn(
                         "size-4 shrink-0",
                         isActive(siteConfig.baseLinks.overview)
