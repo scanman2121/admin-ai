@@ -211,7 +211,7 @@ export default function MobileSidebar() {
                       href={item.href}
                       className={cn(
                         isActive(item.href)
-                          ? "text-primary dark:text-primary-400"
+                          ? "text-primary dark:text-primary"
                           : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                         "flex items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                         focusRing,
@@ -268,7 +268,7 @@ export default function MobileSidebar() {
                             href={item.href}
                             className={cn(
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm"
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
                               "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
                               focusRing,
@@ -324,7 +324,7 @@ export default function MobileSidebar() {
                             href={item.href}
                             className={cn(
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm"
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
                               "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
                               focusRing,
@@ -347,7 +347,7 @@ export default function MobileSidebar() {
                     className={cn(
                       "flex w-full items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                       isActive(siteConfig.baseLinks.fileRepository)
-                        ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary-400 shadow-sm"
+                        ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
                         : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                       focusRing,
                     )}
@@ -399,7 +399,7 @@ export default function MobileSidebar() {
                             href={item.href}
                             className={cn(
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm"
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
                               "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
                               focusRing,
@@ -455,7 +455,7 @@ export default function MobileSidebar() {
                             href={item.href}
                             className={cn(
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm"
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
                               "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
                               focusRing,
@@ -511,7 +511,7 @@ export default function MobileSidebar() {
                             href={item.href}
                             className={cn(
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm"
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
                               "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
                               focusRing,
@@ -567,7 +567,7 @@ export default function MobileSidebar() {
                             href={item.href}
                             className={cn(
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm"
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
                               "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
                               focusRing,

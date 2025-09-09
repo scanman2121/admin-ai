@@ -28,35 +28,35 @@ const buildings = [
     value: "highland-ave",
     name: "125 Highland Ave",
     initials: "HA",
-    color: "bg-primary dark:bg-primary-400",
+    color: "bg-primary dark:bg-primary",
     imageUrl: "https://images.unsplash.com/photo-1471039497385-b6d6ba609f9c?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     value: "market-street",
     name: "400 Market Street",
     initials: "MS",
-    color: "bg-primary dark:bg-primary-400",
+    color: "bg-primary dark:bg-primary",
     imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     value: "state-street",
     name: "75 State Street",
     initials: "SS",
-    color: "bg-primary dark:bg-primary-400",
+    color: "bg-primary dark:bg-primary",
     imageUrl: "https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     value: "congress-ave",
     name: "200 Congress Ave",
     initials: "CA",
-    color: "bg-primary dark:bg-primary-400",
+    color: "bg-primary dark:bg-primary",
     imageUrl: "https://images.unsplash.com/photo-1536697246787-1f7ae568d89a?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     value: "boylston-street",
     name: "500 Boylston Street",
     initials: "BS",
-    color: "bg-primary dark:bg-primary-400",
+    color: "bg-primary dark:bg-primary",
     imageUrl: "https://images.unsplash.com/photo-1577985043696-8bd54d9f093f?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ]
@@ -175,7 +175,7 @@ export const BuildingsDropdownDesktop = () => {
                 <div className="flex shrink-0 items-center">
                   {isPortfolioView ? (
                     <span
-                      className="flex aspect-square size-6 items-center justify-center rounded bg-primary p-1 text-xs font-medium text-white dark:bg-primary-400"
+                      className="flex aspect-square size-6 items-center justify-center rounded bg-primary p-1 text-xs font-medium text-white dark:bg-primary"
                       aria-hidden="true"
                     >
                       <RiBuildingLine className="size-4" />
@@ -215,7 +215,7 @@ export const BuildingsDropdownDesktop = () => {
                 <div className="flex shrink-0 items-center gap-x-2.5">
                   {isPortfolioView ? (
                     <span
-                      className="flex aspect-square size-6 items-center justify-center rounded bg-primary p-1 text-xs font-medium text-white dark:bg-primary-400"
+                      className="flex aspect-square size-6 items-center justify-center rounded bg-primary p-1 text-xs font-medium text-white dark:bg-primary"
                       aria-hidden="true"
                     >
                       <RiBuildingLine className="size-4" />

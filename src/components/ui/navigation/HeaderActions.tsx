@@ -168,7 +168,7 @@ export function HeaderActions() {
                         className={cn(
                             "group flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
                             focusRing,
-                            (isAIDrawerOpen || isFullScreenAIOpen) && "text-primary dark:text-primary-400"
+                            (isAIDrawerOpen || isFullScreenAIOpen) && "text-primary dark:text-primary"
                         )}
                     >
                         <RiSparkling2Line className="size-5" aria-hidden="true" />

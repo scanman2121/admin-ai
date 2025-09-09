@@ -33,7 +33,7 @@ export function SidebarPopover({ icon, title, items, isActive, isInSection }: Si
                     className={cn(
                         "flex w-full items-center justify-center p-2 rounded-md text-[13px] font-medium transition",
                         isInSection || hasActiveItem
-                            ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary-400 shadow-sm"
+                            ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
                             : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
                         focusRing,
                     )}
@@ -43,7 +43,7 @@ export function SidebarPopover({ icon, title, items, isActive, isInSection }: Si
                         className: cn(
                             "size-4 shrink-0",
                             isInSection || hasActiveItem
-                                ? "text-primary dark:text-primary-400"
+                                ? "text-primary dark:text-primary"
                                 : "text-[#696E72] group-hover:text-gray-500 dark:group-hover:text-gray-400"
                         )
                     })}
@@ -69,7 +69,7 @@ export function SidebarPopover({ icon, title, items, isActive, isInSection }: Si
                             className={cn(
                                 "block rounded-md py-2 px-3 text-[13px] font-medium transition",
                                 isActive(item.href)
-                                    ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary-400"
+                                    ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary"
                                     : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
                                 focusRing,
                             )}
