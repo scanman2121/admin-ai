@@ -167,7 +167,7 @@ export default function VendorDetails() {
                         <div className="divide-y divide-gray-200 dark:divide-gray-800">
                             {vendorData.buildings.map((building, index) => (
                                 <div key={index} className="flex items-center gap-3 p-4">
-                                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary">
                                         <RiBuilding2Line className="size-4" />
                                     </div>
                                     <div className="text-gray-900 dark:text-gray-50">

@@ -3,22 +3,22 @@
 "use client"
 
 import {
-  RiArrowLeftDoubleLine,
-  RiArrowLeftSLine,
-  RiArrowRightDoubleLine,
-  RiArrowRightSLine,
+    RiArrowLeftDoubleLine,
+    RiArrowLeftSLine,
+    RiArrowRightDoubleLine,
+    RiArrowRightSLine,
 } from "@remixicon/react"
 import { addYears, format, isSameMonth } from "date-fns"
 import * as React from "react"
 import {
-  DayPicker,
-  useDayPicker,
-  useDayRender,
-  useNavigation,
-  type DayPickerRangeProps,
-  type DayPickerSingleProps,
-  type DayProps,
-  type Matcher,
+    DayPicker,
+    useDayPicker,
+    useDayRender,
+    useNavigation,
+    type DayPickerRangeProps,
+    type DayPickerSingleProps,
+    type DayProps,
+    type Matcher,
 } from "react-day-picker"
 
 import { cn, focusRing } from "@/lib/utils"
@@ -295,7 +295,7 @@ const Calendar = ({
                   className={cn(
                     "absolute inset-x-1/2 bottom-1.5 h-0.5 w-4 -translate-x-1/2 rounded-[2px]",
                     {
-                      "bg-blue-500 dark:bg-blue-500": !selected,
+                      "bg-primary dark:bg-primary": !selected,
                       "!bg-white dark:!bg-gray-950": selected,
                       "!bg-gray-400 dark:!bg-gray-600":
                         selected && range_middle,

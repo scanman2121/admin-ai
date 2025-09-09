@@ -23,7 +23,7 @@ export default function MyHqO() {
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Users</h2>
               <RiInformationLine className="size-4 text-gray-400" />
             </div>
-            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+            <Button variant="light" size="xs" className="text-primary hover:text-primary/90">
               View
             </Button>
           </div>
@@ -34,7 +34,7 @@ export default function MyHqO() {
               <p className="text-sm text-gray-500">Total users</p>
             </div>
             <div className="space-y-1">
-              <p className="text-2xl font-semibold text-blue-600">982</p>
+              <p className="text-2xl font-semibold text-primary">982</p>
               <p className="text-sm text-gray-500">New</p>
               <p className="text-xs text-gray-400">In last 30 days</p>
             </div>
@@ -56,7 +56,7 @@ export default function MyHqO() {
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">30-day Communication Performance</h2>
               <RiInformationLine className="size-4 text-gray-400" />
             </div>
-            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+            <Button variant="light" size="xs" className="text-primary hover:text-primary/90">
               View
             </Button>
           </div>
@@ -71,7 +71,7 @@ export default function MyHqO() {
               <p className="text-sm text-gray-500">Reach rate</p>
             </div>
             <div className="space-y-1">
-              <p className="text-2xl font-semibold text-blue-600">3%</p>
+              <p className="text-2xl font-semibold text-primary">3%</p>
               <p className="text-sm text-gray-500">Open rate</p>
             </div>
             <div className="space-y-1">
@@ -88,7 +88,7 @@ export default function MyHqO() {
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Today's Traffic Report</h2>
               <RiInformationLine className="size-4 text-gray-400" />
             </div>
-            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+            <Button variant="light" size="xs" className="text-primary hover:text-primary/90">
               View activity
             </Button>
           </div>
@@ -103,7 +103,7 @@ export default function MyHqO() {
             <p className="text-sm text-gray-500 mb-6 max-w-xs">
               Centralize your access control and say goodbye to key chaos
             </p>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
               Get started
             </Button>
           </div>
@@ -116,7 +116,7 @@ export default function MyHqO() {
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Today's Summary</h2>
               <RiInformationLine className="size-4 text-gray-400" />
             </div>
-            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+            <Button variant="light" size="xs" className="text-primary hover:text-primary/90">
               Manage visitors
             </Button>
           </div>
@@ -135,7 +135,7 @@ export default function MyHqO() {
                   <p className="text-sm text-gray-500 mb-6">
                     Data will appear here once people start checking in
                   </p>
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
                     Create visit
                   </Button>
                 </div>
@@ -148,7 +148,7 @@ export default function MyHqO() {
                   <p className="text-sm text-gray-500 mb-6">
                     Check back later or create a new booking
                   </p>
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
                     Create booking
                   </Button>
                 </div>
@@ -164,7 +164,7 @@ export default function MyHqO() {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Events</h2>
-            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+            <Button variant="light" size="xs" className="text-primary hover:text-primary/90">
               View all
             </Button>
           </div>
@@ -208,7 +208,7 @@ export default function MyHqO() {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Outreach</h2>
-            <Button variant="light" size="xs" className="text-blue-600 hover:text-blue-700">
+            <Button variant="light" size="xs" className="text-primary hover:text-primary/90">
               View all
             </Button>
                       </div>
@@ -232,8 +232,8 @@ export default function MyHqO() {
               <TabPanel>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 dark:border-gray-800">
-                    <div className="size-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
-                      <RiInformationLine className="size-4 text-blue-600 dark:text-blue-400" />
+                    <div className="size-8 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                      <RiInformationLine className="size-4 text-primary dark:text-primary" />
                     </div>
                       <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">

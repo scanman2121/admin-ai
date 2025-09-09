@@ -147,7 +147,7 @@ export function FullScreenSearch({ isOpen, onClose }: FullScreenSearchProps) {
                                 <div className="flex items-center gap-3">
                                     <div className={cn(
                                         "flex items-center justify-center size-10 rounded-full",
-                                        result.type === "user" && "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
+                                        result.type === "user" && "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary",
                                         result.type === "building" && "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400",
                                         result.type === "tenant" && "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
                                         result.type === "vendor" && "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400",

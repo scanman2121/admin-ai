@@ -33,7 +33,7 @@ export function showToast(message: string, options: ToastOptions = {}) {
             toast.className += ' bg-yellow-50 text-yellow-800 border border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800';
             break;
         default:
-            toast.className += ' bg-blue-50 text-blue-800 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800';
+            toast.className += ' bg-primary/10 text-primary border border-primary/20 dark:bg-primary/20 dark:text-primary dark:border-primary/30';
     }
 
     // Set content

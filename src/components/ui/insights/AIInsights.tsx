@@ -42,13 +42,13 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
                   "flex h-8 w-8 items-center justify-center rounded-md transition-colors",
                   isExpanded
                     ? "bg-gray-100 dark:bg-gray-900"
-                    : "bg-blue-50 dark:bg-blue-950"
+                    : "bg-primary/10 dark:bg-primary/20"
                 )}>
                   <RiSparklingLine className={cn(
                     "h-5 w-5 transition-colors",
                     isExpanded
                       ? "text-gray-500 dark:text-gray-400"
-                      : "text-blue-500 dark:text-blue-400"
+                      : "text-primary dark:text-primary"
                   )} />
                 </div>
                 <h3 className={cn(

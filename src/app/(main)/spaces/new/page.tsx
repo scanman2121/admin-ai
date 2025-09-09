@@ -425,7 +425,7 @@ export default function NewSpace() {
                     <div
                       key={index}
                       className={`relative aspect-square overflow-hidden rounded-lg border-2 border-dashed transition-colors ${isDragging
-                        ? "border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950"
+                        ? "border-primary bg-primary/10 dark:border-primary dark:bg-primary/20"
                         : "border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900"
                         }`}
                       onDragOver={handleDragOver}

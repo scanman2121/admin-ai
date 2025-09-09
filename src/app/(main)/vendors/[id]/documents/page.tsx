@@ -86,7 +86,7 @@ const documentsColumns = [
 
             return (
                 <div className="flex items-center gap-3">
-                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary">
                         <RiFileTextLine className="size-4" />
                     </div>
                     <div>

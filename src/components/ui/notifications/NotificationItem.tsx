@@ -28,7 +28,7 @@ export function NotificationItem({ notification, onRead }: NotificationItemProps
                 return <RiErrorWarningFill className="size-5 text-red-500" />
             case "info":
             default:
-                return <RiInformationFill className="size-5 text-blue-500" />
+                return <RiInformationFill className="size-5 text-primary" />
         }
     }
 

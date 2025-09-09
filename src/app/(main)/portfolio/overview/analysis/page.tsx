@@ -138,9 +138,9 @@ export default function AnalysisPage() {
                     <Card>
                         <Title className="text-text-primary">Key Insights</Title>
                         <div className="mt-4 space-y-4">
-                            <div className="p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
-                                <h3 className="font-medium text-blue-900 dark:text-blue-100">Tenant Satisfaction</h3>
-                                <p className="mt-1 text-sm text-blue-700 dark:text-blue-300">
+                            <div className="p-4 bg-primary/10 dark:bg-primary/20 rounded-lg">
+                                <h3 className="font-medium text-primary dark:text-primary">Tenant Satisfaction</h3>
+                                <p className="mt-1 text-sm text-primary/80 dark:text-primary/80">
                                     Satisfaction rates have increased by 7% in the last quarter, primarily driven by improved amenity services.
                                 </p>
                             </div>

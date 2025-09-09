@@ -144,7 +144,7 @@ const columns: ColumnDef<ProspectiveTenant, unknown>[] = [
                                 const initial = name.charAt(0).toUpperCase();
                                 const parent = target.parentElement;
                                 if (parent) {
-                                    parent.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-blue-500 text-white font-medium">${initial}</div>`;
+                                    parent.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-primary text-primary-foreground font-medium">${initial}</div>`;
                                 }
                             }}
                         />
@@ -197,7 +197,7 @@ const columns: ColumnDef<ProspectiveTenant, unknown>[] = [
             // Generate a consistent color based on broker name
             const getBackgroundColor = (name: string) => {
                 const colors = [
-                    'bg-blue-500',
+                    'bg-primary',
                     'bg-green-500',
                     'bg-purple-500',
                     'bg-pink-500',

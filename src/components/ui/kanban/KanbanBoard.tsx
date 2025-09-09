@@ -145,7 +145,7 @@ const mockTenants: Tenant[] = [
 // Get background color for stage
 const getStageColor = (stage: Stage): string => {
     const colors: Record<Stage, string> = {
-        'New prospect': 'bg-blue-100 dark:bg-blue-950',
+        'New prospect': 'bg-primary/10 dark:bg-primary/20',
         'Tour': 'bg-purple-100 dark:bg-purple-950',
         'Negotiation': 'bg-amber-100 dark:bg-amber-950',
         'Sign off': 'bg-green-100 dark:bg-green-950',
