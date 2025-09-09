@@ -154,7 +154,7 @@ export function Sidebar() {
     <nav className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:flex-col">
       <div className={cn(
         "flex h-full flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 transition-all duration-300",
-        collapsed ? "w-16 px-2" : "w-56 px-3"
+        collapsed ? "w-16 px-2" : "w-64 px-3"
       )}>
         <div className="flex h-16 shrink-0 items-center">
           <Link href="/" className={cn(collapsed ? "pl-0" : "pl-1.5")}>
@@ -171,7 +171,7 @@ export function Sidebar() {
                   <Link
                     href={siteConfig.baseLinks.overview}
                     className={cn(
-                      "group flex items-center gap-x-3 rounded-md py-2 text-[13px] transition",
+                      "group flex items-center gap-x-3 rounded-md py-2 text-[13px] font-medium transition",
                       collapsed ? "px-2 justify-center" : "px-3",
                       isActive(siteConfig.baseLinks.overview)
                         ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary-400 shadow-sm mx-1"
@@ -210,7 +210,7 @@ export function Sidebar() {
                     <button
                       onClick={() => toggleSection('portfolio')}
                       className={cn(
-                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] transition",
+                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'portfolio' || isInPortfolio)
                           ? "text-gray-900 dark:text-gray-50"
@@ -243,7 +243,7 @@ export function Sidebar() {
                           <Link
                             href={item.href}
                             className={cn(
-                              "block rounded-md py-2 pl-10 pr-2 text-[13px] transition",
+                              "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm mx-1"
                                 : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
@@ -276,7 +276,7 @@ export function Sidebar() {
                     <button
                       onClick={() => toggleSection('experienceManager')}
                       className={cn(
-                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] transition",
+                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'experienceManager' || isInExperienceManager)
                           ? "text-gray-900 dark:text-gray-50"
@@ -309,7 +309,7 @@ export function Sidebar() {
                           <Link
                             href={item.href}
                             className={cn(
-                              "block rounded-md py-2 pl-10 pr-2 text-[13px] transition",
+                              "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm mx-1"
                                 : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
@@ -342,7 +342,7 @@ export function Sidebar() {
                     <button
                       onClick={() => toggleSection('operations')}
                       className={cn(
-                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] transition",
+                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'operations' || isInOperations)
                           ? "text-gray-900 dark:text-gray-50"
@@ -375,7 +375,7 @@ export function Sidebar() {
                           <Link
                             href={item.href}
                             className={cn(
-                              "block rounded-md py-2 pl-10 pr-2 text-[13px] transition",
+                              "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm mx-1"
                                 : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
@@ -408,7 +408,7 @@ export function Sidebar() {
                     <button
                       onClick={() => toggleSection('payments')}
                       className={cn(
-                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] transition",
+                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'payments' || isInPayments)
                           ? "text-gray-900 dark:text-gray-50"
@@ -441,7 +441,7 @@ export function Sidebar() {
                           <Link
                             href={item.href}
                             className={cn(
-                              "block rounded-md py-2 pl-10 pr-2 text-[13px] transition",
+                              "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm mx-1"
                                 : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
@@ -461,7 +461,7 @@ export function Sidebar() {
                   <Link
                     href={siteConfig.baseLinks.fileRepository}
                     className={cn(
-                      "group flex items-center gap-x-3 rounded-md py-2 text-[13px] transition",
+                      "group flex items-center gap-x-3 rounded-md py-2 text-[13px] font-medium transition",
                       collapsed ? "px-2 justify-center" : "px-3",
                       isActive(siteConfig.baseLinks.fileRepository)
                         ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary-400 shadow-sm mx-1"
@@ -500,7 +500,7 @@ export function Sidebar() {
                     <button
                       onClick={() => toggleSection('intelligence')}
                       className={cn(
-                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] transition",
+                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'intelligence' || isInIntelligence)
                           ? "text-gray-900 dark:text-gray-50"
@@ -533,7 +533,7 @@ export function Sidebar() {
                           <Link
                             href={item.href}
                             className={cn(
-                              "block rounded-md py-2 pl-10 pr-2 text-[13px] transition",
+                              "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm mx-1"
                                 : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
@@ -566,7 +566,7 @@ export function Sidebar() {
                     <button
                       onClick={() => toggleSection('settingsAndSetup')}
                       className={cn(
-                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] transition",
+                        "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'settingsAndSetup' || isInSettingsAndSetup)
                           ? "text-gray-900 dark:text-gray-50"
@@ -599,7 +599,7 @@ export function Sidebar() {
                           <Link
                             href={item.href}
                             className={cn(
-                              "block rounded-md py-2 pl-10 pr-2 text-[13px] transition",
+                              "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary-400 shadow-sm mx-1"
                                 : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
