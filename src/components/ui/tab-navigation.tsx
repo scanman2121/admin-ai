@@ -41,9 +41,9 @@ const TabNavigationLink = React.forwardRef<HTMLDivElement, TabNavigationLinkProp
         className={cn(
           "flex items-center px-4 py-2 text-sm font-medium transition-colors",
           "hover:text-gray-900 dark:hover:text-gray-50",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
           active
-            ? "border-b-2 border-gray-900 text-gray-900 dark:border-gray-50 dark:text-gray-50"
+            ? "border-b-2 border-primary text-primary dark:border-primary dark:text-primary"
             : "text-gray-500 dark:text-gray-400",
           className
         )}
