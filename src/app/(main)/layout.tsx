@@ -51,7 +51,7 @@ export default function MainLayout({
         <Sidebar />
         <div className={cn(
           "flex flex-col flex-1 transition-all duration-300",
-          collapsed ? "lg:ml-16" : "lg:ml-56"
+          collapsed ? "lg:ml-16" : "lg:ml-64"
         )}>
           <Header />
           <main className="relative flex-1 overflow-y-auto focus:outline-none">
