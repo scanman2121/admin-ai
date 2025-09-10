@@ -225,7 +225,7 @@ export function Sidebar() {
                 {/* Portfolio accordion */}
                 <li className={cn(
                   (openSection === 'portfolio' || isInPortfolio) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -303,7 +303,7 @@ export function Sidebar() {
                 {/* Experience Manager accordion */}
                 <li className={cn(
                   (openSection === 'experienceManager' || isInExperienceManager) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -381,7 +381,7 @@ export function Sidebar() {
                 {/* Operations accordion */}
                 <li className={cn(
                   (openSection === 'operations' || isInOperations) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -459,7 +459,7 @@ export function Sidebar() {
                 {/* Payments accordion */}
                 <li className={cn(
                   (openSection === 'payments' || isInPayments) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -570,7 +570,7 @@ export function Sidebar() {
                 {/* Intelligence accordion */}
                 <li className={cn(
                   (openSection === 'intelligence' || isInIntelligence) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -648,7 +648,7 @@ export function Sidebar() {
                 {/* Settings and setup accordion */}
                 <li className={cn(
                   (openSection === 'settingsAndSetup' || isInSettingsAndSetup) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (

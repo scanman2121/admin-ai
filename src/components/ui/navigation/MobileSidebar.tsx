@@ -234,7 +234,7 @@ export default function MobileSidebar() {
 
               {/* Portfolio accordion */}
               <li className={cn(
-                isInPortfolio ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
+                isInPortfolio ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsPortfolioOpen(!isPortfolioOpen)}
@@ -297,7 +297,7 @@ export default function MobileSidebar() {
 
               {/* Payments accordion */}
               <li className={cn(
-                isInPayments ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
+                isInPayments ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsPaymentsOpen(!isPaymentsOpen)}
@@ -379,7 +379,7 @@ export default function MobileSidebar() {
 
               {/* Experience Manager accordion */}
               <li className={cn(
-                isInExperienceManager ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
+                isInExperienceManager ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsExperienceManagerOpen(!isExperienceManagerOpen)}
@@ -442,7 +442,7 @@ export default function MobileSidebar() {
 
               {/* Operations accordion */}
               <li className={cn(
-                isInOperations ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
+                isInOperations ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsOperationsOpen(!isOperationsOpen)}
@@ -505,7 +505,7 @@ export default function MobileSidebar() {
 
               {/* Intelligence accordion */}
               <li className={cn(
-                isInIntelligence ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
+                isInIntelligence ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsIntelligenceOpen(!isIntelligenceOpen)}
@@ -568,7 +568,7 @@ export default function MobileSidebar() {
 
               {/* Settings & Setup accordion */}
               <li className={cn(
-                isInSettingsAndSetup ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
+                isInSettingsAndSetup ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsSettingsAndSetupOpen(!isSettingsAndSetupOpen)}
