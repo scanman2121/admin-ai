@@ -243,8 +243,13 @@ export function Sidebar() {
                   )}
 
                   {/* Sub-navigation items with animation */}
-                  {!collapsed && openSection === 'portfolio' && (
-                    <ul className="mt-1 space-y-1">
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300 ease-out",
+                    !collapsed && openSection === 'portfolio' 
+                      ? "max-h-96 opacity-100" 
+                      : "max-h-0 opacity-0"
+                  )}>
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
                       {portfolioItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -269,7 +274,7 @@ export function Sidebar() {
                         </li>
                       ))}
                     </ul>
-                  )}
+                  </div>
                 </li>
 
                 {/* Experience Manager accordion */}
@@ -316,8 +321,13 @@ export function Sidebar() {
                   )}
 
                   {/* Sub-navigation items with animation */}
-                  {!collapsed && openSection === 'experienceManager' && (
-                    <ul className="mt-1 space-y-1">
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300 ease-out",
+                    !collapsed && openSection === 'experienceManager' 
+                      ? "max-h-96 opacity-100" 
+                      : "max-h-0 opacity-0"
+                  )}>
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
                       {experienceManagerItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -342,7 +352,7 @@ export function Sidebar() {
                         </li>
                       ))}
                     </ul>
-                  )}
+                  </div>
                 </li>
 
                 {/* Operations accordion */}
@@ -389,8 +399,13 @@ export function Sidebar() {
                   )}
 
                   {/* Sub-navigation items with animation */}
-                  {!collapsed && openSection === 'operations' && (
-                    <ul className="mt-1 space-y-1">
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300 ease-out",
+                    !collapsed && openSection === 'operations' 
+                      ? "max-h-96 opacity-100" 
+                      : "max-h-0 opacity-0"
+                  )}>
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
                       {operationsItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -415,7 +430,7 @@ export function Sidebar() {
                         </li>
                       ))}
                     </ul>
-                  )}
+                  </div>
                 </li>
 
                 {/* Payments accordion */}
@@ -462,8 +477,13 @@ export function Sidebar() {
                   )}
 
                   {/* Sub-navigation items with animation */}
-                  {!collapsed && openSection === 'payments' && (
-                    <ul className="mt-1 space-y-1">
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300 ease-out",
+                    !collapsed && openSection === 'payments' 
+                      ? "max-h-96 opacity-100" 
+                      : "max-h-0 opacity-0"
+                  )}>
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
                       {paymentsItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -488,7 +508,7 @@ export function Sidebar() {
                         </li>
                       ))}
                     </ul>
-                  )}
+                  </div>
                 </li>
 
                 {/* File Repository */}
@@ -568,8 +588,13 @@ export function Sidebar() {
                   )}
 
                   {/* Sub-navigation items with animation */}
-                  {!collapsed && openSection === 'intelligence' && (
-                    <ul className="mt-1 space-y-1">
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300 ease-out",
+                    !collapsed && openSection === 'intelligence' 
+                      ? "max-h-96 opacity-100" 
+                      : "max-h-0 opacity-0"
+                  )}>
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
                       {intelligenceItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -594,7 +619,7 @@ export function Sidebar() {
                         </li>
                       ))}
                     </ul>
-                  )}
+                  </div>
                 </li>
 
                 {/* Settings and setup accordion */}
@@ -641,8 +666,13 @@ export function Sidebar() {
                   )}
 
                   {/* Sub-navigation items with animation */}
-                  {!collapsed && openSection === 'settingsAndSetup' && (
-                    <ul className="mt-1 space-y-1">
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300 ease-out",
+                    !collapsed && openSection === 'settingsAndSetup' 
+                      ? "max-h-96 opacity-100" 
+                      : "max-h-0 opacity-0"
+                  )}>
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
                       {settingsAndSetupItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -667,7 +697,7 @@ export function Sidebar() {
                         </li>
                       ))}
                     </ul>
-                  )}
+                  </div>
                 </li>
               </ul>
             </li>
