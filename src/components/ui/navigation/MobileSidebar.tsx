@@ -16,12 +16,12 @@ import {
     RiArrowRightSLine,
     RiBuildingLine,
     RiDashboardLine,
+    RiDeviceLine,
     RiFolderLine,
     RiHomeLine,
     RiLineChartLine,
     RiMegaphoneLine,
     RiMenuLine,
-    RiMonitorSmartphoneLine,
     RiReceiptLine,
     RiSettings4Line
 } from "@remixicon/react"
@@ -581,7 +581,7 @@ export default function MobileSidebar() {
                   aria-expanded={isSettingsAndSetupOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <RiMonitorSmartphoneLine className="size-4 shrink-0" aria-hidden="true" />
+                    <RiDeviceLine className="size-4 shrink-0" aria-hidden="true" />
                     App configuration
                   </span>
                   {isSettingsAndSetupOpen ? (
