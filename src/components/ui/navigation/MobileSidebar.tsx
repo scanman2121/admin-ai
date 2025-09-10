@@ -36,9 +36,7 @@ const navigation = [
 
 // Portfolio sub-navigation items
 const portfolioItems = [
-  { name: "Overview", href: siteConfig.baseLinks.portfolio.overview },
   { name: "Buildings", href: siteConfig.baseLinks.buildings },
-  { name: "Spaces", href: siteConfig.baseLinks.spaces },
   { name: "Tenants", href: siteConfig.baseLinks.tenants },
   { name: "Users", href: siteConfig.baseLinks.users },
   { name: "Vendors", href: siteConfig.baseLinks.vendors },
@@ -55,7 +53,6 @@ const paymentsItems = [
 
 // Experience Manager sub-navigation items
 const experienceManagerItems = [
-  { name: "Overview", href: siteConfig.baseLinks.experienceManager.overview },
   { name: "Content", href: siteConfig.baseLinks.experienceManager.content },
   { name: "Amenity posts", href: siteConfig.baseLinks.experienceManager.amenityPosts },
   { name: "Events", href: siteConfig.baseLinks.experienceManager.events },
@@ -72,7 +69,6 @@ const operationsItems = [
   { name: "Capacity manager", href: siteConfig.baseLinks.operations.capacityManager },
   { name: "Resource booking", href: siteConfig.baseLinks.operations.resourceBooking },
   { name: "Work orders", href: siteConfig.baseLinks.operations.workOrders },
-  { name: "Parking", href: siteConfig.baseLinks.operations.parking },
   { name: "Energy consumption", href: siteConfig.baseLinks.operations.energyConsumption },
 ] as const
 
@@ -396,7 +392,7 @@ export default function MobileSidebar() {
                 >
                   <span className="flex items-center gap-x-2.5">
                     <RiMegaphoneLine className="size-4 shrink-0" aria-hidden="true" />
-                    Experience Manager
+                    Experience
                   </span>
                   {isExperienceManagerOpen ? (
                     <RiArrowDownSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
