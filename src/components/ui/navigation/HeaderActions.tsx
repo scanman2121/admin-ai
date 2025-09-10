@@ -3,13 +3,13 @@
 import { Button } from "@/components/Button"
 import { Tooltip } from "@/components/Tooltip"
 import { cn, focusRing } from "@/lib/utils"
-import { RiNotification3Line, /* RiQrCodeLine, RiSearchLine, */ RiSparkling2Line, RiQuestionLine } from "@remixicon/react"
+import { /* RiNotification3Line, RiQrCodeLine, RiSearchLine, */ RiSparkling2Line, RiQuestionLine } from "@remixicon/react"
 import { useEffect, useState } from "react"
 import { AIAssistantDrawer } from "../ai/AIAssistantDrawer"
 import { FullScreenAIAssistant } from "../ai/FullScreenAIAssistant"
 import { CreatePopover } from "../create/CreatePopover"
 import { FullScreenNotifications } from "../notifications/FullScreenNotifications"
-import { NotificationsPopover } from "../notifications/NotificationsPopover"
+// import { NotificationsPopover } from "../notifications/NotificationsPopover" // Hidden for now
 // import { QRScannerModal } from "../qr/QRScannerModal" // Hidden for now
 import { SupportDropdown } from "./SupportDropdown"
 import { UserProfileMobile as UserProfileHeader } from "./UserProfile"
@@ -84,19 +84,20 @@ export function HeaderActions() {
         setIsFullScreenAIOpen(true)
     }
 
-    // Handle notifications button click
-    const handleNotificationsClick = () => {
-        if (isMobile) {
-            setIsFullScreenNotificationsOpen(true)
-        }
-        // Desktop uses the popover which is handled by the NotificationsPopover component
-    }
+    // Handle notifications button click - Hidden for now
+    // const handleNotificationsClick = () => {
+    //     if (isMobile) {
+    //         setIsFullScreenNotificationsOpen(true)
+    //     }
+    //     // Desktop uses the popover which is handled by the NotificationsPopover component
+    // }
 
-    // If on mobile, show notifications and user profile
+    // If on mobile, show user profile only (notifications hidden for now)
     if (isMobile) {
         return (
             <div className="flex items-center gap-x-1">
-                <Tooltip content="Notifications" side="bottom">
+                {/* Notifications Button - Hidden for now */}
+                {/* <Tooltip content="Notifications" side="bottom">
                     <Button
                         variant="ghost"
                         onClick={handleNotificationsClick}
@@ -108,7 +109,7 @@ export function HeaderActions() {
                         <RiNotification3Line className="size-5" aria-hidden="true" />
                         <span className="sr-only">Notifications</span>
                     </Button>
-                </Tooltip>
+                </Tooltip> */}
                 
                 <Tooltip content="User profile" side="bottom">
                     <UserProfileHeader />
@@ -180,9 +181,10 @@ export function HeaderActions() {
                     <CreatePopover />
                 </Tooltip>
 
-                <Tooltip content="Notifications" side="bottom">
+                {/* Notifications - Hidden for now */}
+                {/* <Tooltip content="Notifications" side="bottom">
                     <NotificationsPopover />
-                </Tooltip>
+                </Tooltip> */}
                 
                 <Tooltip content="User profile" side="bottom">
                     <UserProfileHeader />
