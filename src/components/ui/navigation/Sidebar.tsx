@@ -6,7 +6,6 @@ import {
     Drawer,
     DrawerClose,
     DrawerContent,
-    DrawerHeader,
     DrawerTitle,
     DrawerTrigger
 } from "@/components/ui/drawer"
@@ -727,22 +726,17 @@ export function Sidebar() {
             </li>
 
             {/* Portfolio Settings - Sticky to bottom */}
-            <li className="mt-auto">
+            <li className="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">
               <Drawer open={portfolioSettingsOpen} onOpenChange={setPortfolioSettingsOpen}>
                 <DrawerTrigger asChild>
                   <button
                     className={cn(
-                      "group relative flex w-full items-center gap-x-3 rounded-md py-2 text-[14px] font-medium transition-all duration-200 ease-out",
+                      "group relative flex w-full items-center gap-x-3 rounded-md py-2 text-[14px] font-medium transition-colors duration-200 ease-out",
                       collapsed ? "px-2 justify-center" : "px-3",
                       "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                       focusRing,
                     )}
                   >
-                    {/* Blue indicator line */}
-                    <div className={cn(
-                      "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
-                      "h-1/2 opacity-0 group-hover:opacity-100"
-                    )} />
                     <RiSettings4Line
                       className={cn(
                         "size-4 shrink-0",
@@ -754,106 +748,141 @@ export function Sidebar() {
                   </button>
                 </DrawerTrigger>
                 <DrawerContent className="max-h-[95vh]">
-                  <div className="flex h-full flex-col">
-                    <DrawerHeader className="border-b border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center justify-between">
-                        <DrawerTitle className="text-xl font-semibold">Portfolio settings</DrawerTitle>
-                        <DrawerClose asChild>
-                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                            <span className="sr-only">Close</span>
-                            <svg
-                              className="h-4 w-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          </Button>
-                        </DrawerClose>
+                  <div className="flex h-full">
+                    {/* Header */}
+                    <div className="absolute top-4 left-6 right-6 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4">
+                      <div>
+                        <DrawerTitle className="text-lg font-semibold text-gray-900 dark:text-gray-50">Settings</DrawerTitle>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Edit settings</p>
                       </div>
-                    </DrawerHeader>
-                    
-                    {/* Drawer Content */}
-                    <div className="flex-1 overflow-y-auto p-6">
-                      <div className="space-y-6">
-                        {/* General Settings Section */}
-                        <div className="space-y-4">
-                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">General settings</h3>
-                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Portfolio name</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Change the display name for your portfolio</p>
-                              <Button variant="outline" size="sm">Edit name</Button>
+                      <DrawerClose asChild>
+                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                          <span className="sr-only">Close</span>
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </Button>
+                      </DrawerClose>
+                    </div>
+
+                    {/* Sidebar */}
+                    <div className="w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 pt-20 pb-6">
+                      <div className="px-6">
+                        <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Settings</h3>
+                        <div className="space-y-1">
+                          <button className="w-full text-left px-3 py-2 text-sm font-medium text-primary bg-primary/10 rounded-md">
+                            General
+                          </button>
+                          <button className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">
+                            Apps
+                          </button>
+                          <button className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">
+                            Email
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="flex-1 pt-20 pb-6 overflow-y-auto">
+                      <div className="px-6 space-y-8">
+                        {/* Company Info Section */}
+                        <div>
+                          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Company info</h2>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">General information about the tenant company</p>
+                          
+                          <div className="space-y-6">
+                            {/* Industry */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Industry</label>
+                              <div className="relative">
+                                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary">
+                                  <option>Computer Software</option>
+                                </select>
+                              </div>
                             </div>
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Default currency</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Set the default currency for all transactions</p>
-                              <Button variant="outline" size="sm">Change currency</Button>
+
+                            {/* Number of employees */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Number of employees</label>
+                              <input 
+                                type="text" 
+                                placeholder="Enter number of employees"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-primary"
+                              />
                             </div>
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Time zone</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Configure the default time zone</p>
-                              <Button variant="outline" size="sm">Update timezone</Button>
+
+                            {/* Website */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Website <span className="text-red-500">*</span>
+                              </label>
+                              <input 
+                                type="url" 
+                                defaultValue="http://www.hqo.co"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary"
+                              />
                             </div>
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Data retention</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Manage how long data is stored</p>
-                              <Button variant="outline" size="sm">Configure retention</Button>
+
+                            {/* Billing address */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Billing address <span className="text-red-500">*</span>
+                              </label>
+                              <textarea 
+                                rows={3}
+                                defaultValue="38 Chauncy St, Boston, MA 02111, USA"
+                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary"
+                              />
+                            </div>
+
+                            {/* Logo */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Logo</label>
+                              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center relative">
+                                <div className="flex flex-col items-center">
+                                  <div className="w-16 h-16 bg-[#1a365d] rounded-lg flex items-center justify-center mb-4">
+                                    <span className="text-white font-bold text-xl">HqO</span>
+                                  </div>
+                                  <button className="absolute top-2 right-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                  </button>
+                                  <Button variant="outline" size="sm" className="mt-2">Upload file</Button>
+                                </div>
+                              </div>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Accepted file types: PNG, JPEG</p>
                             </div>
                           </div>
                         </div>
 
-                        {/* Integration Settings Section */}
-                        <div className="space-y-4">
-                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">Integrations</h3>
-                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">API access</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Manage API keys and access tokens</p>
-                              <Button variant="outline" size="sm">Manage API</Button>
-                            </div>
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Webhooks</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Configure webhook endpoints</p>
-                              <Button variant="outline" size="sm">Setup webhooks</Button>
-                            </div>
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Third-party apps</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Connect external applications</p>
-                              <Button variant="outline" size="sm">View apps</Button>
-                            </div>
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Data export</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Export portfolio data</p>
-                              <Button variant="outline" size="sm">Export data</Button>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Security Settings Section */}
-                        <div className="space-y-4">
-                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">Security & permissions</h3>
-                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">User permissions</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Manage user access and roles</p>
-                              <Button variant="outline" size="sm">Manage permissions</Button>
-                            </div>
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Audit logs</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">View system activity logs</p>
-                              <Button variant="outline" size="sm">View logs</Button>
-                            </div>
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Backup settings</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Configure automated backups</p>
-                              <Button variant="outline" size="sm">Setup backups</Button>
-                            </div>
-                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Access logs</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Monitor login activity</p>
-                              <Button variant="outline" size="sm">View access logs</Button>
+                        {/* Domains Section */}
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Domains</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                            User domains that grant non-guest users access to the app. Generic domains cannot be added. View the list of generic domains in the Help Hub.
+                          </p>
+                          
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">URL domain</label>
+                            <div className="flex flex-wrap gap-2 p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800">
+                              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                hqo.co
+                                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
+                              </span>
+                              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                testlio.com
+                                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
+                              </span>
+                              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                hqo.com
+                                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
+                              </span>
+                              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                srv1.mail-tester.com
+                                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
+                              </span>
                             </div>
                           </div>
                         </div>

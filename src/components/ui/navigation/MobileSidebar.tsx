@@ -630,20 +630,15 @@ export default function MobileSidebar() {
               </li>
 
               {/* Portfolio Settings */}
-              <li className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+              <li className="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">
                 <button
                   onClick={() => setShowPortfolioSettings(!showPortfolioSettings)}
                   className={cn(
-                    "group relative flex w-full items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition-all duration-200 ease-out hover:bg-gray-100 hover:dark:bg-gray-900",
+                    "group relative flex w-full items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition-colors duration-200 ease-out hover:bg-gray-100 hover:dark:bg-gray-900",
                     "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}
                 >
-                  {/* Blue indicator line */}
-                  <div className={cn(
-                    "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
-                    "h-1/2 opacity-0 group-hover:opacity-100"
-                  )} />
                   <RiSettings4Line
                     className="size-4 shrink-0"
                     aria-hidden="true"
