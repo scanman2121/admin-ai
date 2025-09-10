@@ -213,10 +213,17 @@ export default function MobileSidebar() {
                         isActive(item.href)
                           ? "text-primary dark:text-primary"
                           : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
-                        "flex items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
+                        "group relative flex items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition-all duration-200 ease-out hover:bg-gray-100 hover:dark:bg-gray-900",
                         focusRing,
                       )}
                     >
+                      {/* Blue indicator line */}
+                      <div className={cn(
+                        "absolute right-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-l-sm transition-all duration-300 ease-out",
+                        isActive(item.href)
+                          ? "h-full opacity-100"
+                          : "h-1/2 opacity-0 group-hover:opacity-100"
+                      )} />
                       <item.icon
                         className="size-4 shrink-0"
                         aria-hidden="true"
@@ -270,10 +277,17 @@ export default function MobileSidebar() {
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
-                              "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
+                              "group relative flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition-all duration-200 ease-out w-full",
                               focusRing,
                             )}
                           >
+                            {/* Blue indicator line */}
+                            <div className={cn(
+                              "absolute right-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-l-sm transition-all duration-300 ease-out",
+                              isActive(item.href)
+                                ? "h-full opacity-100"
+                                : "h-1/2 opacity-0 group-hover:opacity-100"
+                            )} />
                             {item.name}
                           </Link>
                         </DrawerClose>
@@ -326,10 +340,17 @@ export default function MobileSidebar() {
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
-                              "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
+                              "group relative flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition-all duration-200 ease-out w-full",
                               focusRing,
                             )}
                           >
+                            {/* Blue indicator line */}
+                            <div className={cn(
+                              "absolute right-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-l-sm transition-all duration-300 ease-out",
+                              isActive(item.href)
+                                ? "h-full opacity-100"
+                                : "h-1/2 opacity-0 group-hover:opacity-100"
+                            )} />
                             {item.name}
                           </Link>
                         </DrawerClose>
@@ -401,10 +422,17 @@ export default function MobileSidebar() {
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
-                              "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
+                              "group relative flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition-all duration-200 ease-out w-full",
                               focusRing,
                             )}
                           >
+                            {/* Blue indicator line */}
+                            <div className={cn(
+                              "absolute right-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-l-sm transition-all duration-300 ease-out",
+                              isActive(item.href)
+                                ? "h-full opacity-100"
+                                : "h-1/2 opacity-0 group-hover:opacity-100"
+                            )} />
                             {item.name}
                           </Link>
                         </DrawerClose>
@@ -457,10 +485,17 @@ export default function MobileSidebar() {
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
-                              "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
+                              "group relative flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition-all duration-200 ease-out w-full",
                               focusRing,
                             )}
                           >
+                            {/* Blue indicator line */}
+                            <div className={cn(
+                              "absolute right-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-l-sm transition-all duration-300 ease-out",
+                              isActive(item.href)
+                                ? "h-full opacity-100"
+                                : "h-1/2 opacity-0 group-hover:opacity-100"
+                            )} />
                             {item.name}
                           </Link>
                         </DrawerClose>
@@ -513,10 +548,17 @@ export default function MobileSidebar() {
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
-                              "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
+                              "group relative flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition-all duration-200 ease-out w-full",
                               focusRing,
                             )}
                           >
+                            {/* Blue indicator line */}
+                            <div className={cn(
+                              "absolute right-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-l-sm transition-all duration-300 ease-out",
+                              isActive(item.href)
+                                ? "h-full opacity-100"
+                                : "h-1/2 opacity-0 group-hover:opacity-100"
+                            )} />
                             {item.name}
                           </Link>
                         </DrawerClose>
@@ -569,10 +611,17 @@ export default function MobileSidebar() {
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-800",
-                              "flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition w-full",
+                              "group relative flex items-center rounded-md px-1.5 py-1.5 text-sm font-medium transition-all duration-200 ease-out w-full",
                               focusRing,
                             )}
                           >
+                            {/* Blue indicator line */}
+                            <div className={cn(
+                              "absolute right-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-l-sm transition-all duration-300 ease-out",
+                              isActive(item.href)
+                                ? "h-full opacity-100"
+                                : "h-1/2 opacity-0 group-hover:opacity-100"
+                            )} />
                             {item.name}
                           </Link>
                         </DrawerClose>
