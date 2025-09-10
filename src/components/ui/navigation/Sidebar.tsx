@@ -175,7 +175,7 @@ export function Sidebar() {
                       collapsed ? "px-2 justify-center" : "px-3",
                       isActive(siteConfig.baseLinks.overview)
                         ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
-                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2",
                       focusRing,
                     )}
                   >
@@ -214,7 +214,7 @@ export function Sidebar() {
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'portfolio' || isInPortfolio)
                           ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2 rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'portfolio'}
@@ -245,8 +245,8 @@ export function Sidebar() {
                             className={cn(
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2",
                               focusRing,
                             )}
                           >
@@ -280,7 +280,7 @@ export function Sidebar() {
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'experienceManager' || isInExperienceManager)
                           ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2 rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'experienceManager'}
@@ -311,8 +311,8 @@ export function Sidebar() {
                             className={cn(
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2",
                               focusRing,
                             )}
                           >
@@ -346,7 +346,7 @@ export function Sidebar() {
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'operations' || isInOperations)
                           ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2 rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'operations'}
@@ -377,8 +377,8 @@ export function Sidebar() {
                             className={cn(
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2",
                               focusRing,
                             )}
                           >
@@ -412,7 +412,7 @@ export function Sidebar() {
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'payments' || isInPayments)
                           ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2 rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'payments'}
@@ -443,8 +443,8 @@ export function Sidebar() {
                             className={cn(
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2",
                               focusRing,
                             )}
                           >
@@ -465,7 +465,7 @@ export function Sidebar() {
                       collapsed ? "px-2 justify-center" : "px-3",
                       isActive(siteConfig.baseLinks.fileRepository)
                         ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
-                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2",
                       focusRing,
                     )}
                   >
@@ -504,7 +504,7 @@ export function Sidebar() {
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'intelligence' || isInIntelligence)
                           ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2 rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'intelligence'}
@@ -535,8 +535,8 @@ export function Sidebar() {
                             className={cn(
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2",
                               focusRing,
                             )}
                           >
@@ -570,7 +570,7 @@ export function Sidebar() {
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'settingsAndSetup' || isInSettingsAndSetup)
                           ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2 rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'settingsAndSetup'}
@@ -601,8 +601,8 @@ export function Sidebar() {
                             className={cn(
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 hover:mx-2",
                               focusRing,
                             )}
                           >
