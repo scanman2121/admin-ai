@@ -18,9 +18,9 @@ import {
     RiHomeLine,
     RiLineChartLine,
     RiMegaphoneLine,
+    RiMonitorSmartphoneLine,
     RiReceiptLine,
-    RiSettings4Line,
-    RiSettings5Line
+    RiSettings4Line
 } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -652,7 +652,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<RiSettings5Line className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<RiMonitorSmartphoneLine className="size-4 shrink-0" aria-hidden="true" />}
                       title="Settings and setup"
                       items={settingsAndSetupItems}
                       isActive={isActive}
@@ -672,7 +672,7 @@ export function Sidebar() {
                       aria-expanded={openSection === 'settingsAndSetup'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <RiSettings5Line className="size-4 shrink-0" aria-hidden="true" />
+                        <RiMonitorSmartphoneLine className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "App configuration"}
                       </span>
                       {!collapsed && (
