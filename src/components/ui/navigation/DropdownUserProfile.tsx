@@ -146,9 +146,9 @@ export function DropdownUserProfile({
             </label>
           </div>
 
-          {/* Log Out */}
-          <div className="p-2 border-t border-gray-200 dark:border-gray-700">
-            <DropdownMenuItem className="flex items-center gap-3 px-3 py-2.5 text-gray-700 dark:text-gray-300">
+          {/* Log Out - With grey background */}
+          <div className="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-lg">
+            <DropdownMenuItem className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 m-0 rounded-b-lg">
               <RiLogoutBoxLine className="size-4" />
               <span className="text-sm">Log out</span>
             </DropdownMenuItem>
