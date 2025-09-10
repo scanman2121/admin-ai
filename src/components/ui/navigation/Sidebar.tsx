@@ -11,11 +11,21 @@ import {
     RiLineChartLine,
     RiMegaphoneLine,
     RiReceiptLine,
+    RiSettings4Line,
     RiSettings5Line
 } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
+import { 
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+  DrawerClose 
+} from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
 import { HqOLogo } from "./HqOLogo"
 import { SidebarPopover } from "./SidebarPopover"
 
@@ -79,6 +89,7 @@ type SectionId = 'portfolio' | 'payments' | 'experienceManager' | 'operations' |
 export function Sidebar() {
   const pathname = usePathname()
   const [openSection, setOpenSection] = useState<SectionId | null>(null)
+  const [portfolioSettingsOpen, setPortfolioSettingsOpen] = useState(false)
   const { collapsed } = useContext(SidebarContext)
 
   // Check if current path is in each section
@@ -715,9 +726,142 @@ export function Sidebar() {
               </ul>
             </li>
 
-            {/* Space for future bottom content */}
+            {/* Portfolio Settings - Sticky to bottom */}
             <li className="mt-auto">
-              {/* User profile moved to header */}
+              <Drawer open={portfolioSettingsOpen} onOpenChange={setPortfolioSettingsOpen}>
+                <DrawerTrigger asChild>
+                  <button
+                    className={cn(
+                      "group relative flex w-full items-center gap-x-3 rounded-md py-2 text-[14px] font-medium transition-all duration-200 ease-out",
+                      collapsed ? "px-2 justify-center" : "px-3",
+                      "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
+                      focusRing,
+                    )}
+                  >
+                    {/* Blue indicator line */}
+                    <div className={cn(
+                      "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                      "h-1/2 opacity-0 group-hover:opacity-100"
+                    )} />
+                    <RiSettings4Line
+                      className={cn(
+                        "size-4 shrink-0",
+                        "text-[#696E72] group-hover:text-gray-500 dark:group-hover:text-gray-400"
+                      )}
+                      aria-hidden="true"
+                    />
+                    {!collapsed && <span>Portfolio settings</span>}
+                  </button>
+                </DrawerTrigger>
+                <DrawerContent className="max-h-[95vh]">
+                  <div className="flex h-full flex-col">
+                    <DrawerHeader className="border-b border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center justify-between">
+                        <DrawerTitle className="text-xl font-semibold">Portfolio settings</DrawerTitle>
+                        <DrawerClose asChild>
+                          <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                            <span className="sr-only">Close</span>
+                            <svg
+                              className="h-4 w-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </Button>
+                        </DrawerClose>
+                      </div>
+                    </DrawerHeader>
+                    
+                    {/* Drawer Content */}
+                    <div className="flex-1 overflow-y-auto p-6">
+                      <div className="space-y-6">
+                        {/* General Settings Section */}
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">General settings</h3>
+                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Portfolio name</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Change the display name for your portfolio</p>
+                              <Button variant="outline" size="sm">Edit name</Button>
+                            </div>
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Default currency</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Set the default currency for all transactions</p>
+                              <Button variant="outline" size="sm">Change currency</Button>
+                            </div>
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Time zone</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Configure the default time zone</p>
+                              <Button variant="outline" size="sm">Update timezone</Button>
+                            </div>
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Data retention</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Manage how long data is stored</p>
+                              <Button variant="outline" size="sm">Configure retention</Button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Integration Settings Section */}
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">Integrations</h3>
+                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">API access</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Manage API keys and access tokens</p>
+                              <Button variant="outline" size="sm">Manage API</Button>
+                            </div>
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Webhooks</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Configure webhook endpoints</p>
+                              <Button variant="outline" size="sm">Setup webhooks</Button>
+                            </div>
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Third-party apps</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Connect external applications</p>
+                              <Button variant="outline" size="sm">View apps</Button>
+                            </div>
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Data export</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Export portfolio data</p>
+                              <Button variant="outline" size="sm">Export data</Button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Security Settings Section */}
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">Security & permissions</h3>
+                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">User permissions</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Manage user access and roles</p>
+                              <Button variant="outline" size="sm">Manage permissions</Button>
+                            </div>
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Audit logs</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">View system activity logs</p>
+                              <Button variant="outline" size="sm">View logs</Button>
+                            </div>
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Backup settings</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Configure automated backups</p>
+                              <Button variant="outline" size="sm">Setup backups</Button>
+                            </div>
+                            <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">Access logs</h4>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Monitor login activity</p>
+                              <Button variant="outline" size="sm">View access logs</Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </DrawerContent>
+              </Drawer>
             </li>
           </ul>
         </nav>

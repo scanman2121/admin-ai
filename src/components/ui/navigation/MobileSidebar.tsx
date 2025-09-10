@@ -22,6 +22,7 @@ import {
     RiMegaphoneLine,
     RiMenuLine,
     RiReceiptLine,
+    RiSettings4Line,
     RiSettings5Line
 } from "@remixicon/react"
 import Link from "next/link"
@@ -97,6 +98,7 @@ export default function MobileSidebar() {
   const [isOperationsOpen, setIsOperationsOpen] = useState(false)
   const [isIntelligenceOpen, setIsIntelligenceOpen] = useState(false)
   const [isSettingsAndSetupOpen, setIsSettingsAndSetupOpen] = useState(false)
+  const [showPortfolioSettings, setShowPortfolioSettings] = useState(false)
 
   // Check if current path is in Portfolio section
   const isInPortfolio = portfolioItems.some(item =>
@@ -625,6 +627,80 @@ export default function MobileSidebar() {
                     ))}
                   </ul>
                 </div>
+              </li>
+
+              {/* Portfolio Settings */}
+              <li className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+                <button
+                  onClick={() => setShowPortfolioSettings(!showPortfolioSettings)}
+                  className={cn(
+                    "group relative flex w-full items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition-all duration-200 ease-out hover:bg-gray-100 hover:dark:bg-gray-900",
+                    "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
+                    focusRing,
+                  )}
+                >
+                  {/* Blue indicator line */}
+                  <div className={cn(
+                    "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                    "h-1/2 opacity-0 group-hover:opacity-100"
+                  )} />
+                  <RiSettings4Line
+                    className="size-4 shrink-0"
+                    aria-hidden="true"
+                  />
+                  Portfolio settings
+                </button>
+
+                {/* Portfolio Settings Content */}
+                {showPortfolioSettings && (
+                  <div className="mt-2 space-y-3 px-2">
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">General settings</h4>
+                      <div className="space-y-2">
+                        <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
+                          <span>Portfolio name</span>
+                          <RiArrowRightSLine className="size-4" />
+                        </button>
+                        <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
+                          <span>Default currency</span>
+                          <RiArrowRightSLine className="size-4" />
+                        </button>
+                        <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
+                          <span>Time zone</span>
+                          <RiArrowRightSLine className="size-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Integrations</h4>
+                      <div className="space-y-2">
+                        <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
+                          <span>API access</span>
+                          <RiArrowRightSLine className="size-4" />
+                        </button>
+                        <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
+                          <span>Webhooks</span>
+                          <RiArrowRightSLine className="size-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Security</h4>
+                      <div className="space-y-2">
+                        <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
+                          <span>User permissions</span>
+                          <RiArrowRightSLine className="size-4" />
+                        </button>
+                        <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
+                          <span>Audit logs</span>
+                          <RiArrowRightSLine className="size-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </li>
             </ul>
           </nav>
