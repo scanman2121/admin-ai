@@ -634,7 +634,7 @@ export default function MobileSidebar() {
                 <button
                   onClick={() => setShowPortfolioSettings(!showPortfolioSettings)}
                   className={cn(
-                    "group relative flex w-full items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition-colors duration-200 ease-out hover:bg-gray-100 hover:dark:bg-gray-900",
+                    "group relative flex w-full items-center gap-x-2.5 rounded-md px-1.5 py-2.5 text-sm font-medium transition-colors duration-200 ease-out hover:bg-gray-100 hover:dark:bg-gray-900",
                     "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}

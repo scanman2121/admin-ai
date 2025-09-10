@@ -731,7 +731,7 @@ export function Sidebar() {
                 <DrawerTrigger asChild>
                   <button
                     className={cn(
-                      "group relative flex w-full items-center gap-x-3 rounded-md py-2 text-[14px] font-medium transition-colors duration-200 ease-out",
+                      "group relative flex w-full items-center gap-x-3 rounded-md py-2.5 text-[14px] font-medium transition-colors duration-200 ease-out",
                       collapsed ? "px-2 justify-center" : "px-3",
                       "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                       focusRing,
