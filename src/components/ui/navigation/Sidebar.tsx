@@ -744,7 +744,7 @@ export function Sidebar() {
                       )}
                       aria-hidden="true"
                     />
-                    {!collapsed && <span>Portfolio settings</span>}
+                    {!collapsed && <span>Settings</span>}
                   </button>
                 </DrawerTrigger>
                 <DrawerContent className="max-h-[95vh]">

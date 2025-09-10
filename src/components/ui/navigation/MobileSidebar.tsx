@@ -643,7 +643,7 @@ export default function MobileSidebar() {
                     className="size-4 shrink-0"
                     aria-hidden="true"
                   />
-                  Portfolio settings
+                  Settings
                 </button>
 
                 {/* Portfolio Settings Content */}
