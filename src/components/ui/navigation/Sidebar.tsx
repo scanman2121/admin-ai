@@ -726,7 +726,7 @@ export function Sidebar() {
             </li>
 
             {/* Portfolio Settings - Sticky to bottom */}
-            <li className="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">
+            <li className="mt-auto pt-3 pb-2 border-t border-gray-200 dark:border-gray-700">
               <Drawer open={portfolioSettingsOpen} onOpenChange={setPortfolioSettingsOpen}>
                 <DrawerTrigger asChild>
                   <button

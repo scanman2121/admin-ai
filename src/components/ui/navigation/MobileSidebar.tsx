@@ -630,7 +630,7 @@ export default function MobileSidebar() {
               </li>
 
               {/* Portfolio Settings */}
-              <li className="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">
+              <li className="mt-auto pt-3 pb-2 border-t border-gray-200 dark:border-gray-700">
                 <button
                   onClick={() => setShowPortfolioSettings(!showPortfolioSettings)}
                   className={cn(
