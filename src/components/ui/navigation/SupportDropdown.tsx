@@ -40,16 +40,16 @@ export function SupportDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent align={align}>
-        <DropdownMenuItem onClick={handleContactSupport}>
+      <DropdownMenuContent align={align} className="px-4 py-3">
+        <DropdownMenuItem onClick={handleContactSupport} className="px-3 py-2.5">
           <RiCustomerService2Line className="size-4 shrink-0 mr-2" aria-hidden="true" />
           Contact support
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleHelpHub}>
+        <DropdownMenuItem onClick={handleHelpHub} className="px-3 py-2.5">
           <RiBook2Line className="size-4 shrink-0 mr-2" aria-hidden="true" />
           HelpHub
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleSubmitIdea}>
+        <DropdownMenuItem onClick={handleSubmitIdea} className="px-3 py-2.5">
           <RiLightbulbLine className="size-4 shrink-0 mr-2" aria-hidden="true" />
           Submit an idea
         </DropdownMenuItem>
