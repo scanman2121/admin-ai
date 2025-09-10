@@ -14,7 +14,6 @@ import { cn, focusRing } from "@/lib/utils"
 import {
     RiArrowDownSLine,
     RiArrowRightSLine,
-    RiBuildingLine,
     RiDashboardLine,
     RiFolderLine,
     RiHomeLine,
@@ -30,13 +29,9 @@ import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { HqOLogo } from "./HqOLogo"
 
-// Main navigation items excluding the ones that will go into the Portfolio section
-const navigation = [
-  { name: "My HqO", href: siteConfig.baseLinks.overview, icon: RiHomeLine },
-] as const
-
-// Portfolio sub-navigation items
-const portfolioItems = [
+// My HqO sub-navigation items
+const myHqOItems = [
+  { name: "Home", href: siteConfig.baseLinks.overview },
   { name: "Buildings", href: siteConfig.baseLinks.buildings },
   { name: "Tenants", href: siteConfig.baseLinks.tenants },
   { name: "Users", href: siteConfig.baseLinks.users },
@@ -91,7 +86,7 @@ const intelligenceItems = [
 
 export default function MobileSidebar() {
   const pathname = usePathname()
-  const [isPortfolioOpen, setIsPortfolioOpen] = useState(false)
+  const [isMyHqOOpen, setIsMyHqOOpen] = useState(false)
   const [isPaymentsOpen, setIsPaymentsOpen] = useState(false)
   const [isExperienceManagerOpen, setIsExperienceManagerOpen] = useState(false)
   const [isOperationsOpen, setIsOperationsOpen] = useState(false)
@@ -99,8 +94,8 @@ export default function MobileSidebar() {
   const [isSettingsAndSetupOpen, setIsSettingsAndSetupOpen] = useState(false)
   const [showPortfolioSettings, setShowPortfolioSettings] = useState(false)
 
-  // Check if current path is in Portfolio section
-  const isInPortfolio = portfolioItems.some(item =>
+  // Check if current path is in My HqO section
+  const isInMyHqO = myHqOItems.some(item =>
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
@@ -129,25 +124,22 @@ export default function MobileSidebar() {
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
-  // Check if we're on the My HqO page
-  const isInMyHqO = pathname === siteConfig.baseLinks.overview || pathname.startsWith(siteConfig.baseLinks.overview + "/")
-  
   // Check if we're on the File Repository page
   const isInFileRepository = pathname === siteConfig.baseLinks.fileRepository || pathname.startsWith(siteConfig.baseLinks.fileRepository + "/")
 
   // Auto-expand the section that contains the current path
   useEffect(() => {
-    if (isInMyHqO || isInFileRepository) {
-      // Collapse all sections when My HqO or File Repository is active
-      setIsPortfolioOpen(false)
+    if (isInFileRepository) {
+      // Collapse all sections when File Repository is active
+      setIsMyHqOOpen(false)
       setIsPaymentsOpen(false)
       setIsExperienceManagerOpen(false)
       setIsOperationsOpen(false)
       setIsIntelligenceOpen(false)
       setIsSettingsAndSetupOpen(false)
     } else {
-      if (isInPortfolio) {
-        setIsPortfolioOpen(true)
+      if (isInMyHqO) {
+        setIsMyHqOOpen(true)
       }
       if (isInPayments) {
         setIsPaymentsOpen(true)
@@ -165,7 +157,7 @@ export default function MobileSidebar() {
         setIsSettingsAndSetupOpen(true)
       }
     }
-  }, [isInMyHqO, isInFileRepository, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInIntelligence, isInSettingsAndSetup])
+  }, [isInFileRepository, isInMyHqO, isInPayments, isInExperienceManager, isInOperations, isInIntelligence, isInSettingsAndSetup])
 
   const isActive = (itemHref: string) => {
     if (itemHref === siteConfig.baseLinks.settings.general) {
@@ -200,57 +192,26 @@ export default function MobileSidebar() {
             className="flex flex-1 flex-col space-y-10"
           >
             <ul role="list" className="space-y-1.5">
-              {/* Regular navigation items */}
-              {navigation.map((item) => (
-                <li key={item.name}>
-                  <DrawerClose asChild>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        isActive(item.href)
-                          ? "text-primary dark:text-primary"
-                          : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
-                        "group relative flex items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition-all duration-200 ease-out hover:bg-gray-100 hover:dark:bg-gray-900",
-                        focusRing,
-                      )}
-                    >
-                      {/* Blue indicator line */}
-                      <div className={cn(
-                        "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
-                        isActive(item.href)
-                          ? "h-full opacity-100"
-                          : "h-1/2 opacity-0 group-hover:opacity-100"
-                      )} />
-                      <item.icon
-                        className="size-4 shrink-0"
-                        aria-hidden="true"
-                      />
-                      {item.name}
-                    </Link>
-                  </DrawerClose>
-                </li>
-              ))}
-
-              {/* Portfolio accordion */}
+              {/* My HqO accordion */}
               <li className={cn(
-                isInPortfolio ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                isInMyHqO ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
               )}>
                 <button
-                  onClick={() => setIsPortfolioOpen(!isPortfolioOpen)}
+                  onClick={() => setIsMyHqOOpen(!isMyHqOOpen)}
                   className={cn(
                     "flex w-full items-center justify-between gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
-                    isInPortfolio
+                    isInMyHqO
                       ? "text-[#2D3338]"
                       : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}
-                  aria-expanded={isPortfolioOpen}
+                  aria-expanded={isMyHqOOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <RiBuildingLine className="size-4 shrink-0" aria-hidden="true" />
-                    Portfolio
+                    <RiHomeLine className="size-4 shrink-0" aria-hidden="true" />
+                    My HqO
                   </span>
-                  {isPortfolioOpen ? (
+                  {isMyHqOOpen ? (
                     <RiArrowDownSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   ) : (
                     <RiArrowRightSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
@@ -261,11 +222,11 @@ export default function MobileSidebar() {
                 <div
                   className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    isPortfolioOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+                    isMyHqOOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
                   )}
                 >
                   <ul className="mt-1 space-y-0.5 px-1">
-                    {portfolioItems.map((item) => (
+                    {myHqOItems.map((item) => (
                       <li key={item.name}>
                         <DrawerClose asChild>
                           <Link

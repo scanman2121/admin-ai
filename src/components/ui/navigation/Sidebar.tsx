@@ -12,7 +12,6 @@ import {
 import { cn, focusRing } from "@/lib/utils"
 import {
     RiArrowDownSLine,
-    RiBuildingLine,
     RiDashboardLine,
     RiFolderLine,
     RiHomeLine,
@@ -28,8 +27,9 @@ import { useContext, useEffect, useState } from "react"
 import { HqOLogo } from "./HqOLogo"
 import { SidebarPopover } from "./SidebarPopover"
 
-// Portfolio sub-navigation items
-const portfolioItems = [
+// My HqO sub-navigation items (formerly Portfolio)
+const myHqOItems = [
+  { name: "Home", href: siteConfig.baseLinks.overview },
   { name: "Buildings", href: siteConfig.baseLinks.buildings },
   { name: "Tenants", href: siteConfig.baseLinks.tenants },
   { name: "Users", href: siteConfig.baseLinks.users },
@@ -82,7 +82,7 @@ const intelligenceItems = [
 ] as const
 
 // Type for section IDs to ensure type safety
-type SectionId = 'portfolio' | 'payments' | 'experienceManager' | 'operations' | 'settingsAndSetup' | 'intelligence';
+type SectionId = 'myHqO' | 'payments' | 'experienceManager' | 'operations' | 'settingsAndSetup' | 'intelligence';
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -91,7 +91,7 @@ export function Sidebar() {
   const { collapsed } = useContext(SidebarContext)
 
   // Check if current path is in each section
-  const isInPortfolio = portfolioItems.some(item =>
+  const isInMyHqO = myHqOItems.some(item =>
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
@@ -115,19 +115,17 @@ export function Sidebar() {
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
-  // Check if we're on the My HqO page
-  const isInMyHqO = pathname === siteConfig.baseLinks.overview || pathname.startsWith(siteConfig.baseLinks.overview + "/")
 
   // Check if we're on the File Repository page
   const isInFileRepository = pathname === siteConfig.baseLinks.fileRepository || pathname.startsWith(siteConfig.baseLinks.fileRepository + "/")
 
   // Auto-expand the section that contains the current path
   useEffect(() => {
-    if (isInMyHqO || isInFileRepository) {
-      // Collapse all sections when My HqO or File Repository is active
+    if (isInFileRepository) {
+      // Collapse all sections when File Repository is active
       setOpenSection(null)
-    } else if (isInPortfolio) {
-      setOpenSection('portfolio')
+    } else if (isInMyHqO) {
+      setOpenSection('myHqO')
     } else if (isInPayments) {
       setOpenSection('payments')
     } else if (isInExperienceManager) {
@@ -139,7 +137,7 @@ export function Sidebar() {
     } else if (isInIntelligence) {
       setOpenSection('intelligence')
     }
-  }, [isInMyHqO, isInFileRepository, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInSettingsAndSetup, isInIntelligence])
+  }, [isInFileRepository, isInMyHqO, isInPayments, isInExperienceManager, isInOperations, isInSettingsAndSetup, isInIntelligence])
 
   const isActive = (itemHref: string) => {
     if (itemHref === siteConfig.baseLinks.settings.general) {
@@ -188,75 +186,42 @@ export function Sidebar() {
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
             <li>
               <ul role="list" className="space-y-1">
-                {/* My HqO */}
-                <li>
-                  <Link
-                    href={siteConfig.baseLinks.overview}
-                    className={cn(
-                      "group relative flex items-center gap-x-3 rounded-md py-2 text-[14px] font-medium transition-all duration-200 ease-out",
-                      collapsed ? "px-2 justify-center" : "px-3",
-                      isActive(siteConfig.baseLinks.overview)
-                        ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
-                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
-                      focusRing,
-                    )}
-                  >
-                    {/* Blue indicator line */}
-                    <div className={cn(
-                      "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
-                      isActive(siteConfig.baseLinks.overview)
-                        ? "h-full opacity-100"
-                        : "h-1/2 opacity-0 group-hover:opacity-100"
-                    )} />
-                    <RiHomeLine
-                      className={cn(
-                        "size-4 shrink-0",
-                        isActive(siteConfig.baseLinks.overview)
-                          ? "text-primary dark:text-primary"
-                          : "text-[#696E72] group-hover:text-gray-500 dark:group-hover:text-gray-400",
-                      )}
-                      aria-hidden="true"
-                    />
-                    {!collapsed && <span>My HqO</span>}
-                  </Link>
-                </li>
-
-                {/* Portfolio accordion */}
+                {/* My HqO accordion */}
                 <li className={cn(
-                  (openSection === 'portfolio' || isInPortfolio) && !collapsed
+                  (openSection === 'myHqO' || isInMyHqO) && !collapsed
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<RiBuildingLine className="size-4 shrink-0" aria-hidden="true" />}
-                      title="Portfolio"
-                      items={portfolioItems}
+                      icon={<RiHomeLine className="size-4 shrink-0" aria-hidden="true" />}
+                      title="My HqO"
+                      items={myHqOItems}
                       isActive={isActive}
-                      isInSection={isInPortfolio}
+                      isInSection={isInMyHqO}
                     />
                   ) : (
                     <button
-                      onClick={() => toggleSection('portfolio')}
+                      onClick={() => toggleSection('myHqO')}
                       className={cn(
                         "flex w-full items-center gap-x-2.5 py-2 text-[14px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
-                        (openSection === 'portfolio' || isInPortfolio)
+                        (openSection === 'myHqO' || isInMyHqO)
                           ? "text-[#2D3338]"
                           : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
                         focusRing,
                       )}
-                      aria-expanded={openSection === 'portfolio'}
+                      aria-expanded={openSection === 'myHqO'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <RiBuildingLine className="size-4 shrink-0" aria-hidden="true" />
-                        {!collapsed && "Portfolio"}
+                        <RiHomeLine className="size-4 shrink-0" aria-hidden="true" />
+                        {!collapsed && "My HqO"}
                       </span>
                       {!collapsed && (
                         <RiArrowDownSLine
                           className={cn(
                             "size-4 shrink-0 transition-transform duration-300 ease-in-out",
-                            openSection === 'portfolio' ? "rotate-0" : "-rotate-90"
+                            openSection === 'myHqO' ? "rotate-0" : "-rotate-90"
                           )}
                           aria-hidden="true"
                         />
@@ -267,12 +232,12 @@ export function Sidebar() {
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    !collapsed && openSection === 'portfolio' 
+                    !collapsed && openSection === 'myHqO' 
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
                     <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
-                      {portfolioItems.map((item) => (
+                      {myHqOItems.map((item) => (
                         <li key={item.name}>
                           <Link
                             href={item.href}
