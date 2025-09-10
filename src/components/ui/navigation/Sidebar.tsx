@@ -674,7 +674,7 @@ export function Sidebar() {
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
                         <RiSettings5Line className="size-4 shrink-0" aria-hidden="true" />
-                        {!collapsed && "Settings and setup"}
+                        {!collapsed && "App configuration"}
                       </span>
                       {!collapsed && (
                         <RiArrowDownSLine

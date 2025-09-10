@@ -583,7 +583,7 @@ export default function MobileSidebar() {
                 >
                   <span className="flex items-center gap-x-2.5">
                     <RiSettings5Line className="size-4 shrink-0" aria-hidden="true" />
-                    Settings & setup
+                    App configuration
                   </span>
                   {isSettingsAndSetupOpen ? (
                     <RiArrowDownSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
