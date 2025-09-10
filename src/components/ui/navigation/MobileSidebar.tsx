@@ -219,7 +219,7 @@ export default function MobileSidebar() {
                     >
                       {/* Blue indicator line */}
                       <div className={cn(
-                        "absolute -left-1.5 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-300 ease-out",
+                        "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-300 ease-out",
                         isActive(item.href)
                           ? "h-full opacity-100"
                           : "h-1/2 opacity-0 group-hover:opacity-100"
