@@ -143,11 +143,28 @@ export function Sidebar() {
     return pathname === itemHref || pathname.startsWith(itemHref)
   }
 
-  // Toggle section open/closed
+  // Toggle section open/closed with smooth transitions
   const toggleSection = (section: SectionId) => {
     // Don't toggle sections when sidebar is collapsed
     if (collapsed) return
-    setOpenSection(openSection === section ? null : section)
+    
+    // If clicking the same section, just close it
+    if (openSection === section) {
+      setOpenSection(null)
+      return
+    }
+    
+    // If switching to a different section, close current first, then open new one
+    if (openSection && openSection !== section) {
+      setOpenSection(null)
+      // Small delay to allow close animation to start before opening new section
+      setTimeout(() => {
+        setOpenSection(section)
+      }, 150) // Half the animation duration for smooth transition
+    } else {
+      // No section currently open, just open the new one
+      setOpenSection(section)
+    }
   }
 
   return (
@@ -244,12 +261,12 @@ export function Sidebar() {
 
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
-                    "overflow-hidden transition-all duration-300 ease-out",
+                    "overflow-hidden transition-all duration-300 ease-in-out",
                     !collapsed && openSection === 'portfolio' 
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
                       {portfolioItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -322,12 +339,12 @@ export function Sidebar() {
 
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
-                    "overflow-hidden transition-all duration-300 ease-out",
+                    "overflow-hidden transition-all duration-300 ease-in-out",
                     !collapsed && openSection === 'experienceManager' 
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
                       {experienceManagerItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -400,12 +417,12 @@ export function Sidebar() {
 
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
-                    "overflow-hidden transition-all duration-300 ease-out",
+                    "overflow-hidden transition-all duration-300 ease-in-out",
                     !collapsed && openSection === 'operations' 
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
                       {operationsItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -478,12 +495,12 @@ export function Sidebar() {
 
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
-                    "overflow-hidden transition-all duration-300 ease-out",
+                    "overflow-hidden transition-all duration-300 ease-in-out",
                     !collapsed && openSection === 'payments' 
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
                       {paymentsItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -589,12 +606,12 @@ export function Sidebar() {
 
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
-                    "overflow-hidden transition-all duration-300 ease-out",
+                    "overflow-hidden transition-all duration-300 ease-in-out",
                     !collapsed && openSection === 'intelligence' 
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
                       {intelligenceItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -667,12 +684,12 @@ export function Sidebar() {
 
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
-                    "overflow-hidden transition-all duration-300 ease-out",
+                    "overflow-hidden transition-all duration-300 ease-in-out",
                     !collapsed && openSection === 'settingsAndSetup' 
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-out">
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
                       {settingsAndSetupItems.map((item) => (
                         <li key={item.name}>
                           <Link
