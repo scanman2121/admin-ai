@@ -22,7 +22,7 @@ import {
     RiMenuLine,
     RiReceiptLine,
     RiSettings4Line,
-    RiSettings5Line
+    RiTabletLine
 } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -542,7 +542,7 @@ export default function MobileSidebar() {
                   aria-expanded={isSettingsAndSetupOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <RiSettings5Line className="size-4 shrink-0" aria-hidden="true" />
+                    <RiTabletLine className="size-4 shrink-0" aria-hidden="true" />
                     App configuration
                   </span>
                   {isSettingsAndSetupOpen ? (
