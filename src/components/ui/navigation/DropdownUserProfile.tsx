@@ -10,10 +10,10 @@ import { Input } from "@/components/Input"
 import { Checkbox } from "@/components/Checkbox"
 import { cn } from "@/lib/utils"
 import {
-  RiSettings4Line,
-  RiLogoutBoxLine,
-  RiSearchLine
-} from "@remixicon/react"
+  Settings,
+  LogOut,
+  Search
+} from "lucide-react"
 import * as React from "react"
 
 export type DropdownUserProfileProps = {
@@ -64,7 +64,7 @@ export function DropdownUserProfile({
           {/* Manage Account */}
           <div className="p-2">
             <DropdownMenuItem className="flex items-center gap-3 px-3 py-2.5">
-              <RiSettings4Line className="size-4 text-gray-500" />
+              <Settings className="size-4 text-gray-500" />
               <span className="text-sm">Manage my account</span>
             </DropdownMenuItem>
           </div>
@@ -108,7 +108,7 @@ export function DropdownUserProfile({
             
             {/* Search Input */}
             <div className="relative mb-3">
-              <RiSearchLine className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-gray-400" />
               <Input
                 type="text"
                 placeholder="Search"
@@ -149,7 +149,7 @@ export function DropdownUserProfile({
           {/* Log Out - With grey background */}
           <div className="bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-lg">
             <DropdownMenuItem className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 m-0 rounded-b-lg">
-              <RiLogoutBoxLine className="size-4" />
+              <LogOut className="size-4" />
               <span className="text-sm">Log out</span>
             </DropdownMenuItem>
           </div>

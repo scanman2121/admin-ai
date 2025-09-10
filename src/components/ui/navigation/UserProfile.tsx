@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/Button"
 import { cn, focusRing } from "@/lib/utils"
-import { RiMore2Fill } from "@remixicon/react"
+import { MoreHorizontal } from "lucide-react"
 
 import { DropdownUserProfile } from "./DropdownUserProfile"
 
@@ -32,7 +32,7 @@ export const UserProfileDesktop = ({ isCollapsed = false }: UserProfileDesktopPr
           {!isCollapsed && <span>Ellie Edwards</span>}
         </span>
         {!isCollapsed && (
-          <RiMore2Fill
+          <MoreHorizontal
             className="size-4 shrink-0 text-gray-500 group-hover:text-gray-700 group-hover:dark:text-gray-400"
             aria-hidden="true"
           />

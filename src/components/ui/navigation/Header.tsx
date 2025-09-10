@@ -5,7 +5,7 @@ import { FloatingActionBar } from "./FloatingActionBar"
 import { HeaderActions } from "./HeaderActions"
 import { BuildingsDropdownDesktop } from "./SidebarBuildingsDropdown"
 import { SidebarContext } from "@/app/(main)/layout"
-import { RiMenuFoldLine, RiMenuUnfoldLine } from "@remixicon/react"
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { cn, focusRing } from "@/lib/utils"
 
 export function Header() {
@@ -44,9 +44,9 @@ export function Header() {
                         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
                     >
                         {collapsed ? (
-                            <RiMenuUnfoldLine className="size-4 text-gray-500 dark:text-gray-400" />
+                            <PanelLeftOpen className="size-4 text-gray-500 dark:text-gray-400" />
                         ) : (
-                            <RiMenuFoldLine className="size-4 text-gray-500 dark:text-gray-400" />
+                            <PanelLeftClose className="size-4 text-gray-500 dark:text-gray-400" />
                         )}
                     </button>
                     <BuildingsDropdownDesktop />

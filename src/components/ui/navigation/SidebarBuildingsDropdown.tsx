@@ -17,7 +17,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { cn, focusInput } from "@/lib/utils"
-import { RiBuildingLine, RiExpandUpDownLine, RiInformationLine } from "@remixicon/react"
+import { Building, ChevronsUpDown, Info } from "lucide-react"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import React, { useEffect } from "react"
@@ -178,7 +178,7 @@ export const BuildingsDropdownDesktop = () => {
                       className="flex aspect-square size-6 items-center justify-center rounded bg-primary p-1 text-xs font-medium text-white dark:bg-primary"
                       aria-hidden="true"
                     >
-                      <RiBuildingLine className="size-4" />
+                      <Building className="size-4" />
                     </span>
                   ) : (
                     <div className="relative size-6 overflow-hidden rounded">
@@ -191,7 +191,7 @@ export const BuildingsDropdownDesktop = () => {
                     </div>
                   )}
                 </div>
-                <RiExpandUpDownLine
+                <ChevronsUpDown
                   className="size-4 shrink-0 text-gray-500"
                   aria-hidden="true"
                 />
@@ -218,7 +218,7 @@ export const BuildingsDropdownDesktop = () => {
                       className="flex aspect-square size-6 items-center justify-center rounded bg-primary p-1 text-xs font-medium text-white dark:bg-primary"
                       aria-hidden="true"
                     >
-                      <RiBuildingLine className="size-4" />
+                      <Building className="size-4" />
                     </span>
                   ) : (
                     <div className="relative size-6 overflow-hidden rounded">
@@ -235,7 +235,7 @@ export const BuildingsDropdownDesktop = () => {
                   <p className="truncate text-sm font-medium text-gray-900 dark:text-gray-50">
                     {isPortfolioView ? "All buildings" : selectedBuilding.name}
                   </p>
-                  <RiExpandUpDownLine
+                  <ChevronsUpDown
                     className="size-4 shrink-0 text-gray-500"
                     aria-hidden="true"
                   />
@@ -323,7 +323,7 @@ export const BuildingsDropdownDesktop = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex items-center">
-                  <RiInformationLine className="size-4 text-gray-400" />
+                  <Info className="size-4 text-gray-400" />
                 </div>
               </TooltipTrigger>
               <TooltipContent side="bottom" align="center">

@@ -11,17 +11,17 @@ import {
 } from "@/components/ui/drawer"
 import { cn, focusRing } from "@/lib/utils"
 import {
-    RiArrowDownSLine,
-    RiBuildingLine,
-    RiDashboardLine,
-    RiDeviceLine,
-    RiFolderLine,
-    RiHomeLine,
-    RiLineChartLine,
-    RiMegaphoneLine,
-    RiReceiptLine,
-    RiSettings4Line
-} from "@remixicon/react"
+    ChevronDown,
+    Building,
+    LayoutDashboard,
+    Smartphone,
+    Folder,
+    Home,
+    LineChart,
+    Megaphone,
+    Receipt,
+    Settings
+} from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
@@ -208,7 +208,7 @@ export function Sidebar() {
                         ? "h-full opacity-100"
                         : "h-1/2 opacity-0 group-hover:opacity-100"
                     )} />
-                    <RiHomeLine
+                    <Home
                       className={cn(
                         "size-4 shrink-0",
                         isActive(siteConfig.baseLinks.overview)
@@ -229,7 +229,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<RiBuildingLine className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<Building className="size-4 shrink-0" aria-hidden="true" />}
                       title="Portfolio"
                       items={portfolioItems}
                       isActive={isActive}
@@ -249,11 +249,11 @@ export function Sidebar() {
                       aria-expanded={openSection === 'portfolio'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <RiBuildingLine className="size-4 shrink-0" aria-hidden="true" />
+                        <Building className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "Portfolio"}
                       </span>
                       {!collapsed && (
-                        <RiArrowDownSLine
+                        <ChevronDown
                           className={cn(
                             "size-4 shrink-0 transition-transform duration-300 ease-in-out",
                             openSection === 'portfolio' ? "rotate-0" : "-rotate-90"
@@ -307,7 +307,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<RiMegaphoneLine className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<Megaphone className="size-4 shrink-0" aria-hidden="true" />}
                       title="Experience manager"
                       items={experienceManagerItems}
                       isActive={isActive}
@@ -327,11 +327,11 @@ export function Sidebar() {
                       aria-expanded={openSection === 'experienceManager'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <RiMegaphoneLine className="size-4 shrink-0" aria-hidden="true" />
+                        <Megaphone className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "Experience"}
                       </span>
                       {!collapsed && (
-                        <RiArrowDownSLine
+                        <ChevronDown
                           className={cn(
                             "size-4 shrink-0 transition-transform duration-300 ease-in-out",
                             openSection === 'experienceManager' ? "rotate-0" : "-rotate-90"
@@ -385,7 +385,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<RiDashboardLine className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<LayoutDashboard className="size-4 shrink-0" aria-hidden="true" />}
                       title="Operations"
                       items={operationsItems}
                       isActive={isActive}
@@ -405,11 +405,11 @@ export function Sidebar() {
                       aria-expanded={openSection === 'operations'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <RiDashboardLine className="size-4 shrink-0" aria-hidden="true" />
+                        <LayoutDashboard className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "Operations"}
                       </span>
                       {!collapsed && (
-                        <RiArrowDownSLine
+                        <ChevronDown
                           className={cn(
                             "size-4 shrink-0 transition-transform duration-300 ease-in-out",
                             openSection === 'operations' ? "rotate-0" : "-rotate-90"
@@ -463,7 +463,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<RiReceiptLine className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<Receipt className="size-4 shrink-0" aria-hidden="true" />}
                       title="Payments"
                       items={paymentsItems}
                       isActive={isActive}
@@ -483,11 +483,11 @@ export function Sidebar() {
                       aria-expanded={openSection === 'payments'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <RiReceiptLine className="size-4 shrink-0" aria-hidden="true" />
+                        <Receipt className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "Payments"}
                       </span>
                       {!collapsed && (
-                        <RiArrowDownSLine
+                        <ChevronDown
                           className={cn(
                             "size-4 shrink-0 transition-transform duration-300 ease-in-out",
                             openSection === 'payments' ? "rotate-0" : "-rotate-90"
@@ -553,7 +553,7 @@ export function Sidebar() {
                         ? "h-full opacity-100"
                         : "h-1/2 opacity-0 group-hover:opacity-100"
                     )} />
-                    <RiFolderLine
+                    <Folder
                       className={cn(
                         "size-4 shrink-0",
                         isActive(siteConfig.baseLinks.fileRepository)
@@ -574,7 +574,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<RiLineChartLine className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<LineChart className="size-4 shrink-0" aria-hidden="true" />}
                       title="Intelligence"
                       items={intelligenceItems}
                       isActive={isActive}
@@ -594,11 +594,11 @@ export function Sidebar() {
                       aria-expanded={openSection === 'intelligence'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <RiLineChartLine className="size-4 shrink-0" aria-hidden="true" />
+                        <LineChart className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "Intelligence"}
                       </span>
                       {!collapsed && (
-                        <RiArrowDownSLine
+                        <ChevronDown
                           className={cn(
                             "size-4 shrink-0 transition-transform duration-300 ease-in-out",
                             openSection === 'intelligence' ? "rotate-0" : "-rotate-90"
@@ -652,7 +652,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<RiDeviceLine className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<Smartphone className="size-4 shrink-0" aria-hidden="true" />}
                       title="Settings and setup"
                       items={settingsAndSetupItems}
                       isActive={isActive}
@@ -672,11 +672,11 @@ export function Sidebar() {
                       aria-expanded={openSection === 'settingsAndSetup'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <RiDeviceLine className="size-4 shrink-0" aria-hidden="true" />
+                        <Smartphone className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "App configuration"}
                       </span>
                       {!collapsed && (
-                        <RiArrowDownSLine
+                        <ChevronDown
                           className={cn(
                             "size-4 shrink-0 transition-transform duration-300 ease-in-out",
                             openSection === 'settingsAndSetup' ? "rotate-0" : "-rotate-90"
@@ -736,7 +736,7 @@ export function Sidebar() {
                       focusRing,
                     )}
                   >
-                    <RiSettings4Line
+                    <Settings
                       className={cn(
                         "size-4 shrink-0",
                         "text-[#696E72] group-hover:text-gray-500 dark:group-hover:text-gray-400"

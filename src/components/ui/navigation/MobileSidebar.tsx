@@ -12,19 +12,19 @@ import {
 } from "@/components/Drawer"
 import { cn, focusRing } from "@/lib/utils"
 import {
-    RiArrowDownSLine,
-    RiArrowRightSLine,
-    RiBuildingLine,
-    RiDashboardLine,
-    RiDeviceLine,
-    RiFolderLine,
-    RiHomeLine,
-    RiLineChartLine,
-    RiMegaphoneLine,
-    RiMenuLine,
-    RiReceiptLine,
-    RiSettings4Line
-} from "@remixicon/react"
+    ChevronDown,
+    ChevronRight,
+    Building,
+    LayoutDashboard,
+    Smartphone,
+    Folder,
+    Home,
+    LineChart,
+    Megaphone,
+    Menu,
+    Receipt,
+    Settings
+} from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -32,7 +32,7 @@ import { HqOLogo } from "./HqOLogo"
 
 // Main navigation items excluding the ones that will go into the Portfolio section
 const navigation = [
-  { name: "My HqO", href: siteConfig.baseLinks.overview, icon: RiHomeLine },
+  { name: "My HqO", href: siteConfig.baseLinks.overview, icon: Home },
 ] as const
 
 // Portfolio sub-navigation items
@@ -182,7 +182,7 @@ export default function MobileSidebar() {
           aria-label="open sidebar"
           className="group flex items-center rounded-md p-2 text-sm font-medium hover:bg-gray-100 data-[state=open]:bg-gray-100 data-[state=open]:bg-gray-400/10 hover:dark:bg-gray-400/10"
         >
-          <RiMenuLine
+          <Menu
             className="size-6 shrink-0 sm:size-5"
             aria-hidden="true"
           />
@@ -247,13 +247,13 @@ export default function MobileSidebar() {
                   aria-expanded={isPortfolioOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <RiBuildingLine className="size-4 shrink-0" aria-hidden="true" />
+                    <Building className="size-4 shrink-0" aria-hidden="true" />
                     Portfolio
                   </span>
                   {isPortfolioOpen ? (
-                    <RiArrowDownSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronDown className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   ) : (
-                    <RiArrowRightSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronRight className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   )}
                 </button>
 
@@ -310,13 +310,13 @@ export default function MobileSidebar() {
                   aria-expanded={isPaymentsOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <RiReceiptLine className="size-4 shrink-0" aria-hidden="true" />
+                    <Receipt className="size-4 shrink-0" aria-hidden="true" />
                     Payments
                   </span>
                   {isPaymentsOpen ? (
-                    <RiArrowDownSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronDown className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   ) : (
-                    <RiArrowRightSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronRight className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   )}
                 </button>
 
@@ -370,7 +370,7 @@ export default function MobileSidebar() {
                       focusRing,
                     )}
                   >
-                    <RiFolderLine className="size-4 shrink-0" aria-hidden="true" />
+                    <Folder className="size-4 shrink-0" aria-hidden="true" />
                     File repository
                   </Link>
                 </DrawerClose>
@@ -392,13 +392,13 @@ export default function MobileSidebar() {
                   aria-expanded={isExperienceManagerOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <RiMegaphoneLine className="size-4 shrink-0" aria-hidden="true" />
+                    <Megaphone className="size-4 shrink-0" aria-hidden="true" />
                     Experience
                   </span>
                   {isExperienceManagerOpen ? (
-                    <RiArrowDownSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronDown className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   ) : (
-                    <RiArrowRightSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronRight className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   )}
                 </button>
 
@@ -455,13 +455,13 @@ export default function MobileSidebar() {
                   aria-expanded={isOperationsOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <RiDashboardLine className="size-4 shrink-0" aria-hidden="true" />
+                    <LayoutDashboard className="size-4 shrink-0" aria-hidden="true" />
                     Operations
                   </span>
                   {isOperationsOpen ? (
-                    <RiArrowDownSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronDown className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   ) : (
-                    <RiArrowRightSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronRight className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   )}
                 </button>
 
@@ -518,13 +518,13 @@ export default function MobileSidebar() {
                   aria-expanded={isIntelligenceOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <RiLineChartLine className="size-4 shrink-0" aria-hidden="true" />
+                    <LineChart className="size-4 shrink-0" aria-hidden="true" />
                     Intelligence
                   </span>
                   {isIntelligenceOpen ? (
-                    <RiArrowDownSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronDown className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   ) : (
-                    <RiArrowRightSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronRight className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   )}
                 </button>
 
@@ -581,13 +581,13 @@ export default function MobileSidebar() {
                   aria-expanded={isSettingsAndSetupOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <RiDeviceLine className="size-4 shrink-0" aria-hidden="true" />
+                    <Smartphone className="size-4 shrink-0" aria-hidden="true" />
                     App configuration
                   </span>
                   {isSettingsAndSetupOpen ? (
-                    <RiArrowDownSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronDown className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   ) : (
-                    <RiArrowRightSLine className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                    <ChevronRight className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   )}
                 </button>
 
@@ -638,7 +638,7 @@ export default function MobileSidebar() {
                     focusRing,
                   )}
                 >
-                  <RiSettings4Line
+                  <Settings
                     className="size-4 shrink-0"
                     aria-hidden="true"
                   />
@@ -653,15 +653,15 @@ export default function MobileSidebar() {
                       <div className="space-y-2">
                         <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
                           <span>Portfolio name</span>
-                          <RiArrowRightSLine className="size-4" />
+                          <ChevronRight className="size-4" />
                         </button>
                         <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
                           <span>Default currency</span>
-                          <RiArrowRightSLine className="size-4" />
+                          <ChevronRight className="size-4" />
                         </button>
                         <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
                           <span>Time zone</span>
-                          <RiArrowRightSLine className="size-4" />
+                          <ChevronRight className="size-4" />
                         </button>
                       </div>
                     </div>
@@ -671,11 +671,11 @@ export default function MobileSidebar() {
                       <div className="space-y-2">
                         <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
                           <span>API access</span>
-                          <RiArrowRightSLine className="size-4" />
+                          <ChevronRight className="size-4" />
                         </button>
                         <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
                           <span>Webhooks</span>
-                          <RiArrowRightSLine className="size-4" />
+                          <ChevronRight className="size-4" />
                         </button>
                       </div>
                     </div>
@@ -685,11 +685,11 @@ export default function MobileSidebar() {
                       <div className="space-y-2">
                         <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
                           <span>User permissions</span>
-                          <RiArrowRightSLine className="size-4" />
+                          <ChevronRight className="size-4" />
                         </button>
                         <button className="flex w-full items-center justify-between text-left text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50">
                           <span>Audit logs</span>
-                          <RiArrowRightSLine className="size-4" />
+                          <ChevronRight className="size-4" />
                         </button>
                       </div>
                     </div>

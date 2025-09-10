@@ -2,18 +2,18 @@
 
 import { Button } from "@/components/Button"
 import {
-    RiAddLine,
-    RiAiGenerate,
-    RiCloseLine,
-    RiMessage2Line,
-    // RiQrScanLine, // Hidden for now
-    // RiSearchLine, // Hidden for now
-    // RiQrCodeLine, // Hidden for now
-    RiMapPinLine,
-    RiBuilding2Line,
-    RiUserLine,
-    RiSettings4Line
-} from "@remixicon/react"
+    Plus,
+    Bot,
+    X,
+    MessageSquare,
+    // QrCode, // Hidden for now
+    // Search, // Hidden for now
+    // QrCode, // Hidden for now
+    MapPin,
+    Building2,
+    User,
+    Settings
+} from "lucide-react"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 import { CommunicationsPanel } from "../communications/CommunicationsPanel"
@@ -97,7 +97,7 @@ export function FloatingActionBar() {
                         className="flex flex-col items-center gap-1 text-gray-500 hover:text-gray-900"
                         onClick={() => setIsQRScannerOpen(true)}
                     >
-                        <RiQrScanLine className="h-6 w-6" />
+                        <QrCode className="h-6 w-6" />
                         <span className="text-xs">Scan QR</span>
                     </Button>
                     <Button
@@ -105,7 +105,7 @@ export function FloatingActionBar() {
                         className="flex flex-col items-center gap-1 text-gray-500 hover:text-gray-900"
                         onClick={() => setIsQRScannerOpen(true)}
                     >
-                        <RiQrCodeLine className="h-6 w-6" />
+                        <QrCode className="h-6 w-6" />
                         <span className="text-xs">Generate QR</span>
                     </Button> */}
                     <Button
@@ -113,7 +113,7 @@ export function FloatingActionBar() {
                         className="flex flex-col items-center gap-1 text-gray-500 hover:text-gray-900"
                         onClick={() => setIsQRScannerOpen(true)}
                     >
-                        <RiMapPinLine className="h-6 w-6" />
+                        <MapPin className="h-6 w-6" />
                         <span className="text-xs">Spaces</span>
                     </Button>
                     <Button
@@ -121,7 +121,7 @@ export function FloatingActionBar() {
                         className="flex flex-col items-center gap-1 text-gray-500 hover:text-gray-900"
                         onClick={() => setIsQRScannerOpen(true)}
                     >
-                        <RiBuilding2Line className="h-6 w-6" />
+                        <Building2 className="h-6 w-6" />
                         <span className="text-xs">Buildings</span>
                     </Button>
                     <Button
@@ -129,7 +129,7 @@ export function FloatingActionBar() {
                         className="flex flex-col items-center gap-1 text-gray-500 hover:text-gray-900"
                         onClick={() => setIsQRScannerOpen(true)}
                     >
-                        <RiUserLine className="h-6 w-6" />
+                        <User className="h-6 w-6" />
                         <span className="text-xs">Users</span>
                     </Button>
                     <Button
@@ -137,7 +137,7 @@ export function FloatingActionBar() {
                         className="flex flex-col items-center gap-1 text-gray-500 hover:text-gray-900"
                         onClick={() => setIsQRScannerOpen(true)}
                     >
-                        <RiSettings4Line className="h-6 w-6" />
+                        <Settings className="h-6 w-6" />
                         <span className="text-xs">Settings</span>
                     </Button>
 
@@ -147,7 +147,7 @@ export function FloatingActionBar() {
                         className="rounded-full p-2"
                         onClick={() => setIsSearchOpen(true)}
                     >
-                        <RiSearchLine className="size-6" />
+                        <Search className="size-6" />
                         <span className="sr-only">Search</span>
                     </Button> */}
 
@@ -157,7 +157,7 @@ export function FloatingActionBar() {
                         className="rounded-full p-2"
                         onClick={() => setIsCreateOpen(true)}
                     >
-                        <RiAddLine className="size-6" />
+                        <Plus className="size-6" />
                         <span className="sr-only">Create</span>
                     </Button>
 
@@ -167,7 +167,7 @@ export function FloatingActionBar() {
                         className="rounded-full p-2"
                         onClick={() => setIsAIOpen(true)}
                     >
-                        <RiAiGenerate className="size-6" />
+                        <Bot className="size-6" />
                         <span className="sr-only">AI Assistant</span>
                     </Button>
 
@@ -177,7 +177,7 @@ export function FloatingActionBar() {
                         className="rounded-full p-2"
                         onClick={() => setIsCommunicationsOpen(!isCommunicationsOpen)}
                     >
-                        <RiMessage2Line className="size-6" />
+                        <MessageSquare className="size-6" />
                         <span className="sr-only">Tenant Contacts</span>
                     </Button>
                 </div>
@@ -214,7 +214,7 @@ export function FloatingActionBar() {
                                 className="p-1"
                                 onClick={() => setIsCreateOpen(false)}
                             >
-                                <RiCloseLine className="size-5" />
+                                <X className="size-5" />
                                 <span className="sr-only">Close</span>
                             </Button>
                         </div>

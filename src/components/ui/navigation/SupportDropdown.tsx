@@ -7,10 +7,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/Dropdown"
 import {
-  RiCustomerService2Line,
-  RiBook2Line,
-  RiLightbulbLine
-} from "@remixicon/react"
+  Headphones,
+  Book,
+  Lightbulb
+} from "lucide-react"
 import * as React from "react"
 
 export type SupportDropdownProps = {
@@ -42,15 +42,15 @@ export function SupportDropdown({
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
       <DropdownMenuContent align={align} className="px-4 py-3">
         <DropdownMenuItem onClick={handleContactSupport} className="px-3 py-2.5">
-          <RiCustomerService2Line className="size-4 shrink-0 mr-2" aria-hidden="true" />
+          <Headphones className="size-4 shrink-0 mr-2" aria-hidden="true" />
           Contact support
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleHelpHub} className="px-3 py-2.5">
-          <RiBook2Line className="size-4 shrink-0 mr-2" aria-hidden="true" />
+          <Book className="size-4 shrink-0 mr-2" aria-hidden="true" />
           HelpHub
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleSubmitIdea} className="px-3 py-2.5">
-          <RiLightbulbLine className="size-4 shrink-0 mr-2" aria-hidden="true" />
+          <Lightbulb className="size-4 shrink-0 mr-2" aria-hidden="true" />
           Submit an idea
         </DropdownMenuItem>
       </DropdownMenuContent>

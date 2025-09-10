@@ -3,7 +3,7 @@
 import { Button } from "@/components/Button"
 import { Tooltip } from "@/components/Tooltip"
 import { cn, focusRing } from "@/lib/utils"
-import { RiQuestionLine, /* RiNotification3Line, RiQrCodeLine, RiSearchLine, */ RiSparkling2Line } from "@remixicon/react"
+import { HelpCircle, /* Bell, QrCode, Search, */ Sparkles } from "lucide-react"
 import { useEffect, useState } from "react"
 import { AIAssistantDrawer } from "../ai/AIAssistantDrawer"
 import { FullScreenAIAssistant } from "../ai/FullScreenAIAssistant"
@@ -106,7 +106,7 @@ export function HeaderActions() {
                             focusRing
                         )}
                     >
-                        <RiNotification3Line className="size-5" aria-hidden="true" />
+                        <Bell className="size-5" aria-hidden="true" />
                         <span className="sr-only">Notifications</span>
                     </Button>
                 </Tooltip> */}
@@ -130,7 +130,7 @@ export function HeaderActions() {
                         focusRing
                     )}
                 >
-                    <RiQrCodeLine className="size-5" aria-hidden="true" />
+                    <QrCode className="size-5" aria-hidden="true" />
                     <span className="sr-only">Scan QR Code</span>
                 </Button> */}
 
@@ -143,7 +143,7 @@ export function HeaderActions() {
                         focusRing
                     )}
                 >
-                    <RiSearchLine className="size-5" aria-hidden="true" />
+                    <Search className="size-5" aria-hidden="true" />
                     <span className="sr-only">Search</span>
                 </Button> */}
 
@@ -156,7 +156,7 @@ export function HeaderActions() {
                                 focusRing
                             )}
                         >
-                            <RiQuestionLine className="size-5" aria-hidden="true" />
+                            <HelpCircle className="size-5" aria-hidden="true" />
                             <span className="sr-only">Support</span>
                         </Button>
                     </SupportDropdown>
@@ -172,7 +172,7 @@ export function HeaderActions() {
                             (isAIDrawerOpen || isFullScreenAIOpen) && "text-primary dark:text-primary"
                         )}
                     >
-                        <RiSparkling2Line className="size-5" aria-hidden="true" />
+                        <Sparkles className="size-5" aria-hidden="true" />
                         <span className="sr-only">AI Assistant</span>
                     </Button>
                 </Tooltip>
