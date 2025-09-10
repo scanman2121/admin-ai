@@ -31,7 +31,7 @@ export function SidebarPopover({ icon, title, items, isActive, isInSection }: Si
             <PopoverTrigger asChild>
                 <button
                     className={cn(
-                        "flex w-full items-center justify-center p-2 rounded-md text-[13px] font-medium transition",
+                        "flex w-full items-center justify-center p-2 rounded-md text-[14px] font-medium transition",
                         isInSection || hasActiveItem
                             ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
                             : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
@@ -56,7 +56,7 @@ export function SidebarPopover({ icon, title, items, isActive, isInSection }: Si
                 className="p-2 min-w-48 max-h-[calc(100vh-100px)] overflow-y-auto"
             >
                 <div className="flex flex-col space-y-1">
-                    <div className="px-3 py-2 text-[13px] font-semibold text-[#2D3338] flex items-center gap-x-2">
+                    <div className="px-3 py-2 text-[14px] font-semibold text-[#2D3338] flex items-center gap-x-2">
                         {React.cloneElement(icon, {
                             className: "size-4 shrink-0 text-[#2D3338]"
                         })}
@@ -67,7 +67,7 @@ export function SidebarPopover({ icon, title, items, isActive, isInSection }: Si
                             key={item.name}
                             href={item.href}
                             className={cn(
-                                "block rounded-md py-2 px-3 text-[13px] font-medium transition",
+                                "block rounded-md py-2 px-3 text-[14px] font-medium transition",
                                 isActive(item.href)
                                     ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary"
                                     : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
