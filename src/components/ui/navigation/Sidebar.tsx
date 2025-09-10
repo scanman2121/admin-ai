@@ -181,7 +181,7 @@ export function Sidebar() {
                   >
                     {/* Blue indicator line */}
                     <div className={cn(
-                      "absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-r-sm transition-all duration-300 ease-out",
+                      "absolute -left-3 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-300 ease-out",
                       isActive(siteConfig.baseLinks.overview)
                         ? "h-full opacity-100"
                         : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -259,7 +259,7 @@ export function Sidebar() {
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-r-sm transition-all duration-300 ease-out",
+                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-300 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -332,7 +332,7 @@ export function Sidebar() {
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-r-sm transition-all duration-300 ease-out",
+                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-300 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -405,7 +405,7 @@ export function Sidebar() {
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-r-sm transition-all duration-300 ease-out",
+                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-300 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -478,7 +478,7 @@ export function Sidebar() {
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-r-sm transition-all duration-300 ease-out",
+                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-300 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -506,7 +506,7 @@ export function Sidebar() {
                   >
                     {/* Blue indicator line */}
                     <div className={cn(
-                      "absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-r-sm transition-all duration-300 ease-out",
+                      "absolute -left-3 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-300 ease-out",
                       isActive(siteConfig.baseLinks.fileRepository)
                         ? "h-full opacity-100"
                         : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -584,7 +584,7 @@ export function Sidebar() {
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-r-sm transition-all duration-300 ease-out",
+                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-300 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -657,7 +657,7 @@ export function Sidebar() {
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-r-sm transition-all duration-300 ease-out",
+                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-300 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
