@@ -78,7 +78,6 @@ const settingsAndSetupItems = [
   { name: "Features", href: siteConfig.baseLinks.settingsAndSetup.features },
   { name: "SSO apps", href: siteConfig.baseLinks.settingsAndSetup.ssoApps },
   { name: "Connected apps", href: siteConfig.baseLinks.settingsAndSetup.connectedApps },
-  { name: "Settings", href: siteConfig.baseLinks.settingsAndSetup.settings },
   { name: "Theme", href: siteConfig.baseLinks.settingsAndSetup.theme },
 ] as const
 
