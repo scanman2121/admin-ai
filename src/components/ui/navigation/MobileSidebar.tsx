@@ -229,14 +229,14 @@ export default function MobileSidebar() {
 
               {/* Portfolio accordion */}
               <li className={cn(
-                isInPortfolio ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1" : ""
+                isInPortfolio ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
               )}>
                 <button
                   onClick={() => setIsPortfolioOpen(!isPortfolioOpen)}
                   className={cn(
                     "flex w-full items-center justify-between gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                     isInPortfolio
-                      ? "text-gray-900 dark:text-gray-50"
+                      ? "text-[#2D3338]"
                       : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}
@@ -285,14 +285,14 @@ export default function MobileSidebar() {
 
               {/* Payments accordion */}
               <li className={cn(
-                isInPayments ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1" : ""
+                isInPayments ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
               )}>
                 <button
                   onClick={() => setIsPaymentsOpen(!isPaymentsOpen)}
                   className={cn(
                     "flex w-full items-center justify-between gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                     isInPayments
-                      ? "text-gray-900 dark:text-gray-50"
+                      ? "text-[#2D3338]"
                       : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}
@@ -347,7 +347,7 @@ export default function MobileSidebar() {
                     className={cn(
                       "flex w-full items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                       isActive(siteConfig.baseLinks.fileRepository)
-                        ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
+                        ? "bg-[#F6F7F8] text-primary dark:text-primary shadow-sm"
                         : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                       focusRing,
                     )}
@@ -360,14 +360,14 @@ export default function MobileSidebar() {
 
               {/* Experience Manager accordion */}
               <li className={cn(
-                isInExperienceManager ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1" : ""
+                isInExperienceManager ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
               )}>
                 <button
                   onClick={() => setIsExperienceManagerOpen(!isExperienceManagerOpen)}
                   className={cn(
                     "flex w-full items-center justify-between gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                     isInExperienceManager
-                      ? "text-gray-900 dark:text-gray-50"
+                      ? "text-[#2D3338]"
                       : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}
@@ -416,14 +416,14 @@ export default function MobileSidebar() {
 
               {/* Operations accordion */}
               <li className={cn(
-                isInOperations ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1" : ""
+                isInOperations ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
               )}>
                 <button
                   onClick={() => setIsOperationsOpen(!isOperationsOpen)}
                   className={cn(
                     "flex w-full items-center justify-between gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                     isInOperations
-                      ? "text-gray-900 dark:text-gray-50"
+                      ? "text-[#2D3338]"
                       : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}
@@ -472,14 +472,14 @@ export default function MobileSidebar() {
 
               {/* Intelligence accordion */}
               <li className={cn(
-                isInIntelligence ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1" : ""
+                isInIntelligence ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
               )}>
                 <button
                   onClick={() => setIsIntelligenceOpen(!isIntelligenceOpen)}
                   className={cn(
                     "flex w-full items-center justify-between gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                     isInIntelligence
-                      ? "text-gray-900 dark:text-gray-50"
+                      ? "text-[#2D3338]"
                       : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}
@@ -528,14 +528,14 @@ export default function MobileSidebar() {
 
               {/* Settings & Setup accordion */}
               <li className={cn(
-                isInSettingsAndSetup ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1" : ""
+                isInSettingsAndSetup ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1" : ""
               )}>
                 <button
                   onClick={() => setIsSettingsAndSetupOpen(!isSettingsAndSetupOpen)}
                   className={cn(
                     "flex w-full items-center justify-between gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                     isInSettingsAndSetup
-                      ? "text-gray-900 dark:text-gray-50"
+                      ? "text-[#2D3338]"
                       : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}

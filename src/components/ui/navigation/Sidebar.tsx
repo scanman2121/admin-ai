@@ -175,7 +175,7 @@ export function Sidebar() {
                       collapsed ? "px-2 justify-center" : "px-3",
                       isActive(siteConfig.baseLinks.overview)
                         ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
-                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                       focusRing,
                     )}
                   >
@@ -195,7 +195,7 @@ export function Sidebar() {
                 {/* Portfolio accordion */}
                 <li className={cn(
                   (openSection === 'portfolio' || isInPortfolio) && !collapsed
-                    ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -213,8 +213,8 @@ export function Sidebar() {
                         "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'portfolio' || isInPortfolio)
-                          ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          ? "text-[#2D3338]"
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'portfolio'}
@@ -246,7 +246,7 @@ export function Sidebar() {
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
                               focusRing,
                             )}
                           >
@@ -261,7 +261,7 @@ export function Sidebar() {
                 {/* Experience Manager accordion */}
                 <li className={cn(
                   (openSection === 'experienceManager' || isInExperienceManager) && !collapsed
-                    ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -279,8 +279,8 @@ export function Sidebar() {
                         "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'experienceManager' || isInExperienceManager)
-                          ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          ? "text-[#2D3338]"
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'experienceManager'}
@@ -312,7 +312,7 @@ export function Sidebar() {
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
                               focusRing,
                             )}
                           >
@@ -327,7 +327,7 @@ export function Sidebar() {
                 {/* Operations accordion */}
                 <li className={cn(
                   (openSection === 'operations' || isInOperations) && !collapsed
-                    ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -345,8 +345,8 @@ export function Sidebar() {
                         "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'operations' || isInOperations)
-                          ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          ? "text-[#2D3338]"
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'operations'}
@@ -378,7 +378,7 @@ export function Sidebar() {
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
                               focusRing,
                             )}
                           >
@@ -393,7 +393,7 @@ export function Sidebar() {
                 {/* Payments accordion */}
                 <li className={cn(
                   (openSection === 'payments' || isInPayments) && !collapsed
-                    ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -411,8 +411,8 @@ export function Sidebar() {
                         "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'payments' || isInPayments)
-                          ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          ? "text-[#2D3338]"
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'payments'}
@@ -444,7 +444,7 @@ export function Sidebar() {
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
                               focusRing,
                             )}
                           >
@@ -465,7 +465,7 @@ export function Sidebar() {
                       collapsed ? "px-2 justify-center" : "px-3",
                       isActive(siteConfig.baseLinks.fileRepository)
                         ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
-                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900",
+                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                       focusRing,
                     )}
                   >
@@ -485,7 +485,7 @@ export function Sidebar() {
                 {/* Intelligence accordion */}
                 <li className={cn(
                   (openSection === 'intelligence' || isInIntelligence) && !collapsed
-                    ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -503,8 +503,8 @@ export function Sidebar() {
                         "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'intelligence' || isInIntelligence)
-                          ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          ? "text-[#2D3338]"
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'intelligence'}
@@ -536,7 +536,7 @@ export function Sidebar() {
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
                               focusRing,
                             )}
                           >
@@ -551,7 +551,7 @@ export function Sidebar() {
                 {/* Settings and setup accordion */}
                 <li className={cn(
                   (openSection === 'settingsAndSetup' || isInSettingsAndSetup) && !collapsed
-                    ? "bg-gray-100 dark:bg-gray-800 rounded-md overflow-hidden pb-1"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -569,8 +569,8 @@ export function Sidebar() {
                         "flex w-full items-center gap-x-2.5 py-2 text-[13px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
                         (openSection === 'settingsAndSetup' || isInSettingsAndSetup)
-                          ? "text-gray-900 dark:text-gray-50"
-                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 rounded-md",
+                          ? "text-[#2D3338]"
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
                         focusRing,
                       )}
                       aria-expanded={openSection === 'settingsAndSetup'}
@@ -602,7 +602,7 @@ export function Sidebar() {
                               "block rounded-md py-2 pl-10 pr-2 text-[13px] font-medium transition",
                               isActive(item.href)
                                 ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-50 hover:dark:bg-gray-900 pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
                               focusRing,
                             )}
                           >
