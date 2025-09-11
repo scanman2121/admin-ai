@@ -764,7 +764,7 @@ export default function MobileSidebar() {
                href="https://essensys.com"
                target="_blank"
                rel="noopener noreferrer"
-               className="group flex items-center justify-between rounded-md py-1.5 px-1.5 text-[13px] font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
+               className="group flex items-center justify-between rounded-md py-1.5 px-1.5 text-[13px] font-normal text-[#696E72] dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
              >
                <div className="flex items-center gap-x-2.5">
                  <div className="w-4 h-4 bg-indigo-600 rounded flex items-center justify-center shrink-0">
@@ -780,7 +780,7 @@ export default function MobileSidebar() {
                href="https://prism.com"
                target="_blank"
                rel="noopener noreferrer"
-               className="group flex items-center justify-between rounded-md py-1.5 px-1.5 text-[13px] font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
+               className="group flex items-center justify-between rounded-md py-1.5 px-1.5 text-[13px] font-normal text-[#696E72] dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
              >
                <div className="flex items-center gap-x-2.5">
                  <div className="w-4 h-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center shrink-0">
