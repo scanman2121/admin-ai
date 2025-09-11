@@ -810,7 +810,7 @@ export function Sidebar() {
                    href="https://essensys.com"
                    target="_blank"
                    rel="noopener noreferrer"
-                   className="group flex items-center justify-between rounded-md py-2 px-3 text-[13px] font-normal text-[#696E72] dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
+                   className="group flex items-center justify-between rounded-md py-2 px-3 text-[13px] font-medium text-[#696E72] dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
                  >
                    <div className="flex items-center gap-x-3">
                      <div className="w-4 h-4 bg-indigo-600 rounded flex items-center justify-center shrink-0">
@@ -826,7 +826,7 @@ export function Sidebar() {
                    href="https://prism.com"
                    target="_blank"
                    rel="noopener noreferrer"
-                   className="group flex items-center justify-between rounded-md py-2 px-3 text-[13px] font-normal text-[#696E72] dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
+                   className="group flex items-center justify-between rounded-md py-2 px-3 text-[13px] font-medium text-[#696E72] dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
                  >
                    <div className="flex items-center gap-x-3">
                      <div className="w-4 h-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center shrink-0">
