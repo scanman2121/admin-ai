@@ -800,8 +800,8 @@ export function Sidebar() {
             {/* Connected Apps Section */}
             {!collapsed && (
               <li className="mt-6">
-                <div className="px-3">
-                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-3">
                     CONNECTED APPS
                   </p>
                   <div className="space-y-2">

@@ -754,8 +754,8 @@ export default function MobileSidebar() {
               </li>
 
               {/* Connected Apps Section */}
-              <li className="mt-6 px-4">
-                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+              <li className="mt-6">
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-1.5">
                   CONNECTED APPS
                 </p>
                 <div className="space-y-2">
@@ -763,7 +763,7 @@ export default function MobileSidebar() {
                href="https://essensys.com"
                target="_blank"
                rel="noopener noreferrer"
-               className="flex items-center gap-x-3 rounded-md py-2 px-3 text-[13px] font-normal text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
+               className="flex items-center gap-x-2.5 rounded-md py-1.5 px-1.5 text-[13px] font-normal text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
              >
                <div className="w-4 h-4 bg-indigo-600 rounded flex items-center justify-center shrink-0">
                  <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -776,7 +776,7 @@ export default function MobileSidebar() {
                href="https://prism.com"
                target="_blank"
                rel="noopener noreferrer"
-               className="flex items-center gap-x-3 rounded-md py-2 px-3 text-[13px] font-normal text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
+               className="flex items-center gap-x-2.5 rounded-md py-1.5 px-1.5 text-[13px] font-normal text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
              >
                <div className="w-4 h-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center shrink-0">
                  <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
