@@ -611,21 +611,21 @@ export function Sidebar() {
                           <Link
                             href={item.href}
                             className={cn(
-                              "group relative flex items-center gap-x-3 rounded-md py-2 px-6 text-[13px] font-medium transition-all duration-200 ease-out",
+                              "group relative block rounded-md py-2 pl-10 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
                               isActive(item.href)
-                                ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
-                                : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-100 dark:hover:bg-gray-800",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
                               focusRing,
                             )}
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
                             )} />
-                            <span>{item.name}</span>
+                            {item.name}
                           </Link>
                         </li>
                       ))}

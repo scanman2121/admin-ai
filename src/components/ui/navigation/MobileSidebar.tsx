@@ -413,7 +413,7 @@ export default function MobileSidebar() {
                             className={cn(
                               "flex w-full items-center gap-x-2.5 rounded-md py-1.5 pl-8 pr-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                               isActive(item.href)
-                                ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
                                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                               focusRing,
                             )}
