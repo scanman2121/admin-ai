@@ -756,7 +756,7 @@ export default function MobileSidebar() {
 
               {/* Connected Apps Section */}
               <li className="mt-6">
-                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-1.5">
+                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 px-1.5">
                   CONNECTED APPS
                 </p>
                 <div className="space-y-0.5">
