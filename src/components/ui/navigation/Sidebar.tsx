@@ -811,7 +811,7 @@ export function Sidebar() {
                    rel="noopener noreferrer"
                    className="flex items-center gap-x-3 rounded-md py-2 px-3 text-[13px] font-normal text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
                  >
-                   <div className="w-4 h-4 bg-indigo-600 rounded flex items-center justify-center flex-shrink-0">
+                   <div className="w-4 h-4 bg-indigo-600 rounded flex items-center justify-center shrink-0">
                      <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
                        <path d="M12 2L2 7v10c0 5.55 3.84 9.95 9 11 5.16-1.05 9-5.45 9-11V7l-10-5z"/>
                      </svg>
@@ -824,7 +824,7 @@ export function Sidebar() {
                    rel="noopener noreferrer"
                    className="flex items-center gap-x-3 rounded-md py-2 px-3 text-[13px] font-normal text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
                  >
-                   <div className="w-4 h-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center flex-shrink-0">
+                   <div className="w-4 h-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center shrink-0">
                      <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
                        <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
                      </svg>
