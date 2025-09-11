@@ -759,7 +759,7 @@ export default function MobileSidebar() {
                 <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 px-1.5">
                   CONNECTED APPS
                 </p>
-                <div className="space-y-1">
+                <div className="space-y-0.5">
              <a
                href="https://essensys.com"
                target="_blank"
