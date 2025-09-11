@@ -72,6 +72,11 @@ const settingsAndSetupItems = [
   { name: "Theme", href: siteConfig.baseLinks.settingsAndSetup.theme },
 ] as const
 
+// Files sub-navigation items
+const filesItems = [
+  { name: "Repository", href: siteConfig.baseLinks.fileRepository },
+] as const
+
 // Intelligence sub-navigation items
 const intelligenceItems = [
   { name: "Dashboard", href: siteConfig.baseLinks.intelligence.dashboard },
@@ -81,7 +86,7 @@ const intelligenceItems = [
 ] as const
 
 // Type for section IDs to ensure type safety
-type SectionId = 'portfolio' | 'payments' | 'experienceManager' | 'operations' | 'settingsAndSetup' | 'intelligence';
+type SectionId = 'portfolio' | 'payments' | 'experienceManager' | 'operations' | 'files' | 'settingsAndSetup' | 'intelligence';
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -110,6 +115,10 @@ export function Sidebar() {
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
+  const isInFiles = filesItems.some(item =>
+    pathname === item.href || pathname.startsWith(item.href + "/")
+  )
+
   const isInIntelligence = intelligenceItems.some(item =>
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
@@ -117,13 +126,10 @@ export function Sidebar() {
   // Check if we're on the My HqO page
   const isInMyHqO = pathname === siteConfig.baseLinks.overview || pathname.startsWith(siteConfig.baseLinks.overview + "/")
 
-  // Check if we're on the File Repository page
-  const isInFileRepository = pathname === siteConfig.baseLinks.fileRepository || pathname.startsWith(siteConfig.baseLinks.fileRepository + "/")
-
   // Auto-expand the section that contains the current path
   useEffect(() => {
-    if (isInMyHqO || isInFileRepository) {
-      // Collapse all sections when My HqO or File Repository is active
+    if (isInMyHqO) {
+      // Collapse all sections when My HqO is active
       setOpenSection(null)
     } else if (isInPortfolio) {
       setOpenSection('portfolio')
@@ -133,12 +139,14 @@ export function Sidebar() {
       setOpenSection('experienceManager')
     } else if (isInOperations) {
       setOpenSection('operations')
+    } else if (isInFiles) {
+      setOpenSection('files')
     } else if (isInSettingsAndSetup) {
       setOpenSection('settingsAndSetup')
     } else if (isInIntelligence) {
       setOpenSection('intelligence')
     }
-  }, [isInMyHqO, isInFileRepository, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInSettingsAndSetup, isInIntelligence])
+  }, [isInMyHqO, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInFiles, isInSettingsAndSetup, isInIntelligence])
 
   const isActive = (itemHref: string) => {
     if (itemHref === siteConfig.baseLinks.settings.general) {
@@ -544,37 +552,85 @@ export function Sidebar() {
                   </div>
                 </li>
 
-                {/* File Repository */}
-                <li>
-                  <Link
-                    href={siteConfig.baseLinks.fileRepository}
-                    className={cn(
-                      "group relative flex items-center gap-x-3 rounded-md py-2 text-[14px] font-medium transition-all duration-200 ease-out",
-                      collapsed ? "px-2 justify-center" : "px-3",
-                      isActive(siteConfig.baseLinks.fileRepository)
-                        ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
-                        : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
-                      focusRing,
-                    )}
-                  >
-                    {/* Blue indicator line */}
-                    <div className={cn(
-                      "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
-                      isActive(siteConfig.baseLinks.fileRepository)
-                        ? "h-full opacity-100"
-                        : "h-1/2 opacity-0 group-hover:opacity-100"
-                    )} />
-                    <Folder
-                      className={cn(
-                        "size-4 shrink-0",
-                        isActive(siteConfig.baseLinks.fileRepository)
-                          ? "text-primary dark:text-primary"
-                          : "text-[#696E72] group-hover:text-gray-500 dark:group-hover:text-gray-400",
-                      )}
-                      aria-hidden="true"
+                {/* Files accordion */}
+                <li className={cn(
+                  (openSection === 'files' || isInFiles) && !collapsed
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
+                    : "",
+                  openSection === 'files' && !collapsed
+                    ? "pb-3"
+                    : ""
+                )}>
+                  {collapsed ? (
+                    <SidebarPopover
+                      icon={<Folder className="size-4 shrink-0" aria-hidden="true" />}
+                      title="Files"
+                      items={filesItems}
+                      isActive={isActive}
+                      isInSection={isInFiles}
                     />
-                    {!collapsed && <span>File repository</span>}
-                  </Link>
+                  ) : (
+                    <button
+                      onClick={() => toggleSection('files')}
+                      className={cn(
+                        "flex w-full items-center gap-x-2.5 py-2 text-[14px] font-medium transition",
+                        collapsed ? "px-2 justify-center" : "px-3 justify-between",
+                        (openSection === 'files' || isInFiles)
+                          ? "text-[#2D3338]"
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
+                        focusRing,
+                      )}
+                      aria-expanded={openSection === 'files'}
+                    >
+                      <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
+                        <Folder className="size-4 shrink-0" aria-hidden="true" />
+                        {!collapsed && "Files"}
+                      </span>
+                      {!collapsed && (
+                        <ChevronDown
+                          className={cn(
+                            "size-4 shrink-0 transition-transform duration-300 ease-in-out",
+                            openSection === 'files' ? "rotate-0" : "-rotate-90"
+                          )}
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
+                  )}
+
+                  {/* Sub-navigation items with animation */}
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300 ease-in-out",
+                    !collapsed && openSection === 'files' 
+                      ? "max-h-96 opacity-100" 
+                      : "max-h-0 opacity-0"
+                  )}>
+                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
+                      {filesItems.map((item) => (
+                        <li key={item.name}>
+                          <Link
+                            href={item.href}
+                            className={cn(
+                              "group relative flex items-center gap-x-3 rounded-md py-2 px-6 text-[13px] font-medium transition-all duration-200 ease-out",
+                              isActive(item.href)
+                                ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
+                                : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-gray-100 dark:hover:bg-gray-800",
+                              focusRing,
+                            )}
+                          >
+                            {/* Blue indicator line */}
+                            <div className={cn(
+                              "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                              isActive(item.href)
+                                ? "h-full opacity-100"
+                                : "h-1/2 opacity-0 group-hover:opacity-100"
+                            )} />
+                            <span>{item.name}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </li>
 
                 {/* Intelligence accordion */}

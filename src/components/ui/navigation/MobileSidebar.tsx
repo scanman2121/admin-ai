@@ -80,6 +80,11 @@ const settingsAndSetupItems = [
   { name: "Theme", href: siteConfig.baseLinks.settingsAndSetup.theme },
 ] as const
 
+// Files sub-navigation items
+const filesItems = [
+  { name: "Repository", href: siteConfig.baseLinks.fileRepository },
+] as const
+
 // Intelligence sub-navigation items
 const intelligenceItems = [
   { name: "Dashboard", href: siteConfig.baseLinks.intelligence.dashboard },
@@ -95,6 +100,7 @@ export default function MobileSidebar() {
   const [isExperienceManagerOpen, setIsExperienceManagerOpen] = useState(false)
   const [isOperationsOpen, setIsOperationsOpen] = useState(false)
   const [isIntelligenceOpen, setIsIntelligenceOpen] = useState(false)
+  const [isFilesOpen, setIsFilesOpen] = useState(false)
   const [isSettingsAndSetupOpen, setIsSettingsAndSetupOpen] = useState(false)
   const [showPortfolioSettings, setShowPortfolioSettings] = useState(false)
 
@@ -118,6 +124,11 @@ export default function MobileSidebar() {
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
+  // Check if current path is in Files section
+  const isInFiles = filesItems.some(item =>
+    pathname === item.href || pathname.startsWith(item.href + "/")
+  )
+
   // Check if current path is in Intelligence section
   const isInIntelligence = intelligenceItems.some(item =>
     pathname === item.href || pathname.startsWith(item.href + "/")
@@ -130,18 +141,16 @@ export default function MobileSidebar() {
 
   // Check if we're on the My HqO page
   const isInMyHqO = pathname === siteConfig.baseLinks.overview || pathname.startsWith(siteConfig.baseLinks.overview + "/")
-  
-  // Check if we're on the File Repository page
-  const isInFileRepository = pathname === siteConfig.baseLinks.fileRepository || pathname.startsWith(siteConfig.baseLinks.fileRepository + "/")
 
   // Auto-expand the section that contains the current path
   useEffect(() => {
-    if (isInMyHqO || isInFileRepository) {
-      // Collapse all sections when My HqO or File Repository is active
+    if (isInMyHqO) {
+      // Collapse all sections when My HqO is active
       setIsPortfolioOpen(false)
       setIsPaymentsOpen(false)
       setIsExperienceManagerOpen(false)
       setIsOperationsOpen(false)
+      setIsFilesOpen(false)
       setIsIntelligenceOpen(false)
       setIsSettingsAndSetupOpen(false)
     } else {
@@ -157,6 +166,9 @@ export default function MobileSidebar() {
       if (isInOperations) {
         setIsOperationsOpen(true)
       }
+      if (isInFiles) {
+        setIsFilesOpen(true)
+      }
       if (isInIntelligence) {
         setIsIntelligenceOpen(true)
       }
@@ -164,7 +176,7 @@ export default function MobileSidebar() {
         setIsSettingsAndSetupOpen(true)
       }
     }
-  }, [isInMyHqO, isInFileRepository, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInIntelligence, isInSettingsAndSetup])
+  }, [isInMyHqO, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInFiles, isInIntelligence, isInSettingsAndSetup])
 
   const isActive = (itemHref: string) => {
     if (itemHref === siteConfig.baseLinks.settings.general) {
@@ -358,23 +370,62 @@ export default function MobileSidebar() {
                 </div>
               </li>
 
-              {/* File Repository */}
-              <li>
-                <DrawerClose asChild>
-                  <Link
-                    href={siteConfig.baseLinks.fileRepository}
-                    className={cn(
-                      "flex w-full items-center gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
-                      isActive(siteConfig.baseLinks.fileRepository)
-                        ? "bg-[#F6F7F8] text-primary dark:text-primary shadow-sm"
-                        : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
-                      focusRing,
-                    )}
-                  >
+              {/* Files accordion */}
+              <li className={cn(
+                (isFilesOpen || isInFiles) ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isFilesOpen ? "pb-3" : ""
+              )}>
+                <button
+                  onClick={() => setIsFilesOpen(!isFilesOpen)}
+                  className={cn(
+                    "flex w-full items-center justify-between gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
+                    isInFiles
+                      ? "text-[#2D3338]"
+                      : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
+                    focusRing,
+                  )}
+                  aria-expanded={isFilesOpen}
+                >
+                  <span className="flex items-center gap-x-2.5">
                     <Folder className="size-4 shrink-0" aria-hidden="true" />
-                    File repository
-                  </Link>
-                </DrawerClose>
+                    Files
+                  </span>
+                  {isFilesOpen ? (
+                    <ChevronDown className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                  ) : (
+                    <ChevronRight className="size-4 shrink-0 transition-transform" aria-hidden="true" />
+                  )}
+                </button>
+
+                {/* Sub-navigation items with animation */}
+                <div
+                  className={cn(
+                    "overflow-hidden transition-all duration-300 ease-in-out",
+                    isFilesOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                  )}
+                >
+                  <ul className="mt-1 space-y-1">
+                    {filesItems.map((item) => (
+                      <li key={item.name}>
+                        <DrawerClose asChild>
+                          <Link
+                            href={item.href}
+                            className={cn(
+                              "flex w-full items-center gap-x-2.5 rounded-md py-1.5 pl-8 pr-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
+                              isActive(item.href)
+                                ? "bg-gray-100 dark:bg-gray-800 text-primary dark:text-primary shadow-sm"
+                                : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
+                              focusRing,
+                            )}
+                          >
+                            <ChevronRight className="size-4" />
+                            <span>{item.name}</span>
+                          </Link>
+                        </DrawerClose>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </li>
 
               {/* Experience Manager accordion */}
