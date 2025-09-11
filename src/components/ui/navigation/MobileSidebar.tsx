@@ -16,7 +16,7 @@ import {
     ChevronDown,
     ChevronRight,
     ExternalLink,
-    Folder,
+    FolderOpen,
     HandCoins,
     Home,
     LayoutDashboard,
@@ -388,7 +388,7 @@ export default function MobileSidebar() {
                   aria-expanded={isFilesOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <Folder className="size-4 shrink-0" aria-hidden="true" />
+                    <FolderOpen className="size-4 shrink-0" aria-hidden="true" />
                     Files
                   </span>
                   {isFilesOpen ? (

@@ -14,7 +14,7 @@ import {
     Building,
     ChevronDown,
     ExternalLink,
-    Folder,
+    FolderOpen,
     HandCoins,
     Home,
     LayoutDashboard,
@@ -564,7 +564,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<Folder className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<FolderOpen className="size-4 shrink-0" aria-hidden="true" />}
                       title="Files"
                       items={filesItems}
                       isActive={isActive}
@@ -584,7 +584,7 @@ export function Sidebar() {
                       aria-expanded={openSection === 'files'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <Folder className="size-4 shrink-0" aria-hidden="true" />
+                        <FolderOpen className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "Files"}
                       </span>
                       {!collapsed && (
