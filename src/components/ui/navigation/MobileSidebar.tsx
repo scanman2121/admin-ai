@@ -22,8 +22,8 @@ import { cn, focusRing } from "@/lib/utils"
       LineChart,
       Megaphone,
       Menu,
-      Settings,
-      Smartphone
+      MonitorSpeaker,
+      Settings
   } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -581,7 +581,7 @@ export default function MobileSidebar() {
                   aria-expanded={isSettingsAndSetupOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <Smartphone className="size-4 shrink-0" aria-hidden="true" />
+                    <MonitorSpeaker className="size-4 shrink-0" aria-hidden="true" />
                     App configuration
                   </span>
                   {isSettingsAndSetupOpen ? (
