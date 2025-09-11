@@ -233,7 +233,8 @@ export default function MobileSidebar() {
 
               {/* Portfolio accordion */}
               <li className={cn(
-                isPortfolioOpen ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                (isPortfolioOpen || isInPortfolio) ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isPortfolioOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsPortfolioOpen(!isPortfolioOpen)}
@@ -296,7 +297,8 @@ export default function MobileSidebar() {
 
               {/* Payments accordion */}
               <li className={cn(
-                isPaymentsOpen ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                (isPaymentsOpen || isInPayments) ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isPaymentsOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsPaymentsOpen(!isPaymentsOpen)}
@@ -378,7 +380,8 @@ export default function MobileSidebar() {
 
               {/* Experience Manager accordion */}
               <li className={cn(
-                isExperienceManagerOpen ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                (isExperienceManagerOpen || isInExperienceManager) ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isExperienceManagerOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsExperienceManagerOpen(!isExperienceManagerOpen)}
@@ -441,7 +444,8 @@ export default function MobileSidebar() {
 
               {/* Operations accordion */}
               <li className={cn(
-                isOperationsOpen ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                (isOperationsOpen || isInOperations) ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isOperationsOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsOperationsOpen(!isOperationsOpen)}
@@ -504,7 +508,8 @@ export default function MobileSidebar() {
 
               {/* Intelligence accordion */}
               <li className={cn(
-                isIntelligenceOpen ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                (isIntelligenceOpen || isInIntelligence) ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isIntelligenceOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsIntelligenceOpen(!isIntelligenceOpen)}
@@ -567,7 +572,8 @@ export default function MobileSidebar() {
 
               {/* Settings & Setup accordion */}
               <li className={cn(
-                isSettingsAndSetupOpen ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                (isSettingsAndSetupOpen || isInSettingsAndSetup) ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isSettingsAndSetupOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsSettingsAndSetupOpen(!isSettingsAndSetupOpen)}
