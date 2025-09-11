@@ -19,7 +19,7 @@ import {
     LayoutDashboard,
     LineChart,
     Megaphone,
-      MonitorSmartphone,
+    MonitorSmartphone,
     Settings
 } from "lucide-react"
 import Link from "next/link"
@@ -223,11 +223,8 @@ export function Sidebar() {
 
                 {/* Portfolio accordion */}
                 <li className={cn(
-                  isInPortfolio && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
-                    : "",
                   openSection === 'portfolio' && !collapsed
-                    ? "pb-3"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -304,11 +301,8 @@ export function Sidebar() {
 
                 {/* Experience Manager accordion */}
                 <li className={cn(
-                  isInExperienceManager && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
-                    : "",
                   openSection === 'experienceManager' && !collapsed
-                    ? "pb-3"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -385,11 +379,8 @@ export function Sidebar() {
 
                 {/* Operations accordion */}
                 <li className={cn(
-                  isInOperations && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
-                    : "",
                   openSection === 'operations' && !collapsed
-                    ? "pb-3"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -466,11 +457,8 @@ export function Sidebar() {
 
                 {/* Payments accordion */}
                 <li className={cn(
-                  isInPayments && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
-                    : "",
                   openSection === 'payments' && !collapsed
-                    ? "pb-3"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -580,11 +568,8 @@ export function Sidebar() {
 
                 {/* Intelligence accordion */}
                 <li className={cn(
-                  isInIntelligence && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
-                    : "",
                   openSection === 'intelligence' && !collapsed
-                    ? "pb-3"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -661,11 +646,8 @@ export function Sidebar() {
 
                 {/* Settings and setup accordion */}
                 <li className={cn(
-                  isInSettingsAndSetup && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
-                    : "",
                   openSection === 'settingsAndSetup' && !collapsed
-                    ? "pb-3"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
                     : ""
                 )}>
                   {collapsed ? (
