@@ -11,20 +11,20 @@ import {
     DrawerTrigger
 } from "@/components/Drawer"
 import { cn, focusRing } from "@/lib/utils"
-import {
-    ChevronDown,
-    ChevronRight,
-    Building,
-    LayoutDashboard,
-    Smartphone,
-    Folder,
-    Home,
-    LineChart,
-    Megaphone,
-    Menu,
-    Receipt,
-    Settings
-} from "lucide-react"
+  import {
+      Building,
+      ChevronDown,
+      ChevronRight,
+      Folder,
+      HandCoins,
+      Home,
+      LayoutDashboard,
+      LineChart,
+      Megaphone,
+      Menu,
+      Settings,
+      Smartphone
+  } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -310,7 +310,7 @@ export default function MobileSidebar() {
                   aria-expanded={isPaymentsOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <Receipt className="size-4 shrink-0" aria-hidden="true" />
+                    <HandCoins className="size-4 shrink-0" aria-hidden="true" />
                     Payments
                   </span>
                   {isPaymentsOpen ? (

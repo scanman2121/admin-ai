@@ -10,18 +10,18 @@ import {
     DrawerTrigger
 } from "@/components/ui/drawer"
 import { cn, focusRing } from "@/lib/utils"
-import {
-    ChevronDown,
-    Building,
-    LayoutDashboard,
-    Smartphone,
-    Folder,
-    Home,
-    LineChart,
-    Megaphone,
-    Receipt,
-    Settings
-} from "lucide-react"
+  import {
+      Building,
+      ChevronDown,
+      Folder,
+      HandCoins,
+      Home,
+      LayoutDashboard,
+      LineChart,
+      Megaphone,
+      Settings,
+      Smartphone
+  } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
@@ -463,7 +463,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<Receipt className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<HandCoins className="size-4 shrink-0" aria-hidden="true" />}
                       title="Payments"
                       items={paymentsItems}
                       isActive={isActive}
@@ -483,7 +483,7 @@ export function Sidebar() {
                       aria-expanded={openSection === 'payments'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <Receipt className="size-4 shrink-0" aria-hidden="true" />
+                        <HandCoins className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "Payments"}
                       </span>
                       {!collapsed && (
