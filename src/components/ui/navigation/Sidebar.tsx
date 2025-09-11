@@ -19,7 +19,7 @@ import {
     LayoutDashboard,
     LineChart,
     Megaphone,
-    MonitorSpeaker,
+      MonitorSmartphone,
     Settings
 } from "lucide-react"
 import Link from "next/link"
@@ -670,7 +670,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<MonitorSpeaker className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<MonitorSmartphone className="size-4 shrink-0" aria-hidden="true" />}
                       title="Settings and setup"
                       items={settingsAndSetupItems}
                       isActive={isActive}
@@ -690,7 +690,7 @@ export function Sidebar() {
                       aria-expanded={openSection === 'settingsAndSetup'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <MonitorSpeaker className="size-4 shrink-0" aria-hidden="true" />
+                        <MonitorSmartphone className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "App configuration"}
                       </span>
                       {!collapsed && (

@@ -22,7 +22,7 @@ import {
     LineChart,
     Megaphone,
     Menu,
-    MonitorSpeaker,
+      MonitorSmartphone,
     Settings
 } from "lucide-react"
 import Link from "next/link"
@@ -587,7 +587,7 @@ export default function MobileSidebar() {
                   aria-expanded={isSettingsAndSetupOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
-                    <MonitorSpeaker className="size-4 shrink-0" aria-hidden="true" />
+                    <MonitorSmartphone className="size-4 shrink-0" aria-hidden="true" />
                     App configuration
                   </span>
                   {isSettingsAndSetupOpen ? (
