@@ -10,18 +10,18 @@ import {
     DrawerTrigger
 } from "@/components/ui/drawer"
 import { cn, focusRing } from "@/lib/utils"
-  import {
-      Building,
-      ChevronDown,
-      Folder,
-      HandCoins,
-      Home,
-      LayoutDashboard,
-      LineChart,
-      Megaphone,
-      MonitorSpeaker,
-      Settings
-  } from "lucide-react"
+import {
+    Building,
+    ChevronDown,
+    Folder,
+    HandCoins,
+    Home,
+    LayoutDashboard,
+    LineChart,
+    Megaphone,
+    MonitorSpeaker,
+    Settings
+} from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useContext, useEffect, useState } from "react"
@@ -223,8 +223,11 @@ export function Sidebar() {
 
                 {/* Portfolio accordion */}
                 <li className={cn(
-                  (openSection === 'portfolio' || isInPortfolio) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
+                  isInPortfolio && !collapsed
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
+                    : "",
+                  openSection === 'portfolio' && !collapsed
+                    ? "pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -301,8 +304,11 @@ export function Sidebar() {
 
                 {/* Experience Manager accordion */}
                 <li className={cn(
-                  (openSection === 'experienceManager' || isInExperienceManager) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
+                  isInExperienceManager && !collapsed
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
+                    : "",
+                  openSection === 'experienceManager' && !collapsed
+                    ? "pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -379,8 +385,11 @@ export function Sidebar() {
 
                 {/* Operations accordion */}
                 <li className={cn(
-                  (openSection === 'operations' || isInOperations) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
+                  isInOperations && !collapsed
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
+                    : "",
+                  openSection === 'operations' && !collapsed
+                    ? "pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -457,8 +466,11 @@ export function Sidebar() {
 
                 {/* Payments accordion */}
                 <li className={cn(
-                  (openSection === 'payments' || isInPayments) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
+                  isInPayments && !collapsed
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
+                    : "",
+                  openSection === 'payments' && !collapsed
+                    ? "pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -568,8 +580,11 @@ export function Sidebar() {
 
                 {/* Intelligence accordion */}
                 <li className={cn(
-                  (openSection === 'intelligence' || isInIntelligence) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
+                  isInIntelligence && !collapsed
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
+                    : "",
+                  openSection === 'intelligence' && !collapsed
+                    ? "pb-3"
                     : ""
                 )}>
                   {collapsed ? (
@@ -646,8 +661,11 @@ export function Sidebar() {
 
                 {/* Settings and setup accordion */}
                 <li className={cn(
-                  (openSection === 'settingsAndSetup' || isInSettingsAndSetup) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3"
+                  isInSettingsAndSetup && !collapsed
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden"
+                    : "",
+                  openSection === 'settingsAndSetup' && !collapsed
+                    ? "pb-3"
                     : ""
                 )}>
                   {collapsed ? (

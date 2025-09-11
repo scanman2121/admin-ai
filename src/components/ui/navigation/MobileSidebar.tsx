@@ -11,20 +11,20 @@ import {
     DrawerTrigger
 } from "@/components/Drawer"
 import { cn, focusRing } from "@/lib/utils"
-  import {
-      Building,
-      ChevronDown,
-      ChevronRight,
-      Folder,
-      HandCoins,
-      Home,
-      LayoutDashboard,
-      LineChart,
-      Megaphone,
-      Menu,
-      MonitorSpeaker,
-      Settings
-  } from "lucide-react"
+import {
+    Building,
+    ChevronDown,
+    ChevronRight,
+    Folder,
+    HandCoins,
+    Home,
+    LayoutDashboard,
+    LineChart,
+    Megaphone,
+    Menu,
+    MonitorSpeaker,
+    Settings
+} from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -233,7 +233,8 @@ export default function MobileSidebar() {
 
               {/* Portfolio accordion */}
               <li className={cn(
-                isInPortfolio ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                isInPortfolio ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isPortfolioOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsPortfolioOpen(!isPortfolioOpen)}
@@ -296,7 +297,8 @@ export default function MobileSidebar() {
 
               {/* Payments accordion */}
               <li className={cn(
-                isInPayments ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                isInPayments ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isPaymentsOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsPaymentsOpen(!isPaymentsOpen)}
@@ -378,7 +380,8 @@ export default function MobileSidebar() {
 
               {/* Experience Manager accordion */}
               <li className={cn(
-                isInExperienceManager ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                isInExperienceManager ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isExperienceManagerOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsExperienceManagerOpen(!isExperienceManagerOpen)}
@@ -441,7 +444,8 @@ export default function MobileSidebar() {
 
               {/* Operations accordion */}
               <li className={cn(
-                isInOperations ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                isInOperations ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isOperationsOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsOperationsOpen(!isOperationsOpen)}
@@ -504,7 +508,8 @@ export default function MobileSidebar() {
 
               {/* Intelligence accordion */}
               <li className={cn(
-                isInIntelligence ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                isInIntelligence ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isIntelligenceOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsIntelligenceOpen(!isIntelligenceOpen)}
@@ -567,7 +572,8 @@ export default function MobileSidebar() {
 
               {/* Settings & Setup accordion */}
               <li className={cn(
-                isInSettingsAndSetup ? "bg-[#F6F7F8] rounded-md overflow-hidden pb-3" : ""
+                isInSettingsAndSetup ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isSettingsAndSetupOpen ? "pb-3" : ""
               )}>
                 <button
                   onClick={() => setIsSettingsAndSetupOpen(!isSettingsAndSetupOpen)}
