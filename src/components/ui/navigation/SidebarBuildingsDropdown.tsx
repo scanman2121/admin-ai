@@ -301,7 +301,7 @@ export const BuildingsDropdownDesktop = () => {
               </DropdownMenuLabel>
               
               {/* Search input */}
-              <div className="px-2 py-2 mt-1 mb-1">
+              <div className="px-2 pb-2">
                 <Input
                   type="search"
                   placeholder="Search by building name"
