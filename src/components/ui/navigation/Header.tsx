@@ -30,7 +30,9 @@ export function Header() {
         <header className="sticky top-0 z-20 flex h-16 items-center gap-4 bg-gray-50 dark:bg-gray-950 px-4 sm:px-6">
             <div className="flex flex-1 items-center gap-4">
                 {/* Building picker moved to the left */}
-                <BuildingsDropdownDesktop />
+                <div className="ml-1">
+                    <BuildingsDropdownDesktop />
+                </div>
             </div>
             <HeaderActions />
 
