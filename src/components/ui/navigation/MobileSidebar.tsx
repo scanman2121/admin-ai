@@ -15,7 +15,6 @@ import {
     Building,
     ChevronDown,
     ChevronRight,
-    ExternalLink,
     FolderOpen,
     HandCoins,
     Home,
@@ -754,46 +753,6 @@ export default function MobileSidebar() {
                 )}
               </li>
 
-              {/* Connected Apps Section */}
-              <li className="mt-6">
-                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 px-1.5">
-                  CONNECTED APPS
-                </p>
-                <div className="space-y-0.5">
-             <a
-               href="https://essensys.com"
-               target="_blank"
-               rel="noopener noreferrer"
-               className="group flex items-center justify-between rounded-md py-1.5 px-1.5 text-[13px] font-medium text-[#696E72] dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
-             >
-               <div className="flex items-center gap-x-2.5">
-                 <div className="w-4 h-4 bg-indigo-600 rounded flex items-center justify-center shrink-0">
-                   <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
-                     <path d="M12 2L2 7v10c0 5.55 3.84 9.95 9 11 5.16-1.05 9-5.45 9-11V7l-10-5z"/>
-                   </svg>
-                 </div>
-                 <span>Essensys</span>
-               </div>
-               <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400" />
-             </a>
-             <a
-               href="https://prism.com"
-               target="_blank"
-               rel="noopener noreferrer"
-               className="group flex items-center justify-between rounded-md py-1.5 px-1.5 text-[13px] font-medium text-[#696E72] dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
-             >
-               <div className="flex items-center gap-x-2.5">
-                 <div className="w-4 h-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center shrink-0">
-                   <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
-                     <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
-                   </svg>
-                 </div>
-                 <span>Prism</span>
-               </div>
-               <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400" />
-             </a>
-                </div>
-              </li>
             </ul>
           </nav>
           {/* User profile moved to header */}

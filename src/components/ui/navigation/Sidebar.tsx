@@ -96,6 +96,7 @@ export function Sidebar() {
   const { collapsed } = useContext(SidebarContext)
   const sidebarRef = useRef<HTMLElement>(null)
   const [announcement, setAnnouncement] = useState<string>("")
+  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email'>('general')
 
   // Check if current path is in each section
   const isInPortfolio = portfolioItems.some(item =>
@@ -918,50 +919,6 @@ export function Sidebar() {
               </ul>
             </li>
 
-            {/* Connected Apps Section */}
-            {!collapsed && (
-              <li className="mt-6">
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 px-3">
-                    CONNECTED APPS
-                  </p>
-                  <div className="space-y-0.5">
-                 <a
-                   href="https://essensys.com"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   className="group flex items-center justify-between rounded-md py-2 px-3 text-[13px] font-medium text-[#696E72] dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
-                 >
-                   <div className="flex items-center gap-x-3">
-                     <div className="w-4 h-4 bg-indigo-600 rounded flex items-center justify-center shrink-0">
-                       <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
-                         <path d="M12 2L2 7v10c0 5.55 3.84 9.95 9 11 5.16-1.05 9-5.45 9-11V7l-10-5z"/>
-                       </svg>
-                     </div>
-                     <span>Essensys</span>
-                   </div>
-                   <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400" />
-                 </a>
-                 <a
-                   href="https://prism.com"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   className="group flex items-center justify-between rounded-md py-2 px-3 text-[13px] font-medium text-[#696E72] dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-50 transition-colors"
-                 >
-                   <div className="flex items-center gap-x-3">
-                     <div className="w-4 h-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center shrink-0">
-                       <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
-                         <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
-                       </svg>
-                     </div>
-                     <span>Prism</span>
-                   </div>
-                   <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400" />
-                 </a>
-                  </div>
-                </div>
-              </li>
-            )}
 
             {/* Portfolio Settings - Sticky to bottom */}
             <li className="mt-auto pt-3 pb-2 border-t border-gray-200 dark:border-gray-700">
@@ -1008,13 +965,37 @@ export function Sidebar() {
                       <div className="px-6">
                         <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Settings</h3>
                         <div className="space-y-1">
-                          <button className="w-full text-left px-3 py-2 text-sm font-medium text-primary bg-primary/10 rounded-md">
+                          <button 
+                            onClick={() => setSettingsTab('general')}
+                            className={cn(
+                              "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                              settingsTab === 'general'
+                                ? "text-primary bg-primary/10"
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                            )}
+                          >
                             General
                           </button>
-                          <button className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">
+                          <button 
+                            onClick={() => setSettingsTab('apps')}
+                            className={cn(
+                              "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                              settingsTab === 'apps'
+                                ? "text-primary bg-primary/10"
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                            )}
+                          >
                             Apps
                           </button>
-                          <button className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">
+                          <button 
+                            onClick={() => setSettingsTab('email')}
+                            className={cn(
+                              "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                              settingsTab === 'email'
+                                ? "text-primary bg-primary/10"
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                            )}
+                          >
                             Email
                           </button>
                         </div>
@@ -1024,10 +1005,13 @@ export function Sidebar() {
                     {/* Main Content */}
                     <div className="flex-1 pt-20 pb-6 overflow-y-auto">
                       <div className="px-6 space-y-8">
-                        {/* Company Info Section */}
-                        <div>
-                          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Company info</h2>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">General information about the tenant company</p>
+                        {/* General Tab Content */}
+                        {settingsTab === 'general' && (
+                          <>
+                            {/* Company Info Section */}
+                            <div>
+                              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Company info</h2>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">General information about the tenant company</p>
                           
                           <div className="space-y-6">
                             {/* Industry */}
@@ -1123,7 +1107,110 @@ export function Sidebar() {
                               </span>
                             </div>
                           </div>
-                        </div>
+                            </div>
+                          </>
+                        )}
+
+                        {/* Apps Tab Content */}
+                        {settingsTab === 'apps' && (
+                          <div>
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Connected Apps</h2>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Manage your external application integrations</p>
+                            
+                            <div className="space-y-4">
+                              {/* Essensys App */}
+                              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
+                                <div className="flex items-center gap-4">
+                                  <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shrink-0">
+                                    <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                                      <path d="M12 2L2 7v10c0 5.55 3.84 9.95 9 11 5.16-1.05 9-5.45 9-11V7l-10-5z"/>
+                                    </svg>
+                                  </div>
+                                  <div>
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">Essensys</h3>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Building management platform</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <span className="text-xs font-medium text-green-600 bg-green-100 dark:bg-green-900/20 dark:text-green-400 px-2 py-1 rounded-full">
+                                    Connected
+                                  </span>
+                                  <a
+                                    href="https://essensys.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                  >
+                                    <ExternalLink className="w-4 h-4" />
+                                  </a>
+                                </div>
+                              </div>
+
+                              {/* Prism App */}
+                              <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
+                                <div className="flex items-center gap-4">
+                                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shrink-0">
+                                    <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                                      <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
+                                    </svg>
+                                  </div>
+                                  <div>
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">Prism</h3>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Analytics and insights platform</p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <span className="text-xs font-medium text-green-600 bg-green-100 dark:bg-green-900/20 dark:text-green-400 px-2 py-1 rounded-full">
+                                    Connected
+                                  </span>
+                                  <a
+                                    href="https://prism.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                  >
+                                    <ExternalLink className="w-4 h-4" />
+                                  </a>
+                                </div>
+                              </div>
+
+                              {/* Add New App Button */}
+                              <button className="w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-gray-500 dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                                <span className="text-sm font-medium">Connect new app</span>
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Email Tab Content */}
+                        {settingsTab === 'email' && (
+                          <div>
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Email Settings</h2>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Configure email notifications and preferences</p>
+                            
+                            <div className="space-y-6">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notification Email</label>
+                                <input 
+                                  type="email" 
+                                  placeholder="notifications@company.com"
+                                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-primary"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Frequency</label>
+                                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary">
+                                  <option>Daily</option>
+                                  <option>Weekly</option>
+                                  <option>Monthly</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
