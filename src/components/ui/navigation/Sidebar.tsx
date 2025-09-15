@@ -154,13 +154,26 @@ export function Sidebar() {
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
     if (collapsed) return // Skip keyboard navigation when sidebar is collapsed
 
-    const focusableElements = sidebarRef.current?.querySelectorAll(
+    const allFocusableElements = sidebarRef.current?.querySelectorAll(
       'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>
 
-    if (!focusableElements || focusableElements.length === 0) return
+    if (!allFocusableElements || allFocusableElements.length === 0) return
 
-    const currentIndex = Array.from(focusableElements).findIndex(
+    // Filter out elements that are in collapsed sections (not visible)
+    const focusableElements = Array.from(allFocusableElements).filter(element => {
+      // Check if element is in a collapsed submenu
+      const submenuContainer = element.closest('[aria-hidden="true"]')
+      if (submenuContainer) return false
+
+      // Check if element is actually visible (not in a collapsed section)
+      const rect = element.getBoundingClientRect()
+      return rect.height > 0 && rect.width > 0
+    })
+
+    if (focusableElements.length === 0) return
+
+    const currentIndex = focusableElements.findIndex(
       (element) => element === document.activeElement
     )
 
@@ -350,7 +363,7 @@ export function Sidebar() {
                     aria-hidden={!(openSection === 'portfolio' && !collapsed)}
                   >
                     <ul 
-                      className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out"
+                      className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out"
                       role="group"
                       aria-label="Portfolio navigation"
                     >
@@ -359,16 +372,16 @@ export function Sidebar() {
                           <Link
                             href={item.href}
                             className={cn(
-                              "group relative block rounded-md py-2 pl-10 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
+                              "group relative block rounded-md py-2 pl-8 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                               focusRing,
                             )}
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                              "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -434,22 +447,22 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
                       {experienceManagerItems.map((item) => (
                         <li key={item.name}>
                           <Link
                             href={item.href}
                             className={cn(
-                              "group relative block rounded-md py-2 pl-10 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
+                              "group relative block rounded-md py-2 pl-8 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                               focusRing,
                             )}
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                              "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -515,22 +528,22 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
                       {operationsItems.map((item) => (
                         <li key={item.name}>
                           <Link
                             href={item.href}
                             className={cn(
-                              "group relative block rounded-md py-2 pl-10 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
+                              "group relative block rounded-md py-2 pl-8 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                               focusRing,
                             )}
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                              "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -596,22 +609,22 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
                       {commerceItems.map((item) => (
                         <li key={item.name}>
                           <Link
                             href={item.href}
                             className={cn(
-                              "group relative block rounded-md py-2 pl-10 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
+                              "group relative block rounded-md py-2 pl-8 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                               focusRing,
                             )}
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                              "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -677,22 +690,22 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
                       {filesItems.map((item) => (
                         <li key={item.name}>
                           <Link
                             href={item.href}
                             className={cn(
-                              "group relative block rounded-md py-2 pl-10 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
+                              "group relative block rounded-md py-2 pl-8 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                               focusRing,
                             )}
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                              "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -758,22 +771,22 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
                       {intelligenceItems.map((item) => (
                         <li key={item.name}>
                           <Link
                             href={item.href}
                             className={cn(
-                              "group relative block rounded-md py-2 pl-10 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
+                              "group relative block rounded-md py-2 pl-8 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                               focusRing,
                             )}
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                              "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
@@ -839,22 +852,22 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
                       {settingsAndSetupItems.map((item) => (
                         <li key={item.name}>
                           <Link
                             href={item.href}
                             className={cn(
-                              "group relative block rounded-md py-2 pl-10 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
+                              "group relative block rounded-md py-2 pl-8 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
                               isActive(item.href)
-                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm mx-2 pl-8 pr-2"
-                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] pl-10 pr-2 hover:mx-2 hover:pl-8 hover:pr-2",
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
                               focusRing,
                             )}
                           >
                             {/* Blue indicator line */}
                             <div className={cn(
-                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                              "absolute left-0 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
                               isActive(item.href)
                                 ? "h-full opacity-100"
                                 : "h-1/2 opacity-0 group-hover:opacity-100"
