@@ -25,7 +25,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useContext, useEffect, useState, useRef, useCallback } from "react"
+import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { HqOLogo } from "./HqOLogo"
 import { SidebarPopover } from "./SidebarPopover"
 
@@ -95,7 +95,6 @@ export function Sidebar() {
   const [portfolioSettingsOpen, setPortfolioSettingsOpen] = useState(false)
   const { collapsed } = useContext(SidebarContext)
   const sidebarRef = useRef<HTMLElement>(null)
-  const [focusedIndex, setFocusedIndex] = useState<number>(-1)
 
   // Check if current path is in each section
   const isInPortfolio = portfolioItems.some(item =>
@@ -170,27 +169,23 @@ export function Sidebar() {
         event.preventDefault()
         const nextIndex = currentIndex < focusableElements.length - 1 ? currentIndex + 1 : 0
         focusableElements[nextIndex]?.focus()
-        setFocusedIndex(nextIndex)
         break
 
       case 'ArrowUp':
         event.preventDefault()
         const prevIndex = currentIndex > 0 ? currentIndex - 1 : focusableElements.length - 1
         focusableElements[prevIndex]?.focus()
-        setFocusedIndex(prevIndex)
         break
 
       case 'Home':
         event.preventDefault()
         focusableElements[0]?.focus()
-        setFocusedIndex(0)
         break
 
       case 'End':
         event.preventDefault()
         const lastIndex = focusableElements.length - 1
         focusableElements[lastIndex]?.focus()
-        setFocusedIndex(lastIndex)
         break
 
       case 'Enter':
