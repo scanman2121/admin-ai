@@ -9,6 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/Dropdown"
+import { Input } from "@/components/Input"
 import { CustomSwitch } from "@/components/ui/CustomSwitch"
 import {
     Tooltip,
@@ -17,10 +18,10 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { cn, focusInput } from "@/lib/utils"
-import { Building, ChevronsUpDown, Info } from "lucide-react"
+import { Building, ChevronsUpDown, Info, Star } from "lucide-react"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import React, { useEffect } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { ModalAddBuilding } from "./ModalAddBuilding"
 
 const buildings = [
@@ -111,12 +112,27 @@ export const BuildingsDropdownDesktop = () => {
   const [isPortfolioView, setIsPortfolioView] = React.useState(false)
   const [selectedBuilding, setSelectedBuilding] = React.useState(buildings[0])
   const [isAnimating, setIsAnimating] = React.useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [favoritedBuildings, setFavoritedBuildings] = useState<Set<string>>(new Set())
   const dropdownTriggerRef = React.useRef<null | HTMLButtonElement>(null)
   const focusRef = React.useRef<null | HTMLButtonElement>(null)
   const pathname = usePathname()
 
   const portfolioAllowed = isPortfolioViewAllowed(pathname)
   const pageName = getPageName(pathname)
+
+  // Filter buildings based on search query
+  const filteredBuildings = useMemo(() => {
+    if (!searchQuery.trim()) return buildings
+    return buildings.filter(building =>
+      building.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }, [searchQuery])
+
+  // Get favorite building (first favorited building as default)
+  const favoriteBuilding = useMemo(() => {
+    return buildings.find(building => favoritedBuildings.has(building.value))
+  }, [favoritedBuildings])
 
   // Effect to handle portfolio view toggle when navigating between pages
   useEffect(() => {
@@ -129,6 +145,13 @@ export const BuildingsDropdownDesktop = () => {
       }, 300);
     }
   }, [pathname, isPortfolioView, portfolioAllowed]);
+
+  // Clear search when dropdown closes
+  useEffect(() => {
+    if (!dropdownOpen) {
+      setSearchQuery("");
+    }
+  }, [dropdownOpen]);
 
   const handleDialogItemSelect = () => {
     focusRef.current = dropdownTriggerRef.current
@@ -145,12 +168,30 @@ export const BuildingsDropdownDesktop = () => {
     setSelectedBuilding(building)
     setIsPortfolioView(false)
     setDropdownOpen(false)
+    setSearchQuery("") // Clear search when selecting
   }
 
   const handlePortfolioToggle = (checked: boolean) => {
     if (portfolioAllowed) {
       setIsPortfolioView(checked);
+      // When leaving portfolio view, set to favorite building if available
+      if (!checked && favoriteBuilding) {
+        setSelectedBuilding(favoriteBuilding);
+      }
     }
+  };
+
+  const handleToggleFavorite = (building: typeof buildings[0], e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent building selection
+    setFavoritedBuildings(prev => {
+      const newFavorites = new Set(prev);
+      if (newFavorites.has(building.value)) {
+        newFavorites.delete(building.value);
+      } else {
+        newFavorites.add(building.value);
+      }
+      return newFavorites;
+    });
   };
 
   return (
@@ -260,26 +301,66 @@ export const BuildingsDropdownDesktop = () => {
               <DropdownMenuLabel>
                 Buildings ({buildings.length})
               </DropdownMenuLabel>
-              {buildings.map((building) => (
-                <DropdownMenuItem
-                  key={building.value}
-                  onSelect={() => handleBuildingSelect(building)}
-                >
-                  <div className="flex w-full items-center gap-x-2.5">
-                    <div className="relative size-6 overflow-hidden rounded">
-                      <Image
-                        src={building.imageUrl}
-                        alt={building.name}
-                        fill
-                        className="object-cover"
-                      />
+              
+              {/* Search input */}
+              <div className="px-2 pb-2">
+                <Input
+                  type="search"
+                  placeholder="Search by building name"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-8"
+                  inputClassName="text-sm"
+                />
+              </div>
+
+              {/* Buildings list */}
+              {filteredBuildings.length > 0 ? (
+                filteredBuildings.map((building) => (
+                  <DropdownMenuItem
+                    key={building.value}
+                    onSelect={() => handleBuildingSelect(building)}
+                    className="group"
+                  >
+                    <div className="flex w-full items-center justify-between">
+                      <div className="flex items-center gap-x-2.5">
+                        <div className="relative size-6 overflow-hidden rounded">
+                          <Image
+                            src={building.imageUrl}
+                            alt={building.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                          {building.name}
+                        </p>
+                      </div>
+                      <button
+                        onClick={(e) => handleToggleFavorite(building, e)}
+                        className={cn(
+                          "p-1 rounded-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800",
+                          "opacity-0 group-hover:opacity-100",
+                          favoritedBuildings.has(building.value) && "opacity-100"
+                        )}
+                      >
+                        <Star
+                          className={cn(
+                            "size-4",
+                            favoritedBuildings.has(building.value)
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-400 hover:text-yellow-400"
+                          )}
+                        />
+                      </button>
                     </div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                      {building.name}
-                    </p>
-                  </div>
-                </DropdownMenuItem>
-              ))}
+                  </DropdownMenuItem>
+                ))
+              ) : (
+                <div className="px-2 py-3 text-sm text-gray-500 dark:text-gray-400 text-center">
+                  No buildings found
+                </div>
+              )}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <ModalAddBuilding
@@ -297,7 +378,7 @@ export const BuildingsDropdownDesktop = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <div className={cn(
-                "flex items-center transition-opacity duration-300",
+                "flex items-center gap-x-2 transition-opacity duration-300",
                 !portfolioAllowed && !isAnimating ? "opacity-50 cursor-not-allowed" : "opacity-100"
               )}>
                 <CustomSwitch
@@ -306,34 +387,19 @@ export const BuildingsDropdownDesktop = () => {
                   size="small"
                   disabled={!portfolioAllowed || isAnimating}
                 />
-                <span className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Portfolio view
                 </span>
+                <Info className="size-4 text-gray-400" />
               </div>
             </TooltipTrigger>
             <TooltipContent side="bottom" align="center">
               {portfolioAllowed
-                ? `View data across all buildings in ${pageName}`
+                ? `Portfolio view allows you to see data across all buildings in ${pageName}`
                 : `Portfolio view is not available for ${pageName}`}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <div className="ml-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex items-center">
-                  <Info className="size-4 text-gray-400" />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" align="center">
-                {portfolioAllowed
-                  ? `Portfolio view allows you to see data across all buildings in ${pageName}`
-                  : `Portfolio view is not available for ${pageName}`}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
       </div>
     </div>
   )

@@ -45,8 +45,8 @@ const portfolioItems = [
   { name: "Audiences", href: siteConfig.baseLinks.audiences },
 ] as const
 
-// Payments sub-navigation items
-const paymentsItems = [
+// Commerce sub-navigation items
+const commerceItems = [
   { name: "Transactions", href: siteConfig.baseLinks.transactions },
   { name: "Credits", href: siteConfig.baseLinks.credits },
   { name: "Discounts", href: siteConfig.baseLinks.discounts },
@@ -97,7 +97,7 @@ const intelligenceItems = [
 export default function MobileSidebar() {
   const pathname = usePathname()
   const [isPortfolioOpen, setIsPortfolioOpen] = useState(false)
-  const [isPaymentsOpen, setIsPaymentsOpen] = useState(false)
+  const [isCommerceOpen, setIsCommerceOpen] = useState(false)
   const [isExperienceManagerOpen, setIsExperienceManagerOpen] = useState(false)
   const [isOperationsOpen, setIsOperationsOpen] = useState(false)
   const [isIntelligenceOpen, setIsIntelligenceOpen] = useState(false)
@@ -110,8 +110,8 @@ export default function MobileSidebar() {
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
-  // Check if current path is in Payments section
-  const isInPayments = paymentsItems.some(item =>
+  // Check if current path is in Commerce section
+  const isInPayments = commerceItems.some(item =>
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
@@ -148,7 +148,7 @@ export default function MobileSidebar() {
     if (isInMyHqO) {
       // Collapse all sections when My HqO is active
       setIsPortfolioOpen(false)
-      setIsPaymentsOpen(false)
+      setIsCommerceOpen(false)
       setIsExperienceManagerOpen(false)
       setIsOperationsOpen(false)
       setIsFilesOpen(false)
@@ -159,7 +159,7 @@ export default function MobileSidebar() {
         setIsPortfolioOpen(true)
       }
       if (isInPayments) {
-        setIsPaymentsOpen(true)
+        setIsCommerceOpen(true)
       }
       if (isInExperienceManager) {
         setIsExperienceManagerOpen(true)
@@ -307,13 +307,13 @@ export default function MobileSidebar() {
                 </div>
               </li>
 
-              {/* Payments accordion */}
+              {/* Commerce accordion */}
               <li className={cn(
-                (isPaymentsOpen || isInPayments) ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
-                isPaymentsOpen ? "pb-3" : ""
+                (isCommerceOpen || isInPayments) ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
+                isCommerceOpen ? "pb-3" : ""
               )}>
                 <button
-                  onClick={() => setIsPaymentsOpen(!isPaymentsOpen)}
+                  onClick={() => setIsCommerceOpen(!isCommerceOpen)}
                   className={cn(
                     "flex w-full items-center justify-between gap-x-2.5 rounded-md px-1.5 py-1.5 text-sm font-medium transition hover:bg-gray-100 hover:dark:bg-gray-900",
                     isInPayments
@@ -321,13 +321,13 @@ export default function MobileSidebar() {
                       : "text-gray-700 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50",
                     focusRing,
                   )}
-                  aria-expanded={isPaymentsOpen}
+                  aria-expanded={isCommerceOpen}
                 >
                   <span className="flex items-center gap-x-2.5">
                     <HandCoins className="size-4 shrink-0" aria-hidden="true" />
-                    Payments
+                    Commerce
                   </span>
-                  {isPaymentsOpen ? (
+                  {isCommerceOpen ? (
                     <ChevronDown className="size-4 shrink-0 transition-transform" aria-hidden="true" />
                   ) : (
                     <ChevronRight className="size-4 shrink-0 transition-transform" aria-hidden="true" />
@@ -338,11 +338,11 @@ export default function MobileSidebar() {
                 <div
                   className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    isPaymentsOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+                    isCommerceOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
                   )}
                 >
                   <ul className="mt-1 space-y-0.5 px-1">
-                    {paymentsItems.map((item) => (
+                    {commerceItems.map((item) => (
                       <li key={item.name}>
                         <DrawerClose asChild>
                           <Link

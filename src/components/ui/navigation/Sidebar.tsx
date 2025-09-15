@@ -38,8 +38,8 @@ const portfolioItems = [
   { name: "Audiences", href: siteConfig.baseLinks.audiences },
 ] as const
 
-// Payments sub-navigation items
-const paymentsItems = [
+// Commerce sub-navigation items
+const commerceItems = [
   { name: "Transactions", href: siteConfig.baseLinks.transactions },
   { name: "Credits", href: siteConfig.baseLinks.credits },
   { name: "Discounts", href: siteConfig.baseLinks.discounts },
@@ -87,7 +87,7 @@ const intelligenceItems = [
 ] as const
 
 // Type for section IDs to ensure type safety
-type SectionId = 'portfolio' | 'payments' | 'experienceManager' | 'operations' | 'files' | 'settingsAndSetup' | 'intelligence';
+type SectionId = 'portfolio' | 'commerce' | 'experienceManager' | 'operations' | 'files' | 'settingsAndSetup' | 'intelligence';
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -100,7 +100,7 @@ export function Sidebar() {
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
-  const isInPayments = paymentsItems.some(item =>
+  const isInPayments = commerceItems.some(item =>
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
@@ -135,7 +135,7 @@ export function Sidebar() {
     } else if (isInPortfolio) {
       setOpenSection('portfolio')
     } else if (isInPayments) {
-      setOpenSection('payments')
+      setOpenSection('commerce')
     } else if (isInExperienceManager) {
       setOpenSection('experienceManager')
     } else if (isInOperations) {
@@ -472,45 +472,45 @@ export function Sidebar() {
                   </div>
                 </li>
 
-                {/* Payments accordion */}
+                {/* Commerce accordion */}
                 <li className={cn(
-                  (openSection === 'payments' || isInPayments) && !collapsed
+                  (openSection === 'commerce' || isInPayments) && !collapsed
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden"
                     : "",
-                  openSection === 'payments' && !collapsed
+                  openSection === 'commerce' && !collapsed
                     ? "pb-3"
                     : ""
                 )}>
                   {collapsed ? (
                     <SidebarPopover
                       icon={<HandCoins className="size-4 shrink-0" aria-hidden="true" />}
-                      title="Payments"
-                      items={paymentsItems}
+                      title="Commerce"
+                      items={commerceItems}
                       isActive={isActive}
                       isInSection={isInPayments}
                     />
                   ) : (
                     <button
-                      onClick={() => toggleSection('payments')}
+                      onClick={() => toggleSection('commerce')}
                       className={cn(
                         "flex w-full items-center gap-x-2.5 py-2 text-[14px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
-                        (openSection === 'payments' || isInPayments)
+                        (openSection === 'commerce' || isInPayments)
                           ? "text-[#2D3338]"
                           : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
                         focusRing,
                       )}
-                      aria-expanded={openSection === 'payments'}
+                      aria-expanded={openSection === 'commerce'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
                         <HandCoins className="size-4 shrink-0" aria-hidden="true" />
-                        {!collapsed && "Payments"}
+                        {!collapsed && "Commerce"}
                       </span>
                       {!collapsed && (
                         <ChevronDown
                           className={cn(
                             "size-4 shrink-0 transition-transform duration-300 ease-in-out",
-                            openSection === 'payments' ? "rotate-0" : "-rotate-90"
+                            openSection === 'commerce' ? "rotate-0" : "-rotate-90"
                           )}
                           aria-hidden="true"
                         />
@@ -521,12 +521,12 @@ export function Sidebar() {
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    !collapsed && openSection === 'payments' 
+                    !collapsed && openSection === 'commerce' 
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
                     <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
-                      {paymentsItems.map((item) => (
+                      {commerceItems.map((item) => (
                         <li key={item.name}>
                           <Link
                             href={item.href}
