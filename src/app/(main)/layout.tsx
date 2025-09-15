@@ -4,6 +4,7 @@ import { CommunicationsTab } from "@/components/ui/communications/Communications
 import { FloatingActionBar } from "@/components/ui/navigation/FloatingActionBar"
 import { Header } from "@/components/ui/navigation/Header"
 import { Sidebar } from "@/components/ui/navigation/Sidebar"
+import { SidebarToggle } from "@/components/ui/navigation/SidebarToggle"
 import { createContext, useContext, useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 
@@ -49,6 +50,7 @@ export default function MainLayout({
     <SidebarContext.Provider value={{ collapsed, toggleCollapsed }}>
       <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
         <Sidebar />
+        <SidebarToggle />
         <div className={cn(
           "flex flex-col flex-1 transition-all duration-300",
           collapsed ? "lg:ml-16" : "lg:ml-64"
