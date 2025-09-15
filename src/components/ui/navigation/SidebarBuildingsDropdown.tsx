@@ -18,7 +18,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { cn, focusInput } from "@/lib/utils"
-import { Building, ChevronsUpDown, Info, Pin } from "lucide-react"
+import { Building, ChevronsUpDown, Info, Star } from "lucide-react"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import React, { useEffect, useMemo, useState } from "react"
@@ -113,7 +113,7 @@ export const BuildingsDropdownDesktop = () => {
   const [selectedBuilding, setSelectedBuilding] = React.useState(buildings[0])
   const [isAnimating, setIsAnimating] = React.useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [pinnedBuildingId, setPinnedBuildingId] = useState<string | null>(null)
+  const [starredBuildingId, setStarredBuildingId] = useState<string | null>(null)
   const dropdownTriggerRef = React.useRef<null | HTMLButtonElement>(null)
   const focusRef = React.useRef<null | HTMLButtonElement>(null)
   const pathname = usePathname()
@@ -121,7 +121,7 @@ export const BuildingsDropdownDesktop = () => {
   const portfolioAllowed = isPortfolioViewAllowed(pathname)
   const pageName = getPageName(pathname)
 
-  // Filter and sort buildings based on search query and pinned status
+  // Filter and sort buildings based on search query and starred status
   const filteredBuildings = useMemo(() => {
     let filtered = buildings;
     
@@ -132,18 +132,18 @@ export const BuildingsDropdownDesktop = () => {
       )
     }
     
-    // Sort to show pinned building first
+    // Sort to show starred building first
     return filtered.sort((a, b) => {
-      if (a.value === pinnedBuildingId) return -1; // Pinned building goes first
-      if (b.value === pinnedBuildingId) return 1;  // Other building goes after pinned
-      return 0; // Keep original order for non-pinned buildings
+      if (a.value === starredBuildingId) return -1; // Starred building goes first
+      if (b.value === starredBuildingId) return 1;  // Other building goes after starred
+      return 0; // Keep original order for non-starred buildings
     })
-  }, [searchQuery, pinnedBuildingId])
+  }, [searchQuery, starredBuildingId])
 
-  // Get pinned building as default
-  const pinnedBuilding = useMemo(() => {
-    return buildings.find(building => building.value === pinnedBuildingId)
-  }, [pinnedBuildingId])
+  // Get starred building as default
+  const starredBuilding = useMemo(() => {
+    return buildings.find(building => building.value === starredBuildingId)
+  }, [starredBuildingId])
 
   // Effect to handle portfolio view toggle when navigating between pages
   useEffect(() => {
@@ -185,21 +185,21 @@ export const BuildingsDropdownDesktop = () => {
   const handlePortfolioToggle = (checked: boolean) => {
     if (portfolioAllowed) {
       setIsPortfolioView(checked);
-      // When leaving portfolio view, set to pinned building if available
-      if (!checked && pinnedBuilding) {
-        setSelectedBuilding(pinnedBuilding);
+      // When leaving portfolio view, set to starred building if available
+      if (!checked && starredBuilding) {
+        setSelectedBuilding(starredBuilding);
       }
     }
   };
 
-  const handleTogglePin = (building: typeof buildings[0], e: React.MouseEvent) => {
+  const handleToggleStar = (building: typeof buildings[0], e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent building selection
-    // If clicking on the currently pinned building, unpin it
-    if (pinnedBuildingId === building.value) {
-      setPinnedBuildingId(null);
+    // If clicking on the currently starred building, unstar it
+    if (starredBuildingId === building.value) {
+      setStarredBuildingId(null);
     } else {
-      // Otherwise, pin this building (only one can be pinned at a time)
-      setPinnedBuildingId(building.value);
+      // Otherwise, star this building (only one can be starred at a time)
+      setStarredBuildingId(building.value);
     }
   };
 
@@ -346,17 +346,17 @@ export const BuildingsDropdownDesktop = () => {
                         </p>
                       </div>
                       <button
-                        onClick={(e) => handleTogglePin(building, e)}
+                        onClick={(e) => handleToggleStar(building, e)}
                         className={cn(
                           "p-1 rounded-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800",
                           "opacity-0 group-hover:opacity-100",
-                          pinnedBuildingId === building.value && "opacity-100"
+                          starredBuildingId === building.value && "opacity-100"
                         )}
                       >
-                        <Pin
+                        <Star
                           className={cn(
                             "size-4",
-                            pinnedBuildingId === building.value
+                            starredBuildingId === building.value
                               ? "fill-blue-500 text-blue-500"
                               : "text-gray-400 hover:text-blue-500"
                           )}
