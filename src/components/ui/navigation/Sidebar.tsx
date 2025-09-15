@@ -363,7 +363,7 @@ export function Sidebar() {
                     aria-hidden={!(openSection === 'portfolio' && !collapsed)}
                   >
                     <ul 
-                      className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out"
+                      className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out"
                       role="group"
                       aria-label="Portfolio navigation"
                     >
@@ -447,7 +447,7 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
                       {experienceManagerItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -528,7 +528,7 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
                       {operationsItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -609,7 +609,7 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
                       {commerceItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -690,7 +690,7 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
                       {filesItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -771,7 +771,7 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
                       {intelligenceItems.map((item) => (
                         <li key={item.name}>
                           <Link
@@ -852,7 +852,7 @@ export function Sidebar() {
                       ? "max-h-96 opacity-100" 
                       : "max-h-0 opacity-0"
                   )}>
-                    <ul className="mt-1 space-y-1 px-2 transform transition-transform duration-300 ease-in-out">
+                    <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
                       {settingsAndSetupItems.map((item) => (
                         <li key={item.name}>
                           <Link
