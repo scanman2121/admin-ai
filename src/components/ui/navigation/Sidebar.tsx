@@ -338,7 +338,7 @@ export function Sidebar() {
                 {/* Portfolio accordion */}
                 <li className={cn(
                   (openSection === 'portfolio' || isInPortfolio) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1 px-2"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'portfolio' && !collapsed
                     ? "pb-3"
@@ -433,7 +433,7 @@ export function Sidebar() {
                 {/* Experience Manager accordion */}
                 <li className={cn(
                   (openSection === 'experienceManager' || isInExperienceManager) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1 px-2"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'experienceManager' && !collapsed
                     ? "pb-3"
@@ -514,7 +514,7 @@ export function Sidebar() {
                 {/* Operations accordion */}
                 <li className={cn(
                   (openSection === 'operations' || isInOperations) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1 px-2"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'operations' && !collapsed
                     ? "pb-3"
@@ -595,7 +595,7 @@ export function Sidebar() {
                 {/* Commerce accordion */}
                 <li className={cn(
                   (openSection === 'commerce' || isInPayments) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1 px-2"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'commerce' && !collapsed
                     ? "pb-3"
@@ -676,7 +676,7 @@ export function Sidebar() {
                 {/* Files accordion */}
                 <li className={cn(
                   (openSection === 'files' || isInFiles) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1 px-2"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'files' && !collapsed
                     ? "pb-3"
@@ -757,7 +757,7 @@ export function Sidebar() {
                 {/* Intelligence accordion */}
                 <li className={cn(
                   (openSection === 'intelligence' || isInIntelligence) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1 px-2"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'intelligence' && !collapsed
                     ? "pb-3"
@@ -838,7 +838,7 @@ export function Sidebar() {
                 {/* Settings and setup accordion */}
                 <li className={cn(
                   (openSection === 'settingsAndSetup' || isInSettingsAndSetup) && !collapsed
-                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1 px-2"
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'settingsAndSetup' && !collapsed
                     ? "pb-3"
