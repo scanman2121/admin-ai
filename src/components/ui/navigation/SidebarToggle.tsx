@@ -1,18 +1,19 @@
 "use client"
 
 import { SidebarContext } from "@/app/(main)/layout"
-import { cn, focusRing } from "@/lib/utils"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useContext, useEffect } from "react"
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { cn, focusRing } from "@/lib/utils"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useContext, useEffect } from "react"
 
 export function SidebarToggle() {
     const { collapsed, toggleCollapsed } = useContext(SidebarContext)
+    const tooltipId = "sidebar-toggle-tooltip"
 
     // Add keyboard shortcuts for [ and ]
     useEffect(() => {
@@ -57,6 +58,7 @@ export function SidebarToggle() {
                         )}
                         style={{ top: '52px' }}
                         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                        aria-describedby={tooltipId}
                     >
                         {collapsed ? (
                             <ChevronRight className="size-4 text-gray-600 dark:text-gray-400" />
@@ -65,7 +67,12 @@ export function SidebarToggle() {
                         )}
                     </button>
                 </TooltipTrigger>
-                <TooltipContent side="right" className="flex items-center gap-2">
+                <TooltipContent 
+                    side="right" 
+                    className="flex items-center gap-2"
+                    id={tooltipId}
+                    role="tooltip"
+                >
                     <span>{collapsed ? "Expand" : "Collapse"}</span>
                     <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
                         {collapsed ? "]" : "["}

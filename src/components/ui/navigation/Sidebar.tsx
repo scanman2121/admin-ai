@@ -95,6 +95,7 @@ export function Sidebar() {
   const [portfolioSettingsOpen, setPortfolioSettingsOpen] = useState(false)
   const { collapsed } = useContext(SidebarContext)
   const sidebarRef = useRef<HTMLElement>(null)
+  const [announcement, setAnnouncement] = useState<string>("")
 
   // Check if current path is in each section
   const isInPortfolio = portfolioItems.some(item =>
@@ -223,24 +224,50 @@ export function Sidebar() {
     // Don't toggle sections when sidebar is collapsed
     if (collapsed) return
     
+    // Announce section state changes to screen readers
+    const announceChange = (sectionName: string, isExpanding: boolean) => {
+      const action = isExpanding ? "expanded" : "collapsed"
+      setAnnouncement(`${sectionName} section ${action}`)
+      // Clear announcement after a short delay
+      setTimeout(() => setAnnouncement(""), 1000)
+    }
+
+    // Get section display name
+    const getSectionName = (sectionId: SectionId): string => {
+      const names = {
+        portfolio: "Portfolio",
+        commerce: "Commerce", 
+        experienceManager: "Experience Manager",
+        operations: "Operations",
+        files: "Files",
+        settingsAndSetup: "App Configuration",
+        intelligence: "Intelligence"
+      }
+      return names[sectionId]
+    }
+    
     // If clicking the same section, just close it
     if (openSection === section) {
       setOpenSection(null)
+      announceChange(getSectionName(section), false)
       return
     }
     
     // If switching to a different section, close current first, then open new one
     if (openSection && openSection !== section) {
       setOpenSection(null)
+      announceChange(getSectionName(openSection), false)
       // Small delay to allow close animation to start before opening new section
       setTimeout(() => {
         setOpenSection(section)
+        announceChange(getSectionName(section), true)
         // Focus management: when a section opens, focus stays on the button
         // The user can then use arrow keys to navigate to the sub-items
       }, 150) // Half the animation duration for smooth transition
     } else {
       // No section currently open, just open the new one
       setOpenSection(section)
+      announceChange(getSectionName(section), true)
     }
   }, [collapsed, openSection])
 
@@ -252,6 +279,15 @@ export function Sidebar() {
       role="navigation"
       aria-label="Main navigation"
     >
+      {/* Screen reader announcements for section state changes */}
+      <div 
+        aria-live="polite" 
+        aria-atomic="true" 
+        className="sr-only"
+        role="status"
+      >
+        {announcement}
+      </div>
       <div className={cn(
         "flex h-full flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 transition-all duration-300",
         collapsed ? "w-16 px-2" : "w-64 px-3"
