@@ -25,7 +25,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState, useRef, useCallback } from "react"
 import { HqOLogo } from "./HqOLogo"
 import { SidebarPopover } from "./SidebarPopover"
 
@@ -94,6 +94,8 @@ export function Sidebar() {
   const [openSection, setOpenSection] = useState<SectionId | null>(null)
   const [portfolioSettingsOpen, setPortfolioSettingsOpen] = useState(false)
   const { collapsed } = useContext(SidebarContext)
+  const sidebarRef = useRef<HTMLElement>(null)
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1)
 
   // Check if current path is in each section
   const isInPortfolio = portfolioItems.some(item =>
@@ -149,6 +151,58 @@ export function Sidebar() {
     }
   }, [isInMyHqO, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInFiles, isInSettingsAndSetup, isInIntelligence])
 
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
+    if (collapsed) return // Skip keyboard navigation when sidebar is collapsed
+
+    const focusableElements = sidebarRef.current?.querySelectorAll(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    ) as NodeListOf<HTMLElement>
+
+    if (!focusableElements || focusableElements.length === 0) return
+
+    const currentIndex = Array.from(focusableElements).findIndex(
+      (element) => element === document.activeElement
+    )
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault()
+        const nextIndex = currentIndex < focusableElements.length - 1 ? currentIndex + 1 : 0
+        focusableElements[nextIndex]?.focus()
+        setFocusedIndex(nextIndex)
+        break
+
+      case 'ArrowUp':
+        event.preventDefault()
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : focusableElements.length - 1
+        focusableElements[prevIndex]?.focus()
+        setFocusedIndex(prevIndex)
+        break
+
+      case 'Home':
+        event.preventDefault()
+        focusableElements[0]?.focus()
+        setFocusedIndex(0)
+        break
+
+      case 'End':
+        event.preventDefault()
+        const lastIndex = focusableElements.length - 1
+        focusableElements[lastIndex]?.focus()
+        setFocusedIndex(lastIndex)
+        break
+
+      case 'Enter':
+      case ' ':
+        if (document.activeElement?.tagName === 'BUTTON') {
+          event.preventDefault()
+          ;(document.activeElement as HTMLButtonElement)?.click()
+        }
+        break
+    }
+  }, [collapsed])
+
   const isActive = (itemHref: string) => {
     if (itemHref === siteConfig.baseLinks.settings.general) {
       return pathname.startsWith("/settings")
@@ -156,8 +210,8 @@ export function Sidebar() {
     return pathname === itemHref || pathname.startsWith(itemHref)
   }
 
-  // Toggle section open/closed with smooth transitions
-  const toggleSection = (section: SectionId) => {
+  // Toggle section open/closed with smooth transitions and focus management
+  const toggleSection = useCallback((section: SectionId) => {
     // Don't toggle sections when sidebar is collapsed
     if (collapsed) return
     
@@ -173,15 +227,23 @@ export function Sidebar() {
       // Small delay to allow close animation to start before opening new section
       setTimeout(() => {
         setOpenSection(section)
+        // Focus management: when a section opens, focus stays on the button
+        // The user can then use arrow keys to navigate to the sub-items
       }, 150) // Half the animation duration for smooth transition
     } else {
       // No section currently open, just open the new one
       setOpenSection(section)
     }
-  }
+  }, [collapsed, openSection])
 
   return (
-    <nav className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:flex-col">
+    <nav 
+      ref={sidebarRef}
+      className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:flex-col"
+      onKeyDown={handleKeyDown}
+      role="navigation"
+      aria-label="Main navigation"
+    >
       <div className={cn(
         "flex h-full flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 transition-all duration-300",
         collapsed ? "w-16 px-2" : "w-64 px-3"
@@ -258,6 +320,10 @@ export function Sidebar() {
                         focusRing,
                       )}
                       aria-expanded={openSection === 'portfolio'}
+                      aria-controls="portfolio-submenu"
+                      id="portfolio-button"
+                      role="button"
+                      tabIndex={0}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
                         <Building className="size-4 shrink-0" aria-hidden="true" />
@@ -276,13 +342,23 @@ export function Sidebar() {
                   )}
 
                   {/* Sub-navigation items with animation */}
-                  <div className={cn(
-                    "overflow-hidden transition-all duration-300 ease-in-out",
-                    !collapsed && openSection === 'portfolio' 
-                      ? "max-h-96 opacity-100" 
-                      : "max-h-0 opacity-0"
-                  )}>
-                    <ul className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out">
+                  <div 
+                    className={cn(
+                      "overflow-hidden transition-all duration-300 ease-in-out",
+                      !collapsed && openSection === 'portfolio' 
+                        ? "max-h-96 opacity-100" 
+                        : "max-h-0 opacity-0"
+                    )}
+                    id="portfolio-submenu"
+                    role="region"
+                    aria-labelledby="portfolio-button"
+                    aria-hidden={!(openSection === 'portfolio' && !collapsed)}
+                  >
+                    <ul 
+                      className="mt-1 space-y-1 transform transition-transform duration-300 ease-in-out"
+                      role="group"
+                      aria-label="Portfolio navigation"
+                    >
                       {portfolioItems.map((item) => (
                         <li key={item.name}>
                           <Link
