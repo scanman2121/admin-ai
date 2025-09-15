@@ -3,7 +3,7 @@
 import { Button } from "@/components/Button"
 import { Tooltip } from "@/components/Tooltip"
 import { cn, focusRing } from "@/lib/utils"
-import { HelpCircle, /* Bell, QrCode, Search, */ Sparkles } from "lucide-react"
+import { HelpCircle, Search, Sparkles, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import { AIAssistantDrawer } from "../ai/AIAssistantDrawer"
 import { FullScreenAIAssistant } from "../ai/FullScreenAIAssistant"
@@ -15,11 +15,11 @@ import { SupportDropdown } from "./SupportDropdown"
 import { UserProfileMobile as UserProfileHeader } from "./UserProfile"
 
 export function HeaderActions() {
-    // const [isSearchOpen, setIsSearchOpen] = useState(false) // Hidden for now
+    const [isSearchOpen, setIsSearchOpen] = useState(false)
+    const [searchQuery, setSearchQuery] = useState("")
     const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false)
     const [isFullScreenAIOpen, setIsFullScreenAIOpen] = useState(false)
     const [isFullScreenNotificationsOpen, setIsFullScreenNotificationsOpen] = useState(false)
-    // const [isQRScannerOpen, setIsQRScannerOpen] = useState(false) // Hidden for now
     const [isMobile, setIsMobile] = useState(false)
 
     // Check if we're on mobile
@@ -38,22 +38,27 @@ export function HeaderActions() {
         return () => window.removeEventListener('resize', checkIfMobile)
     }, [])
 
-    // Set up global keyboard shortcuts - Search hidden for now
-    // useEffect(() => {
-    //     const handleKeyDown = (event: KeyboardEvent) => {
-    //         // Open search on Cmd+K or Ctrl+K
-    //         if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-    //             event.preventDefault()
-    //             setIsSearchOpen(true)
-    //         }
-    //     }
+    // Set up global keyboard shortcuts for search
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            // Open search on Cmd+K or Ctrl+K
+            if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+                event.preventDefault()
+                setIsSearchOpen(true)
+            }
+            // Close search on Escape
+            if (event.key === "Escape" && isSearchOpen) {
+                setIsSearchOpen(false)
+                setSearchQuery("")
+            }
+        }
 
-    //     document.addEventListener("keydown", handleKeyDown)
+        document.addEventListener("keydown", handleKeyDown)
 
-    //     return () => {
-    //         document.removeEventListener("keydown", handleKeyDown)
-    //     }
-    // }, [])
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown)
+        }
+    }, [isSearchOpen])
 
     // Dynamically import the FullScreenSearch component to avoid server/client mismatch - Hidden for now
     // const [FullScreenSearch, setFullScreenSearch] = useState<any>(null)
@@ -82,6 +87,31 @@ export function HeaderActions() {
     const handleAIFullScreen = () => {
         setIsAIDrawerOpen(false)
         setIsFullScreenAIOpen(true)
+    }
+
+    // Handle search functionality
+    const handleSearchToggle = () => {
+        setIsSearchOpen(!isSearchOpen)
+        if (!isSearchOpen) {
+            // Focus the input when opening
+            setTimeout(() => {
+                const searchInput = document.querySelector('#header-search-input') as HTMLInputElement
+                if (searchInput) {
+                    searchInput.focus()
+                }
+            }, 100)
+        } else {
+            setSearchQuery("")
+        }
+    }
+
+    const handleSearchSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (searchQuery.trim()) {
+            // Handle search logic here
+            console.log('Searching for:', searchQuery)
+            // You can add your search logic here
+        }
     }
 
     // Handle notifications button click - Hidden for now
@@ -134,18 +164,59 @@ export function HeaderActions() {
                     <span className="sr-only">Scan QR Code</span>
                 </Button> */}
 
-                {/* Search Button - Hidden for now */}
-                {/* <Button
-                    variant="ghost"
-                    onClick={() => setIsSearchOpen(true)}
-                    className={cn(
-                        "group flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
-                        focusRing
-                    )}
-                >
-                    <Search className="size-5" aria-hidden="true" />
-                    <span className="sr-only">Search</span>
-                </Button> */}
+                {/* Animated Search Bar */}
+                <div className="relative flex items-center">
+                    {/* Search Input - slides in from right */}
+                    <div className={cn(
+                        "absolute right-12 top-1/2 -translate-y-1/2 transition-all duration-300 ease-out",
+                        "z-[100]", // Higher z-index to ensure it appears above everything
+                        isSearchOpen 
+                            ? "opacity-100 scale-100 translate-x-0" 
+                            : "opacity-0 scale-95 translate-x-4 pointer-events-none"
+                    )}>
+                        <form onSubmit={handleSearchSubmit} className="flex items-center">
+                            <div className="relative">
+                                <input
+                                    id="header-search-input"
+                                    type="text"
+                                    placeholder="Search..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className={cn(
+                                        "w-64 pl-3 pr-8 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md",
+                                        "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100",
+                                        "placeholder-gray-500 dark:placeholder-gray-400",
+                                        "focus:ring-2 focus:ring-primary focus:border-primary",
+                                        "shadow-lg"
+                                    )}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={handleSearchToggle}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                >
+                                    <X className="size-4" />
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    {/* Search Button */}
+                    <Tooltip content="Search (⌘K)" side="bottom">
+                        <Button
+                            variant="ghost"
+                            onClick={handleSearchToggle}
+                            className={cn(
+                                "group flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
+                                focusRing,
+                                isSearchOpen && "text-primary dark:text-primary"
+                            )}
+                        >
+                            <Search className="size-5" aria-hidden="true" />
+                            <span className="sr-only">Search</span>
+                        </Button>
+                    </Tooltip>
+                </div>
 
                 <Tooltip content="Support" side="bottom">
                     <SupportDropdown align="end">
