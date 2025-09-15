@@ -12,14 +12,14 @@ export function SidebarToggle() {
         <button
             onClick={toggleCollapsed}
             className={cn(
-                "fixed z-50 hidden lg:flex items-center justify-center w-8 h-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full shadow-lg hover:shadow-xl transition-all duration-200",
+                "fixed z-50 hidden lg:flex items-center justify-center w-8 h-8 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full transition-all duration-200",
                 "hover:border-gray-400 dark:hover:border-gray-500",
-                // Position: 64px from top, halfway over the right side of sidebar
+                // Position: 48px from top (64px - 16px), halfway over the right side of sidebar
                 collapsed ? "left-12" : "left-60",
-                "top-16 transform transition-all duration-300",
+                "transform transition-all duration-300",
                 focusRing
             )}
-            style={{ top: '64px' }}
+            style={{ top: '48px' }}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
             {collapsed ? (
