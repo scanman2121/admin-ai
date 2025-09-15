@@ -341,7 +341,7 @@ export function Sidebar() {
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'portfolio' && !collapsed
-                    ? "pb-3"
+                    ? "pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -436,7 +436,7 @@ export function Sidebar() {
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'experienceManager' && !collapsed
-                    ? "pb-3"
+                    ? "pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -517,7 +517,7 @@ export function Sidebar() {
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'operations' && !collapsed
-                    ? "pb-3"
+                    ? "pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -598,7 +598,7 @@ export function Sidebar() {
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'commerce' && !collapsed
-                    ? "pb-3"
+                    ? "pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -679,7 +679,7 @@ export function Sidebar() {
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'files' && !collapsed
-                    ? "pb-3"
+                    ? "pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -760,7 +760,7 @@ export function Sidebar() {
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'intelligence' && !collapsed
-                    ? "pb-3"
+                    ? "pb-1"
                     : ""
                 )}>
                   {collapsed ? (
@@ -841,7 +841,7 @@ export function Sidebar() {
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-1"
                     : "",
                   openSection === 'settingsAndSetup' && !collapsed
-                    ? "pb-3"
+                    ? "pb-1"
                     : ""
                 )}>
                   {collapsed ? (
