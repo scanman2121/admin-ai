@@ -18,7 +18,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { cn, focusInput } from "@/lib/utils"
-import { Building, ChevronsUpDown, Info, Star } from "lucide-react"
+import { Building, ChevronsUpDown, Info, Pin } from "lucide-react"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
 import React, { useEffect, useMemo, useState } from "react"
@@ -113,7 +113,7 @@ export const BuildingsDropdownDesktop = () => {
   const [selectedBuilding, setSelectedBuilding] = React.useState(buildings[0])
   const [isAnimating, setIsAnimating] = React.useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [favoritedBuildings, setFavoritedBuildings] = useState<Set<string>>(new Set())
+  const [pinnedBuildingId, setPinnedBuildingId] = useState<string | null>(null)
   const dropdownTriggerRef = React.useRef<null | HTMLButtonElement>(null)
   const focusRef = React.useRef<null | HTMLButtonElement>(null)
   const pathname = usePathname()
@@ -129,10 +129,10 @@ export const BuildingsDropdownDesktop = () => {
     )
   }, [searchQuery])
 
-  // Get favorite building (first favorited building as default)
-  const favoriteBuilding = useMemo(() => {
-    return buildings.find(building => favoritedBuildings.has(building.value))
-  }, [favoritedBuildings])
+  // Get pinned building as default
+  const pinnedBuilding = useMemo(() => {
+    return buildings.find(building => building.value === pinnedBuildingId)
+  }, [pinnedBuildingId])
 
   // Effect to handle portfolio view toggle when navigating between pages
   useEffect(() => {
@@ -174,24 +174,22 @@ export const BuildingsDropdownDesktop = () => {
   const handlePortfolioToggle = (checked: boolean) => {
     if (portfolioAllowed) {
       setIsPortfolioView(checked);
-      // When leaving portfolio view, set to favorite building if available
-      if (!checked && favoriteBuilding) {
-        setSelectedBuilding(favoriteBuilding);
+      // When leaving portfolio view, set to pinned building if available
+      if (!checked && pinnedBuilding) {
+        setSelectedBuilding(pinnedBuilding);
       }
     }
   };
 
-  const handleToggleFavorite = (building: typeof buildings[0], e: React.MouseEvent) => {
+  const handleTogglePin = (building: typeof buildings[0], e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent building selection
-    setFavoritedBuildings(prev => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(building.value)) {
-        newFavorites.delete(building.value);
-      } else {
-        newFavorites.add(building.value);
-      }
-      return newFavorites;
-    });
+    // If clicking on the currently pinned building, unpin it
+    if (pinnedBuildingId === building.value) {
+      setPinnedBuildingId(null);
+    } else {
+      // Otherwise, pin this building (only one can be pinned at a time)
+      setPinnedBuildingId(building.value);
+    }
   };
 
   return (
@@ -303,7 +301,7 @@ export const BuildingsDropdownDesktop = () => {
               </DropdownMenuLabel>
               
               {/* Search input */}
-              <div className="px-2 pb-2">
+              <div className="px-2 py-2 mt-1 mb-1">
                 <Input
                   type="search"
                   placeholder="Search by building name"
@@ -337,19 +335,19 @@ export const BuildingsDropdownDesktop = () => {
                         </p>
                       </div>
                       <button
-                        onClick={(e) => handleToggleFavorite(building, e)}
+                        onClick={(e) => handleTogglePin(building, e)}
                         className={cn(
                           "p-1 rounded-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800",
                           "opacity-0 group-hover:opacity-100",
-                          favoritedBuildings.has(building.value) && "opacity-100"
+                          pinnedBuildingId === building.value && "opacity-100"
                         )}
                       >
-                        <Star
+                        <Pin
                           className={cn(
                             "size-4",
-                            favoritedBuildings.has(building.value)
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-gray-400 hover:text-yellow-400"
+                            pinnedBuildingId === building.value
+                              ? "fill-blue-500 text-blue-500"
+                              : "text-gray-400 hover:text-blue-500"
                           )}
                         />
                       </button>
