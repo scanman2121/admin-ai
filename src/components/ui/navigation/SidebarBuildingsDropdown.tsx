@@ -121,13 +121,24 @@ export const BuildingsDropdownDesktop = () => {
   const portfolioAllowed = isPortfolioViewAllowed(pathname)
   const pageName = getPageName(pathname)
 
-  // Filter buildings based on search query
+  // Filter and sort buildings based on search query and pinned status
   const filteredBuildings = useMemo(() => {
-    if (!searchQuery.trim()) return buildings
-    return buildings.filter(building =>
-      building.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  }, [searchQuery])
+    let filtered = buildings;
+    
+    // Apply search filter if there's a query
+    if (searchQuery.trim()) {
+      filtered = buildings.filter(building =>
+        building.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+    
+    // Sort to show pinned building first
+    return filtered.sort((a, b) => {
+      if (a.value === pinnedBuildingId) return -1; // Pinned building goes first
+      if (b.value === pinnedBuildingId) return 1;  // Other building goes after pinned
+      return 0; // Keep original order for non-pinned buildings
+    })
+  }, [searchQuery, pinnedBuildingId])
 
   // Get pinned building as default
   const pinnedBuilding = useMemo(() => {
