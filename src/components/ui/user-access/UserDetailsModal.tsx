@@ -420,7 +420,7 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-7xl w-full h-[85vh] overflow-hidden p-0 flex flex-col">
-                <DialogHeader className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+                <DialogHeader className="px-6 py-4 flex-shrink-0">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
@@ -448,53 +448,52 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                     </div>
                 </DialogHeader>
 
-                <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
-                    <TabNavigation>
-                        <TabNavigationLink
-                            asChild
-                            active={activeTab === "access"}
-                            onClick={() => setActiveTab("access")}
-                        >
-                            <button className="flex items-center gap-2">
-                                <Shield className="h-4 w-4" />
-                                Access
-                            </button>
-                        </TabNavigationLink>
-                        <TabNavigationLink
-                            asChild
-                            active={activeTab === "activity"}
-                            onClick={() => setActiveTab("activity")}
-                        >
-                            <button className="flex items-center gap-2">
-                                <Activity className="h-4 w-4" />
-                                Activity
-                            </button>
-                        </TabNavigationLink>
-                        <TabNavigationLink
-                            asChild
-                            active={activeTab === "upcoming-visits"}
-                            onClick={() => setActiveTab("upcoming-visits")}
-                        >
-                            <button className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4" />
-                                Upcoming visits
-                            </button>
-                        </TabNavigationLink>
-                        <TabNavigationLink
-                            asChild
-                            active={activeTab === "general"}
-                            onClick={() => setActiveTab("general")}
-                        >
-                            <button className="flex items-center gap-2">
-                                <User className="h-4 w-4" />
-                                General information
-                            </button>
-                        </TabNavigationLink>
-                    </TabNavigation>
-                </div>
-
-                <div className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-y-auto">
-                    <div className="p-6 h-full">
+                <div className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-y-auto flex flex-col">
+                    <div className="px-6 pt-4 pb-0 flex-shrink-0">
+                        <TabNavigation>
+                            <TabNavigationLink
+                                asChild
+                                active={activeTab === "access"}
+                                onClick={() => setActiveTab("access")}
+                            >
+                                <button className="flex items-center gap-2">
+                                    <Shield className="h-4 w-4" />
+                                    Access
+                                </button>
+                            </TabNavigationLink>
+                            <TabNavigationLink
+                                asChild
+                                active={activeTab === "activity"}
+                                onClick={() => setActiveTab("activity")}
+                            >
+                                <button className="flex items-center gap-2">
+                                    <Activity className="h-4 w-4" />
+                                    Activity
+                                </button>
+                            </TabNavigationLink>
+                            <TabNavigationLink
+                                asChild
+                                active={activeTab === "upcoming-visits"}
+                                onClick={() => setActiveTab("upcoming-visits")}
+                            >
+                                <button className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    Upcoming visits
+                                </button>
+                            </TabNavigationLink>
+                            <TabNavigationLink
+                                asChild
+                                active={activeTab === "general"}
+                                onClick={() => setActiveTab("general")}
+                            >
+                                <button className="flex items-center gap-2">
+                                    <User className="h-4 w-4" />
+                                    General information
+                                </button>
+                            </TabNavigationLink>
+                        </TabNavigation>
+                    </div>
+                    <div className="p-6 pt-6 flex-1">
                         {renderTabContent()}
                     </div>
                 </div>
