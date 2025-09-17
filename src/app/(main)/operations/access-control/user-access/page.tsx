@@ -7,6 +7,7 @@ import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { Badge } from "@/components/ui/badge"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
+import { CreateUserAccessModal } from "@/components/ui/user-access/CreateUserAccessModal"
 import { 
     DropdownMenu, 
     DropdownMenuContent, 
@@ -106,7 +107,7 @@ const userAccessData = [
 ]
 
 // Define columns for the user access table
-const createUserAccessColumns = (onUserClick: (user: any) => void) => [
+const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick: (user: any) => void) => [
     {
         id: "select",
         header: ({ table }: { table: any }) => (
@@ -260,7 +261,11 @@ const createUserAccessColumns = (onUserClick: (user: any) => void) => [
             
             if (acsStatus === "not-in-acs" || serviceRequest !== "No open requests") {
                 return (
-                    <Button variant="primary" size="sm">
+                    <Button 
+                        variant="primary" 
+                        size="sm"
+                        onClick={() => onCreateClick(row.original)}
+                    >
                         Create
                     </Button>
                 );
@@ -281,6 +286,8 @@ export default function AccessControlUserAccess() {
     const [data] = useState(userAccessData)
     const [selectedUser, setSelectedUser] = useState<typeof userAccessData[0] | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [selectedUserForAccess, setSelectedUserForAccess] = useState<typeof userAccessData[0] | null>(null)
+    const [isCreateAccessModalOpen, setIsCreateAccessModalOpen] = useState(false)
 
     const handleUserClick = (user: typeof userAccessData[0]) => {
         setSelectedUser(user)
@@ -292,7 +299,17 @@ export default function AccessControlUserAccess() {
         setSelectedUser(null)
     }
 
-    const userAccessColumns = createUserAccessColumns(handleUserClick)
+    const handleCreateAccessClick = (user: typeof userAccessData[0]) => {
+        setSelectedUserForAccess(user)
+        setIsCreateAccessModalOpen(true)
+    }
+
+    const handleCloseCreateAccessModal = () => {
+        setIsCreateAccessModalOpen(false)
+        setSelectedUserForAccess(null)
+    }
+
+    const userAccessColumns = createUserAccessColumns(handleUserClick, handleCreateAccessClick)
 
     return (
         <div className="space-y-6">
@@ -387,6 +404,13 @@ export default function AccessControlUserAccess() {
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
                 user={selectedUser}
+            />
+
+            {/* Create User Access Modal */}
+            <CreateUserAccessModal
+                isOpen={isCreateAccessModalOpen}
+                onClose={handleCloseCreateAccessModal}
+                user={selectedUserForAccess}
             />
         </div>
     )
