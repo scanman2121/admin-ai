@@ -26,7 +26,7 @@ import { Switch } from "@/components/Switch"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { companies, roles } from "@/data/data"
 import { showError, showSuccess } from "@/lib/toast"
-import { RiArrowLeftLine, RiBuildingLine, RiCheckLine, RiShieldUserLine, RiSmartphoneLine, RiUserLine } from "@remixicon/react"
+import { RiArrowLeftLine, RiBuildingLine, RiCheckLine, RiShieldUserLine, RiSmartphoneLine, RiUserLine, RiCloseLine, RiGroup2Line, RiSuitcaseLine, RiContactsLine } from "@remixicon/react"
 import { useState } from "react"
 
 export type ModalAddUserProps = {
@@ -41,7 +41,7 @@ interface InviteUser {
   mobileAccess: boolean
 }
 
-type UserType = "tenant_user" | "tenant_admin" | "building_admin"
+type UserType = "tenant" | "staff" | "broker" | "contact"
 
 export function ModalAddUser({ children }: ModalAddUserProps) {
   const [open, setOpen] = useState(false)
@@ -49,10 +49,9 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   
   // Step 1 state
-  const [userType, setUserType] = useState<UserType>("tenant_user")
+  const [userType, setUserType] = useState<UserType>("tenant")
   const [selectedBuilding, setSelectedBuilding] = useState("")
   const [emailInput, setEmailInput] = useState("")
-  const [defaultRole, setDefaultRole] = useState("")
   
   // Step 2 state
   const [inviteUsers, setInviteUsers] = useState<InviteUser[]>([])
@@ -62,22 +61,28 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
 
   const userTypes = [
     {
-      id: "tenant_user",
-      title: "Tenant User",
+      id: "tenant",
+      title: "Tenant",
       description: "Employees, residents, and any other person who uses the building.",
       icon: RiUserLine,
     },
     {
-      id: "tenant_admin", 
-      title: "Tenant Admin",
-      description: "A tenant administrator on the HqO platform can manage their employees, register visitors, control access, and more.",
-      icon: RiShieldUserLine,
+      id: "staff", 
+      title: "Staff",
+      description: "Building staff members who manage operations and provide services.",
+      icon: RiGroup2Line,
     },
     {
-      id: "building_admin",
-      title: "Building Admin", 
-      description: "Invite a HqO teammate to the HqO platform.",
-      icon: RiBuildingLine,
+      id: "broker",
+      title: "Broker", 
+      description: "Real estate brokers who facilitate leasing and property transactions.",
+      icon: RiSuitcaseLine,
+    },
+    {
+      id: "contact",
+      title: "Contact", 
+      description: "External contacts and vendors who work with the building.",
+      icon: RiContactsLine,
     },
   ]
 
@@ -93,18 +98,13 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
       return
     }
     
-    if (userType !== "building_admin" && !selectedBuilding) {
+    if (!selectedBuilding) {
       showError("Please select a building")
       return
     }
     
     if (!emailInput.trim()) {
       showError("Please enter at least one email address")
-      return
-    }
-    
-    if (!defaultRole) {
-      showError("Please select a role")
       return
     }
 
@@ -122,7 +122,7 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
     const newInviteUsers: InviteUser[] = emails.map((email, index) => ({
       id: `user-${index}`,
       email,
-      role: defaultRole,
+      role: roles[0].value, // Default to first role
       company: companies[0].value, // Default to first company
       mobileAccess: false,
     }))
@@ -165,10 +165,9 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
 
   const resetForm = () => {
     setStep(1)
-    setUserType("tenant_user")
+    setUserType("tenant")
     setSelectedBuilding("")
     setEmailInput("")
-    setDefaultRole("")
     setInviteUsers([])
     setSendInviteEmail(true)
   }
@@ -180,18 +179,63 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
     }
   }
 
+  const Stepper = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => (
+    <div className="flex items-center gap-2">
+      {Array.from({ length: totalSteps }, (_, index) => {
+        const stepNumber = index + 1
+        const isActive = stepNumber === currentStep
+        const isCompleted = stepNumber < currentStep
+        
+        return (
+          <div key={stepNumber} className="flex items-center">
+            <div
+              className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium ${
+                isCompleted
+                  ? 'bg-blue-600 text-white'
+                  : isActive
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+              }`}
+            >
+              {stepNumber}
+            </div>
+            {stepNumber < totalSteps && (
+              <div className={`w-8 h-px mx-2 ${isCompleted ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'}`} />
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+        {/* Modal Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex items-center gap-4">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Add user</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Invite users to your workspace and assign their access permissions
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <Stepper currentStep={step} totalSteps={2} />
+            <DialogClose asChild>
+              <button className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <RiCloseLine className="size-5 text-gray-500 dark:text-gray-400" />
+              </button>
+            </DialogClose>
+          </div>
+        </div>
+
+        {/* Modal Content */}
+        <div className="p-6">
         {step === 1 && (
           <>
-            <DialogHeader className="pb-6">
-              <DialogTitle>Add user</DialogTitle>
-              <DialogDescription>
-                Invite users to your workspace and assign their access permissions
-              </DialogDescription>
-            </DialogHeader>
             
             <div className="space-y-8">
               {/* User Type Selection */}
@@ -222,28 +266,26 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
               </div>
 
               {/* Building Selection */}
-              {userType !== "building_admin" && (
-                <div>
-                  <Label htmlFor="building-select" className="text-base font-semibold mb-2 block">
-                    Building
-                  </Label>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Select the building(s) the tenant occupies
-                  </p>
-                  <Select value={selectedBuilding} onValueChange={setSelectedBuilding}>
-                    <SelectTrigger id="building-select">
-                      <SelectValue placeholder="Select building(s)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {buildings.map((building) => (
-                        <SelectItem key={building.value} value={building.value}>
-                          {building.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+              <div>
+                <Label htmlFor="building-select" className="text-base font-semibold mb-2 block">
+                  Building
+                </Label>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  Select the building(s) the user will have access to
+                </p>
+                <Select value={selectedBuilding} onValueChange={setSelectedBuilding}>
+                  <SelectTrigger id="building-select">
+                    <SelectValue placeholder="Select building(s)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {buildings.map((building) => (
+                      <SelectItem key={building.value} value={building.value}>
+                        {building.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
               {/* Users Input */}
               <div>
@@ -269,25 +311,6 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
                   </p>
                 </div>
               </div>
-
-              {/* Role Selection */}
-              <div>
-                <Label htmlFor="role-select" className="text-base font-semibold mb-2 block">
-                  Select role(s) to apply to all users, or you can select roles individually in the next step
-                </Label>
-                <Select value={defaultRole} onValueChange={setDefaultRole}>
-                  <SelectTrigger id="role-select">
-                    <SelectValue placeholder="Select role(s)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {roles.map((role) => (
-                      <SelectItem key={role.value} value={role.value}>
-                        {role.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
             </div>
 
             <DialogFooter className="pt-6 border-t">
@@ -295,7 +318,7 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
                 <Button variant="secondary">Cancel</Button>
               </DialogClose>
               <Button onClick={handleStep1Submit}>
-                Continue
+                Next
               </Button>
             </DialogFooter>
           </>
@@ -303,24 +326,22 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
 
         {step === 2 && (
           <>
-            <DialogHeader className="pb-6">
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setStep(1)}
-                  className="p-1"
-                >
-                  <RiArrowLeftLine className="size-4" />
-                </Button>
-                <div>
-                  <DialogTitle>Review and finalize</DialogTitle>
-                  <DialogDescription>
-                    Review the users you're inviting and configure their settings
-                  </DialogDescription>
-                </div>
+            <div className="flex items-center gap-2 mb-6">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setStep(1)}
+                className="p-1"
+              >
+                <RiArrowLeftLine className="size-4" />
+              </Button>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Review and finalize</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Review the users you're inviting and configure their settings
+                </p>
               </div>
-            </DialogHeader>
+            </div>
 
             <div className="space-y-8">
               {/* Roles Review Table */}
@@ -449,6 +470,7 @@ export function ModalAddUser({ children }: ModalAddUserProps) {
             </DialogFooter>
           </>
         )}
+        </div>
       </DialogContent>
     </Dialog>
   )
