@@ -23,7 +23,7 @@ import { Switch } from "@/components/Switch"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { companies, roles } from "@/data/data"
 import { showError, showSuccess } from "@/lib/toast"
-import { RiArrowLeftLine, RiCheckLine, RiShieldUserLine, RiSmartphoneLine, RiUserLine, RiCloseLine, RiGroup2Line, RiSuitcaseLine, RiContactsLine } from "@remixicon/react"
+import { RiArrowLeftLine, RiCheckLine, RiSmartphoneLine, RiUserLine, RiCloseLine, RiGroup2Line, RiSuitcaseLine, RiContactsLine } from "@remixicon/react"
 import { useState } from "react"
 
 export type ModalAddUserProps = {
