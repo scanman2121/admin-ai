@@ -448,7 +448,7 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                     </div>
                 </DialogHeader>
 
-                <div className="px-6 pt-4 pb-4 bg-gray-50 dark:bg-gray-900 flex-shrink-0">
+                <div className="px-6 pt-4 pb-4 bg-white dark:bg-gray-800 flex-shrink-0">
                     <TabNavigation>
                         <TabNavigationLink
                             asChild
