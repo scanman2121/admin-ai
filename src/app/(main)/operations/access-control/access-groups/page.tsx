@@ -269,7 +269,7 @@ export default function AccessControlGroups() {
                 title="Access Control" 
                 customButtons={
                     <Button variant="primary">
-                        Create Access Group
+                        Create mapping
                     </Button>
                 }
             />

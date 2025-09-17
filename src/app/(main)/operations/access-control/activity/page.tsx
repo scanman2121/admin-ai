@@ -1,6 +1,5 @@
 "use client"
 
-import { Button } from "@/components/Button"
 import { PageHeader } from "@/components/PageHeader"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
@@ -181,11 +180,6 @@ export default function AccessControlActivity() {
             {/* Page Header */}
             <PageHeader 
                 title="Access Control" 
-                customButtons={
-                    <Button variant="primary">
-                        Add Access Point
-                    </Button>
-                }
             />
 
             {/* Tab Navigation */}

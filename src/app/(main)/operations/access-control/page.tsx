@@ -29,11 +29,6 @@ export default function AccessControl() {
             {/* Page Header */}
             <PageHeader 
                 title="Access Control" 
-                customButtons={
-                    <Button variant="primary">
-                        Add Access Point
-                    </Button>
-                }
             />
 
             {/* Tab Navigation */}
