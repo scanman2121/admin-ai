@@ -6,7 +6,7 @@ import { Button } from "@/components/Button"
 import { Badge } from "@/components/ui/badge"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { X, Edit3, Calendar, Shield, User } from "lucide-react"
+import { X, Calendar, Shield, User } from "lucide-react"
 
 interface UserDetailsModalProps {
     isOpen: boolean
@@ -333,10 +333,11 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                                 </p>
                             </div>
                         </div>
-                        <Button variant="secondary" size="sm">
-                            <Edit3 className="h-4 w-4 mr-2" />
-                            View Full Profile
-                        </Button>
+                        <div className="mr-8">
+                            <Button variant="secondary" size="sm">
+                                View Full Profile
+                            </Button>
+                        </div>
                     </div>
                 </DialogHeader>
 
