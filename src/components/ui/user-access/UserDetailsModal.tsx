@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { Button } from "@/components/Button"
 import { Badge } from "@/components/ui/badge"
@@ -24,6 +24,7 @@ interface UserDetailsModalProps {
         hasNotes: boolean
         badgeId?: string
     } | null
+    defaultTab?: string
 }
 
 // Mock data for upcoming visits
@@ -523,8 +524,15 @@ const accessColumns = [
     },
 ]
 
-export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProps) {
-    const [activeTab, setActiveTab] = useState("overview")
+export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview" }: UserDetailsModalProps) {
+    const [activeTab, setActiveTab] = useState(defaultTab)
+
+    // Reset to default tab when modal opens or defaultTab changes
+    useEffect(() => {
+        if (isOpen) {
+            setActiveTab(defaultTab)
+        }
+    }, [isOpen, defaultTab])
 
     if (!user) return null
 

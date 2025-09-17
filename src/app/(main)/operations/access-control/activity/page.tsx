@@ -3,6 +3,7 @@
 import { PageHeader } from "@/components/PageHeader"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
+import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -21,79 +22,143 @@ const activityData = [
         id: "1",
         dateTime: "Oct 18, 2024 12:37 PM",
         action: "Access granted",
-        accessPoint: "Test_",
-        company: "Garbarino Property Trust",
-        name: "Chris LastName Test",
-        host: "-",
+        accessPoint: "Main Entrance",
+        company: "TechCorp Solutions",
+        name: "Sarah Chen",
+        email: "sarah.chen@techcorp.com",
+        floorSuite: "Floor 12 / Suite 1205",
+        serviceRequest: "New Employee MKA Req...",
+        serviceRequestType: "New Employee Access",
+        serviceRequestStatus: "In Progress",
+        acsStatus: "active",
+        hasNotes: true,
+        badgeId: "HID-9XY34A",
+        host: "Reception Desk",
     },
     {
         id: "2",
         dateTime: "Oct 18, 2024 12:37 PM",
-        action: "Access granted",
-        accessPoint: "Test_",
-        company: "Garbarino Property Trust",
-        name: "Chris LastName Test",
+        action: "Access denied",
+        accessPoint: "Parking Garage",
+        company: "Thompson Consulting Group",
+        name: "Michael Thompson",
+        email: "michael.thompson@consulting.com",
+        floorSuite: "Floor 15 / Suite 1501",
+        serviceRequest: "No open requests",
+        serviceRequestType: null,
+        serviceRequestStatus: null,
+        acsStatus: "active",
+        hasNotes: false,
+        badgeId: "HID-8BC56D",
         host: "-",
     },
     {
         id: "3",
         dateTime: "Oct 18, 2024 11:02 AM",
         action: "Access granted",
-        accessPoint: "Test_",
-        company: "Garbarino Property Trust",
-        name: "Chris LastName Test",
-        host: "-",
+        accessPoint: "Main Entrance",
+        company: "HealthTech Innovations",
+        name: "Dr. Emma Davis",
+        email: "emma.davis@healthtech.com",
+        floorSuite: "Floor 6 / Suite 605",
+        serviceRequest: "Lost Device Access R...",
+        serviceRequestType: "Lost Device",
+        serviceRequestStatus: "In Progress",
+        acsStatus: "active",
+        hasNotes: false,
+        badgeId: "HID-7GH89E",
+        host: "Security",
     },
     {
         id: "4",
         dateTime: "Oct 16, 2024 10:20 AM",
         action: "Access granted",
-        accessPoint: "Test_",
-        company: "Garbarino Property Trust",
-        name: "Chris LastName Test",
+        accessPoint: "Side Entrance",
+        company: "Rodriguez & Associates Law",
+        name: "David Rodriguez",
+        email: "david.rodriguez@lawfirm.com",
+        floorSuite: "Floor 8 / Suite 802",
+        serviceRequest: "No open requests",
+        serviceRequestType: null,
+        serviceRequestStatus: null,
+        acsStatus: "active",
+        hasNotes: false,
+        badgeId: "HID-7AB12C",
         host: "-",
     },
     {
         id: "5",
         dateTime: "Oct 16, 2024 8:26 AM",
         action: "Access granted",
-        accessPoint: "Test_",
-        company: "Garbarino Property Trust",
-        name: "Chris LastName Test",
-        host: "-",
+        accessPoint: "Main Entrance",
+        company: "Wilson Strategic Consulting",
+        name: "Robert Wilson",
+        email: "robert.wilson@wilson-strategy.com",
+        floorSuite: "Floor 11 / Suite 1108",
+        serviceRequest: "No open requests",
+        serviceRequestType: null,
+        serviceRequestStatus: null,
+        acsStatus: "active",
+        hasNotes: false,
+        badgeId: "HID-5MN78F",
+        host: "Front Desk",
     },
     {
         id: "6",
         dateTime: "Oct 14, 2024 6:43 AM",
         action: "Access granted",
-        accessPoint: "Test_",
-        company: "Garbarino Property Trust",
-        name: "Chris LastName Test",
+        accessPoint: "Parking Garage",
+        company: "Park Architecture Studio",
+        name: "Lisa Park",
+        email: "lisa.park@parkarch.com",
+        floorSuite: "Floor 7 / Suite 705",
+        serviceRequest: "No open requests",
+        serviceRequestType: null,
+        serviceRequestStatus: null,
+        acsStatus: "revoked",
+        hasNotes: false,
+        badgeId: "HID-3PQ21G",
         host: "-",
     },
     {
         id: "7",
         dateTime: "Oct 14, 2024 6:43 AM",
         action: "Access granted",
-        accessPoint: "Test_",
-        company: "Garbarino Property Trust",
-        name: "Chris LastName Test",
-        host: "-",
+        accessPoint: "Main Entrance",
+        company: "TechCorp Solutions",
+        name: "Sarah Chen",
+        email: "sarah.chen@techcorp.com",
+        floorSuite: "Floor 12 / Suite 1205",
+        serviceRequest: "New Employee MKA Req...",
+        serviceRequestType: "New Employee Access",
+        serviceRequestStatus: "In Progress",
+        acsStatus: "active",
+        hasNotes: true,
+        badgeId: "HID-9XY34A",
+        host: "Reception Desk",
     },
     {
         id: "8",
         dateTime: "Oct 14, 2024 5:04 AM",
-        action: "Access granted",
-        accessPoint: "Test_",
-        company: "Garbarino Property Trust",
-        name: "Chris LastName Test",
+        action: "Access denied",
+        accessPoint: "Side Entrance",
+        company: "HealthTech Innovations",
+        name: "Dr. Emma Davis",
+        email: "emma.davis@healthtech.com",
+        floorSuite: "Floor 6 / Suite 605",
+        serviceRequest: "Lost Device Access R...",
+        serviceRequestType: "Lost Device",
+        serviceRequestStatus: "In Progress",
+        acsStatus: "active",
+        hasNotes: false,
+        badgeId: "HID-7GH89E",
         host: "-",
     },
 ]
 
 
-// Define columns for the activity table
-const activityColumns = [
+// Define columns for the activity table with click handler
+const createActivityColumns = (onNameClick: (user: any) => void) => [
     {
         accessorKey: "dateTime",
         header: "Date and time",
@@ -148,12 +213,12 @@ const activityColumns = [
         cell: ({ row }: { row: any }) => {
             const name = row.getValue("name") as string;
             return (
-                <Link 
-                    href={`/users/${row.original.id}`}
-                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 font-medium"
+                <button
+                    onClick={() => onNameClick(row.original)}
+                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 font-medium text-left"
                 >
                     {name}
-                </Link>
+                </button>
             );
         },
     },
@@ -174,6 +239,20 @@ const activityColumns = [
 export default function AccessControlActivity() {
     const pathname = usePathname()
     const [data] = useState(activityData)
+    const [selectedUser, setSelectedUser] = useState<typeof activityData[0] | null>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const handleNameClick = (user: typeof activityData[0]) => {
+        setSelectedUser(user)
+        setIsModalOpen(true)
+    }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false)
+        setSelectedUser(null)
+    }
+
+    const activityColumns = createActivityColumns(handleNameClick)
 
     return (
         <div className="space-y-6">
@@ -202,6 +281,14 @@ export default function AccessControlActivity() {
                 columns={activityColumns}
                 data={data}
                 searchKey="name"
+            />
+
+            {/* User Details Modal */}
+            <UserDetailsModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                user={selectedUser}
+                defaultTab="activity"
             />
         </div>
     )
