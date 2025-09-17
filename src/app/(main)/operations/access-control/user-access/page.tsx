@@ -321,6 +321,15 @@ export default function AccessControlUserAccess() {
         // For now, we'll just log the action
     }
 
+    const handleReviewPendingUsers = () => {
+        // Filter users awaiting approval (not in ACS with service requests)
+        const pendingUsers = data.filter(user => 
+            user.acsStatus === "not-in-acs" && user.serviceRequest !== "No open requests"
+        )
+        setSelectedUsersForAccess(pendingUsers)
+        setIsCreateAccessModalOpen(true)
+    }
+
     const userAccessColumns = createUserAccessColumns(handleUserClick, handleCreateAccessClick)
 
     return (
@@ -393,9 +402,11 @@ export default function AccessControlUserAccess() {
                         </div>
                     </div>
                     <Button 
-                        variant="secondary"
+                        variant="ghost"
+                        onClick={handleReviewPendingUsers}
+                        className="text-primary-600 hover:text-primary-700 hover:bg-primary-50 dark:text-primary-400 dark:hover:text-primary-300 dark:hover:bg-primary-900/20 font-medium"
                     >
-                        Bulk approve
+                        Review
                     </Button>
                 </div>
             </div>
