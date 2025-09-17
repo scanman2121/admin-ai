@@ -59,6 +59,31 @@ export function DataTableToolbar<TData>({
                         ]}
                     />
                 )}
+                {table.getColumn("company") && (
+                    <DataTableFacetedFilter
+                        column={table.getColumn("company")}
+                        title="Company"
+                        options={[
+                            { value: "TechCorp Solutions", label: "TechCorp Solutions" },
+                            { value: "Rodriguez & Associates Law", label: "Rodriguez & Associates Law" },
+                            { value: "Thompson Consulting Group", label: "Thompson Consulting Group" },
+                            { value: "HealthTech Innovations", label: "HealthTech Innovations" },
+                            { value: "Wilson Strategic Consulting", label: "Wilson Strategic Consulting" },
+                            { value: "Park Architecture Studio", label: "Park Architecture Studio" }
+                        ]}
+                    />
+                )}
+                {table.getColumn("acsStatus") && (
+                    <DataTableFacetedFilter
+                        column={table.getColumn("acsStatus")}
+                        title="Status"
+                        options={[
+                            { value: "active", label: "Active" },
+                            { value: "not-in-acs", label: "Not in ACS" },
+                            { value: "revoked", label: "Revoked" }
+                        ]}
+                    />
+                )}
                 {isFiltered && (
                     <Button
                         variant="ghost"

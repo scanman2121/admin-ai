@@ -15,7 +15,7 @@ import {
     DropdownMenuItem, 
     DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
-import { ArrowRight, Users, ChevronDown, User, Building } from "lucide-react"
+import { Users, ChevronDown, User, Building } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -393,13 +393,9 @@ export default function AccessControlUserAccess() {
                         </div>
                     </div>
                     <Button 
-                        variant="primary" 
-                        className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
+                        variant="secondary"
                     >
-                        <span className="flex items-center gap-2">
-                            Bulk approve
-                            <ArrowRight className="h-4 w-4" />
-                        </span>
+                        Bulk approve
                     </Button>
                 </div>
             </div>
