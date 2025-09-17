@@ -1,6 +1,14 @@
 "use client"
 
-import { PageTemplate } from "@/components/PageTemplate"
+import { useState } from "react"
+import { Button } from "@/components/Button"
+import { PageHeader } from "@/components/PageHeader"
+import { DataTable } from "@/components/ui/data-table/DataTable"
+import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
+import { Badge } from "@/components/ui/badge"
+import { ArrowRight, Users } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 // Define tabs for the Access Control User Access page
 const tabs = [
@@ -10,36 +18,322 @@ const tabs = [
     { name: "User access", href: "/operations/access-control/user-access" },
 ]
 
-export default function AccessControlUserAccess() {
-    return (
-        <PageTemplate
-            title="Access Control"
-            primaryCta="Grant Access"
-            tabs={tabs}
-        >
-            <div className="space-y-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50">
-                    User Access Management
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400">
-                    Review and manage user access requests and permissions.
-                </p>
-                
-                {/* User access content will go here */}
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/30 rounded-lg p-6">
-                    <h3 className="text-lg font-medium text-blue-900 dark:text-blue-100 mb-2">
-                        Pending Access Requests
-                    </h3>
-                    <p className="text-blue-700 dark:text-blue-300 mb-4">
-                        You have 3 users awaiting access approval.
-                    </p>
-                    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-8 text-center">
-                        <p className="text-gray-500 dark:text-gray-400">
-                            User access request management coming soon...
-                        </p>
+// Mock data for user access management
+const userAccessData = [
+    {
+        id: "1",
+        name: "Sarah Chen",
+        email: "sarah.chen@techcorp.com",
+        company: "TechCorp Solutions",
+        floorSuite: "Floor 12 / Suite 1205",
+        serviceRequest: "New Employee MKA Req...",
+        serviceRequestType: "New Employee Access",
+        serviceRequestStatus: "In Progress",
+        acsStatus: "not-in-acs",
+        hasNotes: true,
+    },
+    {
+        id: "2",
+        name: "David Rodriguez",
+        email: "david.rodriguez@lawfirm.com",
+        company: "Rodriguez & Associates Law",
+        floorSuite: "Floor 8 / Suite 802",
+        serviceRequest: "No open requests",
+        serviceRequestType: null,
+        serviceRequestStatus: null,
+        acsStatus: "active",
+        hasNotes: false,
+        badgeId: "HID-7AB12C",
+    },
+    {
+        id: "3",
+        name: "Michael Thompson",
+        email: "michael.thompson@consulting.com",
+        company: "Thompson Consulting Group",
+        floorSuite: "Floor 15 / Suite 1501",
+        serviceRequest: "No open requests",
+        serviceRequestType: null,
+        serviceRequestStatus: null,
+        acsStatus: "active",
+        hasNotes: false,
+        badgeId: "HID-9XY34Z",
+    },
+    {
+        id: "4",
+        name: "Emily Watson",
+        email: "emily.watson@healthtech.com",
+        company: "HealthTech Innovations",
+        floorSuite: "Floor 6 / Suite 605",
+        serviceRequest: "Lost Device Access R...",
+        serviceRequestType: "Lost Device",
+        serviceRequestStatus: "In Progress",
+        acsStatus: "active",
+        hasNotes: false,
+    },
+    {
+        id: "5",
+        name: "James Wilson",
+        email: "james.wilson@consulting.com",
+        company: "Wilson Strategic Consulting",
+        floorSuite: "Floor 11 / Suite 1108",
+        serviceRequest: "No open requests",
+        serviceRequestType: null,
+        serviceRequestStatus: null,
+        acsStatus: "active",
+        hasNotes: false,
+        badgeId: "HID-5MN67P",
+    },
+    {
+        id: "6",
+        name: "Lisa Park",
+        email: "lisa.park@architecture.com",
+        company: "Park Architecture Studio",
+        floorSuite: "Floor 7 / Suite 705",
+        serviceRequest: "No open requests",
+        serviceRequestType: null,
+        serviceRequestStatus: null,
+        acsStatus: "revoked",
+        hasNotes: false,
+        badgeId: "HID-2QR89S",
+    },
+]
+
+// Define columns for the user access table
+const userAccessColumns = [
+    {
+        id: "select",
+        header: ({ table }: { table: any }) => (
+            <input
+                type="checkbox"
+                checked={table.getIsAllPageRowsSelected()}
+                onChange={table.getToggleAllPageRowsSelectedHandler()}
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+        ),
+        cell: ({ row }: { row: any }) => (
+            <input
+                type="checkbox"
+                checked={row.getIsSelected()}
+                onChange={row.getToggleSelectedHandler()}
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
+        accessorKey: "name",
+        header: "User",
+        cell: ({ row }: { row: any }) => {
+            const name = row.getValue("name") as string;
+            const email = row.original.email as string;
+            return (
+                <div>
+                    <Link 
+                        href={`/users/${row.original.id}`}
+                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 font-medium"
+                    >
+                        {name}
+                    </Link>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {email}
                     </div>
                 </div>
+            );
+        },
+    },
+    {
+        accessorKey: "company",
+        header: "Company",
+        cell: ({ row }: { row: any }) => {
+            const company = row.getValue("company") as string;
+            return (
+                <span className="text-gray-900 dark:text-gray-50">
+                    {company}
+                </span>
+            );
+        },
+    },
+    {
+        accessorKey: "floorSuite",
+        header: "Floor/Suite",
+        cell: ({ row }: { row: any }) => {
+            const floorSuite = row.getValue("floorSuite") as string;
+            return (
+                <span className="text-gray-900 dark:text-gray-50">
+                    {floorSuite}
+                </span>
+            );
+        },
+    },
+    {
+        accessorKey: "serviceRequest",
+        header: "Service Request",
+        cell: ({ row }: { row: any }) => {
+            const serviceRequest = row.getValue("serviceRequest") as string;
+            const serviceRequestType = row.original.serviceRequestType as string;
+            const serviceRequestStatus = row.original.serviceRequestStatus as string;
+            const hasNotes = row.original.hasNotes as boolean;
+            
+            if (serviceRequest === "No open requests") {
+                return (
+                    <span className="text-gray-500 dark:text-gray-400">
+                        No open requests
+                    </span>
+                );
+            }
+            
+            return (
+                <div>
+                    <Link 
+                        href={`/operations/access-control/requests/${row.original.id}`}
+                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 font-medium"
+                    >
+                        {serviceRequest}
+                    </Link>
+                    <div className="flex items-center gap-2 mt-1">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                            {serviceRequestType} • {serviceRequestStatus}
+                        </span>
+                        {hasNotes && (
+                            <span className="text-sm text-orange-600 dark:text-orange-400">
+                                📝 Has notes
+                            </span>
+                        )}
+                    </div>
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "acsStatus",
+        header: "ACS Status",
+        cell: ({ row }: { row: any }) => {
+            const acsStatus = row.getValue("acsStatus") as string;
+            const badgeId = row.original.badgeId as string;
+            
+            const getStatusBadge = (status: string) => {
+                switch (status) {
+                    case "active":
+                        return (
+                            <Badge 
+                                variant="default" 
+                                className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/30"
+                            >
+                                • Active
+                            </Badge>
+                        );
+                    case "not-in-acs":
+                        return <Badge variant="destructive">• Not in ACS</Badge>;
+                    case "revoked":
+                        return <Badge variant="destructive">• Revoked</Badge>;
+                    default:
+                        return <Badge variant="secondary">• Unknown</Badge>;
+                }
+            };
+            
+            return (
+                <div>
+                    {getStatusBadge(acsStatus)}
+                    {badgeId && (
+                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            {badgeId}
+                        </div>
+                    )}
+                </div>
+            );
+        },
+    },
+    {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }: { row: any }) => {
+            const acsStatus = row.original.acsStatus as string;
+            const serviceRequest = row.original.serviceRequest as string;
+            
+            if (acsStatus === "not-in-acs" || serviceRequest !== "No open requests") {
+                return (
+                    <Button variant="primary" size="sm">
+                        Create
+                    </Button>
+                );
+            }
+            
+            return (
+                <Button variant="secondary" size="sm">
+                    View
+                </Button>
+            );
+        },
+        enableSorting: false,
+    },
+]
+
+export default function AccessControlUserAccess() {
+    const pathname = usePathname()
+    const [data] = useState(userAccessData)
+
+    return (
+        <div className="space-y-6">
+            {/* Page Header */}
+            <PageHeader 
+                title="Access Control" 
+                customButtons={
+                    <Button variant="primary">
+                        Grant Access
+                    </Button>
+                }
+            />
+
+            {/* Tab Navigation */}
+            <TabNavigation>
+                {tabs.map((tab) => (
+                    <TabNavigationLink
+                        key={tab.name}
+                        asChild
+                        active={pathname === tab.href}
+                    >
+                        <Link href={tab.href}>
+                            {tab.name}
+                        </Link>
+                    </TabNavigationLink>
+                ))}
+            </TabNavigation>
+
+            {/* Access Banner */}
+            <div className="relative overflow-hidden rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800/30 dark:bg-blue-900/20">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
+                            <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                3 users awaiting access approval
+                            </p>
+                            <p className="text-sm text-blue-700 dark:text-blue-300">
+                                Review and approve pending access requests below
+                            </p>
+                        </div>
+                    </div>
+                    <Button 
+                        variant="primary" 
+                        className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
+                    >
+                        <span className="flex items-center gap-2">
+                            Bulk approve
+                            <ArrowRight className="h-4 w-4" />
+                        </span>
+                    </Button>
+                </div>
             </div>
-        </PageTemplate>
+
+            {/* Data Table */}
+            <DataTable
+                columns={userAccessColumns}
+                data={data}
+                searchKey="name"
+            />
+        </div>
     )
 }
