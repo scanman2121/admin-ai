@@ -8,8 +8,6 @@ import {
     DialogClose,
     DialogContent,
     DialogFooter,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/Dialog"
 import { Label } from "@/components/Label"
