@@ -204,6 +204,36 @@ const activityColumns = [
             );
         },
     },
+    {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }: { row: any }) => {
+            const rowId = row.original.id as string;
+            
+            // Third row (id: "3") gets "Remove access" button in red
+            if (rowId === "3") {
+                return (
+                    <Button 
+                        variant="destructive" 
+                        size="sm"
+                    >
+                        Remove access
+                    </Button>
+                );
+            }
+            
+            // Other rows get standard action buttons
+            return (
+                <Button 
+                    variant="secondary" 
+                    size="sm"
+                >
+                    View details
+                </Button>
+            );
+        },
+        enableSorting: false,
+    },
 ]
 
 // Define columns for service requests table
