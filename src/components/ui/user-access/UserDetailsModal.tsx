@@ -6,7 +6,7 @@ import { Button } from "@/components/Button"
 import { Badge } from "@/components/ui/badge"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { X, Calendar, Shield, User } from "lucide-react"
+import { X, Calendar, Shield, User, Activity } from "lucide-react"
 
 interface UserDetailsModalProps {
     isOpen: boolean
@@ -38,6 +38,45 @@ const upcomingVisitsData = [
     }
 ]
 
+// Mock data for activity log
+const activityData = [
+    {
+        id: "1",
+        dateTime: "Dec 10, 2024 9:15 AM",
+        action: "Access granted",
+        accessPoint: "Main Entrance",
+        details: "Badge scan successful"
+    },
+    {
+        id: "2",
+        dateTime: "Dec 10, 2024 9:14 AM",
+        action: "Access granted", 
+        accessPoint: "Parking Garage",
+        details: "Mobile app access"
+    },
+    {
+        id: "3",
+        dateTime: "Dec 9, 2024 5:30 PM",
+        action: "Access granted",
+        accessPoint: "Main Entrance",
+        details: "Badge scan successful"
+    },
+    {
+        id: "4",
+        dateTime: "Dec 9, 2024 8:45 AM",
+        action: "Access granted",
+        accessPoint: "Main Entrance", 
+        details: "Badge scan successful"
+    },
+    {
+        id: "5",
+        dateTime: "Dec 8, 2024 6:15 PM",
+        action: "Access denied",
+        accessPoint: "Conference Room A",
+        details: "Insufficient permissions"
+    }
+]
+
 // Mock data for access information
 const accessData = [
     {
@@ -61,6 +100,62 @@ const accessData = [
         level: "Scheduled Access",
         status: "Pending"
     }
+]
+
+// Define columns for activity table
+const activityColumns = [
+    {
+        accessorKey: "dateTime",
+        header: "Date and Time",
+        cell: ({ row }: { row: any }) => {
+            const dateTime = row.getValue("dateTime") as string;
+            return (
+                <span className="text-gray-900 dark:text-gray-50 font-medium">
+                    {dateTime}
+                </span>
+            );
+        },
+    },
+    {
+        accessorKey: "action",
+        header: "Action",
+        cell: ({ row }: { row: any }) => {
+            const action = row.getValue("action") as string;
+            const isGranted = action === "Access granted";
+            return (
+                <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${isGranted ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <span className="text-gray-900 dark:text-gray-50">
+                        {action}
+                    </span>
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "accessPoint",
+        header: "Access Point",
+        cell: ({ row }: { row: any }) => {
+            const accessPoint = row.getValue("accessPoint") as string;
+            return (
+                <span className="text-gray-900 dark:text-gray-50">
+                    {accessPoint}
+                </span>
+            );
+        },
+    },
+    {
+        accessorKey: "details",
+        header: "Details",
+        cell: ({ row }: { row: any }) => {
+            const details = row.getValue("details") as string;
+            return (
+                <span className="text-gray-600 dark:text-gray-400">
+                    {details}
+                </span>
+            );
+        },
+    },
 ]
 
 // Define columns for upcoming visits table
@@ -176,7 +271,7 @@ const accessColumns = [
 ]
 
 export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProps) {
-    const [activeTab, setActiveTab] = useState("upcoming-visits")
+    const [activeTab, setActiveTab] = useState("access")
 
     if (!user) return null
 
@@ -206,6 +301,30 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
 
     const renderTabContent = () => {
         switch (activeTab) {
+            case "access":
+                return (
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+                        <div className="p-6">
+                            <DataTable
+                                columns={accessColumns}
+                                data={accessData}
+                                searchKey="accessPoint"
+                            />
+                        </div>
+                    </div>
+                )
+            case "activity":
+                return (
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+                        <div className="p-6">
+                            <DataTable
+                                columns={activityColumns}
+                                data={activityData}
+                                searchKey="action"
+                            />
+                        </div>
+                    </div>
+                )
             case "upcoming-visits":
                 return (
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
@@ -227,18 +346,6 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                                     </p>
                                 </div>
                             )}
-                        </div>
-                    </div>
-                )
-            case "access":
-                return (
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
-                        <div className="p-6">
-                            <DataTable
-                                columns={accessColumns}
-                                data={accessData}
-                                searchKey="accessPoint"
-                            />
                         </div>
                     </div>
                 )
@@ -345,22 +452,32 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                     <TabNavigation>
                         <TabNavigationLink
                             asChild
-                            active={activeTab === "upcoming-visits"}
-                            onClick={() => setActiveTab("upcoming-visits")}
-                        >
-                            <button className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4" />
-                                Upcoming visits
-                            </button>
-                        </TabNavigationLink>
-                        <TabNavigationLink
-                            asChild
                             active={activeTab === "access"}
                             onClick={() => setActiveTab("access")}
                         >
                             <button className="flex items-center gap-2">
                                 <Shield className="h-4 w-4" />
                                 Access
+                            </button>
+                        </TabNavigationLink>
+                        <TabNavigationLink
+                            asChild
+                            active={activeTab === "activity"}
+                            onClick={() => setActiveTab("activity")}
+                        >
+                            <button className="flex items-center gap-2">
+                                <Activity className="h-4 w-4" />
+                                Activity
+                            </button>
+                        </TabNavigationLink>
+                        <TabNavigationLink
+                            asChild
+                            active={activeTab === "upcoming-visits"}
+                            onClick={() => setActiveTab("upcoming-visits")}
+                        >
+                            <button className="flex items-center gap-2">
+                                <Calendar className="h-4 w-4" />
+                                Upcoming visits
                             </button>
                         </TabNavigationLink>
                         <TabNavigationLink
