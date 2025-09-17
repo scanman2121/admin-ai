@@ -1,13 +1,12 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/Button"
-import { DataTable } from "@/components/ui/data-table/DataTable"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { PageHeader } from "@/components/PageHeader"
+import { DataTable } from "@/components/ui/data-table/DataTable"
+import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useState } from "react"
 
 // Define tabs for the Access Control Access Groups page
 const tabs = [
@@ -92,87 +91,90 @@ const accessGroupOptions = [
 ]
 
 // Floor selector component
-const FloorSelector = ({ floors, onSelect }: { floors: number[], onSelect: (floor: string) => void }) => {
-    const [selectedFloor, setSelectedFloor] = useState(floors[0]?.toString() || "");
+const FloorSelector = ({ floors, onSelect }: { floors: number[], onSelect: (floors: string[]) => void }) => {
+    const [selectedFloors, setSelectedFloors] = useState<string[]>(floors.map(f => f.toString()));
     
-    const handleChange = (value: string) => {
-        setSelectedFloor(value);
-        onSelect(value);
+    const handleFloorToggle = (floor: string) => {
+        const newSelected = selectedFloors.includes(floor)
+            ? selectedFloors.filter(f => f !== floor)
+            : [...selectedFloors, floor];
+        setSelectedFloors(newSelected);
+        onSelect(newSelected);
     };
     
     return (
-        <Select value={selectedFloor} onValueChange={handleChange}>
-            <SelectTrigger className="w-20 h-8">
-                <SelectValue>
-                    {floors.length === 1 ? floors[0] : `${floors[0]}${floors.length > 1 ? '...' : ''}`}
-                </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-                {floors.map((floor) => (
-                    <SelectItem key={floor} value={floor.toString()}>
-                        {floor}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
+        <div className="space-y-1">
+            {floors.map((floor) => (
+                <label key={floor} className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                        type="checkbox"
+                        checked={selectedFloors.includes(floor.toString())}
+                        onChange={() => handleFloorToggle(floor.toString())}
+                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Floor {floor}</span>
+                </label>
+            ))}
+        </div>
     );
 };
 
-// Suite selector component
-const SuiteSelector = ({ suites, onSelect }: { suites: string[][], onSelect: (suite: string) => void }) => {
+// Suite selector component  
+const SuiteSelector = ({ suites, onSelect }: { suites: string[][], onSelect: (suites: string[]) => void }) => {
     const flatSuites = suites.flat();
-    const [selectedSuite, setSelectedSuite] = useState(flatSuites[0] || "");
+    const [selectedSuites, setSelectedSuites] = useState<string[]>(flatSuites);
     
-    const handleChange = (value: string) => {
-        setSelectedSuite(value);
-        onSelect(value);
+    const handleSuiteToggle = (suite: string) => {
+        const newSelected = selectedSuites.includes(suite)
+            ? selectedSuites.filter(s => s !== suite)
+            : [...selectedSuites, suite];
+        setSelectedSuites(newSelected);
+        onSelect(newSelected);
     };
     
     return (
-        <Select value={selectedSuite} onValueChange={handleChange}>
-            <SelectTrigger className="w-24 h-8">
-                <SelectValue>
-                    {flatSuites.length <= 2 
-                        ? flatSuites.join(", ")
-                        : `${flatSuites.slice(0, 2).join(", ")}...`
-                    }
-                </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-                {flatSuites.map((suite) => (
-                    <SelectItem key={suite} value={suite}>
-                        {suite}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
+        <div className="space-y-1">
+            {flatSuites.map((suite) => (
+                <label key={suite} className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                        type="checkbox"
+                        checked={selectedSuites.includes(suite)}
+                        onChange={() => handleSuiteToggle(suite)}
+                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Suite {suite}</span>
+                </label>
+            ))}
+        </div>
     );
 };
 
 // Access group selector component
-const AccessGroupSelector = ({ accessGroups, onSelect }: { accessGroups: string[], onSelect: (group: string) => void }) => {
-    const [selectedGroup, setSelectedGroup] = useState(accessGroups[0] || "");
+const AccessGroupSelector = ({ accessGroups, onSelect }: { accessGroups: string[], onSelect: (groups: string[]) => void }) => {
+    const [selectedGroups, setSelectedGroups] = useState<string[]>(accessGroups);
     
-    const handleChange = (value: string) => {
-        setSelectedGroup(value);
-        onSelect(value);
+    const handleGroupToggle = (group: string) => {
+        const newSelected = selectedGroups.includes(group)
+            ? selectedGroups.filter(g => g !== group)
+            : [...selectedGroups, group];
+        setSelectedGroups(newSelected);
+        onSelect(newSelected);
     };
     
     return (
-        <Select value={selectedGroup} onValueChange={handleChange}>
-            <SelectTrigger className="w-40 h-8">
-                <SelectValue>
-                    {selectedGroup}
-                </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-                {accessGroupOptions.map((group) => (
-                    <SelectItem key={group} value={group}>
-                        {group}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
+        <div className="space-y-1 max-h-32 overflow-y-auto">
+            {accessGroupOptions.map((group) => (
+                <label key={group} className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                        type="checkbox"
+                        checked={selectedGroups.includes(group)}
+                        onChange={() => handleGroupToggle(group)}
+                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{group}</span>
+                </label>
+            ))}
+        </div>
     );
 };
 
@@ -201,7 +203,7 @@ const createTenantMappingColumns = (onFloorSelect: any, onSuiteSelect: any, onGr
             return (
                 <FloorSelector 
                     floors={floors} 
-                    onSelect={(floor) => onFloorSelect(row.original.id, floor)}
+                    onSelect={(floors) => onFloorSelect(row.original.id, floors)}
                 />
             );
         },
@@ -214,7 +216,7 @@ const createTenantMappingColumns = (onFloorSelect: any, onSuiteSelect: any, onGr
             return (
                 <SuiteSelector 
                     suites={suites} 
-                    onSelect={(suite) => onSuiteSelect(row.original.id, suite)}
+                    onSelect={(suites) => onSuiteSelect(row.original.id, suites)}
                 />
             );
         },
@@ -227,7 +229,7 @@ const createTenantMappingColumns = (onFloorSelect: any, onSuiteSelect: any, onGr
             return (
                 <AccessGroupSelector 
                     accessGroups={accessGroups} 
-                    onSelect={(group) => onGroupSelect(row.original.id, group)}
+                    onSelect={(groups) => onGroupSelect(row.original.id, groups)}
                 />
             );
         },
@@ -239,18 +241,18 @@ export default function AccessControlGroups() {
     const [data] = useState(tenantMappingData)
 
     // Handlers for dropdown changes
-    const handleFloorSelect = (tenantId: string, floor: string) => {
-        console.log(`Tenant ${tenantId} selected floor ${floor}`);
+    const handleFloorSelect = (tenantId: string, floors: string[]) => {
+        console.log(`Tenant ${tenantId} selected floors:`, floors);
         // In a real app, this would update the backend
     };
 
-    const handleSuiteSelect = (tenantId: string, suite: string) => {
-        console.log(`Tenant ${tenantId} selected suite ${suite}`);
+    const handleSuiteSelect = (tenantId: string, suites: string[]) => {
+        console.log(`Tenant ${tenantId} selected suites:`, suites);
         // In a real app, this would update the backend
     };
 
-    const handleGroupSelect = (tenantId: string, group: string) => {
-        console.log(`Tenant ${tenantId} selected access group ${group}`);
+    const handleGroupSelect = (tenantId: string, groups: string[]) => {
+        console.log(`Tenant ${tenantId} selected access groups:`, groups);
         // In a real app, this would update the backend
     };
 
