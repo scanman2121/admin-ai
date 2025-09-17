@@ -7,7 +7,13 @@ import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { Badge } from "@/components/ui/badge"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
-import { ArrowRight, Users } from "lucide-react"
+import { 
+    DropdownMenu, 
+    DropdownMenuContent, 
+    DropdownMenuItem, 
+    DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu"
+import { ArrowRight, Users, ChevronDown, User, Building } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -294,9 +300,35 @@ export default function AccessControlUserAccess() {
             <PageHeader 
                 title="Access Control" 
                 customButtons={
-                    <Button variant="primary">
-                        Grant Access
-                    </Button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="primary" className="flex items-center gap-2">
+                                Grant access
+                                <ChevronDown className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-80">
+                            <DropdownMenuItem className="flex items-start gap-3 p-4 cursor-pointer">
+                                <User className="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5" />
+                                <div className="flex-1">
+                                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                                        Individual
+                                    </div>
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex items-start gap-3 p-4 cursor-pointer">
+                                <Building className="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5" />
+                                <div className="flex-1">
+                                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                                        Bulk
+                                    </div>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                        Best for onboarding new tenant companies
+                                    </div>
+                                </div>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 }
             />
 
