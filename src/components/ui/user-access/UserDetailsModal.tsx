@@ -303,98 +303,112 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
         switch (activeTab) {
             case "access":
                 return (
-                    <DataTable
-                        columns={accessColumns}
-                        data={accessData}
-                        searchKey="accessPoint"
-                    />
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+                        <div className="p-6">
+                            <DataTable
+                                columns={accessColumns}
+                                data={accessData}
+                                searchKey="accessPoint"
+                            />
+                        </div>
+                    </div>
                 )
             case "activity":
                 return (
-                    <DataTable
-                        columns={activityColumns}
-                        data={activityData}
-                        searchKey="action"
-                    />
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+                        <div className="p-6">
+                            <DataTable
+                                columns={activityColumns}
+                                data={activityData}
+                                searchKey="action"
+                            />
+                        </div>
+                    </div>
                 )
             case "upcoming-visits":
                 return (
-                    <>
-                        {upcomingVisitsData.length > 0 ? (
-                            <DataTable
-                                columns={visitsColumns}
-                                data={upcomingVisitsData}
-                                searchKey="visitor"
-                            />
-                        ) : (
-                            <div className="flex flex-col items-center justify-center py-12">
-                                <X className="h-12 w-12 text-gray-400 mb-4" />
-                                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                                    No visitors
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm">
-                                    No visitors were found. Visitors will appear here after they're registered
-                                </p>
-                            </div>
-                        )}
-                    </>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+                        <div className="p-6">
+                            {upcomingVisitsData.length > 0 ? (
+                                <DataTable
+                                    columns={visitsColumns}
+                                    data={upcomingVisitsData}
+                                    searchKey="visitor"
+                                />
+                            ) : (
+                                <div className="flex flex-col items-center justify-center py-12">
+                                    <X className="h-12 w-12 text-gray-400 mb-4" />
+                                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
+                                        No visitors
+                                    </h3>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm">
+                                        No visitors were found. Visitors will appear here after they're registered
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 )
             case "general":
                 return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                            <div>
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Full Name
-                                </label>
-                                <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
-                                    {user.name}
-                                </div>
-                            </div>
-                            <div>
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Email Address
-                                </label>
-                                <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
-                                    {user.email}
-                                </div>
-                            </div>
-                            <div>
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Company
-                                </label>
-                                <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
-                                    {user.company}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Location
-                                </label>
-                                <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
-                                    {user.floorSuite}
-                                </div>
-                            </div>
-                            <div>
-                                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    Access Status
-                                </label>
-                                <div className="mt-1">
-                                    {getStatusBadge(user.acsStatus)}
-                                </div>
-                            </div>
-                            {user.badgeId && (
-                                <div>
-                                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        Badge ID
-                                    </label>
-                                    <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
-                                        {user.badgeId}
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+                        <div className="p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Full Name
+                                        </label>
+                                        <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
+                                            {user.name}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Email Address
+                                        </label>
+                                        <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
+                                            {user.email}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Company
+                                        </label>
+                                        <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
+                                            {user.company}
+                                        </div>
                                     </div>
                                 </div>
-                            )}
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Location
+                                        </label>
+                                        <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
+                                            {user.floorSuite}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                            Access Status
+                                        </label>
+                                        <div className="mt-1">
+                                            {getStatusBadge(user.acsStatus)}
+                                        </div>
+                                    </div>
+                                    {user.badgeId && (
+                                        <div>
+                                            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Badge ID
+                                            </label>
+                                            <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
+                                                {user.badgeId}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )
@@ -479,7 +493,7 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                     </TabNavigation>
                 </div>
                 
-                <div className="flex-1 p-6 overflow-y-auto bg-white dark:bg-gray-800">
+                <div className="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
                     {renderTabContent()}
                 </div>
             </DialogContent>
