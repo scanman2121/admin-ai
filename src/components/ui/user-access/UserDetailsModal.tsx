@@ -586,40 +586,17 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                 )
             case "overview":
                 return (
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
-                        <div className="p-6">
-                            {/* Service Request Banner */}
-                            {user.serviceRequest !== "No open requests" && (
-                                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/30">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex-1">
-                                            <div className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                                Current Service Request
-                                            </div>
-                                            <div className="text-blue-600 dark:text-blue-400 font-semibold mb-1">
-                                                SR-2024-001
-                                            </div>
-                                            <div className="text-gray-900 dark:text-gray-50 font-medium mb-1">
-                                                {user.serviceRequestType || user.serviceRequest}
-                                            </div>
-                                            <div className="text-sm text-gray-600 dark:text-gray-400">
-                                                {user.serviceRequestType ? `${user.serviceRequestType} - New Employee Access` : user.serviceRequest}
-                                            </div>
-                                        </div>
-                                        <Button 
-                                            variant="secondary"
-                                            className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
-                                        >
-                                            Mark as completed
-                                        </Button>
-                                    </div>
-                                </div>
-                            )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+                        {/* General Information Card */}
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                            <div className="p-6">
+                                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
+                                    General information
+                                </h3>
                                 <div className="space-y-4">
                                     <div>
                                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Full Name
+                                            Full name
                                         </label>
                                         <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
                                             {user.name}
@@ -627,7 +604,7 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                                     </div>
                                     <div>
                                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Email Address
+                                            Email address
                                         </label>
                                         <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
                                             {user.email}
@@ -641,8 +618,6 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                                             {user.company}
                                         </div>
                                     </div>
-                                </div>
-                                <div className="space-y-4">
                                     <div>
                                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                             Location
@@ -653,7 +628,7 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                                     </div>
                                     <div>
                                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Access Status
+                                            Access status
                                         </label>
                                         <div className="mt-1">
                                             {getStatusBadge(user.acsStatus)}
@@ -670,6 +645,58 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                                         </div>
                                     )}
                                 </div>
+                            </div>
+                        </div>
+
+                        {/* Open Requests Card */}
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                            <div className="p-6">
+                                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
+                                    Open requests
+                                </h3>
+                                {user.serviceRequest !== "No open requests" ? (
+                                    <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/30">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex-1">
+                                                <div className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                                    Current service request
+                                                </div>
+                                                <div className="text-blue-600 dark:text-blue-400 font-semibold mb-1">
+                                                    SR-2024-001
+                                                </div>
+                                                <div className="text-gray-900 dark:text-gray-50 font-medium mb-1">
+                                                    {user.serviceRequestType || user.serviceRequest}
+                                                </div>
+                                                <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                    {user.serviceRequestType ? `${user.serviceRequestType} - New Employee Access` : user.serviceRequest}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="mt-4">
+                                            <Button 
+                                                variant="secondary"
+                                                size="sm"
+                                                className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+                                            >
+                                                Mark as completed
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <div className="text-gray-400 dark:text-gray-500 mb-2">
+                                            <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                        </div>
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
+                                            No open requests
+                                        </h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            All service requests have been completed
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
