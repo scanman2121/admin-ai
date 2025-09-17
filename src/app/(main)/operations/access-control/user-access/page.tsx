@@ -287,7 +287,7 @@ export default function AccessControlUserAccess() {
     const [data] = useState(userAccessData)
     const [selectedUser, setSelectedUser] = useState<typeof userAccessData[0] | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [selectedUserForAccess, setSelectedUserForAccess] = useState<typeof userAccessData[0] | null>(null)
+    const [selectedUsersForAccess, setSelectedUsersForAccess] = useState<typeof userAccessData | null>(null)
     const [isCreateAccessModalOpen, setIsCreateAccessModalOpen] = useState(false)
 
     const handleUserClick = (user: typeof userAccessData[0]) => {
@@ -301,19 +301,18 @@ export default function AccessControlUserAccess() {
     }
 
     const handleCreateAccessClick = (user: typeof userAccessData[0]) => {
-        setSelectedUserForAccess(user)
+        setSelectedUsersForAccess([user])
         setIsCreateAccessModalOpen(true)
     }
 
     const handleCloseCreateAccessModal = () => {
         setIsCreateAccessModalOpen(false)
-        setSelectedUserForAccess(null)
+        setSelectedUsersForAccess(null)
     }
 
     const handleBulkCreateAccess = (selectedUsers: typeof userAccessData) => {
-        console.log('Creating access for multiple users:', selectedUsers)
-        // In a real app, this would call an API to create access for multiple users
-        // For now, we'll just log the action
+        setSelectedUsersForAccess(selectedUsers)
+        setIsCreateAccessModalOpen(true)
     }
 
     const handleBulkRemoveAccess = (selectedUsers: typeof userAccessData) => {
@@ -432,7 +431,7 @@ export default function AccessControlUserAccess() {
             <CreateUserAccessModal
                 isOpen={isCreateAccessModalOpen}
                 onClose={handleCloseCreateAccessModal}
-                user={selectedUserForAccess}
+                users={selectedUsersForAccess}
             />
         </div>
     )
