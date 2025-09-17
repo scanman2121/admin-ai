@@ -5,7 +5,7 @@ import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { DatePicker } from "@/components/DatePicker"
 import { PageHeader } from "@/components/PageHeader"
-import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
+import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowRight, InfoIcon, Users } from "lucide-react"
 import Link from "next/link"
@@ -42,11 +42,9 @@ export default function AccessControl() {
                     <TabNavigationLink
                         key={tab.name}
                         asChild
+                        active={pathname === tab.href}
                     >
-                        <Link 
-                            href={tab.href}
-                            data-active={pathname === tab.href}
-                        >
+                        <Link href={tab.href}>
                             {tab.name}
                         </Link>
                     </TabNavigationLink>
