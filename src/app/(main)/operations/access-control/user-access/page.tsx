@@ -15,7 +15,7 @@ import {
     DropdownMenuItem, 
     DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
-import { Users, ChevronDown, User, Building } from "lucide-react"
+import { Users, ChevronDown, User, Building, FileText } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -156,22 +156,16 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
         header: "Company",
         cell: ({ row }: { row: any }) => {
             const company = row.getValue("company") as string;
+            const floorSuite = row.original.floorSuite as string;
             return (
-                <span className="text-gray-900 dark:text-gray-50">
-                    {company}
-                </span>
-            );
-        },
-    },
-    {
-        accessorKey: "floorSuite",
-        header: "Floor/Suite",
-        cell: ({ row }: { row: any }) => {
-            const floorSuite = row.getValue("floorSuite") as string;
-            return (
-                <span className="text-gray-900 dark:text-gray-50">
-                    {floorSuite}
-                </span>
+                <div>
+                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                        {company}
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {floorSuite}
+                    </div>
+                </div>
             );
         },
     },
@@ -180,7 +174,6 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
         header: "Service Request",
         cell: ({ row }: { row: any }) => {
             const serviceRequest = row.getValue("serviceRequest") as string;
-            const serviceRequestType = row.original.serviceRequestType as string;
             const serviceRequestStatus = row.original.serviceRequestStatus as string;
             const hasNotes = row.original.hasNotes as boolean;
             
@@ -200,14 +193,20 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
                     >
                         {serviceRequest}
                     </Link>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center gap-1 mt-1">
                         <span className="text-sm text-gray-600 dark:text-gray-400">
-                            {serviceRequestType} • {serviceRequestStatus}
+                            {serviceRequestStatus}
                         </span>
                         {hasNotes && (
-                            <span className="text-sm text-orange-600 dark:text-orange-400">
-                                📝 Has notes
-                            </span>
+                            <>
+                                <span className="text-sm text-gray-400 dark:text-gray-500">•</span>
+                                <div className="flex items-center gap-1">
+                                    <FileText className="h-3 w-3 text-orange-600 dark:text-orange-400" />
+                                    <span className="text-sm text-orange-600 dark:text-orange-400">
+                                        Has notes
+                                    </span>
+                                </div>
+                            </>
                         )}
                     </div>
                 </div>
