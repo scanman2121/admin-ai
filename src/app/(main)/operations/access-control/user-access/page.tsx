@@ -8,6 +8,7 @@ import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation
 import { Badge } from "@/components/ui/badge"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { CreateUserAccessModal } from "@/components/ui/user-access/CreateUserAccessModal"
+import { UserAccessBulkActions } from "@/components/ui/user-access/UserAccessBulkActions"
 import { 
     DropdownMenu, 
     DropdownMenuContent, 
@@ -309,6 +310,18 @@ export default function AccessControlUserAccess() {
         setSelectedUserForAccess(null)
     }
 
+    const handleBulkCreateAccess = (selectedUsers: typeof userAccessData) => {
+        console.log('Creating access for multiple users:', selectedUsers)
+        // In a real app, this would call an API to create access for multiple users
+        // For now, we'll just log the action
+    }
+
+    const handleBulkRemoveAccess = (selectedUsers: typeof userAccessData) => {
+        console.log('Removing access for multiple users:', selectedUsers)
+        // In a real app, this would call an API to remove access for multiple users
+        // For now, we'll just log the action
+    }
+
     const userAccessColumns = createUserAccessColumns(handleUserClick, handleCreateAccessClick)
 
     return (
@@ -397,6 +410,15 @@ export default function AccessControlUserAccess() {
                 columns={userAccessColumns}
                 data={data}
                 searchKey="name"
+                renderBulkActions={(table, rowSelection) => (
+                    <UserAccessBulkActions
+                        table={table}
+                        rowSelection={rowSelection}
+                        totalCount={data.length}
+                        onCreateAccess={handleBulkCreateAccess}
+                        onRemoveAccess={handleBulkRemoveAccess}
+                    />
+                )}
             />
 
             {/* User Details Modal */}

@@ -31,6 +31,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   searchKey?: string
   onRowClick?: (row: TData) => void
+  renderBulkActions?: (table: any, rowSelection: any) => React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
@@ -38,6 +39,7 @@ export function DataTable<TData, TValue>({
   data,
   searchKey = "name",
   onRowClick,
+  renderBulkActions,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -122,6 +124,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
+      {renderBulkActions && renderBulkActions(table, rowSelection)}
     </div>
   )
 }
