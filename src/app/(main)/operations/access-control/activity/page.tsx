@@ -3,11 +3,8 @@
 import { useState } from "react"
 import { Button } from "@/components/Button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { Input } from "@/components/Input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { PageHeader } from "@/components/PageHeader"
-import { Search, Download } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -95,34 +92,6 @@ const activityData = [
     },
 ]
 
-// Filter options
-const accessPointOptions = [
-    "Test_",
-    "Main Entrance",
-    "Side Door",
-    "Elevator Bank A",
-    "Elevator Bank B",
-    "Emergency Exit",
-]
-
-const companyOptions = [
-    "Garbarino Property Trust",
-    "Total Network Development",
-    "Cala Foods",
-    "Cut Rite Lawn Care",
-    "Magna Architectural Design",
-    "Finast",
-    "Electronic Geek",
-    "Auto Works",
-]
-
-const actionOptions = [
-    "Access granted",
-    "Access denied",
-    "Access attempted",
-    "Badge expired",
-    "Invalid credentials",
-]
 
 // Define columns for the activity table
 const activityColumns = [
@@ -205,16 +174,7 @@ const activityColumns = [
 
 export default function AccessControlActivity() {
     const pathname = usePathname()
-    const [searchTerm, setSearchTerm] = useState("")
-    const [selectedAccessPoint, setSelectedAccessPoint] = useState("all")
-    const [selectedCompany, setSelectedCompany] = useState("all")
-    const [selectedAction, setSelectedAction] = useState("all")
     const [data] = useState(activityData)
-
-    const handleDownload = () => {
-        // In a real app, this would trigger a CSV/Excel download
-        console.log("Downloading activity log...");
-    };
 
     return (
         <div className="space-y-6">
@@ -243,84 +203,12 @@ export default function AccessControlActivity() {
                 ))}
             </TabNavigation>
 
-            {/* Content */}
-            <div className="space-y-6">
-                {/* Activity Header */}
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50">
-                        Activity
-                    </h2>
-                    <Button 
-                        variant="ghost" 
-                        onClick={handleDownload}
-                        className="p-2"
-                    >
-                        <Download className="h-4 w-4" />
-                    </Button>
-                </div>
-
-                {/* Search and Filters */}
-                <div className="flex items-center gap-4">
-                    <div className="relative flex-1 max-w-sm">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                        <Input
-                            placeholder="Search"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-10"
-                        />
-                    </div>
-                    
-                    <Select value={selectedAccessPoint} onValueChange={setSelectedAccessPoint}>
-                        <SelectTrigger className="w-48">
-                            <SelectValue placeholder="Access point" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Access Points</SelectItem>
-                            {accessPointOptions.map((point) => (
-                                <SelectItem key={point} value={point}>
-                                    {point}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-
-                    <Select value={selectedCompany} onValueChange={setSelectedCompany}>
-                        <SelectTrigger className="w-48">
-                            <SelectValue placeholder="Company" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Companies</SelectItem>
-                            {companyOptions.map((company) => (
-                                <SelectItem key={company} value={company}>
-                                    {company}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-
-                    <Select value={selectedAction} onValueChange={setSelectedAction}>
-                        <SelectTrigger className="w-48">
-                            <SelectValue placeholder="Action" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Actions</SelectItem>
-                            {actionOptions.map((action) => (
-                                <SelectItem key={action} value={action}>
-                                    {action}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                {/* Data Table */}
-                <DataTable
-                    columns={activityColumns}
-                    data={data}
-                    searchKey="name"
-                />
-            </div>
+            {/* Data Table */}
+            <DataTable
+                columns={activityColumns}
+                data={data}
+                searchKey="name"
+            />
         </div>
     )
 }

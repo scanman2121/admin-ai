@@ -3,11 +3,9 @@
 import { useState } from "react"
 import { Button } from "@/components/Button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { Input } from "@/components/Input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { PageHeader } from "@/components/PageHeader"
-import { Search } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -238,9 +236,6 @@ const createTenantMappingColumns = (onFloorSelect: any, onSuiteSelect: any, onGr
 
 export default function AccessControlGroups() {
     const pathname = usePathname()
-    const [searchTerm, setSearchTerm] = useState("")
-    const [selectedTenant, setSelectedTenant] = useState("all")
-    const [selectedAccessGroup, setSelectedAccessGroup] = useState("all")
     const [data] = useState(tenantMappingData)
 
     // Handlers for dropdown changes
@@ -292,66 +287,12 @@ export default function AccessControlGroups() {
                 ))}
             </TabNavigation>
 
-            {/* Content */}
-            <div className="space-y-6">
-                {/* Title and Description */}
-                <div>
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50">
-                        Tenant to Access Group Mapping
-                    </h2>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">
-                        Map tenants and their floors/suites to access control groups. This ensures tenant users can access the correct spaces.
-                    </p>
-                </div>
-
-                {/* Search and Filters */}
-                <div className="flex items-center gap-4">
-                    <div className="relative flex-1 max-w-sm">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                        <Input
-                            placeholder="Search"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-10"
-                        />
-                    </div>
-                    
-                    <Select value={selectedTenant} onValueChange={setSelectedTenant}>
-                        <SelectTrigger className="w-48">
-                            <SelectValue placeholder="Tenant" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Tenants</SelectItem>
-                            {data.map((item) => (
-                                <SelectItem key={item.id} value={item.tenant}>
-                                    {item.tenant}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-
-                    <Select value={selectedAccessGroup} onValueChange={setSelectedAccessGroup}>
-                        <SelectTrigger className="w-48">
-                            <SelectValue placeholder="Access group" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Access Groups</SelectItem>
-                            {accessGroupOptions.map((group) => (
-                                <SelectItem key={group} value={group}>
-                                    {group}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                {/* Data Table */}
-                <DataTable
-                    columns={tenantMappingColumns}
-                    data={data}
-                    searchKey="tenant"
-                />
-            </div>
+            {/* Data Table */}
+            <DataTable
+                columns={tenantMappingColumns}
+                data={data}
+                searchKey="tenant"
+            />
         </div>
     )
 }
