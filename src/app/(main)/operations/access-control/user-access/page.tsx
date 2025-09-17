@@ -322,9 +322,9 @@ export default function AccessControlUserAccess() {
     }
 
     const handleReviewPendingUsers = () => {
-        // Filter users awaiting approval (not in ACS with service requests)
+        // Filter users who need access creation (same logic as Actions column)
         const pendingUsers = data.filter(user => 
-            user.acsStatus === "not-in-acs" && user.serviceRequest !== "No open requests"
+            user.acsStatus === "not-in-acs" || user.serviceRequest !== "No open requests"
         )
         setSelectedUsersForAccess(pendingUsers)
         setIsCreateAccessModalOpen(true)
