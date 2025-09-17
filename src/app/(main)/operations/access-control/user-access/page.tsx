@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/PageHeader"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { Badge } from "@/components/ui/badge"
+import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { ArrowRight, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -99,7 +100,7 @@ const userAccessData = [
 ]
 
 // Define columns for the user access table
-const userAccessColumns = [
+const createUserAccessColumns = (onUserClick: (user: any) => void) => [
     {
         id: "select",
         header: ({ table }: { table: any }) => (
@@ -129,12 +130,12 @@ const userAccessColumns = [
             const email = row.original.email as string;
             return (
                 <div>
-                    <Link 
-                        href={`/users/${row.original.id}`}
-                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 font-medium"
+                    <button
+                        onClick={() => onUserClick(row.original)}
+                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 font-medium text-left"
                     >
                         {name}
-                    </Link>
+                    </button>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                         {email}
                     </div>
@@ -272,6 +273,20 @@ const userAccessColumns = [
 export default function AccessControlUserAccess() {
     const pathname = usePathname()
     const [data] = useState(userAccessData)
+    const [selectedUser, setSelectedUser] = useState<typeof userAccessData[0] | null>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const handleUserClick = (user: typeof userAccessData[0]) => {
+        setSelectedUser(user)
+        setIsModalOpen(true)
+    }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false)
+        setSelectedUser(null)
+    }
+
+    const userAccessColumns = createUserAccessColumns(handleUserClick)
 
     return (
         <div className="space-y-6">
@@ -333,6 +348,13 @@ export default function AccessControlUserAccess() {
                 columns={userAccessColumns}
                 data={data}
                 searchKey="name"
+            />
+
+            {/* User Details Modal */}
+            <UserDetailsModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                user={selectedUser}
             />
         </div>
     )
