@@ -14,9 +14,9 @@ import { usePathname } from "next/navigation"
 // Define tabs for the Access Control page
 const tabs = [
     { name: "Overview", href: "/operations/access-control" },
+    { name: "User access", href: "/operations/access-control/user-access" },
     { name: "Activity", href: "/operations/access-control/activity" },
     { name: "Access groups", href: "/operations/access-control/access-groups" },
-    { name: "User access", href: "/operations/access-control/user-access" },
 ]
 
 export default function AccessControl() {
