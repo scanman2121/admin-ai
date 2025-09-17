@@ -17,7 +17,11 @@ interface UserDetailsModalProps {
         email: string
         company: string
         floorSuite: string
+        serviceRequest: string
+        serviceRequestType: string | null
+        serviceRequestStatus: string | null
         acsStatus: string
+        hasNotes: boolean
         badgeId?: string
     } | null
 }
@@ -461,7 +465,7 @@ const accessColumns = [
 ]
 
 export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProps) {
-    const [activeTab, setActiveTab] = useState("access")
+    const [activeTab, setActiveTab] = useState("overview")
 
     if (!user) return null
 
@@ -551,10 +555,37 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                         </div>
                     </div>
                 )
-            case "general":
+            case "overview":
                 return (
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
                         <div className="p-6">
+                            {/* Service Request Banner */}
+                            {user.serviceRequest !== "No open requests" && (
+                                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/30">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex-1">
+                                            <div className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                                                Current Service Request
+                                            </div>
+                                            <div className="text-blue-600 dark:text-blue-400 font-semibold mb-1">
+                                                SR-2024-001
+                                            </div>
+                                            <div className="text-gray-900 dark:text-gray-50 font-medium mb-1">
+                                                {user.serviceRequestType || user.serviceRequest}
+                                            </div>
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                {user.serviceRequestType ? `${user.serviceRequestType} - New Employee Access` : user.serviceRequest}
+                                            </div>
+                                        </div>
+                                        <Button 
+                                            variant="secondary"
+                                            className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+                                        >
+                                            Mark as Completed
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-4">
                                     <div>
@@ -654,6 +685,16 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                     <TabNavigation>
                         <TabNavigationLink
                             asChild
+                            active={activeTab === "overview"}
+                            onClick={() => setActiveTab("overview")}
+                        >
+                            <button className="flex items-center gap-2">
+                                <User className="h-4 w-4" />
+                                Overview
+                            </button>
+                        </TabNavigationLink>
+                        <TabNavigationLink
+                            asChild
                             active={activeTab === "access"}
                             onClick={() => setActiveTab("access")}
                         >
@@ -690,16 +731,6 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                             <button className="flex items-center gap-2">
                                 <Calendar className="h-4 w-4" />
                                 Visitors
-                            </button>
-                        </TabNavigationLink>
-                        <TabNavigationLink
-                            asChild
-                            active={activeTab === "general"}
-                            onClick={() => setActiveTab("general")}
-                        >
-                            <button className="flex items-center gap-2">
-                                <User className="h-4 w-4" />
-                                General information
                             </button>
                         </TabNavigationLink>
                     </TabNavigation>
