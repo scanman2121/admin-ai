@@ -129,24 +129,24 @@ const activityData = [
 const accessData = [
     {
         id: "1",
-        accessPoint: "Main Entrance",
-        accessGroup: "Access group A",
-        level: "Full Access",
-        status: "Active"
+        userId: "376828",
+        credential: "Awaiting user",
+        device: "-",
+        credStatus: "Awaiting user"
     },
     {
         id: "2",
-        accessPoint: "Parking Garage", 
-        accessGroup: "Access group B",
-        level: "Limited Access",
-        status: "Active"
+        userId: "419902",
+        credential: "324",
+        device: "iOS - iPhone14.3",
+        credStatus: "Issued"
     },
     {
-        id: "3",
-        accessPoint: "Conference Room A",
-        accessGroup: "Access group C", 
-        level: "Scheduled Access",
-        status: "Pending"
+        id: "3", 
+        userId: "419903",
+        credential: "525",
+        device: "Android - Samsung Galaxy",
+        credStatus: "Issued"
     }
 ]
 
@@ -395,72 +395,101 @@ const visitsColumns = [
 // Define columns for access table
 const accessColumns = [
     {
-        accessorKey: "accessPoint",
-        header: "Access Point",
+        accessorKey: "userId",
+        header: "User ID",
         cell: ({ row }: { row: any }) => {
-            const accessPoint = row.getValue("accessPoint") as string;
+            const userId = row.getValue("userId") as string;
             return (
                 <span className="text-gray-900 dark:text-gray-50 font-medium">
-                    {accessPoint}
+                    {userId}
                 </span>
             );
         },
     },
     {
-        accessorKey: "accessGroup",
-        header: "Access Group",
+        accessorKey: "credential",
+        header: "Credential",
         cell: ({ row }: { row: any }) => {
-            const accessGroup = row.getValue("accessGroup") as string;
-            return (
-                <span className="text-gray-900 dark:text-gray-50">
-                    {accessGroup}
-                </span>
-            );
-        },
-    },
-    {
-        accessorKey: "level",
-        header: "Access Level",
-        cell: ({ row }: { row: any }) => {
-            const level = row.getValue("level") as string;
+            const credential = row.getValue("credential") as string;
             return (
                 <span className="text-gray-600 dark:text-gray-400">
-                    {level}
+                    {credential}
                 </span>
             );
         },
     },
     {
-        accessorKey: "status",
-        header: "Status",
+        accessorKey: "device",
+        header: "Device",
         cell: ({ row }: { row: any }) => {
-            const status = row.getValue("status") as string;
-            const getStatusBadge = (status: string) => {
+            const device = row.getValue("device") as string;
+            return (
+                <span className="text-gray-900 dark:text-gray-50">
+                    {device}
+                </span>
+            );
+        },
+    },
+    {
+        accessorKey: "credStatus",
+        header: "Cred status",
+        cell: ({ row }: { row: any }) => {
+            const credStatus = row.getValue("credStatus") as string;
+            const getCredStatusBadge = (status: string) => {
                 switch (status) {
-                    case "Active":
+                    case "Issued":
                         return (
                             <Badge 
                                 variant="default" 
                                 className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/30"
                             >
-                                • {status}
+                                {status}
                             </Badge>
                         );
-                    case "Pending":
+                    case "Awaiting user":
                         return (
                             <Badge 
                                 variant="default" 
-                                className="bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800/30"
+                                className="bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-400 dark:border-gray-800/30"
                             >
-                                • {status}
+                                {status}
                             </Badge>
                         );
                     default:
-                        return <Badge variant="secondary">• {status}</Badge>;
+                        return <Badge variant="secondary">{status}</Badge>;
                 }
             };
-            return getStatusBadge(status);
+            return getCredStatusBadge(credStatus);
         },
+    },
+    {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }: { row: any }) => {
+            const credStatus = row.original.credStatus as string;
+            
+            if (credStatus === "Awaiting user") {
+                return (
+                    <Button 
+                        variant="secondary" 
+                        size="sm"
+                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
+                    >
+                        View user in Origo
+                    </Button>
+                );
+            }
+            
+            return (
+                <Button 
+                    variant="primary" 
+                    size="sm"
+                >
+                    Activate access
+                </Button>
+            );
+        },
+        enableSorting: false,
     },
 ]
 
@@ -502,7 +531,7 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                             <DataTable
                                 columns={accessColumns}
                                 data={accessData}
-                                searchKey="accessPoint"
+                                searchKey="userId"
                             />
                         </div>
                     </div>
