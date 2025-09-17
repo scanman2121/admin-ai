@@ -610,7 +610,7 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                                             variant="secondary"
                                             className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
                                         >
-                                            Mark as Completed
+                                            Mark as completed
                                         </Button>
                                     </div>
                                 </div>
@@ -704,7 +704,7 @@ export function UserDetailsModal({ isOpen, onClose, user }: UserDetailsModalProp
                         </div>
                         <div className="mr-8">
                             <Button variant="secondary" size="sm">
-                                View Full Profile
+                                View full profile
                             </Button>
                         </div>
                     </div>

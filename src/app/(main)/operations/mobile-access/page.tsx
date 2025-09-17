@@ -15,7 +15,7 @@ export default function MobileAccess() {
     return (
         <PageTemplate
             title="Mobile Access"
-            primaryCta="Grant Access"
+            primaryCta="Grant access"
             tabs={tabs}
         />
     )

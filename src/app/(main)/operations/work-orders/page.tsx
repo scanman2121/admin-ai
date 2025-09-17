@@ -15,7 +15,7 @@ export default function WorkOrders() {
     return (
         <PageTemplate
             title="Work Orders"
-            primaryCta="Create Work Order"
+            primaryCta="Create work order"
             tabs={tabs}
         />
     )
