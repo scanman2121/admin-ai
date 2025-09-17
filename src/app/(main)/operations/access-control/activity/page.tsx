@@ -206,9 +206,9 @@ const activityColumns = [
 export default function AccessControlActivity() {
     const pathname = usePathname()
     const [searchTerm, setSearchTerm] = useState("")
-    const [selectedAccessPoint, setSelectedAccessPoint] = useState("")
-    const [selectedCompany, setSelectedCompany] = useState("")
-    const [selectedAction, setSelectedAction] = useState("")
+    const [selectedAccessPoint, setSelectedAccessPoint] = useState("all")
+    const [selectedCompany, setSelectedCompany] = useState("all")
+    const [selectedAction, setSelectedAction] = useState("all")
     const [data] = useState(activityData)
 
     const handleDownload = () => {
@@ -276,7 +276,7 @@ export default function AccessControlActivity() {
                             <SelectValue placeholder="Access point" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">All Access Points</SelectItem>
+                            <SelectItem value="all">All Access Points</SelectItem>
                             {accessPointOptions.map((point) => (
                                 <SelectItem key={point} value={point}>
                                     {point}
@@ -290,7 +290,7 @@ export default function AccessControlActivity() {
                             <SelectValue placeholder="Company" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">All Companies</SelectItem>
+                            <SelectItem value="all">All Companies</SelectItem>
                             {companyOptions.map((company) => (
                                 <SelectItem key={company} value={company}>
                                     {company}
@@ -304,7 +304,7 @@ export default function AccessControlActivity() {
                             <SelectValue placeholder="Action" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">All Actions</SelectItem>
+                            <SelectItem value="all">All Actions</SelectItem>
                             {actionOptions.map((action) => (
                                 <SelectItem key={action} value={action}>
                                     {action}

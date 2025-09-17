@@ -239,8 +239,8 @@ const createTenantMappingColumns = (onFloorSelect: any, onSuiteSelect: any, onGr
 export default function AccessControlGroups() {
     const pathname = usePathname()
     const [searchTerm, setSearchTerm] = useState("")
-    const [selectedTenant, setSelectedTenant] = useState("")
-    const [selectedAccessGroup, setSelectedAccessGroup] = useState("")
+    const [selectedTenant, setSelectedTenant] = useState("all")
+    const [selectedAccessGroup, setSelectedAccessGroup] = useState("all")
     const [data] = useState(tenantMappingData)
 
     // Handlers for dropdown changes
@@ -321,7 +321,7 @@ export default function AccessControlGroups() {
                             <SelectValue placeholder="Tenant" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">All Tenants</SelectItem>
+                            <SelectItem value="all">All Tenants</SelectItem>
                             {data.map((item) => (
                                 <SelectItem key={item.id} value={item.tenant}>
                                     {item.tenant}
@@ -335,7 +335,7 @@ export default function AccessControlGroups() {
                             <SelectValue placeholder="Access group" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="">All Access Groups</SelectItem>
+                            <SelectItem value="all">All Access Groups</SelectItem>
                             {accessGroupOptions.map((group) => (
                                 <SelectItem key={group} value={group}>
                                     {group}
