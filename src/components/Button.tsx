@@ -24,7 +24,7 @@ const buttonVariants = cva(
         light:
           "bg-gray-50 text-gray-900 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-700",
         primary:
-          "bg-primary-600 text-white hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600",
+          "bg-primary-500 text-white hover:bg-primary-600 dark:bg-primary-500 dark:hover:bg-primary-600",
       },
       size: {
         default: "h-10 px-4 py-2",
