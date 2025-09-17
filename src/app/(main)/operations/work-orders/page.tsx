@@ -2,12 +2,13 @@
 
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
-import { SingleDatePicker } from "@/components/DatePicker"
+import { DatePicker } from "@/components/DatePicker"
 import { PageHeader } from "@/components/PageHeader"
-import { TabNavigation } from "@/components/TabNavigation"
+import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowRight, InfoIcon, Users } from "lucide-react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useState } from "react"
 
 // Define tabs for the Work Orders page
@@ -21,18 +22,36 @@ const tabs = [
 export default function WorkOrders() {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(2025, 8, 17)) // Sep 17, 2025
     const [selectedTenant, setSelectedTenant] = useState<string>("all-tenants")
+    const pathname = usePathname()
 
     return (
         <div className="space-y-6">
             {/* Page Header */}
-            <PageHeader title="Work Orders">
-                <Button variant="primary">
-                    Create Work Order
-                </Button>
-            </PageHeader>
+            <PageHeader 
+                title="Work Orders" 
+                customButtons={
+                    <Button variant="primary">
+                        Create Work Order
+                    </Button>
+                }
+            />
 
             {/* Tab Navigation */}
-            <TabNavigation tabs={tabs} />
+            <TabNavigation>
+                {tabs.map((tab) => (
+                    <TabNavigationLink
+                        key={tab.name}
+                        asChild
+                    >
+                        <Link 
+                            href={tab.href}
+                            data-active={pathname === tab.href}
+                        >
+                            {tab.name}
+                        </Link>
+                    </TabNavigationLink>
+                ))}
+            </TabNavigation>
 
             {/* Access Banner */}
             <div className="relative overflow-hidden rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800/30 dark:bg-blue-900/20">
@@ -66,9 +85,9 @@ export default function WorkOrders() {
 
             {/* Date Picker */}
             <div className="flex items-center gap-4">
-                <SingleDatePicker
+                <DatePicker
                     value={selectedDate}
-                    onChange={setSelectedDate}
+                    onChange={(date) => date && setSelectedDate(date)}
                     placeholder="Select date"
                     className="w-48"
                 />
