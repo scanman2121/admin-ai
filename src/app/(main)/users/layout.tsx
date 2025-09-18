@@ -24,6 +24,14 @@ export default function UsersLayout({
     const pathname = usePathname()
     const insights = getPageInsights("users")
 
+    // Check if we're on a user detail page (e.g., /users/[id])
+    const isUserDetailPage = pathname.match(/^\/users\/[^\/]+$/) && pathname !== "/users"
+
+    // If on user detail page, render without header and tabs
+    if (isUserDetailPage) {
+        return <div className="flex h-full w-full flex-col">{children}</div>
+    }
+
     return (
         <div className="flex h-full w-full flex-col space-y-8">
             <div className="flex items-center justify-between">

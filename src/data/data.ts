@@ -848,3 +848,153 @@ export const visitors = [
     badgeNumber: "V1003",
   },
 ]
+
+export const workOrderStatuses: { value: string; label: string; variant: string }[] = [
+  {
+    value: "New",
+    label: "New",
+    variant: "blue",
+  },
+  {
+    value: "In Progress",
+    label: "In Progress",
+    variant: "warning",
+  },
+  {
+    value: "Completed",
+    label: "Completed",
+    variant: "success",
+  },
+  {
+    value: "On Hold",
+    label: "On Hold",
+    variant: "default",
+  },
+]
+
+export const issueTypes: { value: string; label: string }[] = [
+  {
+    value: "Electrical",
+    label: "Electrical",
+  },
+  {
+    value: "Plumbing",
+    label: "Plumbing",
+  },
+  {
+    value: "HVAC",
+    label: "HVAC",
+  },
+  {
+    value: "Maintenance",
+    label: "Maintenance",
+  },
+  {
+    value: "Security",
+    label: "Security",
+  },
+  {
+    value: "Cleaning",
+    label: "Cleaning",
+  },
+  {
+    value: "Other",
+    label: "Other",
+  },
+]
+
+export const buildings: { value: string; label: string }[] = [
+  {
+    value: "Access Bridge Playground",
+    label: "Access Bridge Playground",
+  },
+  {
+    value: "Main Tower",
+    label: "Main Tower",
+  },
+  {
+    value: "East Wing",
+    label: "East Wing",
+  },
+  {
+    value: "West Building",
+    label: "West Building",
+  },
+  {
+    value: "South Plaza",
+    label: "South Plaza",
+  },
+]
+
+export const workOrders = [
+  {
+    id: "WO-001",
+    request: "Day Services - Non Hourly",
+    dateTime: "9/17/2025 10:03 AM",
+    description: "",
+    building: "Access Bridge Playground",
+    floor: "test",
+    assignee: "Unassigned",
+    status: "New",
+    requestor: "Evgeny Mahnovets - HqO",
+    company: "Acme Inc",
+    issueType: "Maintenance",
+    priority: "Medium",
+  },
+  {
+    id: "WO-002",
+    request: "Bin Request",
+    dateTime: "9/12/2025 11:16 AM",
+    description: "",
+    building: "Access Bridge Playground",
+    floor: "Floor 13",
+    assignee: "Unassigned",
+    status: "New",
+    requestor: "Evgeny Mahnovets - HqO",
+    company: "Acme Inc",
+    issueType: "Cleaning",
+    priority: "Low",
+  },
+  {
+    id: "WO-003",
+    request: "Other / Unlisted",
+    dateTime: "9/12/2025 8:53 AM",
+    description: "1st work order",
+    building: "Access Bridge Playground",
+    floor: "Basement",
+    assignee: "Unassigned",
+    status: "New",
+    requestor: "Evgeny Mahnovets - HqO",
+    company: "Acme Inc",
+    issueType: "Other",
+    priority: "High",
+  },
+  {
+    id: "WO-004",
+    request: "HVAC Issue",
+    dateTime: "9/10/2025 2:30 PM",
+    description: "Air conditioning not working in conference room",
+    building: "Main Tower",
+    floor: "Floor 5",
+    assignee: "John Smith",
+    status: "In Progress",
+    requestor: "Sarah Johnson - Tech Corp",
+    company: "Tech Corp",
+    issueType: "HVAC",
+    priority: "High",
+  },
+  {
+    id: "WO-005",
+    request: "Electrical Repair",
+    dateTime: "9/8/2025 9:15 AM",
+    description: "Flickering lights in office area",
+    building: "East Wing",
+    floor: "Floor 3",
+    assignee: "Mike Wilson",
+    status: "Completed",
+    requestor: "Emily Brown - Design Co",
+    company: "Design Co",
+    issueType: "Electrical",
+    priority: "Medium",
+  },
+]
