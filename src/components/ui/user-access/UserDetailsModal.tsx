@@ -540,23 +540,62 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
         return name.split(' ').map(n => n[0]).join('').toUpperCase()
     }
 
-    const getStatusBadge = (status: string) => {
+    const getAppUserStatusBadge = (acsStatus: string) => {
+        // Determine app user status based on ACS status and other factors
+        const isActiveAppUser = acsStatus !== "revoked";
+        
+        if (isActiveAppUser) {
+            return (
+                <Badge 
+                    variant="default" 
+                    className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/30"
+                >
+                    Active app user
+                </Badge>
+            );
+        } else {
+            return (
+                <Badge 
+                    variant="secondary" 
+                    className="bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"
+                >
+                    Inactive app user
+                </Badge>
+            );
+        }
+    }
+
+    const getACSStatusBadge = (status: string) => {
         switch (status) {
             case "active":
                 return (
                     <Badge 
                         variant="default" 
-                        className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/30"
+                        className="bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/30"
                     >
-                        Active
+                        Active ACS
                     </Badge>
                 );
             case "not-in-acs":
-                return <Badge variant="destructive">Not in ACS</Badge>;
+                return (
+                    <Badge 
+                        variant="secondary" 
+                        className="bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400 dark:border-orange-800/30"
+                    >
+                        Not in ACS
+                    </Badge>
+                );
             case "revoked":
-                return <Badge variant="destructive">Revoked</Badge>;
+                return (
+                    <Badge 
+                        variant="destructive" 
+                        className="bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800/30"
+                    >
+                        Revoked ACS
+                    </Badge>
+                );
             default:
-                return <Badge variant="secondary">Unknown</Badge>;
+                return <Badge variant="secondary">Unknown ACS</Badge>;
         }
     }
 
@@ -666,10 +705,11 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
                                     </div>
                                     <div>
                                         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Access status
+                                            User status
                                         </label>
-                                        <div className="mt-1">
-                                            {getStatusBadge(user.acsStatus)}
+                                        <div className="mt-1 flex items-center gap-2">
+                                            {getAppUserStatusBadge(user.acsStatus)}
+                                            {getACSStatusBadge(user.acsStatus)}
                                         </div>
                                     </div>
                                     {user.badgeId && (
@@ -760,7 +800,10 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
                                     <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50">
                                         {user.name}
                                     </h2>
-                                    {getStatusBadge(user.acsStatus)}
+                                    <div className="flex items-center gap-2">
+                                        {getAppUserStatusBadge(user.acsStatus)}
+                                        {getACSStatusBadge(user.acsStatus)}
+                                    </div>
                                 </div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                     {user.company} • {user.email}
