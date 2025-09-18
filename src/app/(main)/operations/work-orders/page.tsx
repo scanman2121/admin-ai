@@ -2,27 +2,32 @@
 
 import { Badge } from "@/components/Badge"
 import { WorkOrdersDataTable } from "@/components/ui/data-table/WorkOrdersDataTable"
+import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { workOrders, workOrderStatuses } from "@/data/data"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-// Define columns for the work orders table
-const workOrdersColumns = [
+// Factory function to create columns with click handlers
+const createWorkOrdersColumns = (onRequestorClick: (requestorDetails: any) => void) => [
     {
         accessorKey: "request",
         header: "Request",
         cell: ({ row }: { row: any }) => {
             const request = row.getValue("request") as string;
             const requestor = row.original.requestor as string;
+            const requestorDetails = row.original.requestorDetails;
 
             return (
                 <div>
                     <div className="font-medium text-gray-900 dark:text-gray-50">
                         {request}
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <button
+                        onClick={() => onRequestorClick(requestorDetails)}
+                        className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer underline"
+                    >
                         {requestor}
-                    </div>
+                    </button>
                 </div>
             );
         },
@@ -144,6 +149,20 @@ const workOrdersColumns = [
 
 export default function WorkOrders() {
     const [data] = useState(workOrders)
+    const [selectedUser, setSelectedUser] = useState<{
+        id: string
+        name: string
+        email: string
+        company: string
+        floorSuite: string
+        serviceRequest: string
+        serviceRequestType: string | null
+        serviceRequestStatus: string | null
+        acsStatus: string
+        hasNotes: boolean
+        badgeId?: string
+    } | null>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const router = useRouter()
 
     const handleRowClick = (workOrder: any) => {
@@ -151,5 +170,34 @@ export default function WorkOrders() {
         router.push(`/operations/work-orders/${workOrder.id}`)
     }
 
-    return <WorkOrdersDataTable columns={workOrdersColumns} data={data} onRowClick={handleRowClick} searchKey="request" />
+    const handleRequestorClick = (requestorDetails: any) => {
+        setSelectedUser(requestorDetails)
+        setIsModalOpen(true)
+    }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false)
+        setSelectedUser(null)
+    }
+
+    const workOrdersColumns = createWorkOrdersColumns(handleRequestorClick)
+
+    return (
+        <div>
+            <WorkOrdersDataTable 
+                columns={workOrdersColumns} 
+                data={data} 
+                onRowClick={handleRowClick} 
+                searchKey="request" 
+            />
+            
+            {/* User Details Modal */}
+            <UserDetailsModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                user={selectedUser}
+                defaultTab="request"
+            />
+        </div>
+    )
 }

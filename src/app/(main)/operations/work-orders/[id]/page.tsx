@@ -5,6 +5,7 @@ import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Textarea } from "@/components/ui/textarea"
+import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { workOrders } from "@/data/data"
 import { ChevronLeft, Download, ExternalLink, FileText, MapPin, Paperclip, Plus, Send, Upload } from "lucide-react"
 import Link from "next/link"
@@ -19,6 +20,7 @@ const getWorkOrderDetailData = (workOrderId: string) => {
     
     return {
         ...baseWorkOrder,
+        requestorDetails: baseWorkOrder.requestorDetails, // Include the full requestor details
         location: {
             building: baseWorkOrder.building,
             floor: baseWorkOrder.floor,
@@ -116,11 +118,37 @@ const getWorkOrderDetailData = (workOrderId: string) => {
 export default function WorkOrderDetailPage({ params }: { params: { id: string } }) {
     const [newMessage, setNewMessage] = useState("")
     const [newNote, setNewNote] = useState("")
+    const [selectedUser, setSelectedUser] = useState<{
+        id: string
+        name: string
+        email: string
+        company: string
+        floorSuite: string
+        serviceRequest: string
+        serviceRequestType: string | null
+        serviceRequestStatus: string | null
+        acsStatus: string
+        hasNotes: boolean
+        badgeId?: string
+    } | null>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
     
     const workOrderDetail = getWorkOrderDetailData(params.id)
     
     if (!workOrderDetail) {
         notFound()
+    }
+
+    const handleRequestorClick = () => {
+        if (workOrderDetail.requestorDetails) {
+            setSelectedUser(workOrderDetail.requestorDetails)
+            setIsModalOpen(true)
+        }
+    }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false)
+        setSelectedUser(null)
     }
 
     return (
@@ -160,9 +188,12 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
+                                    <button
+                                        onClick={handleRequestorClick}
+                                        className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer underline mb-1"
+                                    >
                                         {workOrderDetail.requestor}
-                                    </h3>
+                                    </button>
                                     <p className="text-xs text-gray-500">Requested By</p>
                                 </div>
 
@@ -407,6 +438,14 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                     </Card>
                 </div>
             </div>
+
+            {/* User Details Modal */}
+            <UserDetailsModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                user={selectedUser}
+                defaultTab="request"
+            />
         </div>
     )
 }
