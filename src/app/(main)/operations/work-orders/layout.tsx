@@ -10,7 +10,7 @@ export default function WorkOrdersLayout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
-    const insights = getPageInsights("work-orders")
+    const insights = getPageInsights("operations")
 
     return (
         <div className="flex h-full w-full flex-col space-y-8">

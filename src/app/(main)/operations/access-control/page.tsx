@@ -46,35 +46,6 @@ export default function AccessControl() {
                 ))}
             </TabNavigation>
 
-            {/* Access Banner */}
-            <div className="relative overflow-hidden rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800/30 dark:bg-blue-900/20">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
-                            <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <div>
-                            <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                                3 users awaiting access
-                            </p>
-                            <p className="text-sm text-blue-700 dark:text-blue-300">
-                                Review and approve pending access requests
-                            </p>
-                        </div>
-                    </div>
-                    <Link href="/operations/access-control/user-access">
-                        <Button 
-                            variant="primary" 
-                            className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
-                        >
-                            <span className="flex items-center gap-2">
-                                View requests
-                                <ArrowRight className="h-4 w-4" />
-                            </span>
-                        </Button>
-                    </Link>
-                </div>
-            </div>
 
             {/* Date Picker */}
             <div className="flex items-center gap-4">
@@ -90,6 +61,112 @@ export default function AccessControl() {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 {/* Left Column - Main Content */}
                 <div className="lg:col-span-3 space-y-6">
+                    {/* Access Requests Card */}
+                    <Card>
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
+                            Access requests
+                        </h3>
+                        
+                        {/* Banner Content */}
+                        <div className="relative overflow-hidden rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800/30 dark:bg-blue-900/20 mb-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
+                                        <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                            3 users awaiting access
+                                        </p>
+                                        <p className="text-sm text-blue-700 dark:text-blue-300">
+                                            Review and approve pending access requests
+                                        </p>
+                                    </div>
+                                </div>
+                                <Link href="/operations/access-control/user-access">
+                                    <Button 
+                                        variant="primary" 
+                                        className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
+                                    >
+                                        <span className="flex items-center gap-2">
+                                            View requests
+                                            <ArrowRight className="h-4 w-4" />
+                                        </span>
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Active Access Requests List */}
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
+                                        <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                                            SC
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                            Sarah Chen
+                                        </p>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                            TechCorp Solutions • New Employee Access
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-sm text-gray-900 dark:text-gray-50">Dec 15, 2024</p>
+                                    <p className="text-sm text-blue-600 dark:text-blue-400">In Progress</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/50">
+                                        <span className="text-sm font-medium text-orange-600 dark:text-orange-400">
+                                            ED
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                            Dr. Emma Davis
+                                        </p>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                            HealthTech Innovations • Lost Device Access
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-sm text-gray-900 dark:text-gray-50">Dec 14, 2024</p>
+                                    <p className="text-sm text-orange-600 dark:text-orange-400">Pending Review</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
+                                        <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                                            MT
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                            Michael Thompson
+                                        </p>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                            Thompson Consulting • Access Level Change
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-sm text-gray-900 dark:text-gray-50">Dec 13, 2024</p>
+                                    <p className="text-sm text-green-600 dark:text-green-400">Approved</p>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
+
                     {/* Attendance Card */}
                     <Card>
                         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
