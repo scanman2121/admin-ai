@@ -18,6 +18,7 @@ import { Building, ChevronDown, FileText, MoreVertical, User, Users } from "luci
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
+import { centralizedUsers } from "@/data/centralizedUsers"
 
 // Define tabs for the Access Control User Access page
 const tabs = [
@@ -27,85 +28,27 @@ const tabs = [
     { name: "Access groups", href: "/operations/access-control/access-groups" },
 ]
 
-// Mock data for user access management
-const userAccessData = [
-    {
-        id: "1",
-        name: "Sarah Chen",
-        email: "sarah.chen@techcorp.com",
-        company: "TechCorp Solutions",
-        floorSuite: "Floor 12 / Suite 1205",
-        serviceRequest: "New Employee MKA Req...",
-        serviceRequestType: "New Employee Access",
-        serviceRequestStatus: "In Progress",
-        acsStatus: "not-in-acs",
-        hasNotes: true,
-    },
-    {
-        id: "2",
-        name: "David Rodriguez",
-        email: "david.rodriguez@lawfirm.com",
-        company: "Rodriguez & Associates Law",
-        floorSuite: "Floor 8 / Suite 802",
-        serviceRequest: "No open requests",
-        serviceRequestType: null,
-        serviceRequestStatus: null,
-        acsStatus: "active",
-        hasNotes: false,
-        badgeId: "HID-7AB12C",
-    },
-    {
-        id: "3",
-        name: "Michael Thompson",
-        email: "michael.thompson@consulting.com",
-        company: "Thompson Consulting Group",
-        floorSuite: "Floor 15 / Suite 1501",
-        serviceRequest: "No open requests",
-        serviceRequestType: null,
-        serviceRequestStatus: null,
-        acsStatus: "active",
-        hasNotes: false,
-        badgeId: "HID-9XY34Z",
-    },
-    {
-        id: "4",
-        name: "Emily Watson",
-        email: "emily.watson@healthtech.com",
-        company: "HealthTech Innovations",
-        floorSuite: "Floor 6 / Suite 605",
-        serviceRequest: "Lost Device Access R...",
-        serviceRequestType: "Lost Device",
-        serviceRequestStatus: "In Progress",
-        acsStatus: "active",
-        hasNotes: false,
-    },
-    {
-        id: "5",
-        name: "James Wilson",
-        email: "james.wilson@consulting.com",
-        company: "Wilson Strategic Consulting",
-        floorSuite: "Floor 11 / Suite 1108",
-        serviceRequest: "No open requests",
-        serviceRequestType: null,
-        serviceRequestStatus: null,
-        acsStatus: "active",
-        hasNotes: false,
-        badgeId: "HID-5MN67P",
-    },
-    {
-        id: "6",
-        name: "Lisa Park",
-        email: "lisa.park@architecture.com",
-        company: "Park Architecture Studio",
-        floorSuite: "Floor 7 / Suite 705",
-        serviceRequest: "No open requests",
-        serviceRequestType: null,
-        serviceRequestStatus: null,
-        acsStatus: "revoked",
-        hasNotes: false,
-        badgeId: "HID-2QR89S",
-    },
-]
+// Generate access control data from centralized users
+const userAccessData = centralizedUsers.map(user => ({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    company: user.company,
+    floorSuite: user.floorSuite,
+    serviceRequest: user.acsStatus === "pending" ? "New Employee Access Request..." : 
+                   user.acsStatus === "suspended" ? "Access Restoration Request..." :
+                   user.acsStatus === "inactive" ? "Account Reactivation Request..." :
+                   "No open requests",
+    serviceRequestType: user.acsStatus === "pending" ? "New Employee Access" :
+                       user.acsStatus === "suspended" ? "Access Restoration" :
+                       user.acsStatus === "inactive" ? "Account Reactivation" : null,
+    serviceRequestStatus: user.acsStatus === "pending" ? "In Progress" :
+                         user.acsStatus === "suspended" ? "Under Review" :
+                         user.acsStatus === "inactive" ? "Pending Review" : null,
+    acsStatus: user.acsStatus,
+    hasNotes: user.acsStatus !== "active",
+    badgeId: user.badgeId,
+}))
 
 // Define columns for the user access table
 const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick: (user: any) => void) => [
@@ -231,13 +174,22 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
                                 • Active
                             </Badge>
                         );
-                    case "not-in-acs":
+                    case "pending":
+                        return (
+                            <Badge 
+                                variant="secondary" 
+                                className="bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800/30"
+                            >
+                                • Pending
+                            </Badge>
+                        );
+                    case "suspended":
                         return (
                             <Badge 
                                 variant="secondary" 
                                 className="bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/30"
                             >
-                                • Not in ACS
+                                • Suspended
                             </Badge>
                         );
                     case "revoked":
@@ -273,7 +225,7 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
             const acsStatus = row.original.acsStatus as string;
             const serviceRequest = row.original.serviceRequest as string;
             
-            if (acsStatus === "not-in-acs" || serviceRequest !== "No open requests") {
+            if (acsStatus === "pending" || acsStatus === "suspended" || serviceRequest !== "No open requests") {
                 return (
                     <Button 
                         variant="primary" 
@@ -366,7 +318,7 @@ export default function AccessControlUserAccess() {
     const handleReviewPendingUsers = () => {
         // Filter users who need access creation (same logic as Actions column)
         const pendingUsers = data.filter(user => 
-            user.acsStatus === "not-in-acs" || user.serviceRequest !== "No open requests"
+            user.acsStatus === "pending" || user.acsStatus === "suspended" || user.serviceRequest !== "No open requests"
         )
         setSelectedUsersForAccess(pendingUsers)
         setIsCreateAccessModalOpen(true)

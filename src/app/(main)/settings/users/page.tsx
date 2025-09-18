@@ -98,7 +98,7 @@ export default function Users() {
                 ) : (
                   <Select
                     defaultValue={user.role}
-                    disabled={user.role === "admin"}
+                    disabled={user.role as string === "admin"}
                   >
                     <SelectTrigger className="h-8 w-32">
                       <SelectValue placeholder="Select" />

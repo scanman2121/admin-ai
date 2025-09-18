@@ -8,7 +8,7 @@ import { UserActivityFeed } from "@/components/ui/user/UserActivityFeed"
 import { UserActivityTab } from "@/components/ui/user/UserActivityTab"
 import { UserRequestsTab } from "@/components/ui/user/UserRequestsTab"
 import { UserVisitorsTab } from "@/components/ui/user/UserVisitorsTab"
-import { users } from "@/data/data"
+import { centralizedUsers, getUserById } from "@/data/centralizedUsers"
 import { cn } from "@/lib/utils"
 import { Activity, Calendar, ChevronLeft, FileText, Shield, User as UserIcon } from "lucide-react"
 import Image from "next/image"
@@ -16,24 +16,43 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { useState } from "react"
 
-// Mock additional user data for the detail page
+// Get user detail data from centralized database with fallback to old system
 const getUserDetailData = (userId: string) => {
-    const baseUser = users.find(user => user.email.split('@')[0].replace('.', '') === userId)
+    // First try to find by centralized user ID
+    let baseUser = getUserById(userId)
+    
+    // If not found, try to find by email-based ID (backward compatibility)
+    if (!baseUser) {
+        baseUser = centralizedUsers.find(user => user.email.split('@')[0].replace('.', '') === userId)
+    }
     
     if (!baseUser) return null
     
     return {
         ...baseUser,
         id: userId,
-        phoneNumber: null,
+        phoneNumber: baseUser.phone || null,
         lastActive: null,
-        signupDate: "April 9, 2025 at 07:48 PM",
-        isTestUser: true,
+        signupDate: baseUser.startDate ? new Date(baseUser.startDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }) : "April 9, 2025 at 07:48 PM",
+        isTestUser: false,
         deviceType: "Internal",
         uuid: "c02e86ff-0cb4-4adf-b44f-c443a680124e",
-        acsStatus: "active", // Add acsStatus for compatibility with shared components
-        floorSuite: "Floor 5, Suite 502",
-        serviceRequest: "No open requests"
+        // Use existing fields from centralized database
+        acsStatus: baseUser.acsStatus,
+        floorSuite: baseUser.floorSuite,
+        serviceRequest: baseUser.acsStatus === "pending" ? "New Employee Access Request..." : 
+                       baseUser.acsStatus === "suspended" ? "Access Restoration Request..." :
+                       "No open requests",
+        department: baseUser.department,
+        title: baseUser.title,
+        manager: baseUser.manager,
+        badgeId: baseUser.badgeId
     }
 }
 

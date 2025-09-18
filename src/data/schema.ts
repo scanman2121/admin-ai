@@ -40,6 +40,7 @@ export type Visitor = {
   visitorName: string
   company: string
   hostName: string
+  hostId?: string
   purpose: string
   status: string
   checkOutTime: string | null

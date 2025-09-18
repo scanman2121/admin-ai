@@ -1,4 +1,5 @@
 import { Usage } from "./schema";
+import { centralizedUsers, getUserById, getHostCapableUsers } from "./centralizedUsers";
 
 export const roles: { value: string; label: string }[] = [
   {
@@ -117,89 +118,18 @@ export const userStatuses: { value: string; label: string }[] = [
   },
 ]
 
-export const users: {
-  name: string
-  initials: string
-  email: string
-  role: string
-  company: string
-  avatarUrl?: string
-  buildings: string[]
-  hasMobileAccess: boolean
-  status: "active" | "inactive"
-}[] = [
-    {
-      name: "Ellie Edwards",
-      initials: "EE",
-      email: "ellie.edwards@acme.com",
-      role: "viewer",
-      company: "Acme Inc",
-      avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      buildings: ["Main Tower", "East Wing"],
-      hasMobileAccess: true,
-      status: "active" as const,
-    },
-    {
-      name: "Alissia McCalister",
-      initials: "AM",
-      email: "a.stone@gmail.com",
-      role: "viewer",
-      company: "Acme Inc",
-      buildings: ["Main Tower"],
-      hasMobileAccess: false,
-      status: "inactive" as const,
-    },
-    {
-      name: "Emily Luisa Bernacle",
-      initials: "EB",
-      email: "e.luis.bernacle@gmail.com",
-      role: "member",
-      company: "Acme Inc",
-      buildings: ["West Building", "South Plaza"],
-      hasMobileAccess: true,
-      status: "active" as const,
-    },
-    {
-      name: "Aaron Wave",
-      initials: "AW",
-      email: "a.flow@acme.com",
-      role: "contributor",
-      company: "Acme Inc",
-      buildings: ["Main Tower", "East Wing", "West Building"],
-      hasMobileAccess: true,
-      status: "active" as const,
-    },
-    {
-      name: "Thomas Palstein",
-      initials: "TP",
-      email: "t.palstein@acme.com",
-      role: "viewer",
-      company: "Acme Inc",
-      buildings: ["South Plaza"],
-      hasMobileAccess: false,
-      status: "inactive" as const,
-    },
-    {
-      name: "Sarah Johnson",
-      initials: "SJ",
-      email: "s.johnson@gmail.com",
-      role: "admin",
-      company: "Acme Inc",
-      buildings: ["Main Tower", "East Wing", "West Building", "South Plaza"],
-      hasMobileAccess: true,
-      status: "active" as const,
-    },
-    {
-      name: "Megan Katherina Brown",
-      initials: "MB",
-      email: "m.lovelybrown@gmail.com",
-      role: "contributor",
-      company: "Acme Inc",
-      buildings: ["West Building", "East Wing"],
-      hasMobileAccess: false,
-      status: "active" as const,
-    },
-  ]
+// Export users from centralized database for backward compatibility
+export const users = centralizedUsers.map(user => ({
+  name: user.name,
+  initials: user.initials,
+  email: user.email,
+  role: user.role,
+  company: user.company,
+  avatarUrl: user.avatarUrl,
+  buildings: user.buildings,
+  hasMobileAccess: user.hasMobileAccess,
+  status: user.status,
+}))
 
 export const invitedUsers: {
   name: string
@@ -843,36 +773,63 @@ export const visitorStatuses: { value: string; label: string; variant: string }[
   },
 ]
 
+// Generate realistic visitor data using centralized users as hosts
+const hostUsers = getHostCapableUsers();
 export const visitors = [
   {
     checkInTime: "09:30 AM",
-    visitorName: "Sarah Johnson",
-    company: "Acme Corp",
-    hostName: "Michael Chen",
-    purpose: "Client Meeting",
+    visitorName: "Amanda Chen",
+    company: "Digital Marketing Solutions",
+    hostName: hostUsers.find(u => u.id === "sarah-johnson-tech")?.name || "Sarah Johnson",
+    hostId: "sarah-johnson-tech",
+    purpose: "Product Demo",
     status: "Checked In",
     checkOutTime: null,
     badgeNumber: "V1001",
   },
   {
     checkInTime: "10:15 AM",
-    visitorName: "James Wilson",
-    company: "Tech Solutions",
-    hostName: "Emily Brown",
-    purpose: "Interview",
+    visitorName: "Marcus Rodriguez",
+    company: "Venture Capital Partners",
+    hostName: hostUsers.find(u => u.id === "david-rodriguez-finance")?.name || "David Rodriguez",
+    hostId: "david-rodriguez-finance",
+    purpose: "Investment Meeting",
     status: "Checked Out",
     checkOutTime: "11:45 AM",
     badgeNumber: "V1002",
   },
   {
     checkInTime: "02:00 PM",
-    visitorName: "Maria Garcia",
-    company: "Global Services",
-    hostName: "David Kim",
-    purpose: "Vendor Meeting",
+    visitorName: "Dr. Jennifer Walsh",
+    company: "Medical Research Institute",
+    hostName: hostUsers.find(u => u.id === "dr-emma-davis")?.name || "Dr. Emma Davis",
+    hostId: "dr-emma-davis",
+    purpose: "Research Collaboration",
     status: "Expected",
     checkOutTime: null,
     badgeNumber: "V1003",
+  },
+  {
+    checkInTime: "11:00 AM",
+    visitorName: "Kevin Park",
+    company: "Software Consultants Inc",
+    hostName: hostUsers.find(u => u.id === "michael-chen-tech")?.name || "Michael Chen",
+    hostId: "michael-chen-tech",
+    purpose: "Technical Consultation",
+    status: "Checked In",
+    checkOutTime: null,
+    badgeNumber: "V1004",
+  },
+  {
+    checkInTime: "03:30 PM",
+    visitorName: "Rachel Thompson",
+    company: "Legal Advisory Group",
+    hostName: hostUsers.find(u => u.id === "catherine-wright-legal")?.name || "Catherine Wright",
+    hostId: "catherine-wright-legal",
+    purpose: "Legal Review",
+    status: "Expected",
+    checkOutTime: null,
+    badgeNumber: "V1005",
   },
 ]
 
@@ -953,140 +910,125 @@ export const buildings: { value: string; label: string }[] = [
   },
 ]
 
+// Generate realistic work orders using centralized user database
+const createWorkOrderFromUser = (user: any, request: string, issueType: string, status: string, description: string = "", assignee: string = "Unassigned", priority: string = "Medium") => ({
+  id: `WO-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+  request,
+  dateTime: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toLocaleDateString() + " " + 
+            new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+  description,
+  building: user.buildings[0] || "Main Tower",
+  floor: user.floorSuite.split(',')[0] || "Floor 1",
+  assignee,
+  status,
+  requestor: `${user.name} - ${user.company}`,
+  requestorDetails: {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    company: user.company,
+    floorSuite: user.floorSuite,
+    serviceRequest: request,
+    serviceRequestType: issueType,
+    serviceRequestStatus: status,
+    acsStatus: user.acsStatus,
+    hasNotes: description.length > 0,
+    badgeId: user.badgeId
+  },
+  company: user.company,
+  issueType,
+  priority,
+});
+
+const evgenyUser = getUserById("evgeny-mahnovets");
+const sarahUser = getUserById("sarah-johnson-tech");
+const emilyUser = getUserById("emily-brown-tech");
+const davidUser = getUserById("david-rodriguez-finance");
+const drEmmaUser = getUserById("dr-emma-davis");
+const jamesUser = getUserById("james-wilson-health");
+
 export const workOrders = [
-  {
-    id: "WO-001",
-    request: "Day Services - Non Hourly",
-    dateTime: "9/17/2025 10:03 AM",
-    description: "",
-    building: "Access Bridge Playground",
-    floor: "test",
-    assignee: "Unassigned",
-    status: "New",
-    requestor: "Evgeny Mahnovets - HqO", // For backward compatibility in display
-    requestorDetails: {
-      id: "emahnovets",
-      name: "Evgeny Mahnovets",
-      email: "evgeny.mahnovets@hqo.com",
-      company: "HqO",
-      floorSuite: "Floor 12, Suite 1203",
-      serviceRequest: "Day Services - Non Hourly",
-      serviceRequestType: "Maintenance",
-      serviceRequestStatus: "New",
-      acsStatus: "Active",
-      hasNotes: false,
-      badgeId: "BADGE-EM001"
-    },
-    company: "Acme Inc",
-    issueType: "Maintenance",
-    priority: "Medium",
-  },
-  {
-    id: "WO-002",
-    request: "Bin Request",
-    dateTime: "9/12/2025 11:16 AM",
-    description: "",
-    building: "Access Bridge Playground",
-    floor: "Floor 13",
-    assignee: "Unassigned",
-    status: "New",
-    requestor: "Evgeny Mahnovets - HqO",
-    requestorDetails: {
-      id: "emahnovets",
-      name: "Evgeny Mahnovets",
-      email: "evgeny.mahnovets@hqo.com",
-      company: "HqO",
-      floorSuite: "Floor 12, Suite 1203",
-      serviceRequest: "Bin Request",
-      serviceRequestType: "Cleaning",
-      serviceRequestStatus: "New",
-      acsStatus: "Active",
-      hasNotes: false,
-      badgeId: "BADGE-EM001"
-    },
-    company: "Acme Inc",
-    issueType: "Cleaning",
-    priority: "Low",
-  },
-  {
-    id: "WO-003",
-    request: "Other / Unlisted",
-    dateTime: "9/12/2025 8:53 AM",
-    description: "1st work order",
-    building: "Access Bridge Playground",
-    floor: "Basement",
-    assignee: "Unassigned",
-    status: "New",
-    requestor: "Evgeny Mahnovets - HqO",
-    requestorDetails: {
-      id: "emahnovets",
-      name: "Evgeny Mahnovets",
-      email: "evgeny.mahnovets@hqo.com",
-      company: "HqO",
-      floorSuite: "Floor 12, Suite 1203",
-      serviceRequest: "Other / Unlisted",
-      serviceRequestType: "Other",
-      serviceRequestStatus: "New",
-      acsStatus: "Active",
-      hasNotes: true,
-      badgeId: "BADGE-EM001"
-    },
-    company: "Acme Inc",
-    issueType: "Other",
-    priority: "High",
-  },
-  {
-    id: "WO-004",
-    request: "HVAC Issue",
-    dateTime: "9/10/2025 2:30 PM",
-    description: "Air conditioning not working in conference room",
-    building: "Main Tower",
-    floor: "Floor 5",
-    assignee: "John Smith",
-    status: "In Progress",
-    requestor: "Sarah Johnson - Tech Corp",
-    requestorDetails: {
-      id: "sjohnson",
-      name: "Sarah Johnson",
-      email: "sarah.johnson@techcorp.com",
-      company: "Tech Corp",
-      floorSuite: "Floor 5, Suite 520",
-      serviceRequest: "HVAC Issue",
-      serviceRequestType: "HVAC",
-      serviceRequestStatus: "In Progress",
-      acsStatus: "Active",
-      hasNotes: true,
-      badgeId: "BADGE-SJ002"
-    },
-    company: "Tech Corp",
-    issueType: "HVAC",
-    priority: "High",
-  },
-  {
-    id: "WO-005",
-    request: "Electrical Repair",
-    dateTime: "9/8/2025 9:15 AM",
-    description: "Flickering lights in office area",
-    building: "East Wing",
-    floor: "Floor 3",
-    assignee: "Mike Wilson",
-    status: "Completed",
-    requestor: "Emily Brown - Design Co",
-    requestorDetails: {
-      id: "ebrown",
-      name: "Emily Brown",
-      email: "emily.brown@designco.com",
-      company: "Design Co",
-      floorSuite: "Floor 3, Suite 315",
-      serviceRequest: "Electrical Repair",
-      serviceRequestType: "Electrical",
-      serviceRequestStatus: "Completed",
-      acsStatus: "Active",
-      hasNotes: false,
-      badgeId: "BADGE-EB003"
-    },
-    company: "Design Co",
-    issueType: "Electrical",
-    priority: "Medium",
-  },
+  // Evgeny's requests
+  createWorkOrderFromUser(
+    evgenyUser!,
+    "Office Cleaning Request",
+    "Cleaning",
+    "New",
+    "Regular office cleaning needed for conference room",
+    "Unassigned",
+    "Low"
+  ),
+  createWorkOrderFromUser(
+    evgenyUser!,
+    "Network Connection Issue",
+    "Electrical",
+    "New",
+    "Internet connection intermittent in office suite",
+    "Unassigned",
+    "High"
+  ),
+  
+  // Sarah Johnson's requests
+  createWorkOrderFromUser(
+    sarahUser!,
+    "HVAC Temperature Control",
+    "HVAC",
+    "In Progress",
+    "Air conditioning not maintaining consistent temperature in server room",
+    "Building Maintenance Team",
+    "High"
+  ),
+  createWorkOrderFromUser(
+    sarahUser!,
+    "Lighting Replacement",
+    "Electrical",
+    "Completed",
+    "LED bulbs need replacement in main office area",
+    "Electrical Team",
+    "Medium"
+  ),
+  
+  // Emily Brown's requests
+  createWorkOrderFromUser(
+    emilyUser!,
+    "Furniture Assembly",
+    "Maintenance",
+    "New",
+    "New office furniture needs assembly and installation",
+    "Unassigned",
+    "Medium"
+  ),
+  
+  // David Rodriguez's requests
+  createWorkOrderFromUser(
+    davidUser!,
+    "Security System Update",
+    "Security",
+    "In Progress",
+    "Access card reader needs firmware update",
+    "Security Team",
+    "High"
+  ),
+  
+  // Dr. Emma's requests
+  createWorkOrderFromUser(
+    drEmmaUser!,
+    "Medical Equipment Installation",
+    "Electrical",
+    "New",
+    "New medical monitoring equipment requires electrical setup",
+    "Unassigned",
+    "High"
+  ),
+  
+  // James Wilson's requests
+  createWorkOrderFromUser(
+    jamesUser!,
+    "Water Leak Repair",
+    "Plumbing",
+    "Completed",
+    "Minor water leak in break room sink",
+    "Plumbing Team",
+    "Medium"
+  ),
 ]

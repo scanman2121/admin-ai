@@ -48,8 +48,8 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
     if (!user) return null
 
     const handleViewFullProfile = () => {
-        // Generate user ID from email (same logic as in users page)
-        const userId = user.email.split('@')[0].replace('.', '')
+        // Use centralized user ID if available, otherwise generate from email
+        const userId = user.id || user.email.split('@')[0].replace('.', '')
         onClose()
         router.push(`/users/${userId}`)
     }
