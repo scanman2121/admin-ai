@@ -194,11 +194,11 @@ const serviceRequestColumns = [
 ]
 
 interface UserRequestsTabProps {
-    userId?: string
+    userId?: string // Future: will be used to filter requests data by user
     containerClassName?: string
 }
 
-export function UserRequestsTab({ userId, containerClassName }: UserRequestsTabProps) {
+export function UserRequestsTab({ containerClassName }: UserRequestsTabProps) {
     return (
         <div className={containerClassName || "bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full"}>
             <div className="p-6">

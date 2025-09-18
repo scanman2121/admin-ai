@@ -131,11 +131,11 @@ const accessColumns = [
 ]
 
 interface UserAccessTabProps {
-    userId?: string
+    userId?: string // Future: will be used to filter access data by user
     containerClassName?: string
 }
 
-export function UserAccessTab({ userId, containerClassName }: UserAccessTabProps) {
+export function UserAccessTab({ containerClassName }: UserAccessTabProps) {
     return (
         <div className={containerClassName || "bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full"}>
             <div className="p-6">

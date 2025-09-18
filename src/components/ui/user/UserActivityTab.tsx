@@ -129,11 +129,11 @@ const activityColumns = [
 ]
 
 interface UserActivityTabProps {
-    userId?: string
+    userId?: string // Future: will be used to filter activity data by user
     containerClassName?: string
 }
 
-export function UserActivityTab({ userId, containerClassName }: UserActivityTabProps) {
+export function UserActivityTab({ containerClassName }: UserActivityTabProps) {
     return (
         <div className={containerClassName || "bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full"}>
             <div className="p-6">
