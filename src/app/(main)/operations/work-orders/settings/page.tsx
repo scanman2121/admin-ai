@@ -4,7 +4,11 @@ import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { RiArrowLeftLine, RiSettings3Line } from "@remixicon/react"
+import { Dialog } from "@/components/Dialog"
+import { Input } from "@/components/Input"
+import { Select } from "@/components/Select"
+import { Label } from "@/components/Label"
+import { RiArrowLeftLine, RiSettings3Line, RiAddLine, RiCloseLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -16,12 +20,13 @@ const tabs = [
     { name: "Settings", href: "/operations/work-orders/settings/general" },
 ]
 
-// Sample service types data based on the uploaded interface
+// Comprehensive service types data based on the v0 prototype
 const serviceTypesData = [
+    // Security Category
     {
         id: 1,
         requestType: "Access Request",
-        description: "Requests for building or area access",
+        description: "Building or area access requests",
         category: "Security",
         approval: "Tenant POC",
         assignedTo: "Security Team",
@@ -38,44 +43,164 @@ const serviceTypesData = [
     },
     {
         id: 3,
-        requestType: "HVAC",
-        description: "Heating, ventilation, and air conditioning issues",
+        requestType: "Visitor Access",
+        description: "Temporary visitor access setup",
+        category: "Security",
+        approval: "Tenant POC",
+        assignedTo: "Security Team",
+        status: true,
+    },
+    {
+        id: 4,
+        requestType: "Security Incident",
+        description: "Security-related incidents",
+        category: "Security",
+        approval: "Direct",
+        assignedTo: "Security Team",
+        status: true,
+    },
+    {
+        id: 5,
+        requestType: "Lock/Unlock Request",
+        description: "Door lock/unlock requests",
+        category: "Security",
+        approval: "Direct",
+        assignedTo: "Security Team",
+        status: true,
+    },
+    // Maintenance Category
+    {
+        id: 6,
+        requestType: "HVAC Issue",
+        description: "Heating, ventilation, and AC problems",
         category: "Maintenance",
         approval: "Direct",
         assignedTo: "Maintenance Team",
         status: true,
     },
     {
-        id: 4,
-        requestType: "Bin Request",
-        description: "Waste bin collection or replacement",
-        category: "Cleaning",
+        id: 7,
+        requestType: "Plumbing Repair",
+        description: "Plumbing and water-related issues",
+        category: "Maintenance",
         approval: "Direct",
-        assignedTo: "Housekeeping Team",
+        assignedTo: "Maintenance Team",
         status: true,
     },
     {
-        id: 5,
-        requestType: "Deep Clean",
-        description: "Comprehensive cleaning service",
+        id: 8,
+        requestType: "Electrical Problem",
+        description: "Electrical system issues",
+        category: "Maintenance",
+        approval: "Direct",
+        assignedTo: "Maintenance Team",
+        status: true,
+    },
+    {
+        id: 9,
+        requestType: "General Repair",
+        description: "General maintenance and repairs",
+        category: "Maintenance",
+        approval: "Direct",
+        assignedTo: "Maintenance Team",
+        status: true,
+    },
+    {
+        id: 10,
+        requestType: "Appliance Issue",
+        description: "Appliance repairs and maintenance",
+        category: "Maintenance",
+        approval: "Direct",
+        assignedTo: "Maintenance Team",
+        status: true,
+    },
+    // Cleaning Category
+    {
+        id: 11,
+        requestType: "Deep Cleaning",
+        description: "Thorough cleaning services",
         category: "Cleaning",
         approval: "Direct",
         assignedTo: "Housekeeping Team",
         status: false,
     },
     {
-        id: 6,
+        id: 12,
+        requestType: "Carpet Cleaning",
+        description: "Carpet and upholstery cleaning",
+        category: "Cleaning",
+        approval: "Direct",
+        assignedTo: "Housekeeping Team",
+        status: true,
+    },
+    {
+        id: 13,
+        requestType: "Window Cleaning",
+        description: "Window and glass cleaning",
+        category: "Cleaning",
+        approval: "Direct",
+        assignedTo: "Housekeeping Team",
+        status: true,
+    },
+    {
+        id: 14,
+        requestType: "Waste Removal",
+        description: "Waste and debris removal",
+        category: "Cleaning",
+        approval: "Direct",
+        assignedTo: "Housekeeping Team",
+        status: true,
+    },
+    {
+        id: 15,
+        requestType: "Supply Restocking",
+        description: "Restocking supplies and amenities",
+        category: "Cleaning",
+        approval: "Direct",
+        assignedTo: "Housekeeping Team",
+        status: true,
+    },
+    // Concierge Category
+    {
+        id: 16,
         requestType: "Package Delivery",
-        description: "Package handling and delivery coordination",
+        description: "Package handling and delivery",
         category: "Concierge",
         approval: "Direct",
         assignedTo: "Concierge Team",
         status: true,
     },
     {
-        id: 7,
-        requestType: "Guest Registration",
-        description: "Visitor registration and check-in",
+        id: 17,
+        requestType: "Event Setup",
+        description: "Event planning and setup",
+        category: "Concierge",
+        approval: "Tenant POC",
+        assignedTo: "Concierge Team",
+        status: true,
+    },
+    {
+        id: 18,
+        requestType: "Guest Services",
+        description: "General guest assistance",
+        category: "Concierge",
+        approval: "Direct",
+        assignedTo: "Concierge Team",
+        status: true,
+    },
+    {
+        id: 19,
+        requestType: "Information Request",
+        description: "Information and directions",
+        category: "Concierge",
+        approval: "Direct",
+        assignedTo: "Concierge Team",
+        status: true,
+    },
+    {
+        id: 20,
+        requestType: "Reservation Assistance",
+        description: "Booking and reservation help",
         category: "Concierge",
         approval: "Direct",
         assignedTo: "Concierge Team",
@@ -105,6 +230,14 @@ export default function WorkOrdersSettings() {
     const [searchQuery, setSearchQuery] = useState("")
     const [statusFilter, setStatusFilter] = useState("All")
     const [categoryFilter, setCategoryFilter] = useState("All Categories")
+    const [isAddCustomModalOpen, setIsAddCustomModalOpen] = useState(false)
+    const [newServiceType, setNewServiceType] = useState({
+        requestType: "",
+        description: "",
+        category: "Security",
+        approval: "Direct",
+        assignedTo: ""
+    })
 
     const handleStatusToggle = (id: number) => {
         setServiceTypes(prev => 
@@ -112,6 +245,29 @@ export default function WorkOrdersSettings() {
                 item.id === id ? { ...item, status: !item.status } : item
             )
         )
+    }
+
+    const handleAddCustomType = () => {
+        if (!newServiceType.requestType.trim() || !newServiceType.description.trim() || !newServiceType.assignedTo.trim()) {
+            return
+        }
+
+        const newId = Math.max(...serviceTypes.map(item => item.id)) + 1
+        const customType = {
+            id: newId,
+            ...newServiceType,
+            status: true
+        }
+
+        setServiceTypes(prev => [...prev, customType])
+        setNewServiceType({
+            requestType: "",
+            description: "",
+            category: "Security",
+            approval: "Direct",
+            assignedTo: ""
+        })
+        setIsAddCustomModalOpen(false)
     }
 
     const filteredServiceTypes = serviceTypes.filter(item => {
@@ -142,14 +298,14 @@ export default function WorkOrdersSettings() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                        Work Orders 
+                        Service Request Setup
                     </h1>
                     <p className="text-gray-600 dark:text-gray-400 mt-1">
-                        Manage individual service request types and their configurations
+                        Configure which request types to enable and manage their settings
                     </p>
                 </div>
                 <Button variant="primary">
-                    Save
+                    Save Changes
                 </Button>
             </div>
 
@@ -169,12 +325,28 @@ export default function WorkOrdersSettings() {
             {/* Service Types Content */}
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50">
-                        Service Types
-                    </h2>
-                    <Button>
-                        Add Custom
+                    <div>
+                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50">
+                            Service Types
+                        </h2>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            {serviceTypes.filter(item => item.status).length} of {serviceTypes.length} request types enabled
+                        </p>
+                    </div>
+                    <Button onClick={() => setIsAddCustomModalOpen(true)}>
+                        <RiAddLine className="size-4 mr-1.5" />
+                        Add Custom Type
                     </Button>
+                </div>
+
+                {/* Instructions */}
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                    <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-1">
+                        Choose which request types to enable
+                    </h3>
+                    <p className="text-sm text-blue-700 dark:text-blue-200">
+                        Simply toggle on the types of requests you want to handle. You can always add more later.
+                    </p>
                 </div>
 
                 {/* Search and Filters */}
@@ -230,7 +402,7 @@ export default function WorkOrdersSettings() {
                                     Assigned To
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Status
+                                    Enable
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Actions
@@ -290,6 +462,103 @@ export default function WorkOrdersSettings() {
                     )}
                 </div>
             </div>
+
+            {/* Add Custom Type Modal */}
+            <Dialog open={isAddCustomModalOpen} onOpenChange={setIsAddCustomModalOpen}>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-md">
+                        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+                                Add Custom Service Type
+                            </h3>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setIsAddCustomModalOpen(false)}
+                                className="p-2 h-8 w-8"
+                            >
+                                <RiCloseLine className="size-4" />
+                            </Button>
+                        </div>
+                        
+                        <div className="p-6 space-y-4">
+                            <div>
+                                <Label htmlFor="requestType">Request Type *</Label>
+                                <Input
+                                    id="requestType"
+                                    placeholder="Enter request type name"
+                                    value={newServiceType.requestType}
+                                    onChange={(e) => setNewServiceType(prev => ({ ...prev, requestType: e.target.value }))}
+                                />
+                            </div>
+                            
+                            <div>
+                                <Label htmlFor="description">Description *</Label>
+                                <Input
+                                    id="description"
+                                    placeholder="Enter description"
+                                    value={newServiceType.description}
+                                    onChange={(e) => setNewServiceType(prev => ({ ...prev, description: e.target.value }))}
+                                />
+                            </div>
+                            
+                            <div>
+                                <Label htmlFor="category">Category</Label>
+                                <select
+                                    id="category"
+                                    value={newServiceType.category}
+                                    onChange={(e) => setNewServiceType(prev => ({ ...prev, category: e.target.value }))}
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option>Security</option>
+                                    <option>Maintenance</option>
+                                    <option>Cleaning</option>
+                                    <option>Concierge</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <Label htmlFor="approval">Approval Type</Label>
+                                <select
+                                    id="approval"
+                                    value={newServiceType.approval}
+                                    onChange={(e) => setNewServiceType(prev => ({ ...prev, approval: e.target.value }))}
+                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option>Direct</option>
+                                    <option>Tenant POC</option>
+                                    <option>Manager Approval</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <Label htmlFor="assignedTo">Assigned To *</Label>
+                                <Input
+                                    id="assignedTo"
+                                    placeholder="Enter team or person responsible"
+                                    value={newServiceType.assignedTo}
+                                    onChange={(e) => setNewServiceType(prev => ({ ...prev, assignedTo: e.target.value }))}
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700">
+                            <Button
+                                variant="ghost"
+                                onClick={() => setIsAddCustomModalOpen(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleAddCustomType}
+                                disabled={!newServiceType.requestType.trim() || !newServiceType.description.trim() || !newServiceType.assignedTo.trim()}
+                            >
+                                Add Service Type
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </Dialog>
         </div>
     )
 }
