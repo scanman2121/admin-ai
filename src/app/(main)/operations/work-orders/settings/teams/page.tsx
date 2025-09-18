@@ -35,9 +35,6 @@ export default function WorkOrdersTeams() {
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
                         Work Order Settings
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-400 mt-1">
-                        Configure which request types to enable and manage their settings
-                    </p>
                 </div>
                 <Button variant="primary">
                     Save Changes
