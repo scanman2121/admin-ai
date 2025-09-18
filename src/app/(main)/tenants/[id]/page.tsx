@@ -1,12 +1,11 @@
 "use client"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ChevronRight, Copy, Edit2, Mail, NotepadText, Plus, User, UserPlus, Zap } from "lucide-react"
+import { ChevronRight, Copy, Edit2, Mail, NotepadText, User, UserPlus, Zap } from "lucide-react"
 import Link from "next/link"
 
 // Mock data for tenants
@@ -132,180 +131,232 @@ export default function TenantDetailPage({ params }: { params: { id: string } })
 
     return (
         <div className="space-y-6">
-            {/* Header with back button */}
-            <div className="flex items-center gap-4">
-                <Link href="/tenants" className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
-                    <RiArrowLeftLine className="size-5" />
-                </Link>
-                <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                    Tenant Details
-                </h1>
-            </div>
+            {/* Breadcrumb Navigation */}
+            <nav className="flex items-center space-x-2 text-sm text-gray-500">
+                <Link href="/tenants" className="hover:text-gray-700">Tenants</Link>
+                <ChevronRight className="size-4" />
+                <span className="text-gray-900 font-medium">{tenant.name}</span>
+            </nav>
 
-            {/* Tenant Overview Card */}
-            <Card className="p-6">
-                <div className="flex items-center gap-6">
-                    <div className="relative shrink-0">
-                        <div className="size-20 rounded-lg bg-white dark:bg-gray-900 flex items-center justify-center">
-                            <Image
-                                src={tenant.logo}
-                                alt={tenant.name}
-                                width={60}
-                                height={60}
-                                className="rounded object-contain"
-                            />
-                        </div>
-                        <div className="absolute -bottom-1 -right-1 size-6 bg-green-500 rounded-full flex items-center justify-center">
-                            <RiBuilding4Line className="size-3.5 text-white" />
-                        </div>
+            {/* Company Header */}
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    {/* Company Logo */}
+                    <div className="size-16 rounded-full bg-green-500 flex items-center justify-center">
+                        <Zap className="size-8 text-white" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-3 mb-1">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50 truncate">
-                                {tenant.name}
-                            </h2>
-                            <Badge className={tenant.status === "Active" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" : ""}>
-                                • {tenant.status}
-                            </Badge>
-                        </div>
-                        <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
-                            <span>{tenant.industry}</span>
-                            <span>{tenant.space}</span>
-                            <span>{tenant.floor}</span>
-                            <span>Move-in: {tenant.moveInDate}</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Button variant="outline">
-                            Edit details
-                        </Button>
-                        <Button>
-                            Contact tenant
+                    
+                    {/* Company Name and Edit Button */}
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-2xl font-semibold text-gray-900">{tenant.name}</h1>
+                        <Button variant="ghost" size="sm" className="p-1">
+                            <Edit2 className="size-4 text-gray-500" />
                         </Button>
                     </div>
                 </div>
-            </Card>
 
-            {/* Main Content Tabs */}
+                {/* Building Selector */}
+                <div className="w-48">
+                    <Select defaultValue="all-buildings">
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select building" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all-buildings">All Buildings</SelectItem>
+                            <SelectItem value="building-1">Building 1</SelectItem>
+                            <SelectItem value="building-2">Building 2</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+
+            {/* Tab Navigation */}
             <Tabs defaultValue="overview" className="space-y-6">
-                <TabsList>
+                <TabsList className="grid w-full grid-cols-4">
                     <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="users">Users</TabsTrigger>
+                    <TabsTrigger value="contacts">Contacts</TabsTrigger>
                     <TabsTrigger value="activity">Activity</TabsTrigger>
-                    <TabsTrigger value="settings">Settings</TabsTrigger>
+                    <TabsTrigger value="app-configurations">App Configurations</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="overview" className="space-y-6">
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <Card className="p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-lg font-medium">User overview</h3>
-                                <RiTeamLine className="size-5 text-gray-400" />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1">
-                                    <p className="text-3xl font-semibold">{tenant.stats.totalEmployees}</p>
-                                    <p className="text-sm text-gray-500">Total employees</p>
+                <TabsContent value="overview" className="space-y-0">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Left Column - Details */}
+                        <div className="lg:col-span-1">
+                            <Card className="p-6">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-lg font-semibold">Details</h3>
+                                    <Button variant="ghost" size="sm" className="p-1">
+                                        <Edit2 className="size-4 text-gray-500" />
+                                    </Button>
                                 </div>
-                                <div className="space-y-1">
-                                    <p className="text-3xl font-semibold text-green-600">{tenant.stats.activeUsers}</p>
-                                    <p className="text-sm text-gray-500">Active users</p>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-3xl font-semibold text-amber-600">{tenant.stats.pendingUsers}</p>
-                                    <p className="text-sm text-gray-500">Pending users</p>
-                                </div>
-                            </div>
-                        </Card>
 
-                        <Card className="p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-lg font-medium">Access activity</h3>
-                                <RiMapPinLine className="size-5 text-gray-400" />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-1">
-                                    <p className="text-3xl font-semibold">{tenant.stats.totalVisits}</p>
-                                    <p className="text-sm text-gray-500">Total visits</p>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-3xl font-semibold">{tenant.stats.avgDailyVisits}</p>
-                                    <p className="text-sm text-gray-500">Avg. daily visits</p>
-                                </div>
-                            </div>
-                        </Card>
-
-                        <Card className="p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className="text-lg font-medium">Primary contact</h3>
-                                <RiUserLine className="size-5 text-gray-400" />
-                            </div>
-                            <div className="space-y-3">
-                                <div>
-                                    <p className="font-medium">{tenant.primaryContact.name}</p>
-                                    <p className="text-sm text-gray-500">{tenant.primaryContact.role}</p>
-                                </div>
-                                <div className="space-y-1 text-sm">
-                                    <p>{tenant.primaryContact.email}</p>
-                                    <p>{tenant.primaryContact.phone}</p>
-                                </div>
-                            </div>
-                        </Card>
-                    </div>
-
-                    {/* Recent Activity */}
-                    <Card className="p-6">
-                        <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-lg font-medium">Recent activity</h3>
-                            <Button variant="outline" size="sm">View all</Button>
-                        </div>
-                        <div className="space-y-6">
-                            {tenant.recentActivity.map((activity, index) => (
-                                <div key={index} className="flex items-start gap-4">
-                                    <div className="size-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0">
-                                        {activity.type === "Event" && <RiCalendarEventLine className="size-4 text-gray-600" />}
-                                        {activity.type === "Marketplace" && <RiShoppingBag3Line className="size-4 text-gray-600" />}
-                                        {activity.type === "Access" && <RiMapPinLine className="size-4 text-gray-600" />}
+                                <div className="space-y-6">
+                                    <div>
+                                        <p className="text-sm text-gray-500 mb-2">{tenant.description}</p>
+                                        <Button variant="ghost" size="sm" className="p-1 -ml-1">
+                                            <Edit2 className="size-4 text-gray-500" />
+                                        </Button>
                                     </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="font-medium text-gray-900 dark:text-gray-50">{activity.title}</p>
-                                        <div className="flex items-center gap-3 text-sm">
-                                            <span className="text-gray-500">{activity.type}</span>
-                                            <span className="text-gray-500">{activity.date}</span>
+
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="font-medium text-gray-900">{tenant.industry}</p>
+                                                <p className="text-sm text-gray-500">Industry</p>
+                                            </div>
+                                            <Button variant="ghost" size="sm" className="p-1">
+                                                <Edit2 className="size-4 text-gray-500" />
+                                            </Button>
+                                        </div>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="font-medium text-gray-900">{tenant.billingAddress}</p>
+                                                <p className="text-sm text-gray-500">Billing Address</p>
+                                            </div>
+                                            <Button variant="ghost" size="sm" className="p-1">
+                                                <Edit2 className="size-4 text-gray-500" />
+                                            </Button>
+                                        </div>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="font-medium text-gray-900">{tenant.website}</p>
+                                                <p className="text-sm text-gray-500">Website</p>
+                                            </div>
+                                            <Button variant="ghost" size="sm" className="p-1">
+                                                <Edit2 className="size-4 text-gray-500" />
+                                            </Button>
+                                        </div>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="font-medium text-gray-900">{tenant.employees}</p>
+                                                <p className="text-sm text-gray-500">Employees</p>
+                                            </div>
+                                            <Button variant="ghost" size="sm" className="p-1">
+                                                <Edit2 className="size-4 text-gray-500" />
+                                            </Button>
+                                        </div>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="font-medium text-gray-900">{tenant.domains}</p>
+                                                <p className="text-sm text-gray-500">Domains</p>
+                                            </div>
+                                            <Button variant="ghost" size="sm" className="p-1">
+                                                <Edit2 className="size-4 text-gray-500" />
+                                            </Button>
+                                        </div>
+
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="font-medium text-gray-900">{tenant.creationDate}</p>
+                                                <p className="text-sm text-gray-500">Creation Date</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <Badge className={
-                                        activity.status === "Completed" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" :
-                                            activity.status === "Upcoming" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300" :
-                                                ""
-                                    }>
-                                        {activity.status}
-                                    </Badge>
                                 </div>
-                            ))}
+                            </Card>
                         </div>
-                    </Card>
+
+                        {/* Right Column - Contacts and Activity */}
+                        <div className="lg:col-span-2 space-y-6">
+                            {/* Contacts Section */}
+                            <Card className="p-6">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-lg font-semibold">Contacts</h3>
+                                    <Link href="#" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                                        View Contacts
+                                    </Link>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {tenant.contacts.map((contact) => (
+                                        <div key={contact.id} className="flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                <Avatar className="size-10">
+                                                    <AvatarFallback className="bg-gray-100">
+                                                        <User className="size-5 text-gray-500" />
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div>
+                                                    <p className="font-medium text-gray-900">{contact.name}</p>
+                                                    <p className="text-sm text-gray-500">{contact.email}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Button variant="ghost" size="sm" className="p-1">
+                                                    <Mail className="size-4 text-gray-500" />
+                                                </Button>
+                                                <Button variant="ghost" size="sm" className="p-1">
+                                                    <Copy className="size-4 text-gray-500" />
+                                                </Button>
+                                                <Button variant="ghost" size="sm" className="p-1">
+                                                    <User className="size-4 text-gray-500" />
+                                                </Button>
+                                                {contact.notificationCount > 0 && (
+                                                    <div className="size-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium">
+                                                        {contact.notificationCount}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </Card>
+
+                            {/* Activity Section */}
+                            <Card className="p-6">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-lg font-semibold">Activity</h3>
+                                    <Link href="#" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                                        View Activity
+                                    </Link>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {tenant.activity.map((activity) => (
+                                        <div key={activity.id} className="flex items-start gap-3">
+                                            <div className="size-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mt-1">
+                                                <activity.icon className="size-4 text-blue-600" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <span className="font-medium text-sm">{activity.type}</span>
+                                                    <span className="text-xs text-gray-500">{activity.date}</span>
+                                                </div>
+                                                <p className="text-sm text-gray-900">{activity.title}</p>
+                                                {'subtitle' in activity && activity.subtitle && (
+                                                    <Link href="#" className="text-sm text-blue-600 hover:text-blue-700">
+                                                        {activity.subtitle}
+                                                    </Link>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </Card>
+                        </div>
+                    </div>
                 </TabsContent>
 
-                <TabsContent value="users">
-                    {/* Users tab content will go here */}
+                <TabsContent value="contacts">
                     <Card className="p-6">
-                        <p>Users content coming soon...</p>
+                        <p>Contacts content coming soon...</p>
                     </Card>
                 </TabsContent>
 
                 <TabsContent value="activity">
-                    {/* Activity tab content will go here */}
                     <Card className="p-6">
                         <p>Activity content coming soon...</p>
                     </Card>
                 </TabsContent>
 
-                <TabsContent value="settings">
-                    {/* Settings tab content will go here */}
+                <TabsContent value="app-configurations">
                     <Card className="p-6">
-                        <p>Settings content coming soon...</p>
+                        <p>App Configurations content coming soon...</p>
                     </Card>
                 </TabsContent>
             </Tabs>
