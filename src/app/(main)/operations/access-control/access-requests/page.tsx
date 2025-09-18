@@ -37,62 +37,82 @@ const generateServiceRequest = (user: any) => {
             return {
                 request: "New Employee MKA Request...",
                 type: "New Employee MKA",
-                status: "New"
+                status: "New",
+                acsStatus: "pending",
+                badgeId: null
             }
         case "kevin-chen-new":
             return {
                 request: "Lost Device Replacement...",
                 type: "Lost Device", 
-                status: "In Progress"
+                status: "In Progress",
+                acsStatus: "active",
+                badgeId: "HC-KC-004"
             }
         case "rachel-thompson-new":
             return {
                 request: "New Phone Setup Request...",
                 type: "New Phone",
-                status: "New"
+                status: "New",
+                acsStatus: "pending",
+                badgeId: null
             }
         case "marcus-rodriguez-new":
             return {
                 request: "Access Level Update Request...",
                 type: "Access Level Update",
-                status: "In Progress"
+                status: "In Progress",
+                acsStatus: "active",
+                badgeId: "FG-MR-007"
             }
         case "amanda-kim-contractor":
             return {
                 request: "Tenant Departure Processing...",
                 type: "Tenant Departure",
-                status: "New"
+                status: "New",
+                acsStatus: null,
+                badgeId: null
             }
         case "brian-wilson-suspended":
             return {
                 request: "Termination of Employment...",
                 type: "Termination of Employment",
-                status: "New"
+                status: "New",
+                acsStatus: "active",
+                badgeId: "TC-BW-008"
             }
         default:
             if (user.acsStatus === "pending") {
                 return {
                     request: "New Employee MKA Request...",
                     type: "New Employee MKA",
-                    status: "In Progress"
+                    status: "In Progress",
+                    acsStatus: "pending",
+                    badgeId: null
                 }
             } else if (user.acsStatus === "suspended") {
                 return {
                     request: "Lost Device Replacement...",
                     type: "Lost Device", 
-                    status: "Under Review"
+                    status: "Under Review",
+                    acsStatus: "active",
+                    badgeId: user.badgeId
                 }
             } else if (user.acsStatus === "inactive") {
                 return {
                     request: "Termination of Employment...",
                     type: "Termination of Employment",
-                    status: "Pending Review"
+                    status: "Pending Review",
+                    acsStatus: "active",
+                    badgeId: user.badgeId
                 }
             }
             return {
                 request: "No open requests",
                 type: null,
-                status: null
+                status: null,
+                acsStatus: null,
+                badgeId: null
             }
     }
 }
@@ -111,9 +131,9 @@ const accessRequestsData = centralizedUsers
             serviceRequest: serviceDetails.request,
             serviceRequestType: serviceDetails.type,
             serviceRequestStatus: serviceDetails.status,
-            acsStatus: user.acsStatus,
+            acsStatus: serviceDetails.acsStatus, // Use ACS status from service details
             hasNotes: true, // All users in this view have notes/requests
-            badgeId: user.badgeId,
+            badgeId: serviceDetails.badgeId, // Use badge ID from service details
         }
     })
 
@@ -226,8 +246,13 @@ const createAccessRequestsColumns = (onUserClick: (user: any) => void, onCreateC
         accessorKey: "acsStatus",
         header: "ACS Status",
         cell: ({ row }: { row: any }) => {
-            const acsStatus = row.getValue("acsStatus") as string;
-            const badgeId = row.original.badgeId as string;
+            const acsStatus = row.getValue("acsStatus") as string | null;
+            const badgeId = row.original.badgeId as string | null;
+            
+            // For Tenant Departure requests, show blank
+            if (acsStatus === null) {
+                return <div></div>;
+            }
             
             const getStatusBadge = (status: string) => {
                 switch (status) {
@@ -238,6 +263,15 @@ const createAccessRequestsColumns = (onUserClick: (user: any) => void, onCreateC
                                 className="text-xs"
                             >
                                 • Not in ACS
+                            </Badge>
+                        );
+                    case "active":
+                        return (
+                            <Badge 
+                                variant="success"
+                                className="text-xs"
+                            >
+                                • Active
                             </Badge>
                         );
                     case "suspended":
@@ -279,15 +313,84 @@ const createAccessRequestsColumns = (onUserClick: (user: any) => void, onCreateC
         id: "actions",
         header: "Actions",
         cell: ({ row }: { row: any }) => {
-            return (
-                <Button 
-                    variant="primary" 
-                    size="sm"
-                    onClick={() => onCreateClick(row.original)}
-                >
-                    Create
-                </Button>
-            );
+            const requestType = row.original.serviceRequestType;
+            
+            const getActionButton = () => {
+                switch (requestType) {
+                    case "New Employee MKA":
+                        return (
+                            <Button 
+                                variant="primary" 
+                                size="sm"
+                                onClick={() => onCreateClick(row.original)}
+                            >
+                                Create
+                            </Button>
+                        );
+                    case "New Phone":
+                        return (
+                            <Button 
+                                variant="primary" 
+                                size="sm"
+                                onClick={() => onCreateClick(row.original)}
+                            >
+                                Create
+                            </Button>
+                        );
+                    case "Termination of Employment":
+                        return (
+                            <Button 
+                                variant="destructive" 
+                                size="sm"
+                                onClick={() => onCreateClick(row.original)}
+                            >
+                                Revoke
+                            </Button>
+                        );
+                    case "Lost Device":
+                        return (
+                            <Button 
+                                variant="destructive" 
+                                size="sm"
+                                onClick={() => onCreateClick(row.original)}
+                            >
+                                Revoke
+                            </Button>
+                        );
+                    case "Tenant Departure":
+                        return (
+                            <Button 
+                                variant="destructive" 
+                                size="sm"
+                                onClick={() => onCreateClick(row.original)}
+                            >
+                                Bulk revoke
+                            </Button>
+                        );
+                    case "Access Level Update":
+                        return (
+                            <Button 
+                                variant="secondary" 
+                                size="sm"
+                                onClick={() => onCreateClick(row.original)}
+                            >
+                                View
+                            </Button>
+                        );
+                    default:
+                        return (
+                            <Button 
+                                variant="primary" 
+                                size="sm"
+                                onClick={() => onCreateClick(row.original)}
+                            >
+                                Create
+                            </Button>
+                        );
+                }
+            };
+            
+            return getActionButton();
         },
         enableSorting: false,
     },
