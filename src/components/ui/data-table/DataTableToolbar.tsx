@@ -6,15 +6,18 @@ import { DataTableViewOptions } from "@/components/ui/data-table/DataTableViewOp
 import { Input } from "@/components/ui/input"
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
+import * as React from "react"
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>
     searchKey: string
+    customViewActions?: React.ReactNode
 }
 
 export function DataTableToolbar<TData>({
     table,
     searchKey,
+    customViewActions,
 }: DataTableToolbarProps<TData>) {
     const isFiltered = table.getState().columnFilters.length > 0
 
@@ -109,7 +112,10 @@ export function DataTableToolbar<TData>({
                     </Button>
                 )}
             </div>
-            <DataTableViewOptions table={table} />
+            <div className="flex items-center gap-2">
+                {customViewActions}
+                <DataTableViewOptions table={table} />
+            </div>
         </div>
     )
 } 

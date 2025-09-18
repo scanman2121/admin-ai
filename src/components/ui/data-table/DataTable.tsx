@@ -34,6 +34,7 @@ interface DataTableProps<TData, TValue> {
   renderBulkActions?: (table: any, rowSelection: any) => React.ReactNode
   initialSorting?: SortingState
   initialColumnVisibility?: VisibilityState
+  customViewActions?: React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
@@ -44,6 +45,7 @@ export function DataTable<TData, TValue>({
   renderBulkActions,
   initialSorting = [],
   initialColumnVisibility = {},
+  customViewActions,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(initialColumnVisibility)
@@ -74,7 +76,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} searchKey={searchKey} />
+      <DataTableToolbar table={table} searchKey={searchKey} customViewActions={customViewActions} />
       <div className="overflow-hidden rounded-md border bg-white dark:bg-transparent">
         <Table>
           <TableHeader>

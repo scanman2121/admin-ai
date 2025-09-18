@@ -468,6 +468,28 @@ export default function AccessControlAccessRequests() {
 
     const accessRequestsColumns = createAccessRequestsColumns(handleUserClick, handleCreateAccessClick)
 
+    // View Toggle Component
+    const ViewToggle = () => (
+        <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg">
+            <Button
+                variant={viewMode === 'table' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('table')}
+                className="rounded-r-none border-r border-gray-200 dark:border-gray-700"
+            >
+                <List className="h-4 w-4" />
+            </Button>
+            <Button
+                variant={viewMode === 'card' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('card')}
+                className="rounded-l-none"
+            >
+                <Grid3X3 className="h-4 w-4" />
+            </Button>
+        </div>
+    )
+
     // Card View Component
     const CardView = () => (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -568,27 +590,7 @@ export default function AccessControlAccessRequests() {
                         </Button>
                     </Link>
                 </div>
-                <div className="flex items-center gap-3">
-                    {/* View Toggle */}
-                    <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg">
-                        <Button
-                            variant={viewMode === 'table' ? 'default' : 'ghost'}
-                            size="sm"
-                            onClick={() => setViewMode('table')}
-                            className="rounded-r-none border-r border-gray-200 dark:border-gray-700"
-                        >
-                            <List className="h-4 w-4" />
-                        </Button>
-                        <Button
-                            variant={viewMode === 'card' ? 'default' : 'ghost'}
-                            size="sm"
-                            onClick={() => setViewMode('card')}
-                            className="rounded-l-none"
-                        >
-                            <Grid3X3 className="h-4 w-4" />
-                        </Button>
-                    </div>
-                    <DropdownMenu>
+                <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="primary" className="flex items-center gap-2">
                                 Grant access
@@ -617,7 +619,6 @@ export default function AccessControlAccessRequests() {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-                </div>
             </div>
 
             {/* Tab Navigation */}
@@ -655,6 +656,7 @@ export default function AccessControlAccessRequests() {
                             desc: true // Sort by request type
                         }
                     ]}
+                    customViewActions={<ViewToggle />}
                     renderBulkActions={(table, rowSelection) => (
                         <UserAccessBulkActions
                             table={table}
@@ -666,7 +668,12 @@ export default function AccessControlAccessRequests() {
                     )}
                 />
             ) : (
-                <CardView />
+                <div className="space-y-4">
+                    <div className="flex justify-end">
+                        <ViewToggle />
+                    </div>
+                    <CardView />
+                </div>
             )}
 
             {/* User Details Modal */}
