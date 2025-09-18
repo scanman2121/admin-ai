@@ -11,7 +11,6 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { CreateUserAccessModal } from "@/components/ui/user-access/CreateUserAccessModal"
 import { UserAccessBulkActions } from "@/components/ui/user-access/UserAccessBulkActions"
@@ -441,6 +440,25 @@ export default function AccessControlAccessRequests() {
     const [requestTypeFilter, setRequestTypeFilter] = useState<string[]>([])
     const [statusFilter, setStatusFilter] = useState<string[]>([])
 
+    // Badge status options for dropdown
+    const badgeStatusOptions = [
+        { label: 'New', variant: 'error' as const },
+        { label: 'In Progress', variant: 'warning' as const },
+        { label: 'Under Review', variant: 'neutral' as const },
+        { label: 'Pending Review', variant: 'default' as const },
+        { label: 'Completed', variant: 'success' as const }
+    ]
+
+    const getCurrentStatusVariant = (status: string) => {
+        const option = badgeStatusOptions.find(opt => opt.label === status)
+        return option?.variant || 'default'
+    }
+
+    const handleStatusChange = (userId: string, newStatus: string) => {
+        // Update status logic would go here
+        console.log(`Updating user ${userId} status to ${newStatus}`)
+    }
+
     const handleUserClick = (user: typeof accessRequestsData[0]) => {
         setSelectedUser(user)
         setIsModalOpen(true)
@@ -617,25 +635,40 @@ export default function AccessControlAccessRequests() {
                                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Request status:
                                 </span>
-                                <Select defaultValue={user.serviceRequestStatus || "New"}>
-                                    <SelectTrigger className="w-40">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="New">New</SelectItem>
-                                        <SelectItem value="In Progress">In Progress</SelectItem>
-                                        <SelectItem value="Under Review">Under Review</SelectItem>
-                                        <SelectItem value="Pending Review">Pending Review</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <div className="relative">
+                                            <Badge 
+                                                variant={getCurrentStatusVariant(user.serviceRequestStatus || "New")} 
+                                                className="h-9 px-3 py-1.5 cursor-pointer hover:opacity-80 transition-opacity flex items-center gap-1.5 w-40 justify-between"
+                                            >
+                                                • {user.serviceRequestStatus || "New"}
+                                                <ChevronDown className="h-3 w-3" />
+                                            </Badge>
+                                        </div>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="min-w-[150px]">
+                                        {badgeStatusOptions.map((option) => (
+                                            <DropdownMenuItem
+                                                key={option.label}
+                                                onClick={() => handleStatusChange(user.id, option.label)}
+                                                className="flex items-center gap-2 cursor-pointer"
+                                            >
+                                                <Badge variant={option.variant} className="text-xs pointer-events-none">
+                                                    • {option.label}
+                                                </Badge>
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         </div>
 
                         {/* Nested Employee Access Provisioning Card */}
                         <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-                            <div className="flex items-start justify-between">
+                            <div className="flex items-center justify-between">
                                 {/* Employee Information */}
-                                <div className="space-y-1">
+                                <div className="space-y-1 flex-1">
                                     <div className="font-semibold text-lg text-gray-900 dark:text-gray-50">
                                         {user.name}
                                     </div>
@@ -648,24 +681,19 @@ export default function AccessControlAccessRequests() {
                                     </div>
                                 </div>
 
-                                {/* Access Control Status and Actions */}
-                                <div className="flex items-center gap-4">
+                                {/* Access Control Status and Actions - Aligned horizontally */}
+                                <div className="flex items-center gap-3 ml-4">
                                     {/* Access Status Mini Card */}
-                                    <div className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-3">
+                                    <div className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-3 min-w-[140px]">
                                         <div className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                                             Access Control Status
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <Badge 
-                                                variant={
-                                                    user.serviceRequestStatus === "New" ? "error" :
-                                                    user.serviceRequestStatus === "In Progress" ? "warning" :
-                                                    user.serviceRequestStatus === "Under Review" ? "neutral" :
-                                                    "default"
-                                                }
+                                                variant={getCurrentStatusVariant(user.serviceRequestStatus || "New")}
                                                 className="text-xs"
                                             >
-                                                • {user.serviceRequestStatus}
+                                                • {user.serviceRequestStatus || "New"}
                                             </Badge>
                                             {user.badgeId && (
                                                 <div className="text-xs text-gray-500 font-mono">
@@ -675,12 +703,13 @@ export default function AccessControlAccessRequests() {
                                         </div>
                                     </div>
                                     
-                                    {/* Action Buttons */}
+                                    {/* Action Buttons - Fixed width for alignment */}
                                     <div className="flex items-center gap-2">
                                         <Button
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => handleUserClick(user)}
+                                            className="w-28 justify-center"
                                         >
                                             <User className="mr-2 h-4 w-4" />
                                             View details
@@ -689,6 +718,7 @@ export default function AccessControlAccessRequests() {
                                             variant={user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" || user.serviceRequestType === "Tenant Departure" ? "secondary" : "primary"}
                                             size="sm"
                                             onClick={() => handleCreateAccessClick(user)}
+                                            className="w-28 justify-center"
                                         >
                                             {user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "View" : 
                                              user.serviceRequestType === "Tenant Departure" ? "Review" : "Create access"}
