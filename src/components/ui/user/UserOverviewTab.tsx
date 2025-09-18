@@ -12,15 +12,26 @@ interface UserOverviewTabProps {
         serviceRequest?: string
         serviceRequestType?: string | null
         serviceRequestStatus?: string | null
-        acsStatus: string
+        acsStatus: string | null
         hasNotes?: boolean
-        badgeId?: string
+        badgeId?: string | null
     }
     containerClassName?: string
     isModal?: boolean
 }
 
-const getAppUserStatusBadge = (acsStatus: string) => {
+const getAppUserStatusBadge = (acsStatus: string | null) => {
+    if (acsStatus === null) {
+        return (
+            <Badge 
+                variant="secondary" 
+                className="bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700"
+            >
+                No app status
+            </Badge>
+        );
+    }
+    
     const isActiveAppUser = acsStatus !== "revoked";
     
     if (isActiveAppUser) {
@@ -44,7 +55,15 @@ const getAppUserStatusBadge = (acsStatus: string) => {
     }
 }
 
-const getACSStatusBadge = (status: string) => {
+const getACSStatusBadge = (status: string | null) => {
+    if (status === null) {
+        return (
+            <Badge variant="secondary">
+                No ACS Status
+            </Badge>
+        );
+    }
+    
     switch (status) {
         case "active":
             return (
@@ -53,6 +72,15 @@ const getACSStatusBadge = (status: string) => {
                     className="bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/30"
                 >
                     Active ACS
+                </Badge>
+            );
+        case "pending":
+            return (
+                <Badge 
+                    variant="secondary" 
+                    className="bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/30"
+                >
+                    • Not in ACS
                 </Badge>
             );
         case "not-in-acs":

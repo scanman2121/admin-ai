@@ -25,9 +25,9 @@ interface UserDetailsModalProps {
         serviceRequest: string
         serviceRequestType: string | null
         serviceRequestStatus: string | null
-        acsStatus: string
+        acsStatus: string | null
         hasNotes: boolean
-        badgeId?: string
+        badgeId?: string | null
     } | null
     defaultTab?: string
 }
@@ -58,7 +58,10 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
         return name.split(' ').map(n => n[0]).join('').toUpperCase()
     }
 
-    const getACSStatusBadge = (status: string) => {
+    const getACSStatusBadge = (status: string | null) => {
+        if (status === null) {
+            return { variant: 'neutral' as const, text: '• No Status' }
+        }
         switch (status.toLowerCase()) {
             case 'active':
                 return { variant: 'success' as const, text: '• Active' }

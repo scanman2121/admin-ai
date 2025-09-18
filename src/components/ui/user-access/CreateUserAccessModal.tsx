@@ -13,9 +13,9 @@ type UserData = {
     serviceRequest: string
     serviceRequestType: string | null
     serviceRequestStatus: string | null
-    acsStatus: string
+    acsStatus: string | null
     hasNotes: boolean
-    badgeId?: string
+    badgeId?: string | null
 }
 
 interface CreateUserAccessModalProps {
