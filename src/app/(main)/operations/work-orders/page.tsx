@@ -14,25 +14,34 @@ const createWorkOrdersColumns = (onRequestorClick: (requestorDetails: any) => vo
         header: "Request",
         cell: ({ row }: { row: any }) => {
             const request = row.getValue("request") as string;
-            const requestor = row.original.requestor as string;
             const requestorDetails = row.original.requestorDetails;
+            const name = requestorDetails?.name || "";
+            const company = requestorDetails?.company || "";
 
             return (
-                <div>
-                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                <div className="min-w-0 flex-1">
+                    <div className="font-medium text-gray-900 dark:text-gray-50 mb-1">
                         {request}
                     </div>
-                    <button
-                        onClick={() => onRequestorClick(requestorDetails)}
-                        className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer underline"
-                    >
-                        {requestor}
-                    </button>
+                    <div className="text-sm">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onRequestorClick(requestorDetails);
+                            }}
+                            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer underline hover:no-underline"
+                        >
+                            {name}
+                        </button>
+                        <span className="text-gray-500 mx-1">·</span>
+                        <span className="text-gray-600 dark:text-gray-400">{company}</span>
+                    </div>
                 </div>
             );
         },
         meta: {
             displayName: "Request",
+            className: "w-80 min-w-80",
         },
     },
     {
@@ -52,13 +61,16 @@ const createWorkOrdersColumns = (onRequestorClick: (requestorDetails: any) => vo
         cell: ({ row }: { row: any }) => {
             const description = row.getValue("description") as string;
             return (
-                <span className="text-gray-600 dark:text-gray-400">
-                    {description || "-"}
-                </span>
+                <div className="max-w-48 text-gray-600 dark:text-gray-400">
+                    <span className="line-clamp-2">
+                        {description || "-"}
+                    </span>
+                </div>
             );
         },
         meta: {
             displayName: "Description",
+            className: "w-48 max-w-48",
         },
     },
     {
