@@ -124,6 +124,8 @@ export const users: {
   role: string
   company: string
   avatarUrl?: string
+  buildings: string[]
+  hasMobileAccess: boolean
 }[] = [
     {
       name: "Ellie Edwards",
@@ -132,6 +134,8 @@ export const users: {
       role: "viewer",
       company: "Acme Inc",
       avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      buildings: ["Main Tower", "East Wing"],
+      hasMobileAccess: true,
     },
     {
       name: "Alissia McCalister",
@@ -139,6 +143,8 @@ export const users: {
       email: "a.stone@gmail.com",
       role: "viewer",
       company: "Acme Inc",
+      buildings: ["Main Tower"],
+      hasMobileAccess: false,
     },
     {
       name: "Emily Luisa Bernacle",
@@ -146,6 +152,8 @@ export const users: {
       email: "e.luis.bernacle@gmail.com",
       role: "member",
       company: "Acme Inc",
+      buildings: ["West Building", "South Plaza"],
+      hasMobileAccess: true,
     },
     {
       name: "Aaron Wave",
@@ -153,6 +161,8 @@ export const users: {
       email: "a.flow@acme.com",
       role: "contributor",
       company: "Acme Inc",
+      buildings: ["Main Tower", "East Wing", "West Building"],
+      hasMobileAccess: true,
     },
     {
       name: "Thomas Palstein",
@@ -160,6 +170,8 @@ export const users: {
       email: "t.palstein@acme.com",
       role: "viewer",
       company: "Acme Inc",
+      buildings: ["South Plaza"],
+      hasMobileAccess: false,
     },
     {
       name: "Sarah Johnson",
@@ -167,6 +179,8 @@ export const users: {
       email: "s.johnson@gmail.com",
       role: "admin",
       company: "Acme Inc",
+      buildings: ["Main Tower", "East Wing", "West Building", "South Plaza"],
+      hasMobileAccess: true,
     },
     {
       name: "Megan Katherina Brown",
@@ -174,6 +188,8 @@ export const users: {
       email: "m.lovelybrown@gmail.com",
       role: "contributor",
       company: "Acme Inc",
+      buildings: ["West Building", "East Wing"],
+      hasMobileAccess: false,
     },
   ]
 

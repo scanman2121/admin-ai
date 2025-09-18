@@ -1,10 +1,14 @@
 "use client"
 
+import { Badge } from "@/components/Badge"
 import { Checkbox } from "@/components/Checkbox"
+import { Tooltip } from "@/components/Tooltip"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { roles, users } from "@/data/data"
 import { Row, Table } from "@tanstack/react-table"
+import { MonitorSmartphone } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 // Define columns for the users table
@@ -102,14 +106,26 @@ const usersColumns = [
         enableColumnFilter: true,
     },
     {
-        accessorKey: "email",
-        header: "Email",
+        accessorKey: "buildings",
+        header: "Buildings",
         cell: ({ row }: { row: any }) => {
-            const email = row.getValue("email") as string;
-            return <span className="text-gray-600 dark:text-gray-400">{email}</span>;
+            const buildings = row.getValue("buildings") as string[];
+            return (
+                <div className="flex flex-wrap gap-1">
+                    {buildings.map((building) => (
+                        <Badge
+                            key={building}
+                            variant="neutral"
+                            className="text-xs"
+                        >
+                            {building}
+                        </Badge>
+                    ))}
+                </div>
+            );
         },
         meta: {
-            displayName: "Email",
+            displayName: "Buildings",
         },
     },
     {
@@ -128,11 +144,20 @@ const usersColumns = [
     {
         accessorKey: "status",
         header: "Status",
-        cell: () => {
+        cell: ({ row }: { row: any }) => {
+            const hasMobileAccess = row.original.hasMobileAccess as boolean;
+            
             return (
-                <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                    Active
-                </span>
+                <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                        Active
+                    </span>
+                    {hasMobileAccess && (
+                        <Tooltip content="Mobile access active">
+                            <MonitorSmartphone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        </Tooltip>
+                    )}
+                </div>
             );
         },
         meta: {
@@ -145,5 +170,13 @@ const usersColumns = [
 
 export default function Users() {
     const [data] = useState(users)
-    return <DataTable columns={usersColumns} data={data} />
+    const router = useRouter()
+
+    const handleRowClick = (user: any) => {
+        // Generate user ID from email (remove @ and domain, replace dots)
+        const userId = user.email.split('@')[0].replace('.', '')
+        router.push(`/users/${userId}`)
+    }
+
+    return <DataTable columns={usersColumns} data={data} onRowClick={handleRowClick} />
 } 
