@@ -15,7 +15,7 @@ import {
     DropdownMenuItem, 
     DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
-import { Users, ChevronDown, User, Building, FileText } from "lucide-react"
+import { Users, ChevronDown, User, Building, FileText, MoreVertical } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -259,22 +259,52 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
             const acsStatus = row.original.acsStatus as string;
             const serviceRequest = row.original.serviceRequest as string;
             
+            const ActionsDropdown = () => (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                            <MoreVertical className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                            Activate access
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            Revoke access
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            Remove mobile app access
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            View user in ACS
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            );
+            
             if (acsStatus === "not-in-acs" || serviceRequest !== "No open requests") {
                 return (
-                    <Button 
-                        variant="primary" 
-                        size="sm"
-                        onClick={() => onCreateClick(row.original)}
-                    >
-                        Create
-                    </Button>
+                    <div className="flex items-center gap-2">
+                        <Button 
+                            variant="primary" 
+                            size="sm"
+                            onClick={() => onCreateClick(row.original)}
+                        >
+                            Create
+                        </Button>
+                        <ActionsDropdown />
+                    </div>
                 );
             }
             
             return (
-                <Button variant="secondary" size="sm">
-                    View
-                </Button>
+                <div className="flex items-center gap-2">
+                    <Button variant="secondary" size="sm">
+                        View
+                    </Button>
+                    <ActionsDropdown />
+                </div>
             );
         },
         enableSorting: false,
