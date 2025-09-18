@@ -592,93 +592,112 @@ export default function AccessControlAccessRequests() {
                     {/* Main Service Request Card */}
                     <div className="p-6">
                         <div className="flex items-start justify-between mb-4">
-                            <div className="flex items-center gap-3">
-                                <div className="flex items-center justify-center w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300">
-                                    {user.name.split(' ').map((n: string) => n[0]).join('')}
+                            <div className="space-y-2">
+                                {/* Request Type */}
+                                <div className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+                                    {user.serviceRequestType}
                                 </div>
-                                <div>
+                                
+                                {/* Has Notes */}
+                                {user.hasNotes && (
+                                    <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
+                                        <FileText className="h-4 w-4" />
+                                        Has notes
+                                    </div>
+                                )}
+                                
+                                {/* Requested By */}
+                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    Requested by tenant admin
+                                </div>
+                            </div>
+                            
+                            {/* Request Status */}
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    Request status:
+                                </span>
+                                <Select defaultValue={user.serviceRequestStatus || "New"}>
+                                    <SelectTrigger className="w-40">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="New">New</SelectItem>
+                                        <SelectItem value="In Progress">In Progress</SelectItem>
+                                        <SelectItem value="Under Review">Under Review</SelectItem>
+                                        <SelectItem value="Pending Review">Pending Review</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+
+                        <div className="mb-4">
+                            <div className="text-base text-gray-900 dark:text-gray-50">
+                                {user.serviceRequest}
+                            </div>
+                        </div>
+
+                        {/* Nested Employee Access Provisioning Card */}
+                        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                            <div className="flex items-start justify-between">
+                                {/* Employee Information */}
+                                <div className="space-y-1">
                                     <div className="font-semibold text-lg text-gray-900 dark:text-gray-50">
                                         {user.name}
                                     </div>
                                     <div className="text-sm text-gray-500 dark:text-gray-400">
                                         {user.email}
                                     </div>
-                                    <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1">
+                                    <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                                         <Building className="w-3 h-3" />
                                         {user.company} • {user.floorSuite}
                                     </div>
                                 </div>
-                            </div>
-                            <Select defaultValue={user.serviceRequestStatus || "New"}>
-                                <SelectTrigger className="w-40">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="New">New</SelectItem>
-                                    <SelectItem value="In Progress">In Progress</SelectItem>
-                                    <SelectItem value="Under Review">Under Review</SelectItem>
-                                    <SelectItem value="Pending Review">Pending Review</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
 
-                        <div className="mb-4">
-                            <div className="text-base font-medium text-gray-900 dark:text-gray-50 mb-1">
-                                {user.serviceRequest}
-                            </div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                                {user.serviceRequestType}
-                            </div>
-                        </div>
-
-                        {/* Nested ACS Info Card */}
-                        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">
-                                        Access Control Status
+                                {/* Access Control Status and Actions */}
+                                <div className="text-right space-y-3">
+                                    <div>
+                                        <div className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">
+                                            Access Control Status
+                                        </div>
+                                        <div className="flex items-center justify-end gap-3">
+                                            <Badge 
+                                                variant={
+                                                    user.serviceRequestStatus === "New" ? "error" :
+                                                    user.serviceRequestStatus === "In Progress" ? "warning" :
+                                                    user.serviceRequestStatus === "Under Review" ? "neutral" :
+                                                    "default"
+                                                }
+                                                className="text-xs"
+                                            >
+                                                • {user.serviceRequestStatus}
+                                            </Badge>
+                                            {user.badgeId && (
+                                                <div className="text-xs text-gray-500 font-mono">
+                                                    {user.badgeId}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-3">
-                                        <Badge 
-                                            variant={
-                                                user.serviceRequestStatus === "New" ? "error" :
-                                                user.serviceRequestStatus === "In Progress" ? "warning" :
-                                                user.serviceRequestStatus === "Under Review" ? "neutral" :
-                                                "default"
-                                            }
-                                            className="text-xs"
+                                    
+                                    {/* Action Buttons */}
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => handleUserClick(user)}
                                         >
-                                            • {user.serviceRequestStatus}
-                                        </Badge>
-                                        {user.hasNotes && (
-                                            <div className="flex items-center gap-1 text-xs text-gray-500">
-                                                <FileText className="h-3 w-3" />
-                                                Has notes
-                                            </div>
-                                        )}
-                                        {user.badgeId && (
-                                            <div className="text-xs text-gray-500 font-mono">
-                                                {user.badgeId}
-                                            </div>
-                                        )}
+                                            <User className="mr-2 h-4 w-4" />
+                                            View details
+                                        </Button>
+                                        <Button
+                                            variant="primary"
+                                            size="sm"
+                                            onClick={() => handleCreateAccessClick(user)}
+                                        >
+                                            {user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "Revoke" : "Create access"}
+                                        </Button>
                                     </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleUserClick(user)}
-                                    >
-                                        <User className="mr-2 h-4 w-4" />
-                                        View details
-                                    </Button>
-                                    <Button
-                                        variant="primary"
-                                        size="sm"
-                                        onClick={() => handleCreateAccessClick(user)}
-                                    >
-                                        {user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "Revoke" : "Create access"}
-                                    </Button>
                                 </div>
                             </div>
                         </div>
