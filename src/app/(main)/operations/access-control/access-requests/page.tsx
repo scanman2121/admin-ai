@@ -608,7 +608,7 @@ export default function AccessControlAccessRequests() {
                                 
                                 {/* Requested By */}
                                 <div className="text-sm text-gray-500 dark:text-gray-400">
-                                    Requested by tenant admin
+                                    Requested by Sarah Chen
                                 </div>
                             </div>
                             
