@@ -3,11 +3,12 @@
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
+import { AssignedPersonnelCard } from "@/components/ui/AssignedPersonnelCard"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Textarea } from "@/components/ui/textarea"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { workOrders } from "@/data/data"
-import { ChevronLeft, Download, ExternalLink, FileText, MapPin, Paperclip, Plus, Send, Upload } from "lucide-react"
+import { ChevronLeft, Download, ExternalLink, FileText, MapPin, Paperclip, Send, Upload } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { useState } from "react"
@@ -135,6 +136,16 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
     
     const workOrderDetail = getWorkOrderDetailData(params.id)
     
+    const [assignedPersonnel, setAssignedPersonnel] = useState(
+        workOrderDetail?.assignedPersonnel.map(person => ({
+            id: person.id,
+            name: person.name,
+            email: `${person.name.toLowerCase().replace(' ', '.')}@company.com`,
+            initials: person.initials,
+            role: person.role
+        })) || []
+    )
+    
     if (!workOrderDetail) {
         notFound()
     }
@@ -149,6 +160,14 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
     const handleCloseModal = () => {
         setIsModalOpen(false)
         setSelectedUser(null)
+    }
+
+    const handleAssignPersonnel = (person: { id: string; name: string; email: string; initials: string; role?: string }) => {
+        setAssignedPersonnel(prev => [...prev, person])
+    }
+
+    const handleRemovePersonnel = (personId: string) => {
+        setAssignedPersonnel(prev => prev.filter(person => person.id !== personId))
     }
 
     return (
@@ -368,32 +387,11 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                 {/* Right Column - 1/3 width */}
                 <div className="lg:col-span-1 space-y-6">
                     {/* Assigned Personnel */}
-                    <Card>
-                        <div className="p-6">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Assigned Personnel</h3>
-                            
-                            <div className="space-y-4 mb-4">
-                                {workOrderDetail.assignedPersonnel.map((person) => (
-                                    <div key={person.id} className="flex items-center gap-3">
-                                        <Avatar className="size-10">
-                                            <AvatarFallback className="bg-blue-100 text-blue-600">
-                                                {person.initials}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-900">{person.name}</p>
-                                            <p className="text-xs text-gray-500">{person.role}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            
-                            <Button variant="ghost" size="sm" className="flex items-center gap-2 w-full">
-                                <Plus className="h-4 w-4" />
-                                Assign More
-                            </Button>
-                        </div>
-                    </Card>
+                    <AssignedPersonnelCard
+                        assignedPersonnel={assignedPersonnel}
+                        onAssignPersonnel={handleAssignPersonnel}
+                        onRemovePersonnel={handleRemovePersonnel}
+                    />
 
                     {/* Case Files */}
                     <Card>
