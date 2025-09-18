@@ -209,7 +209,7 @@ export default function AccessControl() {
                                         className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
                                     >
                                         <span className="flex items-center gap-2">
-                                            View requests
+                                            View
                                             <ArrowRight className="h-4 w-4" />
                                         </span>
                                     </Button>
