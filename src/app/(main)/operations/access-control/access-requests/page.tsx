@@ -592,19 +592,19 @@ export default function AccessControlAccessRequests() {
                     {/* Main Service Request Card */}
                     <div className="p-6">
                         <div className="flex items-start justify-between mb-4">
-                            <div className="space-y-2">
-                                {/* Request Type */}
-                                <div className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-                                    {user.serviceRequestType}
-                                </div>
-                                
-                                {/* Has Notes */}
-                                {user.hasNotes && (
-                                    <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
-                                        <FileText className="h-4 w-4" />
-                                        Has notes
+                            <div>
+                                {/* Request Type with Has Notes inline */}
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+                                        {user.serviceRequestType}
                                     </div>
-                                )}
+                                    {user.hasNotes && (
+                                        <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
+                                            <FileText className="h-4 w-4" />
+                                            Has notes
+                                        </div>
+                                    )}
+                                </div>
                                 
                                 {/* Requested By */}
                                 <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -631,12 +631,6 @@ export default function AccessControlAccessRequests() {
                             </div>
                         </div>
 
-                        <div className="mb-4">
-                            <div className="text-base text-gray-900 dark:text-gray-50">
-                                {user.serviceRequest}
-                            </div>
-                        </div>
-
                         {/* Nested Employee Access Provisioning Card */}
                         <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
                             <div className="flex items-start justify-between">
@@ -655,12 +649,13 @@ export default function AccessControlAccessRequests() {
                                 </div>
 
                                 {/* Access Control Status and Actions */}
-                                <div className="text-right space-y-3">
-                                    <div>
-                                        <div className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">
+                                <div className="flex items-center gap-4">
+                                    {/* Access Status Mini Card */}
+                                    <div className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg p-3">
+                                        <div className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
                                             Access Control Status
                                         </div>
-                                        <div className="flex items-center justify-end gap-3">
+                                        <div className="flex items-center gap-2">
                                             <Badge 
                                                 variant={
                                                     user.serviceRequestStatus === "New" ? "error" :
