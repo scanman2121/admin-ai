@@ -55,22 +55,17 @@ const commerceItems = [
 // Experience Manager sub-navigation items
 const experienceManagerItems = [
   { name: "Content", href: siteConfig.baseLinks.experienceManager.content },
-  { name: "Amenity posts", href: siteConfig.baseLinks.experienceManager.amenityPosts },
   { name: "Events", href: siteConfig.baseLinks.experienceManager.events },
   { name: "Surveys", href: siteConfig.baseLinks.experienceManager.surveys },
-  { name: "Community forum", href: siteConfig.baseLinks.experienceManager.communityForum },
   { name: "Communications", href: siteConfig.baseLinks.experienceManager.communications },
 ] as const
 
 // Operations sub-navigation items
 const operationsItems = [
   { name: "Access control", href: siteConfig.baseLinks.operations.accessControl },
-  { name: "Mobile access", href: siteConfig.baseLinks.operations.mobileAccess },
   { name: "Visitor management", href: siteConfig.baseLinks.operations.visitorManagement },
-  { name: "Capacity manager", href: siteConfig.baseLinks.operations.capacityManager },
   { name: "Resource booking", href: siteConfig.baseLinks.operations.resourceBooking },
   { name: "Work orders", href: siteConfig.baseLinks.operations.workOrders },
-  { name: "Energy consumption", href: siteConfig.baseLinks.operations.energyConsumption },
 ] as const
 
 // Settings and setup sub-navigation items
