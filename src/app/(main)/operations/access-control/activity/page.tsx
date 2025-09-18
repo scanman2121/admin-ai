@@ -10,10 +10,11 @@ import { useState } from "react"
 
 // Define tabs for the Access Control Activity page
 const tabs = [
-    { name: "Overview", href: "/operations/access-control" },
-    { name: "User access", href: "/operations/access-control/user-access" },
-    { name: "Activity", href: "/operations/access-control/activity" },
-    { name: "Access groups", href: "/operations/access-control/access-groups" },
+  { name: "Overview", href: "/operations/access-control" },
+  { name: "User access", href: "/operations/access-control/user-access" },
+  { name: "Activity", href: "/operations/access-control/activity" },
+  { name: "Access groups", href: "/operations/access-control/access-groups" },
+  { name: "Audit trail", href: "/operations/access-control/audit-trail" },
 ]
 
 // Mock data for activity log

@@ -17,6 +17,7 @@ const tabs = [
     { name: "User access", href: "/operations/access-control/user-access" },
     { name: "Activity", href: "/operations/access-control/activity" },
     { name: "Access groups", href: "/operations/access-control/access-groups" },
+    { name: "Audit trail", href: "/operations/access-control/audit-trail" },
 ]
 
 export default function AccessControl() {

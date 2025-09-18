@@ -14,11 +14,11 @@ import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation
 import { CreateUserAccessModal } from "@/components/ui/user-access/CreateUserAccessModal"
 import { UserAccessBulkActions } from "@/components/ui/user-access/UserAccessBulkActions"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
+import { centralizedUsers } from "@/data/centralizedUsers"
 import { Building, ChevronDown, FileText, MoreVertical, User, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
-import { centralizedUsers } from "@/data/centralizedUsers"
 
 // Define tabs for the Access Control User Access page
 const tabs = [
@@ -26,6 +26,7 @@ const tabs = [
     { name: "User access", href: "/operations/access-control/user-access" },
     { name: "Activity", href: "/operations/access-control/activity" },
     { name: "Access groups", href: "/operations/access-control/access-groups" },
+    { name: "Audit trail", href: "/operations/access-control/audit-trail" },
 ]
 
 // Generate access control data from centralized users with specific service request details
