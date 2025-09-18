@@ -6,7 +6,7 @@ import { Tooltip } from "@/components/Tooltip"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { roles, users } from "@/data/data"
 import { Row, Table } from "@tanstack/react-table"
-import { MonitorSmartphone } from "lucide-react"
+import { CreditCard } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -154,7 +154,7 @@ const usersColumns = [
                     </span>
                     {hasMobileAccess && (
                         <Tooltip content="Mobile access active">
-                            <MonitorSmartphone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <CreditCard className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                         </Tooltip>
                     )}
                 </div>

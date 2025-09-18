@@ -1,23 +1,23 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/Button"
 import { PageHeader } from "@/components/PageHeader"
-import { DataTable } from "@/components/ui/data-table/DataTable"
-import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { Badge } from "@/components/ui/badge"
-import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
+import { DataTable } from "@/components/ui/data-table/DataTable"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { CreateUserAccessModal } from "@/components/ui/user-access/CreateUserAccessModal"
 import { UserAccessBulkActions } from "@/components/ui/user-access/UserAccessBulkActions"
-import { 
-    DropdownMenu, 
-    DropdownMenuContent, 
-    DropdownMenuItem, 
-    DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu"
-import { Users, ChevronDown, User, Building, FileText, MoreVertical } from "lucide-react"
+import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
+import { Building, ChevronDown, FileText, MoreVertical, User, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useState } from "react"
 
 // Define tabs for the Access Control User Access page
 const tabs = [
