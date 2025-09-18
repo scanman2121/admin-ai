@@ -479,6 +479,12 @@ export default function AccessControlUserAccess() {
                 columns={userAccessColumns}
                 data={data}
                 searchKey="name"
+                initialSorting={[
+                    {
+                        id: "serviceRequest",
+                        desc: true // Sort descending - this will put request names before "No open requests"
+                    }
+                ]}
                 renderBulkActions={(table, rowSelection) => (
                     <UserAccessBulkActions
                         table={table}
