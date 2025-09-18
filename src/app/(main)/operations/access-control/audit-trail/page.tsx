@@ -1,11 +1,12 @@
 "use client"
 
-import { PageHeader } from "@/components/PageHeader"
 import { Badge } from "@/components/Badge"
+import { Button } from "@/components/Button"
+import { PageHeader } from "@/components/PageHeader"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { centralizedUsers } from "@/data/centralizedUsers"
-import { Clock, Shield, User, Users, Settings, Eye, FileText } from "lucide-react"
+import { Clock, Download, Eye, FileText, Settings, Shield, User, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -301,10 +302,54 @@ export default function AccessControlAuditTrail() {
   const pathname = usePathname()
   const [data] = useState(auditTrailData)
 
+  const handleExportAuditTrail = () => {
+    // In a real app, this would generate and download an audit report
+    console.log('Exporting audit trail data:', data)
+    
+    // Create CSV content
+    const headers = ['Timestamp', 'Admin User', 'Action', 'Target', 'Category', 'Severity', 'IP Address', 'Details']
+    const csvContent = [
+      headers.join(','),
+      ...data.map(item => [
+        item.timestamp.toISOString(),
+        `"${item.adminUser.name}"`,
+        `"${item.action}"`,
+        `"${item.target}"`,
+        `"${item.category}"`,
+        item.severity,
+        item.ipAddress,
+        `"${item.details}"`
+      ].join(','))
+    ].join('\n')
+    
+    // Create and download file
+    const blob = new Blob([csvContent], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `access-control-audit-trail-${new Date().toISOString().split('T')[0]}.csv`
+    document.body.appendChild(a)
+    a.click()
+    window.URL.revokeObjectURL(url)
+    document.body.removeChild(a)
+  }
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <PageHeader title="Access Control" />
+      <PageHeader 
+        title="Access Control"
+        customButtons={
+          <Button 
+            variant="primary" 
+            onClick={handleExportAuditTrail}
+            className="flex items-center gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export audit trail
+          </Button>
+        }
+      />
 
       {/* Tab Navigation */}
       <TabNavigation>
@@ -320,30 +365,6 @@ export default function AccessControlAuditTrail() {
           </TabNavigationLink>
         ))}
       </TabNavigation>
-
-      {/* Audit Summary Banner */}
-      <div className="relative overflow-hidden rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800/30 dark:bg-blue-900/20">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
-              <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                {data.length} admin actions recorded
-              </p>
-              <p className="text-sm text-blue-700 dark:text-blue-300">
-                Complete audit trail of access control administrative activities
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="neutral" className="text-xs">
-              Last 7 days
-            </Badge>
-          </div>
-        </div>
-      </div>
 
       {/* Data Table */}
       <DataTable
