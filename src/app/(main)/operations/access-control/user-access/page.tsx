@@ -171,7 +171,7 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
     },
     {
         accessorKey: "serviceRequest",
-        header: "Service Request",
+        header: "Request",
         cell: ({ row }: { row: any }) => {
             const serviceRequest = row.getValue("serviceRequest") as string;
             const serviceRequestStatus = row.original.serviceRequestStatus as string;
