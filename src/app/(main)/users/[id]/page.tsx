@@ -37,15 +37,6 @@ const getUserDetailData = (userId: string) => {
     }
 }
 
-// Activity tabs
-const activityTabs = [
-    { name: "All", active: true },
-    { name: "Access", active: false },
-    { name: "Bookings", active: false },
-    { name: "Visitors", active: false },
-    { name: "RSVPs", active: false },
-    { name: "Notes", active: false },
-]
 
 export default function UserDetailPage({ params }: { params: { id: string } }) {
     const [activeTab, setActiveTab] = useState("overview")
