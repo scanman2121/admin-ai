@@ -3,11 +3,14 @@
 import { Button } from "@/components/Button"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
-import { Select } from "@/components/Select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
 import { buildings, issueTypes } from "@/data/data"
-import { useState } from "react"
+import { useState }
+import { Check, ChevronsUpDown } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface WorkOrderCreateModalProps {
     isOpen: boolean
@@ -49,6 +52,11 @@ export function WorkOrderCreateModal({ isOpen, onClose, onSubmit }: WorkOrderCre
         requestedBy: "",
         dueDate: "",
     })
+    
+    // State for dropdown open/close
+    const [issueTypeOpen, setIssueTypeOpen] = useState(false)
+    const [assignToOpen, setAssignToOpen] = useState(false)
+    const [buildingOpen, setBuildingOpen] = useState(false)
 
     const handleInputChange = (field: keyof WorkOrderData, value: string) => {
         setFormData(prev => ({
@@ -80,6 +88,11 @@ export function WorkOrderCreateModal({ isOpen, onClose, onSubmit }: WorkOrderCre
             dueDate: "",
         })
         
+        // Close all dropdowns
+        setIssueTypeOpen(false)
+        setAssignToOpen(false)
+        setBuildingOpen(false)
+        
         onClose()
     }
 
@@ -96,6 +109,12 @@ export function WorkOrderCreateModal({ isOpen, onClose, onSubmit }: WorkOrderCre
             requestedBy: "",
             dueDate: "",
         })
+        
+        // Close all dropdowns
+        setIssueTypeOpen(false)
+        setAssignToOpen(false)
+        setBuildingOpen(false)
+        
         onClose()
     }
 
@@ -144,18 +163,47 @@ export function WorkOrderCreateModal({ isOpen, onClose, onSubmit }: WorkOrderCre
                         <Label htmlFor="issueType" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                             Issue Type
                         </Label>
-                        <Select
-                            value={formData.issueType}
-                            onValueChange={(value) => handleInputChange("issueType", value)}
-                            required
-                        >
-                            <option value="">Select issue type</option>
-                            {issueTypes.map((type) => (
-                                <option key={type.value} value={type.value}>
-                                    {type.label}
-                                </option>
-                            ))}
-                        </Select>
+                        <Popover open={issueTypeOpen} onOpenChange={setIssueTypeOpen}>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={issueTypeOpen}
+                                    className="w-full justify-between mt-1"
+                                >
+                                    {formData.issueType
+                                        ? issueTypes.find((type) => type.value === formData.issueType)?.label
+                                        : "Select issue type"}
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0">
+                                <Command>
+                                    <CommandInput placeholder="Search issue types..." />
+                                    <CommandEmpty>No issue type found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {issueTypes.map((type) => (
+                                            <CommandItem
+                                                key={type.value}
+                                                value={type.value}
+                                                onSelect={(currentValue) => {
+                                                    handleInputChange("issueType", currentValue === formData.issueType ? "" : currentValue)
+                                                    setIssueTypeOpen(false)
+                                                }}
+                                            >
+                                                <Check
+                                                    className={cn(
+                                                        "mr-2 h-4 w-4",
+                                                        formData.issueType === type.value ? "opacity-100" : "opacity-0"
+                                                    )}
+                                                />
+                                                {type.label}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
                     </div>
 
                     {/* Assign To */}
@@ -163,17 +211,47 @@ export function WorkOrderCreateModal({ isOpen, onClose, onSubmit }: WorkOrderCre
                         <Label htmlFor="assignedTo" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                             Assign To
                         </Label>
-                        <Select
-                            value={formData.assignedTo}
-                            onValueChange={(value) => handleInputChange("assignedTo", value)}
-                        >
-                            <option value="">Select assignee</option>
-                            {assigneeOptions.map((assignee) => (
-                                <option key={assignee.value} value={assignee.value}>
-                                    {assignee.label}
-                                </option>
-                            ))}
-                        </Select>
+                        <Popover open={assignToOpen} onOpenChange={setAssignToOpen}>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={assignToOpen}
+                                    className="w-full justify-between mt-1"
+                                >
+                                    {formData.assignedTo
+                                        ? assigneeOptions.find((assignee) => assignee.value === formData.assignedTo)?.label
+                                        : "Select assignee"}
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0">
+                                <Command>
+                                    <CommandInput placeholder="Search assignees..." />
+                                    <CommandEmpty>No assignee found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {assigneeOptions.map((assignee) => (
+                                            <CommandItem
+                                                key={assignee.value}
+                                                value={assignee.value}
+                                                onSelect={(currentValue) => {
+                                                    handleInputChange("assignedTo", currentValue === formData.assignedTo ? "" : currentValue)
+                                                    setAssignToOpen(false)
+                                                }}
+                                            >
+                                                <Check
+                                                    className={cn(
+                                                        "mr-2 h-4 w-4",
+                                                        formData.assignedTo === assignee.value ? "opacity-100" : "opacity-0"
+                                                    )}
+                                                />
+                                                {assignee.label}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
                     </div>
 
                     {/* Building, Floor, Unit */}
@@ -182,18 +260,47 @@ export function WorkOrderCreateModal({ isOpen, onClose, onSubmit }: WorkOrderCre
                             <Label htmlFor="building" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Building
                             </Label>
-                            <Select
-                                value={formData.building}
-                                onValueChange={(value) => handleInputChange("building", value)}
-                                required
-                            >
-                                <option value="">Select building</option>
-                                {buildings.map((building) => (
-                                    <option key={building.value} value={building.value}>
-                                        {building.label}
-                                    </option>
-                                ))}
-                            </Select>
+                            <Popover open={buildingOpen} onOpenChange={setBuildingOpen}>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        aria-expanded={buildingOpen}
+                                        className="w-full justify-between mt-1"
+                                    >
+                                        {formData.building
+                                            ? buildings.find((building) => building.value === formData.building)?.label
+                                            : "Select building"}
+                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-full p-0">
+                                    <Command>
+                                        <CommandInput placeholder="Search buildings..." />
+                                        <CommandEmpty>No building found.</CommandEmpty>
+                                        <CommandGroup>
+                                            {buildings.map((building) => (
+                                                <CommandItem
+                                                    key={building.value}
+                                                    value={building.value}
+                                                    onSelect={(currentValue) => {
+                                                        handleInputChange("building", currentValue === formData.building ? "" : currentValue)
+                                                        setBuildingOpen(false)
+                                                    }}
+                                                >
+                                                    <Check
+                                                        className={cn(
+                                                            "mr-2 h-4 w-4",
+                                                            formData.building === building.value ? "opacity-100" : "opacity-0"
+                                                        )}
+                                                    />
+                                                    {building.label}
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
                         </div>
                         <div>
                             <Label htmlFor="floor" className="text-sm font-medium text-gray-700 dark:text-gray-300">

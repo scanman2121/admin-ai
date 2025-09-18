@@ -15,7 +15,7 @@ import { UserAccessBulkActions } from "@/components/ui/user-access/UserAccessBul
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { centralizedUsers } from "@/data/centralizedUsers"
 import { RiSettings3Line } from "@remixicon/react"
-import { Building, ChevronDown, FileText, MoreVertical, User, Users } from "lucide-react"
+import { Building, ChevronDown, FileText, MoreVertical, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
