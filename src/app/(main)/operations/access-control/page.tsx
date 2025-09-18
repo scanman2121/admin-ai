@@ -49,19 +49,30 @@ export default function AccessControl() {
 
             {/* Date Picker */}
             <div className="flex items-center gap-4">
-                <DatePicker
-                    value={selectedDate}
-                    onChange={(date) => date && setSelectedDate(date)}
-                    placeholder="Select date"
-                    className="w-48"
-                />
+                <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Analytics date:
+                    </span>
+                    <DatePicker
+                        value={selectedDate}
+                        onChange={(date) => date && setSelectedDate(date)}
+                        placeholder="Select date"
+                        className="w-48"
+                    />
+                </div>
             </div>
 
             {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Left Column - Main Content */}
-                <div className="lg:col-span-2 space-y-6">
-                    {/* Attendance Card */}
+                <div className="space-y-6">
+                    {/* Dashboard Analytics Card */}
+                    <Card>
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+                            Dashboard Analytics
+                        </h2>
+                        <div className="space-y-6">
+                            {/* Attendance Card */}
                     <Card>
                         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
                             Attendance
@@ -171,6 +182,8 @@ export default function AccessControl() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </Card>
                         </div>
                     </Card>
                 </div>
