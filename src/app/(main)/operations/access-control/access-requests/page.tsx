@@ -13,9 +13,12 @@ import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation
 import { CreateUserAccessModal } from "@/components/ui/user-access/CreateUserAccessModal"
 import { UserAccessBulkActions } from "@/components/ui/user-access/UserAccessBulkActions"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
+import { DataTableFacetedFilter } from "@/components/ui/data-table/DataTableFacetedFilter"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { centralizedUsers } from "@/data/centralizedUsers"
 import { RiSettings3Line } from "@remixicon/react"
-import { Building, ChevronDown, FileText, Grid3X3, List, MoreVertical, User } from "lucide-react"
+import { Building, ChevronDown, FileText, Grid3X3, List, MoreVertical, User, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -434,6 +437,9 @@ export default function AccessControlAccessRequests() {
     const [selectedUsersForAccess, setSelectedUsersForAccess] = useState<typeof accessRequestsData | null>(null)
     const [isCreateAccessModalOpen, setIsCreateAccessModalOpen] = useState(false)
     const [viewMode, setViewMode] = useState<'table' | 'card'>('table')
+    const [searchValue, setSearchValue] = useState("")
+    const [requestTypeFilter, setRequestTypeFilter] = useState<string[]>([])
+    const [statusFilter, setStatusFilter] = useState<string[]>([])
 
     const handleUserClick = (user: typeof accessRequestsData[0]) => {
         setSelectedUser(user)
@@ -468,6 +474,91 @@ export default function AccessControlAccessRequests() {
 
     const accessRequestsColumns = createAccessRequestsColumns(handleUserClick, handleCreateAccessClick)
 
+    // Filter data for card view
+    const filteredData = data.filter(user => {
+        const matchesSearch = searchValue === "" || 
+            user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+            user.company.toLowerCase().includes(searchValue.toLowerCase())
+        
+        const matchesRequestType = requestTypeFilter.length === 0 || 
+            (user.serviceRequestType && requestTypeFilter.includes(user.serviceRequestType))
+        
+        const matchesStatus = statusFilter.length === 0 || 
+            (user.serviceRequestStatus && statusFilter.includes(user.serviceRequestStatus))
+        
+        return matchesSearch && matchesRequestType && matchesStatus
+    })
+
+    const handleClearFilters = () => {
+        setSearchValue("")
+        setRequestTypeFilter([])
+        setStatusFilter([])
+    }
+
+    const isFiltered = searchValue !== "" || requestTypeFilter.length > 0 || statusFilter.length > 0
+
+    // Request Type Filter Options
+    const requestTypeOptions = [
+        { value: "New Employee MKA", label: "New Employee MKA" },
+        { value: "Lost Device", label: "Lost Device" },
+        { value: "New Phone", label: "New Phone" },
+        { value: "Access Level Update", label: "Access Level Update" },
+        { value: "Tenant Departure", label: "Tenant Departure" },
+        { value: "Termination of Employment", label: "Termination of Employment" }
+    ]
+
+    // Status Filter Options  
+    const statusOptions = [
+        { value: "New", label: "New" },
+        { value: "In Progress", label: "In Progress" },
+        { value: "Under Review", label: "Under Review" },
+        { value: "Pending Review", label: "Pending Review" }
+    ]
+
+    // Card Filter Toolbar Component
+    const CardFilterToolbar = () => (
+        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4">
+            <div className="flex flex-1 items-center space-x-2">
+                <Input
+                    placeholder="Search by name..."
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    className="h-8 w-[150px] lg:w-[250px]"
+                />
+                <DataTableFacetedFilter
+                    column={{
+                        getFilterValue: () => requestTypeFilter,
+                        setFilterValue: (value: any) => setRequestTypeFilter(value || []),
+                        getFacetedUniqueValues: () => new Map()
+                    } as any}
+                    title="Request type"
+                    options={requestTypeOptions}
+                />
+                <DataTableFacetedFilter
+                    column={{
+                        getFilterValue: () => statusFilter,
+                        setFilterValue: (value: any) => setStatusFilter(value || []),
+                        getFacetedUniqueValues: () => new Map()
+                    } as any}
+                    title="Status"
+                    options={statusOptions}
+                />
+                {isFiltered && (
+                    <Button
+                        variant="ghost"
+                        onClick={handleClearFilters}
+                        className="h-8 px-2 lg:px-3"
+                    >
+                        Reset
+                        <X className="ml-2 h-4 w-4" />
+                    </Button>
+                )}
+            </div>
+            <ViewToggle />
+        </div>
+    )
+
     // View Toggle Component
     const ViewToggle = () => (
         <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg">
@@ -492,87 +583,113 @@ export default function AccessControlAccessRequests() {
 
     // Card View Component
     const CardView = () => (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {data.map((user) => (
+        <div className="space-y-4">
+            {filteredData.map((user) => (
                 <div
                     key={user.id}
-                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-                    onClick={() => handleUserClick(user)}
+                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
                 >
-                    {/* User Header */}
-                    <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300">
-                                {user.name.split(' ').map((n: string) => n[0]).join('')}
-                            </div>
-                            <div>
-                                <div className="font-medium text-gray-900 dark:text-gray-50">
-                                    {user.name}
+                    {/* Main Service Request Card */}
+                    <div className="p-6">
+                        <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="flex items-center justify-center w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300">
+                                    {user.name.split(' ').map((n: string) => n[0]).join('')}
                                 </div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400">
-                                    {user.email}
+                                <div>
+                                    <div className="font-semibold text-lg text-gray-900 dark:text-gray-50">
+                                        {user.name}
+                                    </div>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                                        {user.email}
+                                    </div>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-1">
+                                        <Building className="w-3 h-3" />
+                                        {user.company} • {user.floorSuite}
+                                    </div>
+                                </div>
+                            </div>
+                            <Select defaultValue={user.serviceRequestStatus || "New"}>
+                                <SelectTrigger className="w-40">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="New">New</SelectItem>
+                                    <SelectItem value="In Progress">In Progress</SelectItem>
+                                    <SelectItem value="Under Review">Under Review</SelectItem>
+                                    <SelectItem value="Pending Review">Pending Review</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="mb-4">
+                            <div className="text-base font-medium text-gray-900 dark:text-gray-50 mb-1">
+                                {user.serviceRequest}
+                            </div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                                {user.serviceRequestType}
+                            </div>
+                        </div>
+
+                        {/* Nested ACS Info Card */}
+                        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-2">
+                                        Access Control Status
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <Badge 
+                                            variant={
+                                                user.serviceRequestStatus === "New" ? "error" :
+                                                user.serviceRequestStatus === "In Progress" ? "warning" :
+                                                user.serviceRequestStatus === "Under Review" ? "neutral" :
+                                                "default"
+                                            }
+                                            className="text-xs"
+                                        >
+                                            • {user.serviceRequestStatus}
+                                        </Badge>
+                                        {user.hasNotes && (
+                                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                                                <FileText className="h-3 w-3" />
+                                                Has notes
+                                            </div>
+                                        )}
+                                        {user.badgeId && (
+                                            <div className="text-xs text-gray-500 font-mono">
+                                                {user.badgeId}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => handleUserClick(user)}
+                                    >
+                                        <User className="mr-2 h-4 w-4" />
+                                        View details
+                                    </Button>
+                                    <Button
+                                        variant="primary"
+                                        size="sm"
+                                        onClick={() => handleCreateAccessClick(user)}
+                                    >
+                                        {user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "Revoke" : "Create access"}
+                                    </Button>
                                 </div>
                             </div>
                         </div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-8 w-8 p-0" onClick={(e) => e.stopPropagation()}>
-                                    <span className="sr-only">Open menu</span>
-                                    <MoreVertical className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleUserClick(user); }}>
-                                    <User className="mr-2 h-4 w-4" />
-                                    View details
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleCreateAccessClick(user); }}>
-                                    Create access
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-
-                    {/* Company and Location */}
-                    <div className="mb-3">
-                        <div className="font-medium text-gray-900 dark:text-gray-50 text-sm">
-                            {user.company}
-                        </div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                            <Building className="w-3 h-3" />
-                            {user.floorSuite}
-                        </div>
-                    </div>
-
-                    {/* Service Request */}
-                    <div className="mb-3">
-                        <div className="text-sm text-gray-900 dark:text-gray-50">
-                            {user.serviceRequest}
-                        </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            {user.serviceRequestType}
-                        </div>
-                    </div>
-
-                    {/* Status */}
-                    <div className="flex items-center justify-between">
-                        <Badge 
-                            variant={
-                                user.serviceRequestStatus === "New" ? "error" :
-                                user.serviceRequestStatus === "In Progress" ? "warning" :
-                                user.serviceRequestStatus === "Under Review" ? "neutral" :
-                                "default"
-                            }
-                            className="text-xs"
-                        >
-                            • {user.serviceRequestStatus}
-                        </Badge>
-                        {user.hasNotes && (
-                            <FileText className="h-4 w-4 text-gray-400" />
-                        )}
                     </div>
                 </div>
             ))}
+            {filteredData.length === 0 && (
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    No access requests found matching your criteria.
+                </div>
+            )}
         </div>
     )
 
@@ -669,9 +786,7 @@ export default function AccessControlAccessRequests() {
                 />
             ) : (
                 <div className="space-y-4">
-                    <div className="flex justify-end">
-                        <ViewToggle />
-                    </div>
+                    <CardFilterToolbar />
                     <CardView />
                 </div>
             )}
