@@ -297,7 +297,7 @@ export default function WorkOrdersSettings() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                        Service Request Setup
+                        Work Order Settings
                     </h1>
                     <p className="text-gray-600 dark:text-gray-400 mt-1">
                         Configure which request types to enable and manage their settings
