@@ -47,20 +47,6 @@ export default function AccessControl() {
             </TabNavigation>
 
 
-            {/* Date Picker */}
-            <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Analytics date:
-                    </span>
-                    <DatePicker
-                        value={selectedDate}
-                        onChange={(date) => date && setSelectedDate(date)}
-                        placeholder="Select date"
-                        className="w-48"
-                    />
-                </div>
-            </div>
 
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -68,9 +54,14 @@ export default function AccessControl() {
                 <div className="space-y-6">
                     {/* Dashboard Analytics Card */}
                     <Card>
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-                            Dashboard Analytics
-                        </h2>
+                        <div className="mb-6">
+                            <DatePicker
+                                value={selectedDate}
+                                onChange={(date) => date && setSelectedDate(date)}
+                                placeholder="Select date"
+                                className="w-48"
+                            />
+                        </div>
                         <div className="space-y-6">
                             {/* Attendance Card */}
                     <Card>
@@ -296,39 +287,50 @@ export default function AccessControl() {
                         </div>
                     </Card>
 
-                    {/* Visitor Profiles Card */}
-                    <Card>
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
-                            Visitor profiles
-                        </h3>
-                        <div className="space-y-4">
-                            <div>
-                                <div className="text-2xl font-bold text-gray-900 dark:text-gray-50">53</div>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Total unique visitor records
-                                </p>
+                    {/* Bottom Row - Visitor Profiles and Mobile Access */}
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Visitor Profiles Card */}
+                        <Card>
+                            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
+                                Visitor profiles
+                            </h3>
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-50">53</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        Total unique visitor records
+                                    </p>
+                                </div>
+                                <div>
+                                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-50">0</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        First time visitors this week
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                <div className="text-2xl font-bold text-gray-900 dark:text-gray-50">0</div>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    First time visitors this week
-                                </p>
-                            </div>
-                        </div>
-                    </Card>
+                        </Card>
 
-                    {/* Mobile Access Card */}
-                    <Card>
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
-                            Mobile access
-                        </h3>
-                        <div>
-                            <div className="text-2xl font-bold text-gray-900 dark:text-gray-50">
-                                2 of 112
+                        {/* Mobile Access Card */}
+                        <Card>
+                            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
+                                Mobile access
+                            </h3>
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+                                        2 of 112
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Active users</p>
+                                </div>
+                                <div>
+                                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-50">8</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        Badge-ins today
+                                    </p>
+                                </div>
                             </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Active users</p>
-                        </div>
-                    </Card>
+                        </Card>
+                    </div>
                 </div>
             </div>
         </div>
