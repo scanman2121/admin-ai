@@ -1,10 +1,12 @@
 "use client"
 
 import { Button } from "@/components/Button"
+import { Badge } from "@/components/Badge"
 import { Card } from "@/components/Card"
 import { DatePicker } from "@/components/DatePicker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
+import { centralizedUsers } from "@/data/centralizedUsers"
 import { RiSettings3Line } from "@remixicon/react"
 import { ArrowRight, InfoIcon, Users } from "lucide-react"
 import Link from "next/link"
@@ -14,7 +16,8 @@ import { useState } from "react"
 // Define tabs for the Access Control page
 const tabs = [
     { name: "Overview", href: "/operations/access-control" },
-    { name: "User access", href: "/operations/access-control/user-access" },
+    { name: "Access requests", href: "/operations/access-control/access-requests" },
+    { name: "Active access", href: "/operations/access-control/active-access" },
     { name: "Activity", href: "/operations/access-control/activity" },
     { name: "Access groups", href: "/operations/access-control/access-groups" },
     { name: "Audit trail", href: "/operations/access-control/audit-trail" },
@@ -24,6 +27,11 @@ export default function AccessControl() {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(2025, 8, 17)) // Sep 17, 2025
     const [selectedTenant, setSelectedTenant] = useState<string>("all-tenants")
     const pathname = usePathname()
+
+    // Calculate access requests count for the badge
+    const accessRequestsCount = centralizedUsers.filter(user => 
+        user.acsStatus === "pending" || user.acsStatus === "suspended" || user.acsStatus === "inactive"
+    ).length
 
     return (
         <div className="space-y-6">
@@ -51,6 +59,11 @@ export default function AccessControl() {
                     >
                         <Link href={tab.href}>
                             {tab.name}
+                            {tab.name === "Access requests" && (
+                                <Badge variant="error" className="ml-2 text-xs">
+                                    {accessRequestsCount}
+                                </Badge>
+                            )}
                         </Link>
                     </TabNavigationLink>
                 ))}

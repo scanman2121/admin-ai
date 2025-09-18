@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/Button"
 import { PageHeader } from "@/components/PageHeader"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/Badge"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import {
     DropdownMenu,
@@ -20,7 +20,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 
-// Define tabs for the Access Control User Access page
+// Define tabs for the Access Control Access Requests page
 const tabs = [
     { name: "Overview", href: "/operations/access-control" },
     { name: "Access requests", href: "/operations/access-control/access-requests" },
@@ -97,25 +97,28 @@ const generateServiceRequest = (user: any) => {
     }
 }
 
-const userAccessData = centralizedUsers.map(user => {
-    const serviceDetails = generateServiceRequest(user)
-    return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        company: user.company,
-        floorSuite: user.floorSuite,
-        serviceRequest: serviceDetails.request,
-        serviceRequestType: serviceDetails.type,
-        serviceRequestStatus: serviceDetails.status,
-        acsStatus: user.acsStatus,
-        hasNotes: user.acsStatus !== "active",
-        badgeId: user.badgeId,
-    }
-})
+// Filter users to only show those with access requests (pending, suspended, or inactive)
+const accessRequestsData = centralizedUsers
+    .filter(user => user.acsStatus === "pending" || user.acsStatus === "suspended" || user.acsStatus === "inactive")
+    .map(user => {
+        const serviceDetails = generateServiceRequest(user)
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            company: user.company,
+            floorSuite: user.floorSuite,
+            serviceRequest: serviceDetails.request,
+            serviceRequestType: serviceDetails.type,
+            serviceRequestStatus: serviceDetails.status,
+            acsStatus: user.acsStatus,
+            hasNotes: true, // All users in this view have notes/requests
+            badgeId: user.badgeId,
+        }
+    })
 
-// Define columns for the user access table
-const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick: (user: any) => void) => [
+// Define columns for the access requests table
+const createAccessRequestsColumns = (onUserClick: (user: any) => void, onCreateClick: (user: any) => void) => [
     {
         id: "select",
         header: ({ table }: { table: any }) => (
@@ -184,14 +187,6 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
             const serviceRequestStatus = row.original.serviceRequestStatus as string;
             const hasNotes = row.original.hasNotes as boolean;
             
-            if (serviceRequest === "No open requests") {
-                return (
-                    <span className="text-gray-500 dark:text-gray-400">
-                        No open requests
-                    </span>
-                );
-            }
-            
             return (
                 <div>
                     <Link 
@@ -229,20 +224,11 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
             
             const getStatusBadge = (status: string) => {
                 switch (status) {
-                    case "active":
-                        return (
-                            <Badge 
-                                variant="default" 
-                                className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/30"
-                            >
-                                • Active
-                            </Badge>
-                        );
                     case "pending":
                         return (
                             <Badge 
-                                variant="secondary" 
-                                className="bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800/30"
+                                variant="warning"
+                                className="text-xs"
                             >
                                 • Not in ACS
                             </Badge>
@@ -250,23 +236,23 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
                     case "suspended":
                         return (
                             <Badge 
-                                variant="secondary" 
-                                className="bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/30"
+                                variant="error"
+                                className="text-xs"
                             >
                                 • Suspended
                             </Badge>
                         );
-                    case "revoked":
+                    case "inactive":
                         return (
                             <Badge 
-                                variant="secondary" 
-                                className="bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/30"
+                                variant="neutral"
+                                className="text-xs"
                             >
-                                • Revoked
+                                • Inactive
                             </Badge>
                         );
                     default:
-                        return <Badge variant="secondary">• Unknown</Badge>;
+                        return <Badge variant="neutral" className="text-xs">• Unknown</Badge>;
                 }
             };
             
@@ -286,24 +272,13 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
         id: "actions",
         header: "Actions",
         cell: ({ row }: { row: any }) => {
-            const acsStatus = row.original.acsStatus as string;
-            const serviceRequest = row.original.serviceRequest as string;
-            
-            if (acsStatus === "pending" || acsStatus === "suspended" || serviceRequest !== "No open requests") {
-                return (
-                    <Button 
-                        variant="primary" 
-                        size="sm"
-                        onClick={() => onCreateClick(row.original)}
-                    >
-                        Create
-                    </Button>
-                );
-            }
-            
             return (
-                <Button variant="secondary" size="sm">
-                    View
+                <Button 
+                    variant="primary" 
+                    size="sm"
+                    onClick={() => onCreateClick(row.original)}
+                >
+                    Create
                 </Button>
             );
         },
@@ -340,15 +315,15 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
     },
 ]
 
-export default function AccessControlUserAccess() {
+export default function AccessControlAccessRequests() {
     const pathname = usePathname()
-    const [data] = useState(userAccessData)
-    const [selectedUser, setSelectedUser] = useState<typeof userAccessData[0] | null>(null)
+    const [data] = useState(accessRequestsData)
+    const [selectedUser, setSelectedUser] = useState<typeof accessRequestsData[0] | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [selectedUsersForAccess, setSelectedUsersForAccess] = useState<typeof userAccessData | null>(null)
+    const [selectedUsersForAccess, setSelectedUsersForAccess] = useState<typeof accessRequestsData | null>(null)
     const [isCreateAccessModalOpen, setIsCreateAccessModalOpen] = useState(false)
 
-    const handleUserClick = (user: typeof userAccessData[0]) => {
+    const handleUserClick = (user: typeof accessRequestsData[0]) => {
         setSelectedUser(user)
         setIsModalOpen(true)
     }
@@ -358,7 +333,7 @@ export default function AccessControlUserAccess() {
         setSelectedUser(null)
     }
 
-    const handleCreateAccessClick = (user: typeof userAccessData[0]) => {
+    const handleCreateAccessClick = (user: typeof accessRequestsData[0]) => {
         setSelectedUsersForAccess([user])
         setIsCreateAccessModalOpen(true)
     }
@@ -368,32 +343,23 @@ export default function AccessControlUserAccess() {
         setSelectedUsersForAccess(null)
     }
 
-    const handleBulkCreateAccess = (selectedUsers: typeof userAccessData) => {
+    const handleBulkCreateAccess = (selectedUsers: typeof accessRequestsData) => {
         setSelectedUsersForAccess(selectedUsers)
         setIsCreateAccessModalOpen(true)
     }
 
-    const handleBulkRemoveAccess = (selectedUsers: typeof userAccessData) => {
+    const handleBulkRemoveAccess = (selectedUsers: typeof accessRequestsData) => {
         console.log('Removing access for multiple users:', selectedUsers)
         // In a real app, this would call an API to remove access for multiple users
         // For now, we'll just log the action
     }
 
     const handleReviewPendingUsers = () => {
-        // Filter users who need access creation (same logic as Actions column)
-        const pendingUsers = data.filter(user => 
-            user.acsStatus === "pending" || user.acsStatus === "suspended" || user.serviceRequest !== "No open requests"
-        )
-        setSelectedUsersForAccess(pendingUsers)
+        setSelectedUsersForAccess(data) // All users in this view need access
         setIsCreateAccessModalOpen(true)
     }
 
-    // Calculate the number of users awaiting access approval
-    const pendingUsersCount = data.filter(user => 
-        user.acsStatus === "pending" || user.acsStatus === "suspended" || user.serviceRequest !== "No open requests"
-    ).length
-
-    const userAccessColumns = createUserAccessColumns(handleUserClick, handleCreateAccessClick)
+    const accessRequestsColumns = createAccessRequestsColumns(handleUserClick, handleCreateAccessClick)
 
     return (
         <div className="space-y-6">
@@ -443,48 +409,51 @@ export default function AccessControlUserAccess() {
                     >
                         <Link href={tab.href}>
                             {tab.name}
+                            {tab.name === "Access requests" && (
+                                <Badge variant="error" className="ml-2 text-xs">
+                                    {data.length}
+                                </Badge>
+                            )}
                         </Link>
                     </TabNavigationLink>
                 ))}
             </TabNavigation>
 
-            {/* Access Banner - only show when there are pending users */}
-            {pendingUsersCount > 0 && (
-                <div className="relative overflow-hidden rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800/30 dark:bg-blue-900/20">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
-                                <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                            </div>
-                            <div>
-                                <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                                    {pendingUsersCount} users awaiting access approval
-                                </p>
-                                <p className="text-sm text-blue-700 dark:text-blue-300">
-                                    Review and approve pending access requests below
-                                </p>
-                            </div>
+            {/* Access Banner - always show when there are requests */}
+            <div className="relative overflow-hidden rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800/30 dark:bg-blue-900/20">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
+                            <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                         </div>
-                        <Button 
-                            variant="ghost"
-                            onClick={handleReviewPendingUsers}
-                            className="text-primary-600 hover:text-primary-700 hover:bg-primary-50 dark:text-primary-400 dark:hover:text-primary-300 dark:hover:bg-primary-900/20 font-medium"
-                        >
-                            Review
-                        </Button>
+                        <div>
+                            <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                {data.length} users awaiting access approval
+                            </p>
+                            <p className="text-sm text-blue-700 dark:text-blue-300">
+                                Review and approve pending access requests below
+                            </p>
+                        </div>
                     </div>
+                    <Button 
+                        variant="ghost"
+                        onClick={handleReviewPendingUsers}
+                        className="text-primary-600 hover:text-primary-700 hover:bg-primary-50 dark:text-primary-400 dark:hover:text-primary-300 dark:hover:bg-primary-900/20 font-medium"
+                    >
+                        Review
+                    </Button>
                 </div>
-            )}
+            </div>
 
             {/* Data Table */}
             <DataTable
-                columns={userAccessColumns}
+                columns={accessRequestsColumns}
                 data={data}
                 searchKey="name"
                 initialSorting={[
                     {
                         id: "serviceRequest",
-                        desc: true // Sort descending - this will put request names before "No open requests"
+                        desc: true // Sort by request type
                     }
                 ]}
                 renderBulkActions={(table, rowSelection) => (

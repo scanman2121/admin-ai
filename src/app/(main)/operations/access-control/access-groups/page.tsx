@@ -1,9 +1,11 @@
 "use client"
 
 import { Button } from "@/components/Button"
+import { Badge } from "@/components/Badge"
 import { PageHeader } from "@/components/PageHeader"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
+import { centralizedUsers } from "@/data/centralizedUsers"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -11,7 +13,8 @@ import { useState } from "react"
 // Define tabs for the Access Control Access Groups page
 const tabs = [
   { name: "Overview", href: "/operations/access-control" },
-  { name: "User access", href: "/operations/access-control/user-access" },
+  { name: "Access requests", href: "/operations/access-control/access-requests" },
+  { name: "Active access", href: "/operations/access-control/active-access" },
   { name: "Activity", href: "/operations/access-control/activity" },
   { name: "Access groups", href: "/operations/access-control/access-groups" },
   { name: "Audit trail", href: "/operations/access-control/audit-trail" },
@@ -241,6 +244,11 @@ export default function AccessControlGroups() {
     const pathname = usePathname()
     const [data] = useState(tenantMappingData)
 
+    // Calculate access requests count for the badge
+    const accessRequestsCount = centralizedUsers.filter(user => 
+        user.acsStatus === "pending" || user.acsStatus === "suspended" || user.acsStatus === "inactive"
+    ).length
+
     // Handlers for dropdown changes
     const handleFloorSelect = (tenantId: string, floors: string[]) => {
         console.log(`Tenant ${tenantId} selected floors:`, floors);
@@ -285,6 +293,11 @@ export default function AccessControlGroups() {
                     >
                         <Link href={tab.href}>
                             {tab.name}
+                            {tab.name === "Access requests" && (
+                                <Badge variant="error" className="ml-2 text-xs">
+                                    {accessRequestsCount}
+                                </Badge>
+                            )}
                         </Link>
                     </TabNavigationLink>
                 ))}

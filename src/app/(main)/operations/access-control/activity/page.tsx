@@ -1,9 +1,11 @@
 "use client"
 
 import { PageHeader } from "@/components/PageHeader"
+import { Badge } from "@/components/Badge"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
+import { centralizedUsers } from "@/data/centralizedUsers"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -11,7 +13,8 @@ import { useState } from "react"
 // Define tabs for the Access Control Activity page
 const tabs = [
   { name: "Overview", href: "/operations/access-control" },
-  { name: "User access", href: "/operations/access-control/user-access" },
+  { name: "Access requests", href: "/operations/access-control/access-requests" },
+  { name: "Active access", href: "/operations/access-control/active-access" },
   { name: "Activity", href: "/operations/access-control/activity" },
   { name: "Access groups", href: "/operations/access-control/access-groups" },
   { name: "Audit trail", href: "/operations/access-control/audit-trail" },
@@ -243,6 +246,11 @@ export default function AccessControlActivity() {
     const [selectedUser, setSelectedUser] = useState<typeof activityData[0] | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
+    // Calculate access requests count for the badge
+    const accessRequestsCount = centralizedUsers.filter(user => 
+        user.acsStatus === "pending" || user.acsStatus === "suspended" || user.acsStatus === "inactive"
+    ).length
+
     const handleNameClick = (user: typeof activityData[0]) => {
         setSelectedUser(user)
         setIsModalOpen(true)
@@ -272,6 +280,11 @@ export default function AccessControlActivity() {
                     >
                         <Link href={tab.href}>
                             {tab.name}
+                            {tab.name === "Access requests" && (
+                                <Badge variant="error" className="ml-2 text-xs">
+                                    {accessRequestsCount}
+                                </Badge>
+                            )}
                         </Link>
                     </TabNavigationLink>
                 ))}

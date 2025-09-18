@@ -14,7 +14,8 @@ import { useState } from "react"
 // Define tabs for the Access Control Audit Trail page
 const tabs = [
   { name: "Overview", href: "/operations/access-control" },
-  { name: "User access", href: "/operations/access-control/user-access" },
+  { name: "Access requests", href: "/operations/access-control/access-requests" },
+  { name: "Active access", href: "/operations/access-control/active-access" },
   { name: "Activity", href: "/operations/access-control/activity" },
   { name: "Access groups", href: "/operations/access-control/access-groups" },
   { name: "Audit trail", href: "/operations/access-control/audit-trail" },
@@ -302,6 +303,11 @@ export default function AccessControlAuditTrail() {
   const pathname = usePathname()
   const [data] = useState(auditTrailData)
 
+  // Calculate access requests count for the badge
+  const accessRequestsCount = centralizedUsers.filter(user => 
+    user.acsStatus === "pending" || user.acsStatus === "suspended" || user.acsStatus === "inactive"
+  ).length
+
   const handleExportAuditTrail = () => {
     // In a real app, this would generate and download an audit report
     console.log('Exporting audit trail data:', data)
@@ -361,6 +367,11 @@ export default function AccessControlAuditTrail() {
           >
             <Link href={tab.href}>
               {tab.name}
+              {tab.name === "Access requests" && (
+                <Badge variant="error" className="ml-2 text-xs">
+                  {accessRequestsCount}
+                </Badge>
+              )}
             </Link>
           </TabNavigationLink>
         ))}
