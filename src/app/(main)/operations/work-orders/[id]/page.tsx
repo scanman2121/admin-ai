@@ -136,7 +136,13 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
     
     const workOrderDetail = getWorkOrderDetailData(params.id)
     
-    const [assignedPersonnel, setAssignedPersonnel] = useState(
+    const [assignedPersonnel, setAssignedPersonnel] = useState<Array<{
+        id: string
+        name: string
+        email: string
+        initials: string
+        role?: string
+    }>>(
         workOrderDetail?.assignedPersonnel.map(person => ({
             id: person.id,
             name: person.name,

@@ -1,5 +1,6 @@
 "use client"
 
+import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
@@ -57,6 +58,21 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
         return name.split(' ').map(n => n[0]).join('').toUpperCase()
     }
 
+    const getACSStatusBadge = (status: string) => {
+        switch (status.toLowerCase()) {
+            case 'active':
+                return { variant: 'success' as const, text: '• Active' }
+            case 'inactive':
+                return { variant: 'error' as const, text: '• Inactive' }
+            case 'pending':
+                return { variant: 'warning' as const, text: '• Pending' }
+            case 'suspended':
+                return { variant: 'error' as const, text: '• Suspended' }
+            default:
+                return { variant: 'neutral' as const, text: '• Unknown ACS' }
+        }
+    }
+
 
     const renderTabContent = () => {
         switch (activeTab) {
@@ -92,7 +108,10 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
                                         {user.name}
                                     </h2>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-blue-600 dark:text-blue-400">Active user</span>
+                                        <Badge variant="success">• Active user</Badge>
+                                        <Badge variant={getACSStatusBadge(user.acsStatus).variant}>
+                                            {getACSStatusBadge(user.acsStatus).text}
+                                        </Badge>
                                     </div>
                                 </div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -108,7 +127,7 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
                     </div>
                 </DialogHeader>
 
-                <div className="px-6 pt-4 pb-4 bg-white dark:bg-gray-800 flex-shrink-0">
+                <div className="px-6 pt-4 bg-white dark:bg-gray-800 flex-shrink-0">
                     <TabNavigation>
                         <TabNavigationLink
                             asChild
