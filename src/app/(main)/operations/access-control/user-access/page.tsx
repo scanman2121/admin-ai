@@ -259,55 +259,54 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
             const acsStatus = row.original.acsStatus as string;
             const serviceRequest = row.original.serviceRequest as string;
             
-            const ActionsDropdown = () => (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                            <MoreVertical className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                            Activate access
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            Revoke access
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            Remove mobile app access
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            View user in ACS
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            );
-            
             if (acsStatus === "not-in-acs" || serviceRequest !== "No open requests") {
                 return (
-                    <div className="flex items-center gap-2">
-                        <Button 
-                            variant="primary" 
-                            size="sm"
-                            onClick={() => onCreateClick(row.original)}
-                        >
-                            Create
-                        </Button>
-                        <ActionsDropdown />
-                    </div>
+                    <Button 
+                        variant="primary" 
+                        size="sm"
+                        onClick={() => onCreateClick(row.original)}
+                    >
+                        Create
+                    </Button>
                 );
             }
             
             return (
-                <div className="flex items-center gap-2">
-                    <Button variant="secondary" size="sm">
-                        View
-                    </Button>
-                    <ActionsDropdown />
-                </div>
+                <Button variant="secondary" size="sm">
+                    View
+                </Button>
             );
         },
         enableSorting: false,
+    },
+    {
+        id: "menu",
+        header: "",
+        cell: ({ row }: { row: any }) => (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <MoreVertical className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem>
+                        Activate access
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        Revoke access
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        Remove mobile app access
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        View user in ACS
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        ),
+        enableSorting: false,
+        size: 60, // Fixed width for the kebab column
     },
 ]
 

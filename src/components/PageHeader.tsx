@@ -62,35 +62,37 @@ export function PageHeader({
                 {title}
             </h1>
 
-            {(primaryCta || secondaryCta || customButtons) && (
-                <div className="flex gap-3">
-                    {customButtons ? (
-                        customButtons
-                    ) : (
-                        <>
-                            {secondaryCta && (
-                                <Button
-                                    variant="ghost"
-                                    className="border border-primary text-primary hover:bg-gray-50 hover:bg-opacity-30"
-                                    onClick={onSecondaryClick}
-                                    {...secondaryButtonProps}
-                                >
-                                    {secondaryCta}
-                                </Button>
-                            )}
+            <div className="flex gap-3 min-h-[40px] items-center">
+                {(primaryCta || secondaryCta || customButtons) && (
+                    <>
+                        {customButtons ? (
+                            customButtons
+                        ) : (
+                            <>
+                                {secondaryCta && (
+                                    <Button
+                                        variant="ghost"
+                                        className="border border-primary text-primary hover:bg-gray-50 hover:bg-opacity-30"
+                                        onClick={onSecondaryClick}
+                                        {...secondaryButtonProps}
+                                    >
+                                        {secondaryCta}
+                                    </Button>
+                                )}
 
-                            {primaryCta && (
-                                <Button
-                                    onClick={onPrimaryClick}
-                                    {...primaryButtonProps}
-                                >
-                                    {primaryCta}
-                                </Button>
-                            )}
-                        </>
-                    )}
-                </div>
-            )}
+                                {primaryCta && (
+                                    <Button
+                                        onClick={onPrimaryClick}
+                                        {...primaryButtonProps}
+                                    >
+                                        {primaryCta}
+                                    </Button>
+                                )}
+                            </>
+                        )}
+                    </>
+                )}
+            </div>
         </div>
     )
 } 
