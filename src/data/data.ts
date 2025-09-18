@@ -958,62 +958,62 @@ const brianWilsonUser = getUserById("brian-wilson-suspended");
 export const workOrders = [
   // ACCESS REQUEST WORK ORDERS (These show up in work orders AND create the service requests in access control)
   
-  // New Employee Access Requests
+  // Different types of access requests
   createWorkOrderFromUser(
     jenniferMartinezUser!,
-    "New Employee Access Request",
+    "New Employee MKA Request",
     "Security",
     "New",
-    "New hire Jennifer Martinez requires building access setup for TechCorp Solutions. Position: Junior Developer, Start Date: 01/15/2025",
+    "New hire Jennifer Martinez requires mobile key access setup for TechCorp Solutions. Position: Junior Developer, Start Date: 01/15/2025. Setup smartphone access and badge credentials.",
     "Security Team",
     "High"
   ),
   createWorkOrderFromUser(
     kevinChenUser!,
-    "New Employee Access Request", 
+    "Lost Device Replacement", 
     "Security",
     "In Progress",
-    "New research scientist Kevin Chen needs access to HealthTech facilities and lab areas. Requires biometric setup.",
+    "Research scientist Kevin Chen reported lost smartphone with mobile access credentials. Requires device deactivation and new device setup for HealthTech facilities.",
     "Security Team",
     "High"
   ),
   createWorkOrderFromUser(
     rachelThompsonUser!,
-    "New Employee Access Request",
+    "New Phone Setup Request",
     "Security",
     "New",
-    "Senior Paralegal Rachel Thompson requires access to Legal Partners offices and client meeting rooms.",
+    "Senior Paralegal Rachel Thompson received new company iPhone and requires mobile access transfer from old device. Legal Partners offices and client meeting rooms access needed.",
     "Unassigned",
-    "High"
+    "Medium"
   ),
   createWorkOrderFromUser(
     marcusRodriguezUser!,
-    "New Employee Access Request",
+    "Access Level Update Request",
     "Security",
     "In Progress", 
-    "Investment Analyst Marcus Rodriguez needs access to Global Finance Corp secure areas and trading floor.",
+    "Investment Analyst Marcus Rodriguez promoted to Senior Analyst. Requires elevated access to Global Finance Corp trading floor and executive areas.",
     "Security Team",
-    "High"
+    "Medium"
   ),
   createWorkOrderFromUser(
     amandaKimUser!,
-    "Contractor Access Request",
+    "Tenant Departure Processing",
     "Security",
     "New",
-    "External IT Consultant Amanda Kim requires temporary access for 3-month project. Limited access to IT areas only.",
+    "External Contractor LLC contract ending. Process tenant departure for Amanda Kim - revoke building access and collect credentials.",
     "Unassigned",
-    "Medium"
+    "High"
   ),
   
-  // Access Restoration Request
+  // Termination of Employment
   createWorkOrderFromUser(
     brianWilsonUser!,
-    "Access Restoration Request",
+    "Termination of Employment",
     "Security", 
     "New",
-    "QA Engineer Brian Wilson requires access restoration after security incident resolution. Badge replacement needed.",
+    "QA Engineer Brian Wilson employment terminated. Immediate revocation of all access credentials, mobile access, and badge collection required.",
     "Unassigned",
-    "Medium"
+    "High"
   ),
 
   // REGULAR FACILITY WORK ORDERS

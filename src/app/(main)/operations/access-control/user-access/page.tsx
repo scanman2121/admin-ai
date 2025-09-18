@@ -35,57 +35,57 @@ const generateServiceRequest = (user: any) => {
     switch (user.id) {
         case "jennifer-martinez-new":
             return {
-                request: "New Employee Access Request...",
-                type: "New Employee Access",
+                request: "New Employee MKA Request...",
+                type: "New Employee MKA",
                 status: "New"
             }
         case "kevin-chen-new":
             return {
-                request: "New Employee Access Request...",
-                type: "New Employee Access", 
+                request: "Lost Device Replacement...",
+                type: "Lost Device", 
                 status: "In Progress"
             }
         case "rachel-thompson-new":
             return {
-                request: "New Employee Access Request...",
-                type: "New Employee Access",
+                request: "New Phone Setup Request...",
+                type: "New Phone",
                 status: "New"
             }
         case "marcus-rodriguez-new":
             return {
-                request: "New Employee Access Request...",
-                type: "New Employee Access",
+                request: "Access Level Update Request...",
+                type: "Access Level Update",
                 status: "In Progress"
             }
         case "amanda-kim-contractor":
             return {
-                request: "Contractor Access Request...",
-                type: "Contractor Access",
+                request: "Tenant Departure Processing...",
+                type: "Tenant Departure",
                 status: "New"
             }
         case "brian-wilson-suspended":
             return {
-                request: "Access Restoration Request...",
-                type: "Access Restoration",
+                request: "Termination of Employment...",
+                type: "Termination of Employment",
                 status: "New"
             }
         default:
             if (user.acsStatus === "pending") {
                 return {
-                    request: "New Employee Access Request...",
-                    type: "New Employee Access",
+                    request: "New Employee MKA Request...",
+                    type: "New Employee MKA",
                     status: "In Progress"
                 }
             } else if (user.acsStatus === "suspended") {
                 return {
-                    request: "Access Restoration Request...",
-                    type: "Access Restoration", 
+                    request: "Lost Device Replacement...",
+                    type: "Lost Device", 
                     status: "Under Review"
                 }
             } else if (user.acsStatus === "inactive") {
                 return {
-                    request: "Account Reactivation Request...",
-                    type: "Account Reactivation",
+                    request: "Termination of Employment...",
+                    type: "Termination of Employment",
                     status: "Pending Review"
                 }
             }
