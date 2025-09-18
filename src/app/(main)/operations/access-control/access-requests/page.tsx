@@ -3,19 +3,19 @@
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
+import { DataTableFacetedFilter } from "@/components/ui/data-table/DataTableFacetedFilter"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { CreateUserAccessModal } from "@/components/ui/user-access/CreateUserAccessModal"
 import { UserAccessBulkActions } from "@/components/ui/user-access/UserAccessBulkActions"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
-import { DataTableFacetedFilter } from "@/components/ui/data-table/DataTableFacetedFilter"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { centralizedUsers } from "@/data/centralizedUsers"
 import { RiSettings3Line } from "@remixicon/react"
 import { Building, ChevronDown, FileText, Grid3X3, List, MoreVertical, User, X } from "lucide-react"
@@ -364,11 +364,11 @@ const createAccessRequestsColumns = (onUserClick: (user: any) => void, onCreateC
                     case "Tenant Departure":
                         return (
                             <Button 
-                                variant="destructive" 
+                                variant="secondary" 
                                 size="sm"
                                 onClick={() => onCreateClick(row.original)}
                             >
-                                Bulk revoke
+                                Review
                             </Button>
                         );
                     case "Access Level Update":
@@ -691,11 +691,12 @@ export default function AccessControlAccessRequests() {
                                             View details
                                         </Button>
                                         <Button
-                                            variant={user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "secondary" : "primary"}
+                                            variant={user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" || user.serviceRequestType === "Tenant Departure" ? "secondary" : "primary"}
                                             size="sm"
                                             onClick={() => handleCreateAccessClick(user)}
                                         >
-                                            {user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "View" : "Create access"}
+                                            {user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "View" : 
+                                             user.serviceRequestType === "Tenant Departure" ? "Review" : "Create access"}
                                         </Button>
                                     </div>
                                 </div>
