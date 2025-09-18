@@ -1,12 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { Button } from "@/components/Button"
 import { Badge } from "@/components/ui/badge"
-import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { X, Calendar, Shield, User, Activity, FileText } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
+import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
+import { Activity, Calendar, FileText, Shield, User, X } from "lucide-react"
+import { useEffect, useState } from "react"
 
 interface UserDetailsModalProps {
     isOpen: boolean
@@ -580,18 +580,18 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
                 return (
                     <Badge 
                         variant="secondary" 
-                        className="bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-400 dark:border-orange-800/30"
+                        className="bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/30"
                     >
-                        Not in ACS
+                        • Not in ACS
                     </Badge>
                 );
             case "revoked":
                 return (
                     <Badge 
-                        variant="destructive" 
-                        className="bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800/30"
+                        variant="secondary" 
+                        className="bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/30"
                     >
-                        Revoked ACS
+                        • Revoked ACS
                     </Badge>
                 );
             default:

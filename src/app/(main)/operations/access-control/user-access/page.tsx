@@ -232,9 +232,23 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
                             </Badge>
                         );
                     case "not-in-acs":
-                        return <Badge variant="destructive">• Not in ACS</Badge>;
+                        return (
+                            <Badge 
+                                variant="secondary" 
+                                className="bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/30"
+                            >
+                                • Not in ACS
+                            </Badge>
+                        );
                     case "revoked":
-                        return <Badge variant="destructive">• Revoked</Badge>;
+                        return (
+                            <Badge 
+                                variant="secondary" 
+                                className="bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/30"
+                            >
+                                • Revoked
+                            </Badge>
+                        );
                     default:
                         return <Badge variant="secondary">• Unknown</Badge>;
                 }
@@ -282,7 +296,7 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
     {
         id: "menu",
         header: "",
-        cell: ({ row }: { row: any }) => (
+        cell: () => (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
