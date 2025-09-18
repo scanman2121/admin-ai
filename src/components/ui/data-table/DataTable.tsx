@@ -33,6 +33,7 @@ interface DataTableProps<TData, TValue> {
   onRowClick?: (row: TData) => void
   renderBulkActions?: (table: any, rowSelection: any) => React.ReactNode
   initialSorting?: SortingState
+  initialColumnVisibility?: VisibilityState
 }
 
 export function DataTable<TData, TValue>({
@@ -42,9 +43,10 @@ export function DataTable<TData, TValue>({
   onRowClick,
   renderBulkActions,
   initialSorting = [],
+  initialColumnVisibility = {},
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(initialColumnVisibility)
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [sorting, setSorting] = React.useState<SortingState>(initialSorting)
 

@@ -1,8 +1,7 @@
 "use client"
 
-import { Button } from "@/components/Button"
-import { PageHeader } from "@/components/PageHeader"
 import { Badge } from "@/components/Badge"
+import { Button } from "@/components/Button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import {
     DropdownMenu,
@@ -15,6 +14,7 @@ import { CreateUserAccessModal } from "@/components/ui/user-access/CreateUserAcc
 import { UserAccessBulkActions } from "@/components/ui/user-access/UserAccessBulkActions"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { centralizedUsers } from "@/data/centralizedUsers"
+import { RiSettings3Line } from "@remixicon/react"
 import { Building, ChevronDown, FileText, MoreVertical, User, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -216,6 +216,13 @@ const createAccessRequestsColumns = (onUserClick: (user: any) => void, onCreateC
         },
     },
     {
+        accessorKey: "serviceRequestType",
+        header: "Request Type",
+        cell: ({ row }: { row: any }) => {
+            return row.getValue("serviceRequestType");
+        }
+    },
+    {
         accessorKey: "acsStatus",
         header: "ACS Status",
         cell: ({ row }: { row: any }) => {
@@ -364,40 +371,47 @@ export default function AccessControlAccessRequests() {
     return (
         <div className="space-y-6">
             {/* Page Header */}
-            <PageHeader 
-                title="Access Control" 
-                customButtons={
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="primary" className="flex items-center gap-2">
-                                Grant access
-                                <ChevronDown className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-80">
-                            <DropdownMenuItem className="flex items-start gap-3 p-4 cursor-pointer">
-                                <User className="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5" />
-                                <div className="flex-1">
-                                    <div className="font-medium text-gray-900 dark:text-gray-50">
-                                        Individual
-                                    </div>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
+                        Access Control
+                    </h1>
+                    <Link href="/operations/access-control/settings">
+                        <Button variant="ghost" size="sm" className="p-2 h-8 w-8">
+                            <RiSettings3Line className="size-4" />
+                        </Button>
+                    </Link>
+                </div>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="primary" className="flex items-center gap-2">
+                            Grant access
+                            <ChevronDown className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-80">
+                        <DropdownMenuItem className="flex items-start gap-3 p-4 cursor-pointer">
+                            <User className="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5" />
+                            <div className="flex-1">
+                                <div className="font-medium text-gray-900 dark:text-gray-50">
+                                    Individual
                                 </div>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="flex items-start gap-3 p-4 cursor-pointer">
-                                <Building className="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5" />
-                                <div className="flex-1">
-                                    <div className="font-medium text-gray-900 dark:text-gray-50">
-                                        Bulk
-                                    </div>
-                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                        Best for onboarding new tenant companies
-                                    </div>
+                            </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="flex items-start gap-3 p-4 cursor-pointer">
+                            <Building className="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5" />
+                            <div className="flex-1">
+                                <div className="font-medium text-gray-900 dark:text-gray-50">
+                                    Bulk
                                 </div>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                }
-            />
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                    Best for onboarding new tenant companies
+                                </div>
+                            </div>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
 
             {/* Tab Navigation */}
             <TabNavigation>
@@ -450,6 +464,9 @@ export default function AccessControlAccessRequests() {
                 columns={accessRequestsColumns}
                 data={data}
                 searchKey="name"
+                initialColumnVisibility={{
+                    serviceRequestType: false // Hide the request type column since it's used for filtering only
+                }}
                 initialSorting={[
                     {
                         id: "serviceRequest",

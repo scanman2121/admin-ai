@@ -1,11 +1,12 @@
 "use client"
 
-import { PageHeader } from "@/components/PageHeader"
 import { Badge } from "@/components/Badge"
+import { Button } from "@/components/Button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { centralizedUsers } from "@/data/centralizedUsers"
+import { RiSettings3Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -266,9 +267,18 @@ export default function AccessControlActivity() {
     return (
         <div className="space-y-6">
             {/* Page Header */}
-            <PageHeader 
-                title="Access Control" 
-            />
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
+                        Access Control
+                    </h1>
+                    <Link href="/operations/access-control/settings">
+                        <Button variant="ghost" size="sm" className="p-2 h-8 w-8">
+                            <RiSettings3Line className="size-4" />
+                        </Button>
+                    </Link>
+                </div>
+            </div>
 
             {/* Tab Navigation */}
             <TabNavigation>

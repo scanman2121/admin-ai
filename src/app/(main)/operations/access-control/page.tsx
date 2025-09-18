@@ -1,7 +1,7 @@
 "use client"
 
-import { Button } from "@/components/Button"
 import { Badge } from "@/components/Badge"
+import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { DatePicker } from "@/components/DatePicker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -37,16 +37,16 @@ export default function AccessControl() {
         <div className="space-y-6">
             {/* Page Header */}
             <div className="flex items-center justify-between">
-                <div>
+                <div className="flex items-center gap-2">
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
                         Access Control
                     </h1>
+                    <Link href="/operations/access-control/settings">
+                        <Button variant="ghost" size="sm" className="p-2 h-8 w-8">
+                            <RiSettings3Line className="size-4" />
+                        </Button>
+                    </Link>
                 </div>
-                <Link href="/operations/access-control/settings">
-                    <Button variant="ghost" size="sm" className="p-2 h-8 w-8">
-                        <RiSettings3Line className="size-4" />
-                    </Button>
-                </Link>
             </div>
 
             {/* Tab Navigation */}

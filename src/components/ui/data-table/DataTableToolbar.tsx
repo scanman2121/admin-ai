@@ -84,6 +84,20 @@ export function DataTableToolbar<TData>({
                         ]}
                     />
                 )}
+                {table.getColumn("serviceRequestType") && (
+                    <DataTableFacetedFilter
+                        column={table.getColumn("serviceRequestType")}
+                        title="Request type"
+                        options={[
+                            { value: "New Employee MKA", label: "New Employee MKA" },
+                            { value: "Lost Device", label: "Lost Device" },
+                            { value: "New Phone", label: "New Phone" },
+                            { value: "Access Level Update", label: "Access Level Update" },
+                            { value: "Tenant Departure", label: "Tenant Departure" },
+                            { value: "Termination of Employment", label: "Termination of Employment" }
+                        ]}
+                    />
+                )}
                 {isFiltered && (
                     <Button
                         variant="ghost"

@@ -1,11 +1,11 @@
 "use client"
 
-import { Button } from "@/components/Button"
 import { Badge } from "@/components/Badge"
-import { PageHeader } from "@/components/PageHeader"
+import { Button } from "@/components/Button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { centralizedUsers } from "@/data/centralizedUsers"
+import { RiSettings3Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -274,14 +274,21 @@ export default function AccessControlGroups() {
     return (
         <div className="space-y-6">
             {/* Page Header */}
-            <PageHeader 
-                title="Access Control" 
-                customButtons={
-                    <Button variant="primary">
-                        Create mapping
-                    </Button>
-                }
-            />
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
+                        Access Control
+                    </h1>
+                    <Link href="/operations/access-control/settings">
+                        <Button variant="ghost" size="sm" className="p-2 h-8 w-8">
+                            <RiSettings3Line className="size-4" />
+                        </Button>
+                    </Link>
+                </div>
+                <Button variant="primary">
+                    Create mapping
+                </Button>
+            </div>
 
             {/* Tab Navigation */}
             <TabNavigation>
