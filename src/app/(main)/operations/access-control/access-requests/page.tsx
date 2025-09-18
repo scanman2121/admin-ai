@@ -465,11 +465,6 @@ export default function AccessControlAccessRequests() {
         // For now, we'll just log the action
     }
 
-    const handleReviewPendingUsers = () => {
-        setSelectedUsersForAccess(data) // All users in this view need access
-        setIsCreateAccessModalOpen(true)
-    }
-
     const accessRequestsColumns = createAccessRequestsColumns(handleUserClick, handleCreateAccessClick)
 
     return (

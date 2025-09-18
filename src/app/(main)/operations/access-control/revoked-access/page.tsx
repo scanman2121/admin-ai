@@ -135,8 +135,7 @@ const createRevokedAccessColumns = (onUserClick: (user: typeof revokedAccessData
     {
         id: "actions",
         header: "",
-        cell: ({ row }: any) => {
-            const user = row.original
+        cell: () => {
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -252,7 +251,6 @@ export default function AccessControlRevokedAccess() {
                         totalCount={data.length}
                         onCreateAccess={() => {}} // Not applicable for revoked users
                         onRemoveAccess={handleBulkRestoreAccess}
-                        actionLabel="Restore access" // Custom label for revoked users
                     />
                 )}
             />
