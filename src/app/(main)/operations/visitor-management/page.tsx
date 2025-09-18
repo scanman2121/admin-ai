@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/Checkbox"
 import { DateRangePicker, type DateRange } from "@/components/DatePicker"
 import { Input } from "@/components/Input"
 import { PageHeader } from "@/components/PageHeader"
-import { Select } from "@/components/Select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
@@ -275,7 +275,7 @@ export default function VisitorManagement() {
         <div className="space-y-6">
             {/* Page Header */}
             <PageHeader 
-                title="Visitor Management" 
+            title="Visitor Management"
                 customButtons={
                     <div className="relative">
                         <Button variant="primary" className="flex items-center gap-2">
@@ -381,31 +381,51 @@ export default function VisitorManagement() {
                         />
                     </div>
                     <Select>
-                        <option value="">Type</option>
-                        <option value="visitor">Visitor</option>
-                        <option value="vendor">Vendor</option>
-                        <option value="employee">Employee</option>
+                        <SelectTrigger className="w-32">
+                            <SelectValue placeholder="Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="visitor">Visitor</SelectItem>
+                            <SelectItem value="vendor">Vendor</SelectItem>
+                            <SelectItem value="employee">Employee</SelectItem>
+                        </SelectContent>
                     </Select>
                     <Select>
-                        <option value="">Group</option>
-                        <option value="group1">Group 1</option>
-                        <option value="group2">Group 2</option>
+                        <SelectTrigger className="w-32">
+                            <SelectValue placeholder="Group" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="group1">Group 1</SelectItem>
+                            <SelectItem value="group2">Group 2</SelectItem>
+                        </SelectContent>
                     </Select>
                     <Select>
-                        <option value="">Brendan D...</option>
-                        <option value="brendan">Brendan DeStefano</option>
+                        <SelectTrigger className="w-40">
+                            <SelectValue placeholder="Brendan D..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="brendan">Brendan DeStefano</SelectItem>
+                        </SelectContent>
                     </Select>
                     <Select>
-                        <option value="">Host Company</option>
-                        <option value="hqo">HqO</option>
-                        <option value="acme">Acme Corp</option>
+                        <SelectTrigger className="w-40">
+                            <SelectValue placeholder="Host Company" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="hqo">HqO</SelectItem>
+                            <SelectItem value="acme">Acme Corp</SelectItem>
+                        </SelectContent>
                     </Select>
                     <Select>
-                        <option value="">Status</option>
-                        <option value="expected">Expected</option>
-                        <option value="checked-in">Checked In</option>
-                        <option value="checked-out">Checked Out</option>
-                        <option value="cancelled">Cancelled</option>
+                        <SelectTrigger className="w-32">
+                            <SelectValue placeholder="Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="expected">Expected</SelectItem>
+                            <SelectItem value="checked-in">Checked In</SelectItem>
+                            <SelectItem value="checked-out">Checked Out</SelectItem>
+                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                        </SelectContent>
                     </Select>
                 </div>
 

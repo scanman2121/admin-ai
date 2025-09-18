@@ -4,8 +4,8 @@ import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Switch } from "@/components/Switch"
 import { UserAccessTab } from "@/components/ui/user/UserAccessTab"
+import { UserActivityFeed } from "@/components/ui/user/UserActivityFeed"
 import { UserActivityTab } from "@/components/ui/user/UserActivityTab"
-import { UserOverviewTab } from "@/components/ui/user/UserOverviewTab"
 import { UserRequestsTab } from "@/components/ui/user/UserRequestsTab"
 import { UserVisitorsTab } from "@/components/ui/user/UserVisitorsTab"
 import { users } from "@/data/data"
@@ -168,11 +168,10 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
             {/* Main content */}
             {activeTab === "overview" && (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Overview section - Left side (2/3 width) */}
+                    {/* Activity Feed - Left side (2/3 width) */}
                     <div className="lg:col-span-2">
-                        <UserOverviewTab 
-                            user={userDetail} 
-                            containerClassName=""
+                        <UserActivityFeed 
+                            userId={userDetail.id}
                         />
                     </div>
 
