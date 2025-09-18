@@ -93,7 +93,7 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-7xl w-full h-[85vh] overflow-hidden p-0 flex flex-col">
+            <DialogContent className="max-w-7xl w-full h-[85vh] overflow-hidden p-0 gap-0 flex flex-col">
                 <DialogHeader className="px-6 py-4 flex-shrink-0">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
