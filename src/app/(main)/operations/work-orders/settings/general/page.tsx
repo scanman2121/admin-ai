@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/Button"
+import { Card } from "@/components/Card"
 import { Checkbox } from "@/components/Checkbox"
 import { Select } from "@/components/Select"
 import { Switch } from "@/components/Switch"
@@ -101,257 +102,294 @@ export default function WorkOrdersGeneralSettings() {
             </TabNavigation>
 
             {/* Settings Content */}
-            <div className="space-y-8">
-                {/* Default Form Fields Section */}
-                <div className="space-y-4">
-                    <div>
-                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-1">
-                            Default Form Fields
-                        </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Choose which fields appear on all service request forms by default.
-                        </p>
-                    </div>
-                    
-                    <div className="space-y-4">
-                        {/* Location */}
-                        <div className="flex items-center justify-between py-3">
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                    Location
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Building, floor, room number
-                                </p>
-                            </div>
-                            <Switch
-                                checked={formFields.location}
-                                onCheckedChange={() => handleFormFieldToggle('location')}
-                            />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Request Form Settings Card */}
+                <Card className="lg:col-span-2">
+                    <div className="p-6">
+                        <div className="mb-6">
+                            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
+                                Request Form Settings
+                            </h2>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Configure which fields appear on service request forms and validation requirements.
+                            </p>
                         </div>
-                        
-                        {/* Description */}
-                        <div className="flex items-center justify-between py-3">
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                    Description
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Detailed issue description
-                                </p>
-                            </div>
-                            <Switch
-                                checked={formFields.description}
-                                onCheckedChange={() => handleFormFieldToggle('description')}
-                            />
-                        </div>
-                        
-                        {/* Attachments */}
-                        <div className="flex items-center justify-between py-3">
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                    Attachments
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Photo/file uploads
-                                </p>
-                            </div>
-                            <Switch
-                                checked={formFields.attachments}
-                                onCheckedChange={() => handleFormFieldToggle('attachments')}
-                            />
-                        </div>
-                        
-                        {/* Urgency Level */}
-                        <div className="flex items-center justify-between py-3">
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                    Urgency Level
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Low, medium, high urgency
-                                </p>
-                            </div>
-                            <Switch
-                                checked={formFields.urgencyLevel}
-                                onCheckedChange={() => handleFormFieldToggle('urgencyLevel')}
-                            />
-                        </div>
-                    </div>
-                </div>
 
-                {/* Notifications Section */}
-                <div className="space-y-4">
-                    <div>
-                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-1">
-                            Notifications
-                        </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Global notification settings that apply to all request types (unless overridden in individual type settings).
-                        </p>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Default Form Fields */}
+                            <div>
+                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-4">
+                                    Default Form Fields
+                                </h3>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+                                    Choose which fields appear on all service request forms by default.
+                                </p>
+                                
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-between py-2">
+                                        <div>
+                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                Location
+                                            </h4>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Building, floor, room number
+                                            </p>
+                                        </div>
+                                        <Switch
+                                            checked={formFields.location}
+                                            onCheckedChange={() => handleFormFieldToggle('location')}
+                                        />
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-between py-2">
+                                        <div>
+                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                Description
+                                            </h4>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Detailed issue description
+                                            </p>
+                                        </div>
+                                        <Switch
+                                            checked={formFields.description}
+                                            onCheckedChange={() => handleFormFieldToggle('description')}
+                                        />
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-between py-2">
+                                        <div>
+                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                Attachments
+                                            </h4>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Photo/file uploads
+                                            </p>
+                                        </div>
+                                        <Switch
+                                            checked={formFields.attachments}
+                                            onCheckedChange={() => handleFormFieldToggle('attachments')}
+                                        />
+                                    </div>
+                                    
+                                    <div className="flex items-center justify-between py-2">
+                                        <div>
+                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                Urgency Level
+                                            </h4>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Low, medium, high urgency
+                                            </p>
+                                        </div>
+                                        <Switch
+                                            checked={formFields.urgencyLevel}
+                                            onCheckedChange={() => handleFormFieldToggle('urgencyLevel')}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Required Fields */}
+                            <div>
+                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-4">
+                                    Required Fields
+                                </h3>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+                                    Select which fields must be filled out before submission.
+                                </p>
+                                
+                                <div className="space-y-3">
+                                    <div className="flex items-center space-x-3">
+                                        <Checkbox
+                                            id="required-location"
+                                            checked={formConfig.requiredFields.location}
+                                            onCheckedChange={() => handleRequiredFieldToggle('location')}
+                                        />
+                                        <label htmlFor="required-location" className="text-sm text-gray-900 dark:text-gray-100">
+                                            Location
+                                        </label>
+                                    </div>
+                                    
+                                    <div className="flex items-center space-x-3">
+                                        <Checkbox
+                                            id="required-description"
+                                            checked={formConfig.requiredFields.description}
+                                            onCheckedChange={() => handleRequiredFieldToggle('description')}
+                                        />
+                                        <label htmlFor="required-description" className="text-sm text-gray-900 dark:text-gray-100">
+                                            Description
+                                        </label>
+                                    </div>
+                                    
+                                    <div className="flex items-center space-x-3">
+                                        <Checkbox
+                                            id="required-attachments"
+                                            checked={formConfig.requiredFields.attachments}
+                                            onCheckedChange={() => handleRequiredFieldToggle('attachments')}
+                                        />
+                                        <label htmlFor="required-attachments" className="text-sm text-gray-900 dark:text-gray-100">
+                                            Attachments
+                                        </label>
+                                    </div>
+                                    
+                                    <div className="flex items-center space-x-3">
+                                        <Checkbox
+                                            id="required-contact"
+                                            checked={formConfig.requiredFields.contactInfo}
+                                            onCheckedChange={() => handleRequiredFieldToggle('contactInfo')}
+                                        />
+                                        <label htmlFor="required-contact" className="text-sm text-gray-900 dark:text-gray-100">
+                                            Contact Info
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div className="space-y-4">
-                        {/* Always Notify Requestor */}
-                        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                            <div className="flex items-center justify-between">
+                </Card>
+
+                {/* Notification Preferences Card */}
+                <Card>
+                    <div className="p-6">
+                        <div className="mb-6">
+                            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
+                                Notification Preferences
+                            </h2>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Configure email notifications for work order events and status changes.
+                            </p>
+                        </div>
+                        
+                        <div className="space-y-4">
+                            {/* Always Notify Requestor - Highlighted */}
+                            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                            Always Notify Requestor
+                                        </h3>
+                                        <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
+                                            Send confirmation and status updates to the person who submitted each request
+                                        </p>
+                                    </div>
+                                    <Switch
+                                        checked={notifications.alwaysNotifyRequestor}
+                                        onCheckedChange={() => handleNotificationToggle('alwaysNotifyRequestor')}
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
                                 <div>
-                                    <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                                        Always Notify Requestor
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        Notify Assigned Team
                                     </h3>
-                                    <p className="text-sm text-blue-700 dark:text-blue-300">
-                                        Send confirmation and status updates to the person who submitted each request
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        Send email to assigned team when new requests are submitted
                                     </p>
                                 </div>
                                 <Switch
-                                    checked={notifications.alwaysNotifyRequestor}
-                                    onCheckedChange={() => handleNotificationToggle('alwaysNotifyRequestor')}
+                                    checked={notifications.notifyAssignedTeam}
+                                    onCheckedChange={() => handleNotificationToggle('notifyAssignedTeam')}
+                                />
+                            </div>
+                            
+                            <div className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700">
+                                <div>
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        Notify on Status Changes
+                                    </h3>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        Send email when request status is updated or comments are added
+                                    </p>
+                                </div>
+                                <Switch
+                                    checked={notifications.notifyOnStatusChanges}
+                                    onCheckedChange={() => handleNotificationToggle('notifyOnStatusChanges')}
+                                />
+                            </div>
+                            
+                            <div className="flex items-center justify-between py-3">
+                                <div>
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        Notify on Reassignment
+                                    </h3>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                        Send email to new assignee when requests are reassigned between teams
+                                    </p>
+                                </div>
+                                <Switch
+                                    checked={notifications.notifyOnReassignment}
+                                    onCheckedChange={() => handleNotificationToggle('notifyOnReassignment')}
                                 />
                             </div>
                         </div>
-                        
-                        {/* Notify Assigned Team */}
-                        <div className="flex items-center justify-between py-3">
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                    Notify Assigned Team
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Send email to assigned team when new requests are submitted
-                                </p>
-                            </div>
-                            <Switch
-                                checked={notifications.notifyAssignedTeam}
-                                onCheckedChange={() => handleNotificationToggle('notifyAssignedTeam')}
-                            />
-                        </div>
-                        
-                        {/* Notify on Status Changes */}
-                        <div className="flex items-center justify-between py-3">
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                    Notify on Status Changes
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Send email when request status is updated or comments are added
-                                </p>
-                            </div>
-                            <Switch
-                                checked={notifications.notifyOnStatusChanges}
-                                onCheckedChange={() => handleNotificationToggle('notifyOnStatusChanges')}
-                            />
-                        </div>
-                        
-                        {/* Notify on Reassignment */}
-                        <div className="flex items-center justify-between py-3">
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                    Notify on Reassignment
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Send email to new assignee when requests are reassigned between teams
-                                </p>
-                            </div>
-                            <Switch
-                                checked={notifications.notifyOnReassignment}
-                                onCheckedChange={() => handleNotificationToggle('notifyOnReassignment')}
-                            />
-                        </div>
                     </div>
-                </div>
+                </Card>
 
-                {/* Form Configuration Section */}
-                <div className="space-y-4">
-                    <div>
-                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-1">
-                            Form Configuration
-                        </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Customize how service request forms behave and validate input.
-                        </p>
-                    </div>
-                    
-                    <div className="space-y-6">
-                        {/* Required Fields */}
-                        <div>
-                            <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
-                                Required Fields
-                            </h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                                Select which fields must be filled out
+                {/* File & Attachment Settings Card */}
+                <Card>
+                    <div className="p-6">
+                        <div className="mb-6">
+                            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
+                                File & Attachment Settings
+                            </h2>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Configure file upload limits and attachment handling for service requests.
                             </p>
-                            
-                            <div className="space-y-3">
-                                <div className="flex items-center space-x-3">
-                                    <Checkbox
-                                        id="required-location"
-                                        checked={formConfig.requiredFields.location}
-                                        onCheckedChange={() => handleRequiredFieldToggle('location')}
-                                    />
-                                    <label htmlFor="required-location" className="text-sm text-gray-900 dark:text-gray-100">
-                                        Location
-                                    </label>
-                                </div>
-                                
-                                <div className="flex items-center space-x-3">
-                                    <Checkbox
-                                        id="required-description"
-                                        checked={formConfig.requiredFields.description}
-                                        onCheckedChange={() => handleRequiredFieldToggle('description')}
-                                    />
-                                    <label htmlFor="required-description" className="text-sm text-gray-900 dark:text-gray-100">
-                                        Description
-                                    </label>
-                                </div>
-                                
-                                <div className="flex items-center space-x-3">
-                                    <Checkbox
-                                        id="required-attachments"
-                                        checked={formConfig.requiredFields.attachments}
-                                        onCheckedChange={() => handleRequiredFieldToggle('attachments')}
-                                    />
-                                    <label htmlFor="required-attachments" className="text-sm text-gray-900 dark:text-gray-100">
-                                        Attachments
-                                    </label>
-                                </div>
-                                
-                                <div className="flex items-center space-x-3">
-                                    <Checkbox
-                                        id="required-contact"
-                                        checked={formConfig.requiredFields.contactInfo}
-                                        onCheckedChange={() => handleRequiredFieldToggle('contactInfo')}
-                                    />
-                                    <label htmlFor="required-contact" className="text-sm text-gray-900 dark:text-gray-100">
-                                        Contact Info
-                                    </label>
-                                </div>
-                            </div>
                         </div>
                         
-                        {/* Maximum Attachments */}
-                        <div>
-                            <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
-                                Maximum Attachments
-                            </h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                                Limit number of files per request
-                            </p>
-                            
-                            <div className="max-w-xs">
-                                <Select
-                                    value={formConfig.maxAttachments}
-                                    onValueChange={(value) => setFormConfig(prev => ({ ...prev, maxAttachments: value }))}
-                                >
-                                    <option value="1">1 file</option>
-                                    <option value="3">3 files</option>
-                                    <option value="5">5 files</option>
-                                    <option value="10">10 files</option>
-                                    <option value="unlimited">Unlimited</option>
-                                </Select>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
+                                    Maximum Attachments
+                                </h3>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+                                    Limit the number of files users can upload per request
+                                </p>
+                                
+                                <div className="max-w-xs">
+                                    <Select
+                                        value={formConfig.maxAttachments}
+                                        onValueChange={(value) => setFormConfig(prev => ({ ...prev, maxAttachments: value }))}
+                                    >
+                                        <option value="1">1 file</option>
+                                        <option value="3">3 files</option>
+                                        <option value="5">5 files</option>
+                                        <option value="10">10 files</option>
+                                        <option value="unlimited">Unlimited</option>
+                                    </Select>
+                                </div>
+                            </div>
+
+                            {/* Future settings can be added here */}
+                            <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
+                                <div className="flex items-center justify-between py-2">
+                                    <div>
+                                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                            Auto-compress Images
+                                        </h4>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            Automatically compress uploaded images to save storage
+                                        </p>
+                                    </div>
+                                    <Switch checked={true} disabled />
+                                </div>
+                                
+                                <div className="flex items-center justify-between py-2">
+                                    <div>
+                                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                            Virus Scanning
+                                        </h4>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            Scan all uploaded files for security threats
+                                        </p>
+                                    </div>
+                                    <Switch checked={true} disabled />
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     )

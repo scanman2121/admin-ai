@@ -3,12 +3,13 @@
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/Dropdown"
 import { AssignedPersonnelCard } from "@/components/ui/AssignedPersonnelCard"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Textarea } from "@/components/ui/textarea"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { workOrders } from "@/data/data"
-import { ChevronLeft, Download, ExternalLink, FileText, MapPin, Paperclip, Send, Upload } from "lucide-react"
+import { ChevronDown, ChevronLeft, Download, ExternalLink, FileText, MapPin, Paperclip, Send, Upload } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { useState } from "react"
@@ -152,6 +153,24 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
         })) || []
     )
     
+    // Status management
+    const [currentStatus, setCurrentStatus] = useState(workOrderDetail?.status || 'Open')
+    
+    // Available status options
+    const statusOptions = [
+        { label: 'Open', variant: 'warning' as const },
+        { label: 'In Progress', variant: 'default' as const },
+        { label: 'Pending', variant: 'warning' as const },
+        { label: 'Completed', variant: 'success' as const },
+        { label: 'Cancelled', variant: 'error' as const },
+        { label: 'On Hold', variant: 'neutral' as const }
+    ]
+    
+    const getCurrentStatusVariant = (status: string) => {
+        const option = statusOptions.find(opt => opt.label === status)
+        return option?.variant || 'warning'
+    }
+    
     if (!workOrderDetail) {
         notFound()
     }
@@ -176,6 +195,12 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
         setAssignedPersonnel(prev => prev.filter(person => person.id !== personId))
     }
 
+    const handleStatusChange = (newStatus: string) => {
+        setCurrentStatus(newStatus)
+        // Here you would typically make an API call to update the status
+        console.log(`Status updated to: ${newStatus}`)
+    }
+
     return (
         <div className="space-y-6">
             {/* Header with back navigation and actions */}
@@ -193,12 +218,35 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                 </div>
                 
                 <div className="flex items-center gap-3">
-                    <Button variant="primary">
+                    <Button variant="secondary">
                         Send to External System
                     </Button>
-                    <Badge variant="warning">
-                        • {workOrderDetail.status}
-                    </Badge>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <div className="relative">
+                                <Badge 
+                                    variant={getCurrentStatusVariant(currentStatus)} 
+                                    className="h-9 px-3 py-1.5 cursor-pointer hover:opacity-80 transition-opacity flex items-center gap-1.5"
+                                >
+                                    • {currentStatus}
+                                    <ChevronDown className="h-3 w-3" />
+                                </Badge>
+                            </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="min-w-[150px]">
+                            {statusOptions.map((option) => (
+                                <DropdownMenuItem
+                                    key={option.label}
+                                    onClick={() => handleStatusChange(option.label)}
+                                    className="flex items-center gap-2 cursor-pointer"
+                                >
+                                    <Badge variant={option.variant} className="text-xs pointer-events-none">
+                                        • {option.label}
+                                    </Badge>
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </div>
 
