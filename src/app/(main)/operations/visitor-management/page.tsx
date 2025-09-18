@@ -7,6 +7,7 @@ import { DatePicker } from "@/components/DatePicker"
 import { PageHeader } from "@/components/PageHeader"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
+import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
 import { Calendar, ChevronDown, ChevronLeft, ChevronRight, Download } from "lucide-react"
 import Link from "next/link"
@@ -38,7 +39,15 @@ const visitorData = [
         },
         host: {
             name: "Brendan DeStefano",
-            company: "HqO"
+            company: "HqO",
+            email: "brendan.destefano@hqo.com",
+            floorSuite: "Floor 14 / Suite 14.2",
+            serviceRequest: "No open requests",
+            serviceRequestType: null,
+            serviceRequestStatus: null,
+            acsStatus: "active",
+            hasNotes: false,
+            badgeId: "HID-BD001"
         },
         invite: "-",
         floor: "14 (s14.2)",
@@ -60,7 +69,15 @@ const visitorData = [
         },
         host: {
             name: "Brendan DeStefano",
-            company: "HqO"
+            company: "HqO",
+            email: "brendan.destefano@hqo.com",
+            floorSuite: "Floor 14 / Suite 14.2",
+            serviceRequest: "No open requests",
+            serviceRequestType: null,
+            serviceRequestStatus: null,
+            acsStatus: "active",
+            hasNotes: false,
+            badgeId: "HID-BD002"
         },
         invite: "-",
         floor: "-",
@@ -82,7 +99,15 @@ const visitorData = [
         },
         host: {
             name: "Brendan DeStefano",
-            company: "HqO"
+            company: "HqO",
+            email: "brendan.destefano@hqo.com",
+            floorSuite: "Floor 12 / Suite 12.1",
+            serviceRequest: "No open requests",
+            serviceRequestType: null,
+            serviceRequestStatus: null,
+            acsStatus: "active",
+            hasNotes: false,
+            badgeId: "HID-BD003"
         },
         invite: "-",
         floor: "12 (s12.1)",
@@ -104,7 +129,15 @@ const visitorData = [
         },
         host: {
             name: "Brendan DeStefano",
-            company: "HqO"
+            company: "HqO",
+            email: "brendan.destefano@hqo.com",
+            floorSuite: "Floor 14 / Suite 14.2",
+            serviceRequest: "No open requests",
+            serviceRequestType: null,
+            serviceRequestStatus: null,
+            acsStatus: "active",
+            hasNotes: false,
+            badgeId: "HID-BD004"
         },
         invite: "-",
         floor: "-",
@@ -130,6 +163,14 @@ type VisitorRow = {
     host: {
         name: string
         company: string
+        email: string
+        floorSuite: string
+        serviceRequest: string
+        serviceRequestType: string | null
+        serviceRequestStatus: string | null
+        acsStatus: string
+        hasNotes: boolean
+        badgeId: string
     }
     invite: string
     floor: string
@@ -142,8 +183,8 @@ type VisitorRow = {
 // Column helper
 const columnHelper = createColumnHelper<VisitorRow>()
 
-// Table columns
-const visitorColumns = [
+// Create table columns with click handler
+const createVisitorColumns = (onHostClick: (host: VisitorRow["host"]) => void) => [
     columnHelper.display({
         id: "select",
         header: ({ table }) => (
@@ -206,9 +247,12 @@ const visitorColumns = [
             const host = row.getValue("host") as VisitorRow["host"]
             return (
                 <div className="space-y-1">
-                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    <button
+                        onClick={() => onHostClick(host)}
+                        className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer underline"
+                    >
                         {host.name}
-                    </div>
+                    </button>
                     <div className="text-xs text-gray-500">
                         {host.company}
                     </div>
@@ -296,10 +340,50 @@ export default function VisitorManagement() {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(
         new Date(2025, 8, 17) // September 17, 2025
     )
+    const [selectedUser, setSelectedUser] = useState<{
+        id: string
+        name: string
+        email: string
+        company: string
+        floorSuite: string
+        serviceRequest: string
+        serviceRequestType: string | null
+        serviceRequestStatus: string | null
+        acsStatus: string
+        hasNotes: boolean
+        badgeId?: string
+    } | null>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const handleDateChange = (date: Date | undefined) => {
         setSelectedDate(date)
     }
+
+    const handleHostClick = (host: VisitorRow["host"]) => {
+        // Convert host data to match UserDetailsModal expected format
+        const userForModal = {
+            id: host.badgeId,
+            name: host.name,
+            email: host.email,
+            company: host.company,
+            floorSuite: host.floorSuite,
+            serviceRequest: host.serviceRequest,
+            serviceRequestType: host.serviceRequestType,
+            serviceRequestStatus: host.serviceRequestStatus,
+            acsStatus: host.acsStatus,
+            hasNotes: host.hasNotes,
+            badgeId: host.badgeId
+        }
+        setSelectedUser(userForModal)
+        setIsModalOpen(true)
+    }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false)
+        setSelectedUser(null)
+    }
+
+    const visitorColumns = createVisitorColumns(handleHostClick)
 
     return (
         <div className="space-y-6">
@@ -363,34 +447,6 @@ export default function VisitorManagement() {
                 </div>
             </div>
 
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-4 gap-6">
-                <div className="space-y-1">
-                    <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">1</p>
-                    <p className="text-sm text-gray-500">Total Visits</p>
-                </div>
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                        <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">0</p>
-                    </div>
-                    <p className="text-sm text-gray-500">Expected</p>
-                </div>
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                        <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">0</p>
-                    </div>
-                    <p className="text-sm text-gray-500">Checked-in</p>
-                </div>
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-gray-400"></div>
-                        <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">1</p>
-                    </div>
-                    <p className="text-sm text-gray-500">Cancelled</p>
-                </div>
-            </div>
 
             {/* Visits Section */}
             <div className="space-y-4">
@@ -425,6 +481,14 @@ export default function VisitorManagement() {
                     searchKey="status"
                 />
             </div>
+
+            {/* User Details Modal */}
+            <UserDetailsModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                user={selectedUser}
+                defaultTab="visitors"
+            />
         </div>
     )
 } 
