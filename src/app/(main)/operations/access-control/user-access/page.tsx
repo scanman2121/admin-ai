@@ -28,27 +28,89 @@ const tabs = [
     { name: "Access groups", href: "/operations/access-control/access-groups" },
 ]
 
-// Generate access control data from centralized users
-const userAccessData = centralizedUsers.map(user => ({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    company: user.company,
-    floorSuite: user.floorSuite,
-    serviceRequest: user.acsStatus === "pending" ? "New Employee Access Request..." : 
-                   user.acsStatus === "suspended" ? "Access Restoration Request..." :
-                   user.acsStatus === "inactive" ? "Account Reactivation Request..." :
-                   "No open requests",
-    serviceRequestType: user.acsStatus === "pending" ? "New Employee Access" :
-                       user.acsStatus === "suspended" ? "Access Restoration" :
-                       user.acsStatus === "inactive" ? "Account Reactivation" : null,
-    serviceRequestStatus: user.acsStatus === "pending" ? "In Progress" :
-                         user.acsStatus === "suspended" ? "Under Review" :
-                         user.acsStatus === "inactive" ? "Pending Review" : null,
-    acsStatus: user.acsStatus,
-    hasNotes: user.acsStatus !== "active",
-    badgeId: user.badgeId,
-}))
+// Generate access control data from centralized users with specific service request details
+const generateServiceRequest = (user: any) => {
+    switch (user.id) {
+        case "jennifer-martinez-new":
+            return {
+                request: "New Employee Access Request...",
+                type: "New Employee Access",
+                status: "New"
+            }
+        case "kevin-chen-new":
+            return {
+                request: "New Employee Access Request...",
+                type: "New Employee Access", 
+                status: "In Progress"
+            }
+        case "rachel-thompson-new":
+            return {
+                request: "New Employee Access Request...",
+                type: "New Employee Access",
+                status: "New"
+            }
+        case "marcus-rodriguez-new":
+            return {
+                request: "New Employee Access Request...",
+                type: "New Employee Access",
+                status: "In Progress"
+            }
+        case "amanda-kim-contractor":
+            return {
+                request: "Contractor Access Request...",
+                type: "Contractor Access",
+                status: "New"
+            }
+        case "brian-wilson-suspended":
+            return {
+                request: "Access Restoration Request...",
+                type: "Access Restoration",
+                status: "New"
+            }
+        default:
+            if (user.acsStatus === "pending") {
+                return {
+                    request: "New Employee Access Request...",
+                    type: "New Employee Access",
+                    status: "In Progress"
+                }
+            } else if (user.acsStatus === "suspended") {
+                return {
+                    request: "Access Restoration Request...",
+                    type: "Access Restoration", 
+                    status: "Under Review"
+                }
+            } else if (user.acsStatus === "inactive") {
+                return {
+                    request: "Account Reactivation Request...",
+                    type: "Account Reactivation",
+                    status: "Pending Review"
+                }
+            }
+            return {
+                request: "No open requests",
+                type: null,
+                status: null
+            }
+    }
+}
+
+const userAccessData = centralizedUsers.map(user => {
+    const serviceDetails = generateServiceRequest(user)
+    return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        company: user.company,
+        floorSuite: user.floorSuite,
+        serviceRequest: serviceDetails.request,
+        serviceRequestType: serviceDetails.type,
+        serviceRequestStatus: serviceDetails.status,
+        acsStatus: user.acsStatus,
+        hasNotes: user.acsStatus !== "active",
+        badgeId: user.badgeId,
+    }
+})
 
 // Define columns for the user access table
 const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick: (user: any) => void) => [

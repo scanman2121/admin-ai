@@ -947,7 +947,77 @@ const davidUser = getUserById("david-rodriguez-finance");
 const drEmmaUser = getUserById("dr-emma-davis");
 const jamesUser = getUserById("james-wilson-health");
 
+// New users awaiting access
+const jenniferMartinezUser = getUserById("jennifer-martinez-new");
+const kevinChenUser = getUserById("kevin-chen-new");
+const rachelThompsonUser = getUserById("rachel-thompson-new");
+const marcusRodriguezUser = getUserById("marcus-rodriguez-new");
+const amandaKimUser = getUserById("amanda-kim-contractor");
+const brianWilsonUser = getUserById("brian-wilson-suspended");
+
 export const workOrders = [
+  // ACCESS REQUEST WORK ORDERS (These show up in work orders AND create the service requests in access control)
+  
+  // New Employee Access Requests
+  createWorkOrderFromUser(
+    jenniferMartinezUser!,
+    "New Employee Access Request",
+    "Security",
+    "New",
+    "New hire Jennifer Martinez requires building access setup for TechCorp Solutions. Position: Junior Developer, Start Date: 01/15/2025",
+    "Security Team",
+    "High"
+  ),
+  createWorkOrderFromUser(
+    kevinChenUser!,
+    "New Employee Access Request", 
+    "Security",
+    "In Progress",
+    "New research scientist Kevin Chen needs access to HealthTech facilities and lab areas. Requires biometric setup.",
+    "Security Team",
+    "High"
+  ),
+  createWorkOrderFromUser(
+    rachelThompsonUser!,
+    "New Employee Access Request",
+    "Security",
+    "New",
+    "Senior Paralegal Rachel Thompson requires access to Legal Partners offices and client meeting rooms.",
+    "Unassigned",
+    "High"
+  ),
+  createWorkOrderFromUser(
+    marcusRodriguezUser!,
+    "New Employee Access Request",
+    "Security",
+    "In Progress", 
+    "Investment Analyst Marcus Rodriguez needs access to Global Finance Corp secure areas and trading floor.",
+    "Security Team",
+    "High"
+  ),
+  createWorkOrderFromUser(
+    amandaKimUser!,
+    "Contractor Access Request",
+    "Security",
+    "New",
+    "External IT Consultant Amanda Kim requires temporary access for 3-month project. Limited access to IT areas only.",
+    "Unassigned",
+    "Medium"
+  ),
+  
+  // Access Restoration Request
+  createWorkOrderFromUser(
+    brianWilsonUser!,
+    "Access Restoration Request",
+    "Security", 
+    "New",
+    "QA Engineer Brian Wilson requires access restoration after security incident resolution. Badge replacement needed.",
+    "Unassigned",
+    "Medium"
+  ),
+
+  // REGULAR FACILITY WORK ORDERS
+  
   // Evgeny's requests
   createWorkOrderFromUser(
     evgenyUser!,
