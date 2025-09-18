@@ -262,7 +262,7 @@ interface UserAccessTabProps {
 
 export function UserAccessTab({ containerClassName }: UserAccessTabProps) {
     return (
-        <div className={containerClassName || "space-y-6"}>
+        <div className={containerClassName || "space-y-8"}>
             {/* Access Credentials Card */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
                 <div className="p-6">

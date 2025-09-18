@@ -103,32 +103,30 @@ export function UserActivityTab({ containerClassName }: UserActivityTabProps) {
             </div>
 
             {/* Activity Timeline */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <div className="space-y-6">
-                    {activityEvents.map((event, index) => (
-                        <div key={event.id} className="flex gap-4">
-                            {/* Timeline indicator */}
-                            <div className="flex flex-col items-center">
-                                <div className="w-10 h-10 rounded-full border-2 border-blue-500 bg-white dark:bg-gray-800 flex items-center justify-center">
-                                    <FileText className="h-4 w-4 text-blue-500" />
-                                </div>
-                                {index < activityEvents.length - 1 && (
-                                    <div className="w-px h-16 bg-gray-200 dark:bg-gray-700 mt-2" />
-                                )}
+            <div className="space-y-6">
+                {activityEvents.map((event, index) => (
+                    <div key={event.id} className="flex gap-4">
+                        {/* Timeline indicator */}
+                        <div className="flex flex-col items-center">
+                            <div className="w-10 h-10 rounded-full border-2 border-blue-500 bg-white dark:bg-gray-800 flex items-center justify-center">
+                                <FileText className="h-4 w-4 text-blue-500" />
                             </div>
+                            {index < activityEvents.length - 1 && (
+                                <div className="w-px h-16 bg-gray-200 dark:bg-gray-700 mt-2" />
+                            )}
+                        </div>
 
-                            {/* Event content */}
-                            <div className="flex-1 min-w-0">
-                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                                    {event.action} <span className="text-gray-500 dark:text-gray-400 font-normal">{event.timestamp}</span>
-                                </div>
-                                <div className="text-sm text-gray-700 dark:text-gray-300">
-                                    {event.content}
-                                </div>
+                        {/* Event content */}
+                        <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
+                                {event.action} <span className="text-gray-500 dark:text-gray-400 font-normal">{event.timestamp}</span>
+                            </div>
+                            <div className="text-sm text-gray-700 dark:text-gray-300">
+                                {event.content}
                             </div>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
 
                 {/* Empty state if no activity */}
                 {activityEvents.length === 0 && (

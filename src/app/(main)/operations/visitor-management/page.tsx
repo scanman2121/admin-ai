@@ -3,14 +3,12 @@
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { Checkbox } from "@/components/Checkbox"
-import { DateRangePicker, type DateRange } from "@/components/DatePicker"
-import { Input } from "@/components/Input"
+import { DatePicker } from "@/components/DatePicker"
 import { PageHeader } from "@/components/PageHeader"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
-import { Calendar, ChevronDown, Download, Search } from "lucide-react"
+import { Calendar, ChevronDown, Download } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -45,7 +43,9 @@ const visitorData = [
         invite: "-",
         floor: "14 (s14.2)",
         status: "Expected",
-        badge: "De-Activated"
+        badge: "De-Activated",
+        hostCompany: "HqO",
+        visitorType: "Visitor"
     },
     {
         id: "2",
@@ -65,7 +65,9 @@ const visitorData = [
         invite: "-",
         floor: "-",
         status: "Expected",
-        badge: "De-Activated"
+        badge: "De-Activated",
+        hostCompany: "HqO",
+        visitorType: "Visitor"
     },
     {
         id: "3",
@@ -85,7 +87,9 @@ const visitorData = [
         invite: "-",
         floor: "12 (s12.1)",
         status: "Expected",
-        badge: "De-Activated"
+        badge: "De-Activated",
+        hostCompany: "HqO",
+        visitorType: "Visitor"
     },
     {
         id: "4",
@@ -105,7 +109,9 @@ const visitorData = [
         invite: "-",
         floor: "-",
         status: "Expected",
-        badge: "De-Activated"
+        badge: "De-Activated",
+        hostCompany: "HqO",
+        visitorType: "Visitor"
     }
 ]
 
@@ -129,6 +135,8 @@ type VisitorRow = {
     floor: string
     status: string
     badge: string
+    hostCompany: string
+    visitorType: string
 }
 
 // Column helper
@@ -245,6 +253,8 @@ const visitorColumns = [
             )
         },
         enableSorting: false,
+        filterFn: "equals" as const,
+        enableColumnFilter: true,
     }),
     columnHelper.accessor("badge", {
         header: "Badge",
@@ -258,17 +268,37 @@ const visitorColumns = [
         },
         enableSorting: false,
     }),
+    // Hidden columns for filtering
+    columnHelper.display({
+        id: "hostCompany",
+        header: "Host Company",
+        cell: () => null,
+        enableColumnFilter: true,
+        filterFn: "equals" as const,
+        meta: {
+            displayName: "Host Company",
+        },
+    }),
+    columnHelper.display({
+        id: "visitorType",
+        header: "Type", 
+        cell: () => null,
+        enableColumnFilter: true,
+        filterFn: "equals" as const,
+        meta: {
+            displayName: "Type",
+        },
+    }),
 ] as ColumnDef<VisitorRow>[]
 
 export default function VisitorManagement() {
     const pathname = usePathname()
-    const [selectedDates, setSelectedDates] = useState<DateRange | undefined>({
-        from: new Date(2025, 6, 1), // July 1, 2025
-        to: new Date(2025, 8, 17)   // September 17, 2025
-    })
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+        new Date(2025, 8, 17) // September 17, 2025
+    )
 
-    const handleDateChange = (dateRange: DateRange | undefined) => {
-        setSelectedDates(dateRange)
+    const handleDateChange = (date: Date | undefined) => {
+        setSelectedDate(date)
     }
 
     return (
@@ -309,8 +339,8 @@ export default function VisitorManagement() {
             {/* Date Picker */}
             <div className="flex items-center gap-2">
                 <Calendar className="h-5 w-5 text-gray-400" />
-                <DateRangePicker
-                    value={selectedDates}
+                <DatePicker
+                    value={selectedDate}
                     onChange={handleDateChange}
                     className="w-fit"
                 />
@@ -371,69 +401,11 @@ export default function VisitorManagement() {
                     </div>
                 </div>
 
-                {/* Search and Filter Bar */}
-                <div className="flex flex-wrap items-center gap-4 pb-4">
-                    <div className="relative flex-1 min-w-[300px]">
-                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                        <Input
-                            placeholder="Search"
-                            className="pl-10"
-                        />
-                    </div>
-                    <Select>
-                        <SelectTrigger className="w-32">
-                            <SelectValue placeholder="Type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="visitor">Visitor</SelectItem>
-                            <SelectItem value="vendor">Vendor</SelectItem>
-                            <SelectItem value="employee">Employee</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <Select>
-                        <SelectTrigger className="w-32">
-                            <SelectValue placeholder="Group" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="group1">Group 1</SelectItem>
-                            <SelectItem value="group2">Group 2</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <Select>
-                        <SelectTrigger className="w-40">
-                            <SelectValue placeholder="Brendan D..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="brendan">Brendan DeStefano</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <Select>
-                        <SelectTrigger className="w-40">
-                            <SelectValue placeholder="Host Company" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="hqo">HqO</SelectItem>
-                            <SelectItem value="acme">Acme Corp</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <Select>
-                        <SelectTrigger className="w-32">
-                            <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="expected">Expected</SelectItem>
-                            <SelectItem value="checked-in">Checked In</SelectItem>
-                            <SelectItem value="checked-out">Checked Out</SelectItem>
-                            <SelectItem value="cancelled">Cancelled</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
                 {/* Data Table */}
                 <DataTable
                     columns={visitorColumns}
                     data={visitorData}
-                    searchKey="visitor.name"
+                    searchKey="status"
                 />
             </div>
         </div>
