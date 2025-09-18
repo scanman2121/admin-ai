@@ -332,20 +332,10 @@ export default function WorkOrdersSettings() {
                             {serviceTypes.filter(item => item.status).length} of {serviceTypes.length} request types enabled
                         </p>
                     </div>
-                    <Button onClick={() => setIsAddCustomModalOpen(true)}>
+                    <Button variant="ghost" onClick={() => setIsAddCustomModalOpen(true)}>
                         <RiAddLine className="size-4 mr-1.5" />
                         Add Custom Type
                     </Button>
-                </div>
-
-                {/* Instructions */}
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                    <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-1">
-                        Choose which request types to enable
-                    </h3>
-                    <p className="text-sm text-blue-700 dark:text-blue-200">
-                        Simply toggle on the types of requests you want to handle. You can always add more later.
-                    </p>
                 </div>
 
                 {/* Search and Filters */}
