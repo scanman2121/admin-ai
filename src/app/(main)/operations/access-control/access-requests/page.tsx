@@ -15,7 +15,7 @@ import { UserAccessBulkActions } from "@/components/ui/user-access/UserAccessBul
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { centralizedUsers } from "@/data/centralizedUsers"
 import { RiSettings3Line } from "@remixicon/react"
-import { Building, ChevronDown, FileText, MoreVertical, User } from "lucide-react"
+import { Building, ChevronDown, FileText, Grid3X3, List, MoreVertical, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -433,6 +433,7 @@ export default function AccessControlAccessRequests() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedUsersForAccess, setSelectedUsersForAccess] = useState<typeof accessRequestsData | null>(null)
     const [isCreateAccessModalOpen, setIsCreateAccessModalOpen] = useState(false)
+    const [viewMode, setViewMode] = useState<'table' | 'card'>('table')
 
     const handleUserClick = (user: typeof accessRequestsData[0]) => {
         setSelectedUser(user)
@@ -467,6 +468,92 @@ export default function AccessControlAccessRequests() {
 
     const accessRequestsColumns = createAccessRequestsColumns(handleUserClick, handleCreateAccessClick)
 
+    // Card View Component
+    const CardView = () => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {data.map((user) => (
+                <div
+                    key={user.id}
+                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => handleUserClick(user)}
+                >
+                    {/* User Header */}
+                    <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                            <div className="flex items-center justify-center w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300">
+                                {user.name.split(' ').map((n: string) => n[0]).join('')}
+                            </div>
+                            <div>
+                                <div className="font-medium text-gray-900 dark:text-gray-50">
+                                    {user.name}
+                                </div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    {user.email}
+                                </div>
+                            </div>
+                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0" onClick={(e) => e.stopPropagation()}>
+                                    <span className="sr-only">Open menu</span>
+                                    <MoreVertical className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleUserClick(user); }}>
+                                    <User className="mr-2 h-4 w-4" />
+                                    View details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleCreateAccessClick(user); }}>
+                                    Create access
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+
+                    {/* Company and Location */}
+                    <div className="mb-3">
+                        <div className="font-medium text-gray-900 dark:text-gray-50 text-sm">
+                            {user.company}
+                        </div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                            <Building className="w-3 h-3" />
+                            {user.floorSuite}
+                        </div>
+                    </div>
+
+                    {/* Service Request */}
+                    <div className="mb-3">
+                        <div className="text-sm text-gray-900 dark:text-gray-50">
+                            {user.serviceRequest}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            {user.serviceRequestType}
+                        </div>
+                    </div>
+
+                    {/* Status */}
+                    <div className="flex items-center justify-between">
+                        <Badge 
+                            variant={
+                                user.serviceRequestStatus === "New" ? "error" :
+                                user.serviceRequestStatus === "In Progress" ? "warning" :
+                                user.serviceRequestStatus === "Under Review" ? "neutral" :
+                                "default"
+                            }
+                            className="text-xs"
+                        >
+                            • {user.serviceRequestStatus}
+                        </Badge>
+                        {user.hasNotes && (
+                            <FileText className="h-4 w-4 text-gray-400" />
+                        )}
+                    </div>
+                </div>
+            ))}
+        </div>
+    )
+
     return (
         <div className="space-y-6">
             {/* Page Header */}
@@ -481,13 +568,33 @@ export default function AccessControlAccessRequests() {
                         </Button>
                     </Link>
                 </div>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="primary" className="flex items-center gap-2">
-                            Grant access
-                            <ChevronDown className="h-4 w-4" />
+                <div className="flex items-center gap-3">
+                    {/* View Toggle */}
+                    <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <Button
+                            variant={viewMode === 'table' ? 'default' : 'ghost'}
+                            size="sm"
+                            onClick={() => setViewMode('table')}
+                            className="rounded-r-none border-r border-gray-200 dark:border-gray-700"
+                        >
+                            <List className="h-4 w-4" />
                         </Button>
-                    </DropdownMenuTrigger>
+                        <Button
+                            variant={viewMode === 'card' ? 'default' : 'ghost'}
+                            size="sm"
+                            onClick={() => setViewMode('card')}
+                            className="rounded-l-none"
+                        >
+                            <Grid3X3 className="h-4 w-4" />
+                        </Button>
+                    </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="primary" className="flex items-center gap-2">
+                                Grant access
+                                <ChevronDown className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-80">
                         <DropdownMenuItem className="flex items-start gap-3 p-4 cursor-pointer">
                             <User className="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5" />
@@ -510,6 +617,7 @@ export default function AccessControlAccessRequests() {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+                </div>
             </div>
 
             {/* Tab Navigation */}
@@ -532,30 +640,34 @@ export default function AccessControlAccessRequests() {
                 ))}
             </TabNavigation>
 
-            {/* Data Table */}
-            <DataTable
-                columns={accessRequestsColumns}
-                data={data}
-                searchKey="name"
-                initialColumnVisibility={{
-                    serviceRequestType: false // Hide the request type column since it's used for filtering only
-                }}
-                initialSorting={[
-                    {
-                        id: "serviceRequest",
-                        desc: true // Sort by request type
-                    }
-                ]}
-                renderBulkActions={(table, rowSelection) => (
-                    <UserAccessBulkActions
-                        table={table}
-                        rowSelection={rowSelection}
-                        totalCount={data.length}
-                        onCreateAccess={handleBulkCreateAccess}
-                        onRemoveAccess={handleBulkRemoveAccess}
-                    />
-                )}
-            />
+            {/* Data View */}
+            {viewMode === 'table' ? (
+                <DataTable
+                    columns={accessRequestsColumns}
+                    data={data}
+                    searchKey="name"
+                    initialColumnVisibility={{
+                        serviceRequestType: false // Hide the request type column since it's used for filtering only
+                    }}
+                    initialSorting={[
+                        {
+                            id: "serviceRequest",
+                            desc: true // Sort by request type
+                        }
+                    ]}
+                    renderBulkActions={(table, rowSelection) => (
+                        <UserAccessBulkActions
+                            table={table}
+                            rowSelection={rowSelection}
+                            totalCount={data.length}
+                            onCreateAccess={handleBulkCreateAccess}
+                            onRemoveAccess={handleBulkRemoveAccess}
+                        />
+                    )}
+                />
+            ) : (
+                <CardView />
+            )}
 
             {/* User Details Modal */}
             <UserDetailsModal
