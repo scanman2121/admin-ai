@@ -253,7 +253,7 @@ export default function WorkOrdersGeneralSettings() {
                         <div className="mb-6">
                             <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
                                 Notification Preferences
-                            </h2>
+                </h2>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
                                 Configure email notifications for work order events and status changes.
                             </p>
@@ -387,8 +387,8 @@ export default function WorkOrdersGeneralSettings() {
                                     <Switch checked={true} disabled />
                                 </div>
                             </div>
-                        </div>
                     </div>
+                </div>
                 </Card>
             </div>
         </div>

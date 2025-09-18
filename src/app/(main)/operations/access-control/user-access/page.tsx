@@ -242,7 +242,7 @@ const createUserAccessColumns = (onUserClick: (user: any) => void, onCreateClick
                                 variant="secondary" 
                                 className="bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800/30"
                             >
-                                • Pending
+                                • Not in ACS
                             </Badge>
                         );
                     case "suspended":
@@ -386,6 +386,11 @@ export default function AccessControlUserAccess() {
         setIsCreateAccessModalOpen(true)
     }
 
+    // Calculate the number of users awaiting access approval
+    const pendingUsersCount = data.filter(user => 
+        user.acsStatus === "pending" || user.acsStatus === "suspended" || user.serviceRequest !== "No open requests"
+    ).length
+
     const userAccessColumns = createUserAccessColumns(handleUserClick, handleCreateAccessClick)
 
     return (
@@ -441,31 +446,33 @@ export default function AccessControlUserAccess() {
                 ))}
             </TabNavigation>
 
-            {/* Access Banner */}
-            <div className="relative overflow-hidden rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800/30 dark:bg-blue-900/20">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
-                            <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            {/* Access Banner - only show when there are pending users */}
+            {pendingUsersCount > 0 && (
+                <div className="relative overflow-hidden rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800/30 dark:bg-blue-900/20">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
+                                <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                    {pendingUsersCount} users awaiting access approval
+                                </p>
+                                <p className="text-sm text-blue-700 dark:text-blue-300">
+                                    Review and approve pending access requests below
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                                3 users awaiting access approval
-                            </p>
-                            <p className="text-sm text-blue-700 dark:text-blue-300">
-                                Review and approve pending access requests below
-                            </p>
-                        </div>
+                        <Button 
+                            variant="ghost"
+                            onClick={handleReviewPendingUsers}
+                            className="text-primary-600 hover:text-primary-700 hover:bg-primary-50 dark:text-primary-400 dark:hover:text-primary-300 dark:hover:bg-primary-900/20 font-medium"
+                        >
+                            Review
+                        </Button>
                     </div>
-                    <Button 
-                        variant="ghost"
-                        onClick={handleReviewPendingUsers}
-                        className="text-primary-600 hover:text-primary-700 hover:bg-primary-50 dark:text-primary-400 dark:hover:text-primary-300 dark:hover:bg-primary-900/20 font-medium"
-                    >
-                        Review
-                    </Button>
                 </div>
-            </div>
+            )}
 
             {/* Data Table */}
             <DataTable
