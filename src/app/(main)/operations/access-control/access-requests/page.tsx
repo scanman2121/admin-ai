@@ -344,21 +344,21 @@ const createAccessRequestsColumns = (onUserClick: (user: any) => void, onCreateC
                     case "Termination of Employment":
                         return (
                             <Button 
-                                variant="destructive" 
+                                variant="secondary" 
                                 size="sm"
                                 onClick={() => onCreateClick(row.original)}
                             >
-                                Revoke
+                                View
                             </Button>
                         );
                     case "Lost Device":
                         return (
                             <Button 
-                                variant="destructive" 
+                                variant="secondary" 
                                 size="sm"
                                 onClick={() => onCreateClick(row.original)}
                             >
-                                Revoke
+                                View
                             </Button>
                         );
                     case "Tenant Departure":
@@ -691,11 +691,11 @@ export default function AccessControlAccessRequests() {
                                             View details
                                         </Button>
                                         <Button
-                                            variant="primary"
+                                            variant={user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "secondary" : "primary"}
                                             size="sm"
                                             onClick={() => handleCreateAccessClick(user)}
                                         >
-                                            {user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "Revoke" : "Create access"}
+                                            {user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "View" : "Create access"}
                                         </Button>
                                     </div>
                                 </div>
