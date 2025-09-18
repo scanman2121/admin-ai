@@ -1,20 +1,19 @@
 "use client"
 
-import { useState } from "react"
-import { PageHeader } from "@/components/PageHeader"
-import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { DataTable } from "@/components/ui/data-table/DataTable"
-import { DateRangePicker } from "@/components/DatePicker"
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
-import { Card } from "@/components/Card"
-import { Input } from "@/components/Input"
-import { Select } from "@/components/Select"
-import { CalendarIcon, ChevronDownIcon, DownloadIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline"
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
 import { Checkbox } from "@/components/Checkbox"
+import { DateRangePicker, type DateRange } from "@/components/DatePicker"
+import { Input } from "@/components/Input"
+import { PageHeader } from "@/components/PageHeader"
+import { Select } from "@/components/Select"
+import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
+import { DataTable } from "@/components/ui/data-table/DataTable"
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
+import { Calendar, ChevronDown, Download, Search } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useState } from "react"
 
 // Define tabs for the Visitor Management page
 const tabs = [
@@ -263,10 +262,14 @@ const visitorColumns = [
 
 export default function VisitorManagement() {
     const pathname = usePathname()
-    const [selectedDates, setSelectedDates] = useState({
+    const [selectedDates, setSelectedDates] = useState<DateRange | undefined>({
         from: new Date(2025, 6, 1), // July 1, 2025
         to: new Date(2025, 8, 17)   // September 17, 2025
     })
+
+    const handleDateChange = (dateRange: DateRange | undefined) => {
+        setSelectedDates(dateRange)
+    }
 
     return (
         <div className="space-y-6">
@@ -277,7 +280,7 @@ export default function VisitorManagement() {
                     <div className="relative">
                         <Button variant="primary" className="flex items-center gap-2">
                             Create visit
-                            <ChevronDownIcon className="h-4 w-4" />
+                            <ChevronDown className="h-4 w-4" />
                         </Button>
                     </div>
                 }
@@ -305,10 +308,10 @@ export default function VisitorManagement() {
 
             {/* Date Picker */}
             <div className="flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5 text-gray-400" />
+                <Calendar className="h-5 w-5 text-gray-400" />
                 <DateRangePicker
                     value={selectedDates}
-                    onChange={setSelectedDates}
+                    onChange={handleDateChange}
                     className="w-fit"
                 />
             </div>
@@ -348,7 +351,7 @@ export default function VisitorManagement() {
                     <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50">Visits</h2>
                     <div className="flex items-center gap-4">
                         <Button variant="secondary" size="sm" className="flex items-center gap-2">
-                            <DownloadIcon className="h-4 w-4" />
+                            <Download className="h-4 w-4" />
                         </Button>
                         <div className="flex items-center gap-2 text-sm text-gray-500">
                             <span>1 - 4 of 4</span>
@@ -371,7 +374,7 @@ export default function VisitorManagement() {
                 {/* Search and Filter Bar */}
                 <div className="flex flex-wrap items-center gap-4 pb-4">
                     <div className="relative flex-1 min-w-[300px]">
-                        <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                         <Input
                             placeholder="Search"
                             className="pl-10"
