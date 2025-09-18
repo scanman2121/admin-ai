@@ -444,7 +444,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
                 user={selectedUser}
-                defaultTab="request"
+                defaultTab="requests"
             />
         </div>
     )

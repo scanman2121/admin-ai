@@ -196,7 +196,7 @@ export default function WorkOrders() {
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
                 user={selectedUser}
-                defaultTab="request"
+                defaultTab="requests"
             />
         </div>
     )
