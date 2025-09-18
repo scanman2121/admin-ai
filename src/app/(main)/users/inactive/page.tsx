@@ -4,7 +4,7 @@ import { Badge } from "@/components/Badge"
 import { Checkbox } from "@/components/Checkbox"
 import { Tooltip } from "@/components/Tooltip"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { roles } from "@/data/data"
+import { roles, users } from "@/data/data"
 import { Row, Table } from "@tanstack/react-table"
 import { CreditCard } from "lucide-react"
 import Image from "next/image"
@@ -146,11 +146,17 @@ const usersColumns = [
         header: "Status",
         cell: ({ row }: { row: any }) => {
             const hasMobileAccess = row.original.hasMobileAccess as boolean;
+            const status = row.original.status as string;
+            const isActive = status === "active";
             
             return (
                 <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">
-                        Inactive
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        isActive 
+                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                            : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                    }`}>
+                        {isActive ? "Active" : "Inactive"}
                     </span>
                     {hasMobileAccess && (
                         <Tooltip content="Mobile access active">
@@ -168,10 +174,9 @@ const usersColumns = [
     },
 ]
 
-// For this example, we'll show an empty table for inactive users
-const inactiveUsers: any[] = []
-
 export default function UsersInactive() {
+    // Filter to show only inactive users
+    const inactiveUsers = users.filter(user => user.status === "inactive")
     const [data] = useState(inactiveUsers)
     const router = useRouter()
 

@@ -1,151 +1,239 @@
 "use client"
 
+import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
+import { Checkbox } from "@/components/Checkbox"
 import { Tooltip } from "@/components/Tooltip"
-import { invitedUsers } from "@/data/data"
+import { DataTable } from "@/components/ui/data-table/DataTable"
+import { invitedUsers, roles } from "@/data/data"
 import { showError } from "@/lib/toast"
-import { useEffect, useState } from "react"
+import { Row, Table } from "@tanstack/react-table"
+import { CreditCard, RotateCcw } from "lucide-react"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
-export default function InvitedUsers() {
-    const [isLoading, setIsLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
-    const [invitedUserData, setInvitedUserData] = useState(invitedUsers)
+// Define columns for the invited users table
+const invitedUsersColumns = [
+    {
+        id: "select",
+        header: ({ table }: { table: Table<any> }) => (
+            <Checkbox
+                checked={
+                    table.getIsAllPageRowsSelected()
+                        ? true
+                        : table.getIsSomePageRowsSelected()
+                            ? "indeterminate"
+                            : false
+                }
+                onCheckedChange={(value) => {
+                    table.toggleAllPageRowsSelected(!!value)
+                }}
+                aria-label="Select all"
+            />
+        ),
+        cell: ({ row }: { row: Row<any> }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => {
+                    row.toggleSelected(!!value)
+                }}
+                onClick={(e) => {
+                    e.stopPropagation()
+                }}
+                aria-label="Select row"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+        meta: {
+            displayName: "Select",
+        },
+    },
+    {
+        accessorKey: "name",
+        header: "User",
+        cell: ({ row }: { row: any }) => {
+            const name = row.getValue("name") as string;
+            const email = row.original.email as string;
+            const avatarUrl = row.original.avatarUrl as string;
+            const initials = row.original.initials as string;
 
-    // Simulate data loading
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                setIsLoading(true)
-                // In a real app, you would fetch data from an API
-                // For now, we'll just use the imported data with a delay
-                await new Promise(resolve => setTimeout(resolve, 500))
-
-                setInvitedUserData(invitedUsers)
-                setError(null)
-            } catch (err) {
-                console.error("Error loading invited user data:", err)
-                setError("Failed to load invited user data. Please refresh the page.")
-                showError("Failed to load invited user data. Please refresh the page.")
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        loadData()
-    }, [])
-
-    const handleResendInvitation = (email: string) => {
-        try {
-            // In a real app, you would call an API to resend the invitation
-            console.log("Resending invitation to:", email)
-            showError("This feature is not implemented yet.")
-        } catch (err) {
-            console.error("Error resending invitation:", err)
-            showError("Failed to resend invitation. Please try again.")
-        }
-    }
-
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-            </div>
-        )
-    }
-
-    if (error) {
-        return (
-            <div className="bg-red-50 border border-red-200 text-red-800 rounded-md p-4 my-4 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800">
-                <p>{error}</p>
-                <Button
-                    className="mt-2"
-                    onClick={() => window.location.reload()}
-                >
-                    Refresh Page
-                </Button>
-            </div>
-        )
-    }
-
-    return (
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
-            <div className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
-                <div className="flex items-center justify-between bg-gray-50 px-4 py-3.5 dark:bg-gray-900">
-                    <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium uppercase text-gray-500">
-                            {invitedUserData.length} invited
-                        </span>
+            return (
+                <div className="flex items-center gap-3">
+                    <div className="relative size-8 overflow-hidden rounded-full">
+                        {avatarUrl ? (
+                            <Image
+                                src={avatarUrl}
+                                alt={name}
+                                fill
+                                className="object-cover"
+                            />
+                        ) : (
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                                {initials}
+                            </div>
+                        )}
+                    </div>
+                    <div>
+                        <div className="font-medium text-gray-900 dark:text-gray-50">
+                            {name}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                            {email}
+                        </div>
                     </div>
                 </div>
-                <div className="p-0">
-                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
-                        <thead className="bg-gray-50 dark:bg-gray-900">
-                            <tr>
-                                <th
-                                    scope="col"
-                                    className="px-4 py-3.5 text-left text-xs font-medium uppercase text-gray-500"
-                                >
-                                    Email
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="px-4 py-3.5 text-left text-xs font-medium uppercase text-gray-500"
-                                >
-                                    Status
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="px-4 py-3.5 text-left text-xs font-medium uppercase text-gray-500"
-                                >
-                                    Role
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="px-4 py-3.5 text-left text-xs font-medium uppercase text-gray-500"
-                                >
-                                    Invited
-                                </th>
-                                <th scope="col" className="relative py-3.5 pl-3 pr-4">
-                                    <span className="sr-only">Edit</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-800 dark:bg-gray-950">
-                            {invitedUserData.map((user) => (
-                                <tr key={user.email} className="hover:bg-gray-50 hover:dark:bg-gray-800">
-                                    <td className="whitespace-nowrap px-4 py-4 text-sm">
-                                        <div className="font-medium text-gray-900 dark:text-gray-50">
-                                            {user.email}
-                                        </div>
-                                    </td>
-                                    <td className="whitespace-nowrap px-4 py-4">
-                                        <span className="inline-flex items-center rounded-full bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20 dark:bg-yellow-500/10 dark:text-yellow-500 dark:ring-yellow-500/20">
-                                            Pending
-                                        </span>
-                                    </td>
-                                    <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
-                                        {user.role}
-                                    </td>
-                                    <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500">
-                                        {`${user.expires} days ago`}
-                                    </td>
-                                    <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium">
-                                        <Tooltip content="Resend invitation">
-                                            <Button
-                                                variant="ghost"
-                                                className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-500 dark:hover:text-indigo-400"
-                                                onClick={() => handleResendInvitation(user.email)}
-                                            >
-                                                Resend
-                                            </Button>
-                                        </Tooltip>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+            );
+        },
+        meta: {
+            displayName: "User",
+        },
+    },
+    {
+        accessorKey: "role",
+        header: "Role",
+        cell: ({ row }: { row: any }) => {
+            const role = row.getValue("role") as string;
+            const roleLabel = roles.find(r => r.value === role)?.label || role;
+
+            return (
+                <span className="capitalize">{roleLabel}</span>
+            );
+        },
+        meta: {
+            displayName: "Role",
+        },
+        filterFn: "equals" as const,
+        enableColumnFilter: true,
+    },
+    {
+        accessorKey: "buildings",
+        header: "Buildings",
+        cell: ({ row }: { row: any }) => {
+            const buildings = row.getValue("buildings") as string[];
+            return (
+                <div className="flex flex-wrap gap-1">
+                    {buildings.map((building) => (
+                        <Badge
+                            key={building}
+                            variant="neutral"
+                            className="text-xs"
+                        >
+                            {building}
+                        </Badge>
+                    ))}
                 </div>
-            </div>
-        </div>
-    )
-} 
+            );
+        },
+        meta: {
+            displayName: "Buildings",
+        },
+    },
+    {
+        accessorKey: "company",
+        header: "Company",
+        cell: ({ row }: { row: any }) => {
+            const company = row.getValue("company") as string;
+            return <span className="text-gray-600 dark:text-gray-400">{company}</span>;
+        },
+        meta: {
+            displayName: "Company",
+        },
+        filterFn: "equals" as const,
+        enableColumnFilter: true,
+    },
+    {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }: { row: any }) => {
+            const hasMobileAccess = row.original.hasMobileAccess as boolean;
+            
+            return (
+                <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
+                        Pending
+                    </span>
+                    {hasMobileAccess && (
+                        <Tooltip content="Mobile access active">
+                            <CreditCard className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        </Tooltip>
+                    )}
+                </div>
+            );
+        },
+        meta: {
+            displayName: "Status",
+        },
+        filterFn: "equals" as const,
+        enableColumnFilter: true,
+    },
+    {
+        accessorKey: "invitedDate",
+        header: "Invited",
+        cell: ({ row }: { row: any }) => {
+            const invitedDate = row.getValue("invitedDate") as string;
+            const expiresInDays = row.original.expiresInDays as number;
+            
+            return (
+                <div>
+                    <div className="text-sm text-gray-900 dark:text-gray-100">{invitedDate}</div>
+                    <div className="text-xs text-gray-500">Expires in {expiresInDays} days</div>
+                </div>
+            );
+        },
+        meta: {
+            displayName: "Invited",
+        },
+    },
+    {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }: { row: any }) => {
+            const email = row.original.email as string;
+            
+            const handleResendInvitation = (e: React.MouseEvent) => {
+                e.stopPropagation(); // Prevent row click
+                try {
+                    // In a real app, you would call an API to resend the invitation
+                    console.log("Resending invitation to:", email)
+                    showError("This feature is not implemented yet.")
+                } catch (err) {
+                    console.error("Error resending invitation:", err)
+                    showError("Failed to resend invitation. Please try again.")
+                }
+            };
+
+            return (
+                <Tooltip content="Resend invitation">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleResendInvitation}
+                        className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-500 dark:hover:text-indigo-400"
+                    >
+                        <RotateCcw className="h-4 w-4 mr-1" />
+                        Resend
+                    </Button>
+                </Tooltip>
+            );
+        },
+        enableSorting: false,
+        meta: {
+            displayName: "Actions",
+        },
+    },
+]
+
+export default function InvitedUsers() {
+    const [data] = useState(invitedUsers)
+    const router = useRouter()
+
+    const handleRowClick = (user: any) => {
+        // Generate user ID from email (remove @ and domain, replace dots)
+        const userId = user.email.split('@')[0].replace('.', '')
+        router.push(`/users/${userId}`)
+    }
+
+    return <DataTable columns={invitedUsersColumns} data={data} onRowClick={handleRowClick} />
+}

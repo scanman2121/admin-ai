@@ -173,7 +173,7 @@ export default function Users() {
                     {user.email}
                   </p>
                   <p className="text-xs text-gray-500">
-                    Expires in {user.expires} days
+                    Expires in {user.expiresInDays} days
                   </p>
                 </div>
               </div>

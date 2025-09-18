@@ -1,58 +1,79 @@
 "use client"
 
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { RiArrowLeftLine, RiBuilding4Line, RiCalendarEventLine, RiMapPinLine, RiShoppingBag3Line, RiTeamLine, RiUserLine } from "@remixicon/react"
-import Image from "next/image"
+import { ChevronRight, Copy, Edit2, Mail, NotepadText, Plus, User, UserPlus, Zap } from "lucide-react"
 import Link from "next/link"
 
 // Mock data for tenants
 const tenantsData = {
     "1": {
         id: "1",
-        name: "Acme Corporation",
-        industry: "Technology",
-        space: "5,000 sqft",
-        floor: "15th Floor",
-        building: "125 Highland Ave",
-        moveInDate: "April 15, 2024",
-        leaseStart: "2024-04-15",
-        leaseEnd: "2027-04-14",
+        name: "EcoVolt Energy Solutions",
+        industry: "Renewables & Environment",
+        website: "https://www.ecovolt.io",
+        domains: "ecovolt.com",
+        employees: 314,
+        billingAddress: "162 E Berkeley St, Boston, MA 02118, USA",
+        creationDate: "March 14, 2024 at 04:05 PM",
         status: "Active",
-        logo: "https://ui-avatars.com/api/?name=Acme+Corporation&background=0D9488&color=fff",
-        primaryContact: {
-            name: "John Smith",
-            role: "Office Manager",
-            email: "john.smith@acme.com",
-            phone: "(555) 123-4567"
-        },
-        stats: {
-            totalEmployees: 150,
-            activeUsers: 142,
-            pendingUsers: 8,
-            totalVisits: 3245,
-            avgDailyVisits: 85
-        },
-        recentActivity: [
+        description: "EcoVolt Energy Solutions innovates in the Renewable Electricity industry, focusing on sustainable energy generation and storage from wind, solar, and more. We aim to provide clean electricity, reduce carbon footprints, and promote energy independence, driving towards a greener future.",
+        contacts: [
             {
-                type: "Event",
-                title: "Team Building Workshop",
-                date: "2024-03-25",
-                status: "Upcoming"
+                id: "1",
+                name: "Alex Morgan",
+                email: "amorgan@ecovoltenergy.com",
+                avatar: "/avatars/default-avatar.png",
+                notificationCount: 1
             },
             {
-                type: "Marketplace",
-                title: "Catering Order",
-                date: "2024-03-24",
-                status: "Completed"
+                id: "2", 
+                name: "Jordon Lee",
+                email: "jlee@ecovoltenergy.com",
+                avatar: "/avatars/default-avatar.png",
+                notificationCount: 3
             },
             {
-                type: "Access",
-                title: "After Hours Access Request",
-                date: "2024-03-23",
-                status: "Approved"
+                id: "3",
+                name: "Taylor Kim",
+                email: "kim@ecovoltenergy.com", 
+                avatar: "/avatars/default-avatar.png",
+                notificationCount: 1
+            }
+        ],
+        activity: [
+            {
+                id: "1",
+                type: "Note Added",
+                title: "They went to the gym today",
+                date: "September 04, 2025 at 02:55 PM",
+                icon: NotepadText
+            },
+            {
+                id: "2",
+                type: "Note Added", 
+                title: "Test note",
+                date: "September 04, 2025 at 11:17 AM",
+                icon: NotepadText
+            },
+            {
+                id: "3",
+                type: "Note Added",
+                title: "Alex was asking about the next rooftop event",
+                date: "September 02, 2025 at 04:43 PM", 
+                icon: NotepadText
+            },
+            {
+                id: "4",
+                type: "Visitor Invited",
+                title: "User registered Ashley Colella to visit on July 22, 2025 at 02:45 PM.",
+                subtitle: "View Visitors",
+                date: "July 22, 2025 at 01:55 PM",
+                icon: UserPlus
             }
         ]
     },
@@ -60,45 +81,29 @@ const tenantsData = {
         id: "2",
         name: "Global Enterprises",
         industry: "Finance",
-        space: "8,000 sqft",
-        floor: "20th Floor",
-        building: "400 Market Street",
-        moveInDate: "May 1, 2024",
-        leaseStart: "2024-05-01",
-        leaseEnd: "2027-04-30",
+        website: "https://www.globalent.com",
+        domains: "globalent.com",
+        employees: 200,
+        billingAddress: "400 Market Street, San Francisco, CA 94102, USA",
+        creationDate: "May 1, 2024 at 09:00 AM",
         status: "Active",
-        logo: "https://ui-avatars.com/api/?name=Global+Enterprises&background=6366F1&color=fff",
-        primaryContact: {
-            name: "Sarah Johnson",
-            role: "Facilities Manager",
-            email: "sarah.j@globalent.com",
-            phone: "(555) 234-5678"
-        },
-        stats: {
-            totalEmployees: 200,
-            activeUsers: 185,
-            pendingUsers: 15,
-            totalVisits: 4500,
-            avgDailyVisits: 120
-        },
-        recentActivity: [
+        description: "Global Enterprises is a leading financial services company providing comprehensive solutions for businesses worldwide.",
+        contacts: [
             {
-                type: "Event",
-                title: "Office Expansion Meeting",
-                date: "2024-03-26",
-                status: "Upcoming"
-            },
+                id: "1",
+                name: "Sarah Johnson",
+                email: "sarah.j@globalent.com",
+                avatar: "/avatars/default-avatar.png",
+                notificationCount: 2
+            }
+        ],
+        activity: [
             {
-                type: "Access",
-                title: "Weekend Access Approval",
-                date: "2024-03-23",
-                status: "Completed"
-            },
-            {
-                type: "Marketplace",
-                title: "Office Supplies Order",
-                date: "2024-03-22",
-                status: "Completed"
+                id: "1",
+                type: "Note Added",
+                title: "Quarterly review meeting scheduled",
+                date: "September 01, 2025 at 10:30 AM",
+                icon: NotepadText
             }
         ]
     }

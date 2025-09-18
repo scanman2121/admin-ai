@@ -126,6 +126,7 @@ export const users: {
   avatarUrl?: string
   buildings: string[]
   hasMobileAccess: boolean
+  status: "active" | "inactive"
 }[] = [
     {
       name: "Ellie Edwards",
@@ -136,6 +137,7 @@ export const users: {
       avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=2787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       buildings: ["Main Tower", "East Wing"],
       hasMobileAccess: true,
+      status: "active" as const,
     },
     {
       name: "Alissia McCalister",
@@ -145,6 +147,7 @@ export const users: {
       company: "Acme Inc",
       buildings: ["Main Tower"],
       hasMobileAccess: false,
+      status: "inactive" as const,
     },
     {
       name: "Emily Luisa Bernacle",
@@ -154,6 +157,7 @@ export const users: {
       company: "Acme Inc",
       buildings: ["West Building", "South Plaza"],
       hasMobileAccess: true,
+      status: "active" as const,
     },
     {
       name: "Aaron Wave",
@@ -163,6 +167,7 @@ export const users: {
       company: "Acme Inc",
       buildings: ["Main Tower", "East Wing", "West Building"],
       hasMobileAccess: true,
+      status: "active" as const,
     },
     {
       name: "Thomas Palstein",
@@ -172,6 +177,7 @@ export const users: {
       company: "Acme Inc",
       buildings: ["South Plaza"],
       hasMobileAccess: false,
+      status: "inactive" as const,
     },
     {
       name: "Sarah Johnson",
@@ -181,6 +187,7 @@ export const users: {
       company: "Acme Inc",
       buildings: ["Main Tower", "East Wing", "West Building", "South Plaza"],
       hasMobileAccess: true,
+      status: "active" as const,
     },
     {
       name: "Megan Katherina Brown",
@@ -190,26 +197,46 @@ export const users: {
       company: "Acme Inc",
       buildings: ["West Building", "East Wing"],
       hasMobileAccess: false,
+      status: "active" as const,
     },
   ]
 
 export const invitedUsers: {
+  name: string
   initials: string
   email: string
   role: string
-  expires: number
+  company: string
+  avatarUrl?: string
+  buildings: string[]
+  hasMobileAccess: boolean
+  status: "invited"
+  invitedDate: string
+  expiresInDays: number
 }[] = [
     {
+      name: "Lydia Posh",
       initials: "LP",
       email: "lydia.posh@gmail.com",
       role: "viewer",
-      expires: 12,
+      company: "Global Tech",
+      buildings: ["Main Tower"],
+      hasMobileAccess: false,
+      status: "invited" as const,
+      invitedDate: "12/05/2024",
+      expiresInDays: 12,
     },
     {
+      name: "Anton Widburg",
       initials: "AW",
       email: "awidburg@bluewin.ch",
       role: "viewer",
-      expires: 8,
+      company: "Tech Innovators",
+      buildings: ["East Wing"],
+      hasMobileAccess: false,
+      status: "invited" as const,
+      invitedDate: "12/09/2024",
+      expiresInDays: 8,
     },
   ]
 

@@ -146,11 +146,17 @@ const usersColumns = [
         header: "Status",
         cell: ({ row }: { row: any }) => {
             const hasMobileAccess = row.original.hasMobileAccess as boolean;
+            const status = row.original.status as string;
+            const isActive = status === "active";
             
             return (
                 <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                        Active
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        isActive 
+                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                            : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                    }`}>
+                        {isActive ? "Active" : "Inactive"}
                     </span>
                     {hasMobileAccess && (
                         <Tooltip content="Mobile access active">
@@ -169,8 +175,9 @@ const usersColumns = [
 ]
 
 export default function UsersActive() {
-    // For this example, we'll consider all users as active
-    const [data] = useState(users)
+    // Filter to show only active users
+    const activeUsers = users.filter(user => user.status === "active")
+    const [data] = useState(activeUsers)
     const router = useRouter()
 
     const handleRowClick = (user: any) => {

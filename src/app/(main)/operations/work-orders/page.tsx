@@ -119,7 +119,7 @@ const workOrdersColumns = [
     {
         accessorKey: "company",
         header: "Company",
-        cell: ({ row: _row }: { row: any }) => {
+        cell: ({ row }: { row: any }) => {
             return null; // Hidden column
         },
         meta: {
@@ -131,7 +131,7 @@ const workOrdersColumns = [
     {
         accessorKey: "issueType",
         header: "Issue Type",
-        cell: ({ row: _row }: { row: any }) => {
+        cell: ({ row }: { row: any }) => {
             return null; // Hidden column
         },
         meta: {
