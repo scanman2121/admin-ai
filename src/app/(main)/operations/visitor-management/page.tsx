@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/PageHeader"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
-import { Calendar, ChevronDown, Download } from "lucide-react"
+import { Calendar, ChevronDown, ChevronLeft, ChevronRight, Download } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -336,26 +336,43 @@ export default function VisitorManagement() {
                 ))}
             </TabNavigation>
 
-            {/* Date Picker */}
-            <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-gray-400" />
-                <DatePicker
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    className="w-fit"
-                />
+            {/* Date Picker with Navigation and Statistics */}
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-gray-400" />
+                        <DatePicker
+                            value={selectedDate}
+                            onChange={handleDateChange}
+                            className="w-fit"
+                        />
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                            <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                            <ChevronRight className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="w-80 h-2 bg-gray-200 rounded-full">
+                    <div className="w-full h-2 bg-gray-400 rounded-full"></div>
+                </div>
             </div>
 
             {/* Statistics Cards */}
             <div className="grid grid-cols-4 gap-6">
                 <div className="space-y-1">
-                    <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">4</p>
+                    <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">1</p>
                     <p className="text-sm text-gray-500">Total Visits</p>
                 </div>
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
                         <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                        <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">4</p>
+                        <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">0</p>
                     </div>
                     <p className="text-sm text-gray-500">Expected</p>
                 </div>
@@ -369,7 +386,7 @@ export default function VisitorManagement() {
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
                         <div className="h-2 w-2 rounded-full bg-gray-400"></div>
-                        <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">0</p>
+                        <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">1</p>
                     </div>
                     <p className="text-sm text-gray-500">Cancelled</p>
                 </div>
