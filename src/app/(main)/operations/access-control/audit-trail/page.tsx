@@ -16,6 +16,7 @@ const tabs = [
   { name: "Overview", href: "/operations/access-control" },
   { name: "Access requests", href: "/operations/access-control/access-requests" },
   { name: "Active access", href: "/operations/access-control/active-access" },
+  { name: "Revoked access", href: "/operations/access-control/revoked-access" },
   { name: "Activity", href: "/operations/access-control/activity" },
   { name: "Access groups", href: "/operations/access-control/access-groups" },
   { name: "Audit trail", href: "/operations/access-control/audit-trail" },
