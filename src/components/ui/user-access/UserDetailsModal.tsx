@@ -2,10 +2,15 @@
 
 import { Button } from "@/components/Button"
 import { Badge } from "@/components/ui/badge"
-import { DataTable } from "@/components/ui/data-table/DataTable"
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
-import { Activity, Calendar, FileText, Shield, User, X } from "lucide-react"
+import { UserAccessTab } from "@/components/ui/user/UserAccessTab"
+import { UserActivityTab } from "@/components/ui/user/UserActivityTab"
+import { UserOverviewTab } from "@/components/ui/user/UserOverviewTab"
+import { UserRequestsTab } from "@/components/ui/user/UserRequestsTab"
+import { UserVisitorsTab } from "@/components/ui/user/UserVisitorsTab"
+import { Activity, Calendar, FileText, Shield, User } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 interface UserDetailsModalProps {
@@ -526,6 +531,7 @@ const accessColumns = [
 
 export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview" }: UserDetailsModalProps) {
     const [activeTab, setActiveTab] = useState(defaultTab)
+    const router = useRouter()
 
     // Reset to default tab when modal opens or defaultTab changes
     useEffect(() => {
@@ -535,6 +541,13 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
     }, [isOpen, defaultTab])
 
     if (!user) return null
+
+    const handleViewFullProfile = () => {
+        // Generate user ID from email (same logic as in users page)
+        const userId = user.email.split('@')[0].replace('.', '')
+        onClose()
+        router.push(`/users/${userId}`)
+    }
 
     const getInitials = (name: string) => {
         return name.split(' ').map(n => n[0]).join('').toUpperCase()
@@ -602,183 +615,15 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
     const renderTabContent = () => {
         switch (activeTab) {
             case "access":
-                return (
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
-                        <div className="p-6">
-                            <DataTable
-                                columns={accessColumns}
-                                data={accessData}
-                                searchKey="userId"
-                            />
-                        </div>
-                    </div>
-                )
+                return <UserAccessTab userId={user.id} />
             case "activity":
-                return (
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
-                        <div className="p-6">
-                            <DataTable
-                                columns={activityColumns}
-                                data={activityData}
-                                searchKey="action"
-                            />
-                        </div>
-                    </div>
-                )
+                return <UserActivityTab userId={user.id} />
             case "requests":
-                return (
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
-                        <div className="p-6">
-                            <DataTable
-                                columns={serviceRequestColumns}
-                                data={serviceRequestsData}
-                                searchKey="requestType"
-                            />
-                        </div>
-                    </div>
-                )
+                return <UserRequestsTab userId={user.id} />
             case "visitors":
-                return (
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 h-full">
-                        <div className="p-6">
-                            {upcomingVisitsData.length > 0 ? (
-                                <DataTable
-                                    columns={visitsColumns}
-                                    data={upcomingVisitsData}
-                                    searchKey="visitor"
-                                />
-                            ) : (
-                                <div className="flex flex-col items-center justify-center py-12">
-                                    <X className="h-12 w-12 text-gray-400 mb-4" />
-                                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                                        No visitors
-                                    </h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm">
-                                        No visitors were found. Visitors will appear here after they're registered
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                )
+                return <UserVisitorsTab userId={user.id} />
             case "overview":
-                return (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
-                        {/* General Information Card */}
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                            <div className="p-6">
-                                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
-                                    General information
-                                </h3>
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Full name
-                                        </label>
-                                        <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
-                                            {user.name}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Email address
-                                        </label>
-                                        <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
-                                            {user.email}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Company
-                                        </label>
-                                        <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
-                                            {user.company}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Location
-                                        </label>
-                                        <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
-                                            {user.floorSuite}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            User status
-                                        </label>
-                                        <div className="mt-1 flex items-center gap-2">
-                                            {getAppUserStatusBadge(user.acsStatus)}
-                                            {getACSStatusBadge(user.acsStatus)}
-                                        </div>
-                                    </div>
-                                    {user.badgeId && (
-                                        <div>
-                                            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                Badge ID
-                                            </label>
-                                            <div className="mt-1 text-sm text-gray-900 dark:text-gray-50">
-                                                {user.badgeId}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Open Requests Card */}
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                            <div className="p-6">
-                                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
-                                    Open requests
-                                </h3>
-                                {user.serviceRequest !== "No open requests" ? (
-                                    <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/30">
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex-1">
-                                                <div className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                                                    Current service request
-                                                </div>
-                                                <div className="text-blue-600 dark:text-blue-400 font-semibold mb-1">
-                                                    SR-2024-001
-                                                </div>
-                                                <div className="text-gray-900 dark:text-gray-50 font-medium mb-1">
-                                                    {user.serviceRequestType || user.serviceRequest}
-                                                </div>
-                                                <div className="text-sm text-gray-600 dark:text-gray-400">
-                                                    {user.serviceRequestType ? `${user.serviceRequestType} - New Employee Access` : user.serviceRequest}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="mt-4">
-                                            <Button 
-                                                variant="secondary"
-                                                size="sm"
-                                                className="bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
-                                            >
-                                                Mark as completed
-                                            </Button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-8">
-                                        <div className="text-gray-400 dark:text-gray-500 mb-2">
-                                            <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                            </svg>
-                                        </div>
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
-                                            No open requests
-                                        </h3>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                                            All service requests have been completed
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                )
+                return <UserOverviewTab user={user} isModal={true} />
             default:
                 return null
         }
@@ -811,7 +656,7 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
                             </div>
                         </div>
                         <div className="mr-8">
-                            <Button variant="secondary" size="sm">
+                            <Button variant="secondary" size="sm" onClick={handleViewFullProfile}>
                                 View full profile
                             </Button>
                         </div>

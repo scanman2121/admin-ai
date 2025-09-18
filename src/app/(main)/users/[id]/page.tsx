@@ -3,9 +3,14 @@
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Switch } from "@/components/Switch"
+import { UserAccessTab } from "@/components/ui/user/UserAccessTab"
+import { UserActivityTab } from "@/components/ui/user/UserActivityTab"
+import { UserOverviewTab } from "@/components/ui/user/UserOverviewTab"
+import { UserRequestsTab } from "@/components/ui/user/UserRequestsTab"
+import { UserVisitorsTab } from "@/components/ui/user/UserVisitorsTab"
 import { users } from "@/data/data"
 import { cn } from "@/lib/utils"
-import { ChevronLeft, Plus } from "lucide-react"
+import { Activity, Calendar, ChevronLeft, FileText, Shield, User as UserIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -25,7 +30,10 @@ const getUserDetailData = (userId: string) => {
         signupDate: "April 9, 2025 at 07:48 PM",
         isTestUser: true,
         deviceType: "Internal",
-        uuid: "c02e86ff-0cb4-4adf-b44f-c443a680124e"
+        uuid: "c02e86ff-0cb4-4adf-b44f-c443a680124e",
+        acsStatus: "active", // Add acsStatus for compatibility with shared components
+        floorSuite: "Floor 5, Suite 502",
+        serviceRequest: "No open requests"
     }
 }
 
@@ -106,35 +114,62 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
                     <button
                         onClick={() => setActiveTab("overview")}
                         className={cn(
-                            "border-b-2 py-2 px-1 text-sm font-medium",
+                            "border-b-2 py-2 px-1 text-sm font-medium flex items-center gap-2",
                             activeTab === "overview"
                                 ? "border-blue-500 text-blue-600 dark:text-blue-400"
                                 : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                         )}
                     >
+                        <UserIcon className="h-4 w-4" />
                         Overview
                     </button>
                     <button
-                        onClick={() => setActiveTab("tenant-roles")}
+                        onClick={() => setActiveTab("access")}
                         className={cn(
-                            "border-b-2 py-2 px-1 text-sm font-medium",
-                            activeTab === "tenant-roles"
+                            "border-b-2 py-2 px-1 text-sm font-medium flex items-center gap-2",
+                            activeTab === "access"
                                 ? "border-blue-500 text-blue-600 dark:text-blue-400"
                                 : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                         )}
                     >
-                        Tenant roles
+                        <Shield className="h-4 w-4" />
+                        Access
                     </button>
                     <button
-                        onClick={() => setActiveTab("building-admin-roles")}
+                        onClick={() => setActiveTab("requests")}
                         className={cn(
-                            "border-b-2 py-2 px-1 text-sm font-medium",
-                            activeTab === "building-admin-roles"
+                            "border-b-2 py-2 px-1 text-sm font-medium flex items-center gap-2",
+                            activeTab === "requests"
                                 ? "border-blue-500 text-blue-600 dark:text-blue-400"
                                 : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                         )}
                     >
-                        Building admin roles
+                        <FileText className="h-4 w-4" />
+                        Requests
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("visitors")}
+                        className={cn(
+                            "border-b-2 py-2 px-1 text-sm font-medium flex items-center gap-2",
+                            activeTab === "visitors"
+                                ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                        )}
+                    >
+                        <Calendar className="h-4 w-4" />
+                        Visitors
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("activity")}
+                        className={cn(
+                            "border-b-2 py-2 px-1 text-sm font-medium flex items-center gap-2",
+                            activeTab === "activity"
+                                ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                        )}
+                    >
+                        <Activity className="h-4 w-4" />
+                        Activity
                     </button>
                 </nav>
             </div>
@@ -142,47 +177,12 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
             {/* Main content */}
             {activeTab === "overview" && (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Activity section - Left side (2/3 width) */}
+                    {/* Overview section - Left side (2/3 width) */}
                     <div className="lg:col-span-2">
-                        <Card className="h-full">
-                            <div className="p-6">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Activity</h2>
-                                    <Button variant="primary" size="sm" className="flex items-center gap-2">
-                                        <Plus className="h-4 w-4" />
-                                        Add note
-                                    </Button>
-                                </div>
-                                
-                                {/* Activity tabs */}
-                                <div className="flex space-x-1 mb-6">
-                                    {activityTabs.map((tab) => (
-                                        <button
-                                            key={tab.name}
-                                            className={cn(
-                                                "px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
-                                                tab.active
-                                                    ? "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100"
-                                                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:bg-gray-800"
-                                            )}
-                                        >
-                                            {tab.name}
-                                        </button>
-                                    ))}
-                                </div>
-
-                                {/* No activity state */}
-                                <div className="flex flex-col items-center justify-center py-12 text-center">
-                                    <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
-                                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1l-4 4z" />
-                                        </svg>
-                                    </div>
-                                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No activity yet</h3>
-                                    <p className="text-gray-500 dark:text-gray-400">User activity will appear here when available</p>
-                                </div>
-                            </div>
-                        </Card>
+                        <UserOverviewTab 
+                            user={userDetail} 
+                            containerClassName=""
+                        />
                     </div>
 
                     {/* User info section - Right side (1/3 width) */}
@@ -270,23 +270,36 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
                 </div>
             )}
 
-            {/* Other tab content placeholders */}
-            {activeTab === "tenant-roles" && (
-                <Card>
-                    <div className="p-6">
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Tenant Roles</h2>
-                        <p className="text-gray-500 dark:text-gray-400">Tenant role management content will be implemented here.</p>
-                    </div>
-                </Card>
+            {/* Access tab */}
+            {activeTab === "access" && (
+                <UserAccessTab 
+                    userId={userDetail.id}
+                    containerClassName="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                />
             )}
 
-            {activeTab === "building-admin-roles" && (
-                <Card>
-                    <div className="p-6">
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Building Admin Roles</h2>
-                        <p className="text-gray-500 dark:text-gray-400">Building admin role management content will be implemented here.</p>
-                    </div>
-                </Card>
+            {/* Requests tab */}
+            {activeTab === "requests" && (
+                <UserRequestsTab 
+                    userId={userDetail.id}
+                    containerClassName="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                />
+            )}
+
+            {/* Visitors tab */}
+            {activeTab === "visitors" && (
+                <UserVisitorsTab 
+                    userId={userDetail.id}
+                    containerClassName="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                />
+            )}
+
+            {/* Activity tab */}
+            {activeTab === "activity" && (
+                <UserActivityTab 
+                    userId={userDetail.id}
+                    containerClassName="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                />
             )}
         </div>
     )
