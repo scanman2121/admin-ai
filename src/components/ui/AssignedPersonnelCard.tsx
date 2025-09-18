@@ -87,14 +87,14 @@ export function AssignedPersonnelCard({
 
   return (
     <Card>
-      <div className="p-6">
+      <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
           Assigned personnel
         </h3>
         
         {/* Search Input */}
-        <div className="relative mb-6">
-          <div className="relative">
+        <div className="relative mb-4">
+          <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               type="text"
@@ -103,7 +103,7 @@ export function AssignedPersonnelCard({
               onChange={(e) => setSearchTerm(e.target.value)}
               onFocus={handleSearchFocus}
               onBlur={handleSearchBlur}
-              className="pl-10 py-3 text-sm border-gray-300 rounded-lg"
+              className="w-full pl-10 pr-4 py-2 text-sm"
             />
           </div>
           
@@ -114,7 +114,7 @@ export function AssignedPersonnelCard({
                 <button
                   key={person.id}
                   onClick={() => handlePersonClick(person)}
-                  className="w-full flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="w-full flex items-center gap-3 p-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Avatar className="size-10">
                     <AvatarImage src={person.avatar} alt={person.name} />
@@ -138,15 +138,15 @@ export function AssignedPersonnelCard({
 
         {/* Assigned Personnel */}
         {assignedPersonnel.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">
               Assigned ({assignedPersonnel.length})
             </h4>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {assignedPersonnel.map((person) => (
                 <div
                   key={person.id}
-                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                  className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded-lg"
                 >
                   <div className="flex items-center gap-3">
                     <Avatar className="size-10">
@@ -176,11 +176,11 @@ export function AssignedPersonnelCard({
           </div>
         ) : (
           /* Empty State */
-          <div className="text-center py-12">
-            <div className="size-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-              <Users className="h-8 w-8 text-gray-400" />
+          <div className="text-center py-8">
+            <div className="size-12 mx-auto mb-3 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+              <Users className="h-6 w-6 text-gray-400" />
             </div>
-            <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+            <h4 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-1">
               No personnel assigned yet
             </h4>
             <p className="text-sm text-gray-500 dark:text-gray-400">

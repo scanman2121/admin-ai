@@ -2,9 +2,11 @@
 
 import { Button } from "@/components/Button"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
+import { WorkOrderCreateModal } from "@/components/ui/work-orders/WorkOrderCreateModal"
 import { getPageInsights } from "@/lib/insights"
-import { RiAddLine, RiSettings3Line } from "@remixicon/react"
+import { RiSettings3Line } from "@remixicon/react"
 import { usePathname, useRouter } from "next/navigation"
+import { useState } from "react"
 
 export default function WorkOrdersLayout({
     children,
@@ -14,6 +16,12 @@ export default function WorkOrdersLayout({
     const pathname = usePathname()
     const router = useRouter()
     const insights = getPageInsights("operations")
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+
+    const handleCreateWorkOrder = (workOrderData: any) => {
+        // TODO: Implement work order creation logic
+        console.log('Creating work order:', workOrderData)
+    }
 
     // Check if we're on a work order detail page (e.g., /operations/work-orders/[id])
     const isWorkOrderDetailPage = pathname.match(/^\/operations\/work-orders\/[^\/]+$/) && pathname !== "/operations/work-orders"
@@ -42,8 +50,7 @@ export default function WorkOrdersLayout({
                         <RiSettings3Line className="size-4" />
                     </Button>
                 </div>
-                <Button>
-                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
+                <Button onClick={() => setIsCreateModalOpen(true)}>
                     Add work order
                 </Button>
             </div>
@@ -53,6 +60,13 @@ export default function WorkOrdersLayout({
             <div className="flex flex-col gap-4 w-full">
                 <div className="pt-6">{children}</div>
             </div>
+
+            {/* Work Order Create Modal */}
+            <WorkOrderCreateModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                onSubmit={handleCreateWorkOrder}
+            />
         </div>
     )
 }

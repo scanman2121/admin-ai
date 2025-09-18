@@ -256,17 +256,23 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                 <div className="lg:col-span-2 space-y-6">
                     {/* Request Details */}
                     <Card>
-                        <div className="p-6">
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-6">Request Details</h2>
+                        <div className="p-4">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Request Details</h2>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <button
-                                        onClick={handleRequestorClick}
-                                        className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer underline mb-1"
-                                    >
-                                        {workOrderDetail.requestor}
-                                    </button>
+                                    <div className="mb-1">
+                                        <button
+                                            onClick={handleRequestorClick}
+                                            className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer underline hover:no-underline"
+                                        >
+                                            {workOrderDetail.requestorDetails?.name || workOrderDetail.requestor.split(' - ')[0]}
+                                        </button>
+                                        <span className="text-gray-500 mx-1">·</span>
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                                            {workOrderDetail.requestorDetails?.company || workOrderDetail.requestor.split(' - ')[1]}
+                                        </span>
+                                    </div>
                                     <p className="text-xs text-gray-500">Requested By</p>
                                 </div>
 
@@ -313,11 +319,11 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                     {/* Messages */}
                     <Card>
-                        <div className="p-6">
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-6">Messages</h2>
+                        <div className="p-4">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Messages</h2>
                             
                             {/* Message thread */}
-                            <div className="space-y-4 mb-6">
+                            <div className="space-y-3 mb-4">
                                 {/* Image attachment */}
                                 <div className="flex items-start gap-3">
                                     <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
@@ -383,11 +389,11 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                     {/* Internal Notes */}
                     <Card>
-                        <div className="p-6">
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-6">Internal Notes</h2>
+                        <div className="p-4">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Internal Notes</h2>
                             
                             {/* Existing notes */}
-                            <div className="space-y-4 mb-6">
+                            <div className="space-y-3 mb-4">
                                 {workOrderDetail.internalNotes.map((note) => (
                                     <div key={note.id} className="p-3 bg-gray-50 rounded-lg">
                                         <p className="text-sm text-gray-900 mb-1">{note.content}</p>
@@ -415,10 +421,10 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                     {/* Activity Log */}
                     <Card>
-                        <div className="p-6">
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-6">Activity Log</h2>
+                        <div className="p-4">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Activity Log</h2>
                             
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                                 {workOrderDetail.activityLog.map((activity) => (
                                     <div key={activity.id} className="flex items-start gap-3">
                                         <div className="size-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mt-1">
@@ -449,7 +455,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                     {/* Case Files */}
                     <Card>
-                        <div className="p-6">
+                        <div className="p-4">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Case Files</h3>
                             
                             <div className="space-y-4">
@@ -476,7 +482,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                     {/* Location Details */}
                     <Card>
-                        <div className="p-6">
+                        <div className="p-4">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Location Details</h3>
                             
                             <div className="flex items-start gap-3">
