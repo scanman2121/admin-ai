@@ -435,7 +435,7 @@ export default function AccessControlAccessRequests() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedUsersForAccess, setSelectedUsersForAccess] = useState<typeof accessRequestsData | null>(null)
     const [isCreateAccessModalOpen, setIsCreateAccessModalOpen] = useState(false)
-    const [viewMode, setViewMode] = useState<'table' | 'card'>('table')
+    const [viewMode, setViewMode] = useState<'table' | 'card'>('card')
     const [searchValue, setSearchValue] = useState("")
     const [requestTypeFilter, setRequestTypeFilter] = useState<string[]>([])
     const [statusFilter, setStatusFilter] = useState<string[]>([])
