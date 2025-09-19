@@ -560,6 +560,15 @@ export default function AccessControlAccessRequests() {
                 />
                 <DataTableFacetedFilter
                     column={{
+                        getFilterValue: () => companyFilter,
+                        setFilterValue: (value: any) => setCompanyFilter(value || []),
+                        getFacetedUniqueValues: () => new Map()
+                    } as any}
+                    title="Company"
+                    options={companyOptions}
+                />
+                <DataTableFacetedFilter
+                    column={{
                         getFilterValue: () => requestTypeFilter,
                         setFilterValue: (value: any) => setRequestTypeFilter(value || []),
                         getFacetedUniqueValues: () => new Map()
@@ -575,15 +584,6 @@ export default function AccessControlAccessRequests() {
                     } as any}
                     title="Status"
                     options={statusOptions}
-                />
-                <DataTableFacetedFilter
-                    column={{
-                        getFilterValue: () => companyFilter,
-                        setFilterValue: (value: any) => setCompanyFilter(value || []),
-                        getFacetedUniqueValues: () => new Map()
-                    } as any}
-                    title="Company"
-                    options={companyOptions}
                 />
                 {isFiltered && (
                     <Button
