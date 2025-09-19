@@ -113,8 +113,8 @@ export function DataTableToolbar<TData>({
                 )}
             </div>
             <div className="flex items-center gap-2">
-                {customViewActions}
                 <DataTableViewOptions table={table} />
+                {customViewActions}
             </div>
         </div>
     )
