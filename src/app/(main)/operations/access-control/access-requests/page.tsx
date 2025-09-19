@@ -716,10 +716,10 @@ export default function AccessControlAccessRequests() {
                                 {/* Action */}
                                 <div className="flex justify-end">
                                     <Button
-                                        variant={user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" || user.serviceRequestType === "Tenant Departure" ? "secondary" : "ghost"}
+                                        variant={user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" || user.serviceRequestType === "Tenant Departure" ? "secondary" : "outline"}
                                         size="sm"
                                         onClick={() => handleCreateAccessClick(user)}
-                                        className={`w-24 justify-center ${user.serviceRequestType !== "Termination of Employment" && user.serviceRequestType !== "Lost Device" && user.serviceRequestType !== "Tenant Departure" ? "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 hover:bg-blue-50 dark:hover:bg-blue-900/20" : ""}`}
+                                        className={`w-24 justify-center ${user.serviceRequestType !== "Termination of Employment" && user.serviceRequestType !== "Lost Device" && user.serviceRequestType !== "Tenant Departure" ? "border-blue-500 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20" : ""}`}
                                     >
                                         {user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "View" : 
                                          user.serviceRequestType === "Tenant Departure" ? "Review" : "Create"}
