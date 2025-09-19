@@ -717,7 +717,7 @@ export default function AccessControlAccessRequests() {
                                         className="w-24 justify-center"
                                     >
                                         {user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" ? "View" : 
-                                         user.serviceRequestType === "Tenant Departure" ? "Review" : "Create access"}
+                                         user.serviceRequestType === "Tenant Departure" ? "Review" : "Create"}
                                     </Button>
                                 </div>
                             </div>
