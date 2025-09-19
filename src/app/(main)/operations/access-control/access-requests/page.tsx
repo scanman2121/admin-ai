@@ -439,6 +439,7 @@ export default function AccessControlAccessRequests() {
     const [searchValue, setSearchValue] = useState("")
     const [requestTypeFilter, setRequestTypeFilter] = useState<string[]>([])
     const [statusFilter, setStatusFilter] = useState<string[]>([])
+    const [companyFilter, setCompanyFilter] = useState<string[]>([])
 
     // Badge status options for dropdown
     const badgeStatusOptions = [
@@ -505,16 +506,20 @@ export default function AccessControlAccessRequests() {
         const matchesStatus = statusFilter.length === 0 || 
             (user.serviceRequestStatus && statusFilter.includes(user.serviceRequestStatus))
         
-        return matchesSearch && matchesRequestType && matchesStatus
+        const matchesCompany = companyFilter.length === 0 || 
+            companyFilter.includes(user.company)
+        
+        return matchesSearch && matchesRequestType && matchesStatus && matchesCompany
     })
 
     const handleClearFilters = () => {
         setSearchValue("")
         setRequestTypeFilter([])
         setStatusFilter([])
+        setCompanyFilter([])
     }
 
-    const isFiltered = searchValue !== "" || requestTypeFilter.length > 0 || statusFilter.length > 0
+    const isFiltered = searchValue !== "" || requestTypeFilter.length > 0 || statusFilter.length > 0 || companyFilter.length > 0
 
     // Request Type Filter Options
     const requestTypeOptions = [
@@ -532,6 +537,15 @@ export default function AccessControlAccessRequests() {
         { value: "In Progress", label: "In Progress" },
         { value: "Under Review", label: "Under Review" },
         { value: "Pending Review", label: "Pending Review" }
+    ]
+
+    const companyOptions = [
+        { value: "TechCorp Solutions", label: "TechCorp Solutions" },
+        { value: "Rodriguez & Associates Law", label: "Rodriguez & Associates Law" },
+        { value: "Thompson Consulting Group", label: "Thompson Consulting Group" },
+        { value: "HealthTech Innovations", label: "HealthTech Innovations" },
+        { value: "Wilson Strategic Consulting", label: "Wilson Strategic Consulting" },
+        { value: "Park Architecture Studio", label: "Park Architecture Studio" }
     ]
 
     // Card Filter Toolbar Component
@@ -561,6 +575,15 @@ export default function AccessControlAccessRequests() {
                     } as any}
                     title="Status"
                     options={statusOptions}
+                />
+                <DataTableFacetedFilter
+                    column={{
+                        getFilterValue: () => companyFilter,
+                        setFilterValue: (value: any) => setCompanyFilter(value || []),
+                        getFacetedUniqueValues: () => new Map()
+                    } as any}
+                    title="Company"
+                    options={companyOptions}
                 />
                 {isFiltered && (
                     <Button
