@@ -637,15 +637,24 @@ export default function AccessControlAccessRequests() {
                                 </span>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <div className="relative">
-                                            <Badge 
-                                                variant={getCurrentStatusVariant(user.serviceRequestStatus || "New")} 
-                                                className="h-9 px-3 py-1.5 cursor-pointer hover:opacity-80 transition-opacity flex items-center gap-1.5 w-40 justify-between"
-                                            >
-                                                • {user.serviceRequestStatus || "New"}
-                                                <ChevronDown className="h-3 w-3" />
-                                            </Badge>
-                                        </div>
+                                        <Button
+                                            variant="outline"
+                                            className="h-9 px-3 py-1.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center gap-1.5 w-40 justify-between text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600"
+                                        >
+                                            <span className="flex items-center gap-1.5">
+                                                <span 
+                                                    className={`w-2 h-2 rounded-full ${
+                                                        getCurrentStatusVariant(user.serviceRequestStatus || "New") === "error" ? "bg-red-500" :
+                                                        getCurrentStatusVariant(user.serviceRequestStatus || "New") === "warning" ? "bg-yellow-500" :
+                                                        getCurrentStatusVariant(user.serviceRequestStatus || "New") === "neutral" ? "bg-blue-500" :
+                                                        getCurrentStatusVariant(user.serviceRequestStatus || "New") === "success" ? "bg-green-500" :
+                                                        "bg-gray-500"
+                                                    }`}
+                                                />
+                                                {user.serviceRequestStatus || "New"}
+                                            </span>
+                                            <ChevronDown className="h-3 w-3" />
+                                        </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="min-w-[150px]">
                                         {badgeStatusOptions.map((option) => (
@@ -654,9 +663,18 @@ export default function AccessControlAccessRequests() {
                                                 onClick={() => handleStatusChange(user.id, option.label)}
                                                 className="flex items-center gap-2 cursor-pointer"
                                             >
-                                                <Badge variant={option.variant} className="text-xs pointer-events-none">
-                                                    • {option.label}
-                                                </Badge>
+                                                <span className="flex items-center gap-2">
+                                                    <span 
+                                                        className={`w-2 h-2 rounded-full ${
+                                                            option.variant === "error" ? "bg-red-500" :
+                                                            option.variant === "warning" ? "bg-yellow-500" :
+                                                            option.variant === "neutral" ? "bg-blue-500" :
+                                                            option.variant === "success" ? "bg-green-500" :
+                                                            "bg-gray-500"
+                                                        }`}
+                                                    />
+                                                    {option.label}
+                                                </span>
                                             </DropdownMenuItem>
                                         ))}
                                     </DropdownMenuContent>
