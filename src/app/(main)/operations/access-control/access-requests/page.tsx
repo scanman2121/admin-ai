@@ -694,22 +694,27 @@ export default function AccessControlAccessRequests() {
                                 </div>
 
                                 {/* ACS Status */}
-                                <div className="flex justify-center">
+                                <div className="flex justify-start">
                                     <Badge 
-                                        variant={getCurrentStatusVariant(user.serviceRequestStatus || "New")}
+                                        variant={
+                                            user.acsStatus === "active" ? "success" :
+                                            user.acsStatus === "pending" ? "warning" :
+                                            "error"
+                                        }
                                         className="text-xs"
                                     >
-                                        • {user.serviceRequestStatus || "New"}
+                                        • {user.acsStatus === "active" ? "Active" : 
+                                           user.acsStatus === "pending" ? "Pending" : "Not in ACS"}
                                     </Badge>
                                 </div>
 
                                 {/* Credential */}
-                                <div className="text-center text-gray-500 dark:text-gray-400 font-mono text-xs">
+                                <div className="text-left text-gray-500 dark:text-gray-400 font-mono text-xs">
                                     {user.badgeId || "N/A"}
                                 </div>
 
                                 {/* Action */}
-                                <div className="flex justify-end">
+                                <div className="flex justify-start">
                                     <Button
                                         variant={user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" || user.serviceRequestType === "Tenant Departure" ? "secondary" : "primary"}
                                         size="sm"
