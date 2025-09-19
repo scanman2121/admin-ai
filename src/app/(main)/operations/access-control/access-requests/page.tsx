@@ -17,7 +17,7 @@ import { UserAccessBulkActions } from "@/components/ui/user-access/UserAccessBul
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { centralizedUsers } from "@/data/centralizedUsers"
 import { RiSettings3Line } from "@remixicon/react"
-import { Building, ChevronDown, FileText, Grid3X3, List, MoreVertical, User, X } from "lucide-react"
+import { Building, ChevronDown, FileText, Grid3X3, List, MoreVertical, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -752,35 +752,6 @@ export default function AccessControlAccessRequests() {
                         </Button>
                     </Link>
                 </div>
-                <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="primary" className="flex items-center gap-2">
-                                Grant access
-                                <ChevronDown className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-80">
-                        <DropdownMenuItem className="flex items-start gap-3 p-4 cursor-pointer">
-                            <User className="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5" />
-                            <div className="flex-1">
-                                <div className="font-medium text-gray-900 dark:text-gray-50">
-                                    Individual
-                                </div>
-                            </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="flex items-start gap-3 p-4 cursor-pointer">
-                            <Building className="h-5 w-5 text-gray-600 dark:text-gray-400 mt-0.5" />
-                            <div className="flex-1">
-                                <div className="font-medium text-gray-900 dark:text-gray-50">
-                                    Bulk
-                                </div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                    Best for onboarding new tenant companies
-                                </div>
-                            </div>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
             </div>
 
             {/* Tab Navigation */}
