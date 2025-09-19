@@ -775,7 +775,7 @@ export default function AccessControlAccessRequests() {
                     onClick={() => setIsCreateAccessModalOpen(true)}
                     className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
-                    Bulk create
+                    Create
                 </Button>
             </div>
 
