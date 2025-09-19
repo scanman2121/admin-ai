@@ -666,7 +666,7 @@ export default function AccessControlAccessRequests() {
 
                         {/* Mini Table for Employee Access Provisioning */}
                         <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden">
-                            <div className="grid grid-cols-7 gap-4 p-4 items-center text-sm">
+                            <div className="grid grid-cols-[1fr_1fr_1fr_1.5fr_auto_auto_auto] gap-4 p-4 items-center text-sm">
                                 {/* User Name - Clickable */}
                                 <div className="font-medium text-gray-900 dark:text-gray-50">
                                     <button
@@ -709,7 +709,7 @@ export default function AccessControlAccessRequests() {
                                 </div>
 
                                 {/* Credential */}
-                                <div className="text-left text-gray-500 dark:text-gray-400 font-mono text-xs">
+                                <div className="text-left text-gray-500 dark:text-gray-400 font-mono text-xs pl-2">
                                     {user.badgeId || "N/A"}
                                 </div>
 
