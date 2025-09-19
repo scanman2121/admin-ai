@@ -711,26 +711,24 @@ export default function AccessControlAccessRequests() {
                                     </div>
 
                                     {/* Access Info Group */}
-                                    <div>
-                                        <div className="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-gray-600 dark:text-gray-300 text-sm font-medium">
                                             Access info:
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Badge 
-                                                variant={
-                                                    user.acsStatus === "active" ? "success" :
-                                                    user.acsStatus === "pending" ? "warning" :
-                                                    "error"
-                                                }
-                                                className="text-xs"
-                                            >
-                                                • {user.acsStatus === "active" ? "Active" : 
-                                                   user.acsStatus === "pending" ? "Pending" : "Not in ACS"}
-                                            </Badge>
-                                            <span className="text-gray-500 dark:text-gray-400 font-mono text-xs">
-                                                {user.badgeId || "N/A"}
-                                            </span>
-                                        </div>
+                                        </span>
+                                        <Badge 
+                                            variant={
+                                                user.acsStatus === "active" ? "success" :
+                                                user.acsStatus === "pending" ? "warning" :
+                                                "error"
+                                            }
+                                            className="text-xs"
+                                        >
+                                            • {user.acsStatus === "active" ? "Active" : 
+                                               user.acsStatus === "pending" ? "Pending" : "Not in ACS"}
+                                        </Badge>
+                                        <span className="text-gray-500 dark:text-gray-400 font-mono text-xs">
+                                            {user.badgeId || "N/A"}
+                                        </span>
                                     </div>
                                 </div>
 
