@@ -612,8 +612,8 @@ export default function AccessControlAccessRequests() {
                         <div className="flex items-start justify-between mb-4">
                             <div>
                                 {/* Request Type with Has Notes inline */}
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+                                <div className="flex items-center gap-3 mb-1">
+                                    <div className="text-base font-semibold text-gray-900 dark:text-gray-50">
                                         {user.serviceRequestType}
                                     </div>
                                     {user.hasNotes && (
