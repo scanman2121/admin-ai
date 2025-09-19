@@ -772,25 +772,35 @@ export default function AccessControlAccessRequests() {
                 </div>
             </div>
 
-            {/* Tab Navigation */}
-            <TabNavigation>
-                {tabs.map((tab) => (
-                    <TabNavigationLink
-                        key={tab.name}
-                        asChild
-                        active={pathname === tab.href}
-                    >
-                        <Link href={tab.href}>
-                            {tab.name}
-                            {tab.name === "Access requests" && (
-                                <Badge variant="error" className="ml-2 text-xs">
-                                    {data.length}
-                                </Badge>
-                            )}
-                        </Link>
-                    </TabNavigationLink>
-                ))}
-            </TabNavigation>
+            {/* Sticky Navigation and Filters */}
+            <div className="sticky top-0 z-10 bg-white dark:bg-gray-950 pb-4">
+                {/* Tab Navigation */}
+                <TabNavigation>
+                    {tabs.map((tab) => (
+                        <TabNavigationLink
+                            key={tab.name}
+                            asChild
+                            active={pathname === tab.href}
+                        >
+                            <Link href={tab.href}>
+                                {tab.name}
+                                {tab.name === "Access requests" && (
+                                    <Badge variant="error" className="ml-2 text-xs">
+                                        {data.length}
+                                    </Badge>
+                                )}
+                            </Link>
+                        </TabNavigationLink>
+                    ))}
+                </TabNavigation>
+
+                {/* Filters for Card View */}
+                {viewMode === 'card' && (
+                    <div className="mt-4">
+                        <CardFilterToolbar />
+                    </div>
+                )}
+            </div>
 
             {/* Data View */}
             {viewMode === 'table' ? (
@@ -820,7 +830,6 @@ export default function AccessControlAccessRequests() {
                 />
             ) : (
                 <div className="space-y-4">
-                    <CardFilterToolbar />
                     <CardView />
                 </div>
             )}
