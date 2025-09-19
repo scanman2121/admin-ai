@@ -682,11 +682,11 @@ export default function AccessControlAccessRequests() {
                             </div>
                         </div>
 
-                        {/* Stacked Employee Access Information */}
+                        {/* Horizontal Employee Access Information */}
                         <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
                             <div className="flex items-start justify-between">
-                                <div className="space-y-2 text-sm">
-                                    {/* Name and Email */}
+                                <div className="grid grid-cols-3 gap-6 flex-1 text-sm">
+                                    {/* Name and Email Group */}
                                     <div>
                                         <button
                                             onClick={() => handleUserClick(user)}
@@ -699,7 +699,7 @@ export default function AccessControlAccessRequests() {
                                         </div>
                                     </div>
 
-                                    {/* Company and Location */}
+                                    {/* Company and Location Group */}
                                     <div>
                                         <div className="text-gray-500 dark:text-gray-400">
                                             {user.company}
@@ -710,28 +710,32 @@ export default function AccessControlAccessRequests() {
                                         </div>
                                     </div>
 
-                                    {/* Access Info */}
-                                    <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                                        <span className="text-sm font-medium">Access info:</span>
-                                        <Badge 
-                                            variant={
-                                                user.acsStatus === "active" ? "success" :
-                                                user.acsStatus === "pending" ? "warning" :
-                                                "error"
-                                            }
-                                            className="text-xs"
-                                        >
-                                            • {user.acsStatus === "active" ? "Active" : 
-                                               user.acsStatus === "pending" ? "Pending" : "Not in ACS"}
-                                        </Badge>
-                                        <span className="text-gray-500 dark:text-gray-400 font-mono text-xs">
-                                            {user.badgeId || "N/A"}
-                                        </span>
+                                    {/* Access Info Group */}
+                                    <div>
+                                        <div className="text-gray-600 dark:text-gray-300 text-sm font-medium mb-1">
+                                            Access info:
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Badge 
+                                                variant={
+                                                    user.acsStatus === "active" ? "success" :
+                                                    user.acsStatus === "pending" ? "warning" :
+                                                    "error"
+                                                }
+                                                className="text-xs"
+                                            >
+                                                • {user.acsStatus === "active" ? "Active" : 
+                                                   user.acsStatus === "pending" ? "Pending" : "Not in ACS"}
+                                            </Badge>
+                                            <span className="text-gray-500 dark:text-gray-400 font-mono text-xs">
+                                                {user.badgeId || "N/A"}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
                                 {/* Action Button */}
-                                <div className="flex-shrink-0">
+                                <div className="flex-shrink-0 ml-4">
                                     <Button
                                         variant={user.serviceRequestType === "Termination of Employment" || user.serviceRequestType === "Lost Device" || user.serviceRequestType === "Tenant Departure" ? "secondary" : "outline"}
                                         size="sm"
