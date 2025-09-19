@@ -536,7 +536,7 @@ export default function AccessControlAccessRequests() {
 
     // Card Filter Toolbar Component
     const CardFilterToolbar = () => (
-        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-4">
+        <div className="flex items-center justify-between pb-4">
             <div className="flex flex-1 items-center space-x-2">
                 <Input
                     placeholder="Search by name..."
