@@ -1,7 +1,7 @@
 export const siteConfig = {
-  name: "Dashboard",
+  name: "HqO",
   url: "https://dashboard.tremor.so",
-  description: "The only dashboard you will ever need.",
+  description: "HqO admin prototype",
   baseLinks: {
     home: "/",
     overview: "/my-hqo",
