@@ -438,7 +438,8 @@ export default function AccessControlAccessRequests() {
     const [viewMode, setViewMode] = useState<'table' | 'card'>('card')
     const [searchValue, setSearchValue] = useState("")
     const [requestTypeFilter, setRequestTypeFilter] = useState<string[]>([])
-    const [statusFilter, setStatusFilter] = useState<string[]>([])
+    const [requestStatusFilter, setRequestStatusFilter] = useState<string[]>([])
+    const [accessStatusFilter, setAccessStatusFilter] = useState<string[]>([])
     const [companyFilter, setCompanyFilter] = useState<string[]>([])
 
     // Badge status options for dropdown
@@ -503,23 +504,27 @@ export default function AccessControlAccessRequests() {
         const matchesRequestType = requestTypeFilter.length === 0 || 
             (user.serviceRequestType && requestTypeFilter.includes(user.serviceRequestType))
         
-        const matchesStatus = statusFilter.length === 0 || 
-            (user.serviceRequestStatus && statusFilter.includes(user.serviceRequestStatus))
+        const matchesRequestStatus = requestStatusFilter.length === 0 || 
+            (user.serviceRequestStatus && requestStatusFilter.includes(user.serviceRequestStatus))
+        
+        const matchesAccessStatus = accessStatusFilter.length === 0 || 
+            (user.acsStatus && accessStatusFilter.includes(user.acsStatus))
         
         const matchesCompany = companyFilter.length === 0 || 
             companyFilter.includes(user.company)
         
-        return matchesSearch && matchesRequestType && matchesStatus && matchesCompany
+        return matchesSearch && matchesRequestType && matchesRequestStatus && matchesAccessStatus && matchesCompany
     })
 
     const handleClearFilters = () => {
         setSearchValue("")
         setRequestTypeFilter([])
-        setStatusFilter([])
+        setRequestStatusFilter([])
+        setAccessStatusFilter([])
         setCompanyFilter([])
     }
 
-    const isFiltered = searchValue !== "" || requestTypeFilter.length > 0 || statusFilter.length > 0 || companyFilter.length > 0
+    const isFiltered = searchValue !== "" || requestTypeFilter.length > 0 || requestStatusFilter.length > 0 || accessStatusFilter.length > 0 || companyFilter.length > 0
 
     // Request Type Filter Options
     const requestTypeOptions = [
@@ -531,12 +536,20 @@ export default function AccessControlAccessRequests() {
         { value: "Termination of Employment", label: "Termination of Employment" }
     ]
 
-    // Status Filter Options  
-    const statusOptions = [
+    // Request Status Filter Options  
+    const requestStatusOptions = [
         { value: "New", label: "New" },
         { value: "In Progress", label: "In Progress" },
         { value: "Under Review", label: "Under Review" },
         { value: "Pending Review", label: "Pending Review" }
+    ]
+
+    // Access Status Filter Options
+    const accessStatusOptions = [
+        { value: "active", label: "Active" },
+        { value: "pending", label: "Not in ACS" },
+        { value: "suspended", label: "Suspended" },
+        { value: "inactive", label: "Inactive" }
     ]
 
     const companyOptions = [
@@ -569,12 +582,21 @@ export default function AccessControlAccessRequests() {
                 />
                 <DataTableFacetedFilter
                     column={{
-                        getFilterValue: () => statusFilter,
-                        setFilterValue: (value: any) => setStatusFilter(value || []),
+                        getFilterValue: () => requestStatusFilter,
+                        setFilterValue: (value: any) => setRequestStatusFilter(value || []),
                         getFacetedUniqueValues: () => new Map()
                     } as any}
-                    title="Status"
-                    options={statusOptions}
+                    title="Request status"
+                    options={requestStatusOptions}
+                />
+                <DataTableFacetedFilter
+                    column={{
+                        getFilterValue: () => accessStatusFilter,
+                        setFilterValue: (value: any) => setAccessStatusFilter(value || []),
+                        getFacetedUniqueValues: () => new Map()
+                    } as any}
+                    title="Access status"
+                    options={accessStatusOptions}
                 />
                 <DataTableFacetedFilter
                     column={{

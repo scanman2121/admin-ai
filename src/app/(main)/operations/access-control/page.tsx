@@ -24,15 +24,135 @@ const tabs = [
     { name: "Audit trail", href: "/operations/access-control/audit-trail" },
 ]
 
+// Generate access control data from centralized users with specific service request details
+const generateServiceRequest = (user: any) => {
+    switch (user.id) {
+        case "jennifer-martinez-new":
+            return {
+                request: "New Employee MKA Request...",
+                type: "New Employee MKA",
+                status: "New"
+            }
+        case "kevin-chen-new":
+            return {
+                request: "Lost Device Replacement...",
+                type: "Lost Device", 
+                status: "In Progress"
+            }
+        case "rachel-thompson-new":
+            return {
+                request: "New Phone Setup Request...",
+                type: "New Phone",
+                status: "New"
+            }
+        case "marcus-rodriguez-new":
+            return {
+                request: "Access Level Update Request...",
+                type: "Access Level Update",
+                status: "In Progress"
+            }
+        case "amanda-kim-contractor":
+            return {
+                request: "Tenant Departure Processing...",
+                type: "Tenant Departure",
+                status: "New"
+            }
+        case "brian-wilson-suspended":
+            return {
+                request: "Termination of Employment...",
+                type: "Termination of Employment",
+                status: "New"
+            }
+        default:
+            if (user.acsStatus === "pending") {
+                return {
+                    request: "New Employee MKA Request...",
+                    type: "New Employee MKA",
+                    status: "In Progress"
+                }
+            } else if (user.acsStatus === "suspended") {
+                return {
+                    request: "Lost Device Replacement...",
+                    type: "Lost Device", 
+                    status: "Under Review"
+                }
+            } else if (user.acsStatus === "inactive") {
+                return {
+                    request: "Termination of Employment...",
+                    type: "Termination of Employment",
+                    status: "Pending Review"
+                }
+            }
+            return {
+                request: "No open requests",
+                type: null,
+                status: null
+            }
+    }
+}
+
+// Filter users to only show those with access requests (pending, suspended, or inactive)
+const accessRequestsData = centralizedUsers
+    .filter(user => user.acsStatus === "pending" || user.acsStatus === "suspended" || user.acsStatus === "inactive")
+    .map(user => {
+        const serviceDetails = generateServiceRequest(user)
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            company: user.company,
+            floorSuite: user.floorSuite,
+            serviceRequest: serviceDetails.request,
+            serviceRequestType: serviceDetails.type,
+            serviceRequestStatus: serviceDetails.status,
+            acsStatus: user.acsStatus,
+            hasNotes: true,
+            badgeId: user.badgeId,
+        }
+    })
+
 export default function AccessControl() {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(2025, 8, 17)) // Sep 17, 2025
     const [selectedTenant, setSelectedTenant] = useState<string>("all-tenants")
     const pathname = usePathname()
 
     // Calculate access requests count for the badge
-    const accessRequestsCount = centralizedUsers.filter(user => 
-        user.acsStatus === "pending" || user.acsStatus === "suspended" || user.acsStatus === "inactive"
-    ).length
+    const accessRequestsCount = accessRequestsData.length
+
+    // Get status color variant
+    const getStatusVariant = (status: string) => {
+        switch (status) {
+            case "New":
+                return "text-red-600 dark:text-red-400"
+            case "In Progress":
+                return "text-blue-600 dark:text-blue-400"
+            case "Under Review":
+                return "text-orange-600 dark:text-orange-400"
+            case "Pending Review":
+                return "text-yellow-600 dark:text-yellow-400"
+            case "Completed":
+                return "text-green-600 dark:text-green-400"
+            default:
+                return "text-gray-600 dark:text-gray-400"
+        }
+    }
+
+    // Get initials from name
+    const getInitials = (name: string) => {
+        return name.split(' ').map(n => n[0]).join('').toUpperCase()
+    }
+
+    // Get avatar background color
+    const getAvatarColor = (index: number) => {
+        const colors = [
+            "bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400",
+            "bg-orange-100 dark:bg-orange-900/50 text-orange-600 dark:text-orange-400", 
+            "bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-400",
+            "bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400",
+            "bg-pink-100 dark:bg-pink-900/50 text-pink-600 dark:text-pink-400"
+        ]
+        return colors[index % colors.length]
+    }
 
     return (
         <div className="space-y-6">
@@ -228,14 +348,14 @@ export default function AccessControl() {
                                     </div>
                                     <div>
                                         <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                                            3 users awaiting access
+                                            {accessRequestsCount} users awaiting access
                                         </p>
                                         <p className="text-sm text-blue-700 dark:text-blue-300">
                                             Review and approve pending access requests
                                         </p>
                                     </div>
                                 </div>
-                                <Link href="/operations/access-control/user-access">
+                                <Link href="/operations/access-control/access-requests">
                                     <Button 
                                         variant="primary" 
                                         className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
@@ -251,71 +371,42 @@ export default function AccessControl() {
 
                         {/* Active Access Requests List */}
                         <div className="space-y-4">
-                            <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                                <div className="flex items-center gap-3">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50">
-                                        <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                                            SC
-                                        </span>
+                            {accessRequestsData.slice(0, 3).map((user, index) => (
+                                <div key={user.id} className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${getAvatarColor(index)}`}>
+                                            <span className="text-sm font-medium">
+                                                {getInitials(user.name)}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                {user.name}
+                                            </p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                                {user.company} • {user.serviceRequestType}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                                            Sarah Chen
+                                    <div className="text-right">
+                                        <p className="text-sm text-gray-900 dark:text-gray-50">
+                                            {new Date().toLocaleDateString('en-US', { 
+                                                month: 'short', 
+                                                day: 'numeric', 
+                                                year: 'numeric' 
+                                            })}
                                         </p>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                                            TechCorp Solutions • New Employee Access
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-sm text-gray-900 dark:text-gray-50">Dec 15, 2024</p>
-                                    <p className="text-sm text-blue-600 dark:text-blue-400">In Progress</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                                <div className="flex items-center gap-3">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/50">
-                                        <span className="text-sm font-medium text-orange-600 dark:text-orange-400">
-                                            ED
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                                            Dr. Emma Davis
-                                        </p>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                                            HealthTech Innovations • Lost Device Access
+                                        <p className={`text-sm ${getStatusVariant(user.serviceRequestStatus || 'New')}`}>
+                                            {user.serviceRequestStatus}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-sm text-gray-900 dark:text-gray-50">Dec 14, 2024</p>
-                                    <p className="text-sm text-orange-600 dark:text-orange-400">Pending Review</p>
+                            ))}
+                            {accessRequestsData.length === 0 && (
+                                <div className="text-center py-4 text-gray-500 dark:text-gray-400">
+                                    No pending access requests
                                 </div>
-                            </div>
-
-                            <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                                <div className="flex items-center gap-3">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
-                                        <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                                            MT
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                                            Michael Thompson
-                                        </p>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                                            Thompson Consulting • Access Level Change
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-sm text-gray-900 dark:text-gray-50">Dec 13, 2024</p>
-                                    <p className="text-sm text-green-600 dark:text-green-400">Approved</p>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </Card>
 
