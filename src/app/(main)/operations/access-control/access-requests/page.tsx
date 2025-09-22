@@ -550,7 +550,7 @@ export default function AccessControlAccessRequests() {
 
     // Card Filter Toolbar Component
     const CardFilterToolbar = () => (
-        <div className="flex items-center justify-between pb-4">
+        <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center space-x-2">
                 <Input
                     placeholder="Search by name..."
@@ -569,21 +569,21 @@ export default function AccessControlAccessRequests() {
                 />
                 <DataTableFacetedFilter
                     column={{
-                        getFilterValue: () => requestTypeFilter,
-                        setFilterValue: (value: any) => setRequestTypeFilter(value || []),
-                        getFacetedUniqueValues: () => new Map()
-                    } as any}
-                    title="Request type"
-                    options={requestTypeOptions}
-                />
-                <DataTableFacetedFilter
-                    column={{
                         getFilterValue: () => statusFilter,
                         setFilterValue: (value: any) => setStatusFilter(value || []),
                         getFacetedUniqueValues: () => new Map()
                     } as any}
                     title="Status"
                     options={statusOptions}
+                />
+                <DataTableFacetedFilter
+                    column={{
+                        getFilterValue: () => requestTypeFilter,
+                        setFilterValue: (value: any) => setRequestTypeFilter(value || []),
+                        getFacetedUniqueValues: () => new Map()
+                    } as any}
+                    title="Request type"
+                    options={requestTypeOptions}
                 />
                 {isFiltered && (
                     <Button
@@ -823,37 +823,39 @@ export default function AccessControlAccessRequests() {
             </TabNavigation>
 
             {/* Data View */}
-            {viewMode === 'table' ? (
-                <DataTable
-                    columns={accessRequestsColumns}
-                    data={data}
-                    searchKey="name"
-                    initialColumnVisibility={{
-                        serviceRequestType: false // Hide the request type column since it's used for filtering only
-                    }}
-                    initialSorting={[
-                        {
-                            id: "serviceRequest",
-                            desc: true // Sort by request type
-                        }
-                    ]}
-                    customViewActions={<ViewToggle />}
-                    renderBulkActions={(table, rowSelection) => (
-                        <UserAccessBulkActions
-                            table={table}
-                            rowSelection={rowSelection}
-                            totalCount={data.length}
-                            onCreateAccess={handleBulkCreateAccess}
-                            onRemoveAccess={handleBulkRemoveAccess}
-                        />
-                    )}
-                />
-            ) : (
-                <div className="space-y-4">
-                    <CardFilterToolbar />
-                    <CardView />
-                </div>
-            )}
+            <div className="space-y-4">
+                {viewMode === 'table' ? (
+                    <DataTable
+                        columns={accessRequestsColumns}
+                        data={data}
+                        searchKey="name"
+                        initialColumnVisibility={{
+                            serviceRequestType: false // Hide the request type column since it's used for filtering only
+                        }}
+                        initialSorting={[
+                            {
+                                id: "serviceRequest",
+                                desc: true // Sort by request type
+                            }
+                        ]}
+                        customViewActions={<ViewToggle />}
+                        renderBulkActions={(table, rowSelection) => (
+                            <UserAccessBulkActions
+                                table={table}
+                                rowSelection={rowSelection}
+                                totalCount={data.length}
+                                onCreateAccess={handleBulkCreateAccess}
+                                onRemoveAccess={handleBulkRemoveAccess}
+                            />
+                        )}
+                    />
+                ) : (
+                    <>
+                        <CardFilterToolbar />
+                        <CardView />
+                    </>
+                )}
+            </div>
 
             {/* User Details Modal */}
             <UserDetailsModal

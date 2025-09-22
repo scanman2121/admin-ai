@@ -279,6 +279,14 @@ export default function AccessControlActivity() {
                         </Button>
                     </Link>
                 </div>
+                <div className="flex items-center gap-2">
+                    <Button variant="ghost">
+                        Export
+                    </Button>
+                    <Button variant="primary">
+                        Download activity
+                    </Button>
+                </div>
             </div>
 
             {/* Tab Navigation */}

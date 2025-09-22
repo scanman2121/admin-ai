@@ -6,7 +6,7 @@ import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { centralizedUsers } from "@/data/centralizedUsers"
 import { RiSettings3Line } from "@remixicon/react"
-import { Clock, Download, Eye, FileText, Settings, Shield, User, Users } from "lucide-react"
+import { Clock, Download, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -208,56 +208,14 @@ const auditTrailColumns = [
     cell: ({ row }: { row: any }) => {
       const action = row.getValue("action") as string
       const category = row.original.category as string
-      const severity = row.original.severity as string
       
-      const getCategoryIcon = (category: string) => {
-        switch (category) {
-          case "Access Management":
-            return <Shield className="h-4 w-4" />
-          case "Bulk Operations":
-            return <Users className="h-4 w-4" />
-          case "Security Configuration":
-          case "Emergency Response":
-            return <Shield className="h-4 w-4" />
-          case "Group Management":
-            return <Users className="h-4 w-4" />
-          case "Device Management":
-            return <Settings className="h-4 w-4" />
-          case "Reporting":
-          case "Compliance":
-            return <FileText className="h-4 w-4" />
-          default:
-            return <Eye className="h-4 w-4" />
-        }
-      }
-
-      const getSeverityVariant = (severity: string) => {
-        switch (severity) {
-          case "High":
-            return "error"
-          case "Warning": 
-            return "warning"
-          case "Info":
-          default:
-            return "neutral"
-        }
-      }
-
       return (
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            {getCategoryIcon(category)}
-            <span className="font-medium text-gray-900 dark:text-gray-50">
-              {action}
-            </span>
+        <div className="space-y-1">
+          <div className="font-medium text-gray-900 dark:text-gray-50">
+            {action}
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant={getSeverityVariant(severity)} className="text-xs">
-              {severity}
-            </Badge>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              {category}
-            </span>
+          <div className="text-xs text-gray-500 dark:text-gray-400">
+            {category}
           </div>
         </div>
       )
