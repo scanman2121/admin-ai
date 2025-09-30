@@ -489,12 +489,12 @@ export default function WorkOrdersTeams() {
             }}>
                 <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>{isEditMode ? 'Edit Team' : 'Add New Team'}</DialogTitle>
+                        <DialogTitle>{isEditMode ? 'Edit team' : 'Add new team'}</DialogTitle>
                     </DialogHeader>
                     
                     <div className="space-y-4">
                         <div>
-                            <Label htmlFor="team-name">Team Name *</Label>
+                            <Label htmlFor="team-name">Team name *</Label>
                             <Input
                                 id="team-name"
                                 placeholder="Enter team name"
@@ -514,7 +514,7 @@ export default function WorkOrdersTeams() {
                         </div>
                         
                         <div>
-                            <Label>Team Members</Label>
+                            <Label>Team members</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
                                 Search and add users to this team
                             </p>
@@ -579,7 +579,7 @@ export default function WorkOrdersTeams() {
                         </div>
                         
                         <div>
-                            <Label>Service Categories & Request Types</Label>
+                            <Label>Service categories & request types</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
                                 Select categories to automatically include all their request types, or customize individual selections
                             </p>
@@ -657,7 +657,7 @@ export default function WorkOrdersTeams() {
                             onClick={handleAddTeam}
                             disabled={!newTeam.name.trim() || !newTeam.description.trim()}
                         >
-                            {isEditMode ? 'Update Team' : 'Add Team'}
+                            {isEditMode ? 'Update team' : 'Add team'}
                         </Button>
             </div>
                 </DialogContent>
