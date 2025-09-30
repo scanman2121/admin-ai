@@ -12,6 +12,7 @@ import { RiAddLine, RiArrowLeftLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line,
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
+import { workOrderStatuses } from "@/data/statuses"
 
 // Define tabs for the Work Orders Settings page
 const tabs = [
@@ -33,6 +34,7 @@ const serviceTypesData = [
         approval: "Tenant POC",
         assignedTo: "Security Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Completed", "Cancelled"],
     },
     {
         id: 2,
@@ -42,6 +44,7 @@ const serviceTypesData = [
         approval: "Tenant POC",
         assignedTo: "Security Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Completed", "Cancelled"],
     },
     {
         id: 3,
@@ -51,6 +54,7 @@ const serviceTypesData = [
         approval: "Tenant POC",
         assignedTo: "Security Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Completed", "Cancelled"],
     },
     {
         id: 4,
@@ -60,6 +64,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Security Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Completed", "Cancelled", "On Hold"],
     },
     {
         id: 5,
@@ -69,6 +74,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Security Team",
         status: true,
+        statuses: ["New", "Open", "Completed", "Cancelled"],
     },
     // Maintenance Category
     {
@@ -79,6 +85,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Maintenance Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Pending", "Completed", "Cancelled", "On Hold"],
     },
     {
         id: 7,
@@ -88,6 +95,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Maintenance Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Pending", "Completed", "Cancelled", "On Hold"],
     },
     {
         id: 8,
@@ -97,6 +105,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Maintenance Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Pending", "Completed", "Cancelled", "On Hold"],
     },
     {
         id: 9,
@@ -106,6 +115,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Maintenance Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Pending", "Completed", "Cancelled"],
     },
     {
         id: 10,
@@ -115,6 +125,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Maintenance Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Pending", "Completed", "Cancelled", "On Hold"],
     },
     // Cleaning Category
     {
@@ -125,6 +136,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Housekeeping Team",
         status: false,
+        statuses: ["New", "Open", "In Progress", "Completed", "Cancelled"],
     },
     {
         id: 12,
@@ -134,6 +146,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Housekeeping Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Completed", "Cancelled"],
     },
     {
         id: 13,
@@ -143,6 +156,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Housekeeping Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Completed", "Cancelled"],
     },
     {
         id: 14,
@@ -152,6 +166,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Housekeeping Team",
         status: true,
+        statuses: ["New", "Open", "Completed", "Cancelled"],
     },
     {
         id: 15,
@@ -161,6 +176,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Housekeeping Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Completed", "Cancelled"],
     },
     // Concierge Category
     {
@@ -171,6 +187,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Concierge Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Completed", "Cancelled"],
     },
     {
         id: 17,
@@ -180,6 +197,7 @@ const serviceTypesData = [
         approval: "Tenant POC",
         assignedTo: "Concierge Team",
         status: true,
+        statuses: ["New", "Open", "In Progress", "Pending", "Completed", "Cancelled", "On Hold"],
     },
     {
         id: 18,
@@ -189,6 +207,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Concierge Team",
         status: true,
+        statuses: ["New", "Open", "Completed", "Cancelled"],
     },
     {
         id: 19,
@@ -198,6 +217,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Concierge Team",
         status: true,
+        statuses: ["New", "Open", "Completed", "Cancelled"],
     },
     {
         id: 20,
@@ -207,6 +227,7 @@ const serviceTypesData = [
         approval: "Direct",
         assignedTo: "Concierge Team",
         status: false,
+        statuses: ["New", "Open", "In Progress", "Completed", "Cancelled"],
     },
 ]
 
@@ -242,7 +263,8 @@ export default function WorkOrdersSettings() {
         description: "",
         category: "Security",
         approval: "Direct",
-        assignedTo: ""
+        assignedTo: "",
+        statuses: [] as string[]
     })
 
     const handleStatusToggle = (id: number) => {
@@ -271,7 +293,8 @@ export default function WorkOrdersSettings() {
             description: "",
             category: "Security",
             approval: "Direct",
-            assignedTo: ""
+            assignedTo: "",
+            statuses: []
         })
         setIsAddCustomModalOpen(false)
     }
@@ -283,7 +306,8 @@ export default function WorkOrdersSettings() {
             description: serviceType.description,
             category: serviceType.category,
             approval: serviceType.approval,
-            assignedTo: serviceType.assignedTo
+            assignedTo: serviceType.assignedTo,
+            statuses: serviceType.statuses || []
         })
         setIsEditModalOpen(true)
     }
@@ -305,7 +329,8 @@ export default function WorkOrdersSettings() {
             description: "",
             category: "Security",
             approval: "Direct",
-            assignedTo: ""
+            assignedTo: "",
+            statuses: []
         })
         setIsEditModalOpen(false)
     }
@@ -313,6 +338,15 @@ export default function WorkOrdersSettings() {
     const handleDeleteServiceType = (id: number) => {
         setServiceTypes(prev => prev.filter(item => item.id !== id))
         setOpenDropdownId(null)
+    }
+
+    const handleStatusToggleInModal = (statusName: string) => {
+        setNewServiceType(prev => ({
+            ...prev,
+            statuses: prev.statuses.includes(statusName)
+                ? prev.statuses.filter(s => s !== statusName)
+                : [...prev.statuses, statusName]
+        }))
     }
 
     const filteredServiceTypes = serviceTypes.filter(item => {
@@ -443,6 +477,9 @@ export default function WorkOrdersSettings() {
                                     Assigned To
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Statuses
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                     Enable
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -473,6 +510,23 @@ export default function WorkOrdersSettings() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
                                         {serviceType.assignedTo}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="flex flex-wrap gap-1">
+                                            {serviceType.statuses?.slice(0, 3).map((status) => (
+                                                <span
+                                                    key={status}
+                                                    className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                                                >
+                                                    {status}
+                                                </span>
+                                            ))}
+                                            {(serviceType.statuses?.length || 0) > 3 && (
+                                                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                                                    +{(serviceType.statuses?.length || 0) - 3} more
+                                                </span>
+                                            )}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <Switch
@@ -604,12 +658,45 @@ export default function WorkOrdersSettings() {
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, assignedTo: e.target.value }))}
                             />
                         </div>
+                        
+                        <div>
+                            <Label>Available Statuses</Label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                Select which statuses are available for this service type
+                            </p>
+                            <div className="space-y-2 max-h-40 overflow-y-auto">
+                                {workOrderStatuses.filter(s => s.status).map((status) => (
+                                    <div key={status.id} className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            id={`status-${status.id}`}
+                                            checked={newServiceType.statuses.includes(status.name)}
+                                            onChange={() => handleStatusToggleInModal(status.name)}
+                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        <label htmlFor={`status-${status.id}`} className="text-sm text-gray-900 dark:text-gray-100">
+                                            {status.name}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                     
                     <div className="flex items-center justify-end gap-3 mt-6">
                         <Button
                             variant="ghost"
-                            onClick={() => setIsAddCustomModalOpen(false)}
+                            onClick={() => {
+                                setIsAddCustomModalOpen(false)
+                                setNewServiceType({
+                                    requestType: "",
+                                    description: "",
+                                    category: "Security",
+                                    approval: "Direct",
+                                    assignedTo: "",
+                                    statuses: []
+                                })
+                            }}
                         >
                             Cancel
                         </Button>
@@ -689,6 +776,29 @@ export default function WorkOrdersSettings() {
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, assignedTo: e.target.value }))}
                             />
                         </div>
+                        
+                        <div>
+                            <Label>Available Statuses</Label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                Select which statuses are available for this service type
+                            </p>
+                            <div className="space-y-2 max-h-40 overflow-y-auto">
+                                {workOrderStatuses.filter(s => s.status).map((status) => (
+                                    <div key={status.id} className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            id={`edit-status-${status.id}`}
+                                            checked={newServiceType.statuses.includes(status.name)}
+                                            onChange={() => handleStatusToggleInModal(status.name)}
+                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        <label htmlFor={`edit-status-${status.id}`} className="text-sm text-gray-900 dark:text-gray-100">
+                                            {status.name}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                     
                     <div className="flex items-center justify-end gap-3 mt-6">
@@ -702,7 +812,8 @@ export default function WorkOrdersSettings() {
                                     description: "",
                                     category: "Security",
                                     approval: "Direct",
-                                    assignedTo: ""
+                                    assignedTo: "",
+                                    statuses: []
                                 })
                             }}
                         >
