@@ -349,16 +349,15 @@ export default function WorkOrdersTeams() {
                                             </div>
                                         </div>
 
-                                    {team.isActive && (
-                                        <div className="space-y-4">
+                                        <div className={`space-y-4 ${!team.isActive ? 'opacity-60' : ''}`}>
                                             <div>
-                                                    <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
+                                                    <h4 className={`text-sm font-medium mb-3 ${team.isActive ? 'text-gray-900 dark:text-gray-100' : 'text-gray-500 dark:text-gray-500'}`}>
                                                         Team members ({team.members.length})
                                                     </h4>
                                                 <div className="flex -space-x-2">
                                                         {team.members.map((member) => (
                                                         <Avatar key={member.id} className="border-2 border-white dark:border-gray-800">
-                                                            <AvatarFallback className="text-xs font-medium bg-gray-100 dark:bg-gray-700">
+                                                            <AvatarFallback className={`text-xs font-medium ${team.isActive ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-50 dark:bg-gray-800 text-gray-400'}`}>
                                                                             {member.initials}
                                                                         </AvatarFallback>
                                                                     </Avatar>
@@ -370,40 +369,38 @@ export default function WorkOrdersTeams() {
                                                 </div>
 
                                                 <div>
-                                                    <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                                                    <h4 className={`text-sm font-medium mb-2 ${team.isActive ? 'text-gray-900 dark:text-gray-100' : 'text-gray-500 dark:text-gray-500'}`}>
                                                         Service category and request types
                                                     </h4>
                                                     <div className="flex flex-wrap gap-1">
-                                                        <Badge variant="success" className="text-xs">
+                                                        <Badge variant={team.isActive ? "success" : "neutral"} className={`text-xs ${!team.isActive ? 'opacity-60' : ''}`}>
                                                             {team.category}
                                                         </Badge>
                                                         {team.requestTypes.slice(0, 2).map((type) => (
-                                                            <Badge key={type} variant="neutral" className="text-xs">
+                                                            <Badge key={type} variant="neutral" className={`text-xs ${!team.isActive ? 'opacity-60' : ''}`}>
                                                                 {type}
                                                             </Badge>
                                                         ))}
                                                         {team.requestTypes.length > 2 && (
-                                                            <Badge variant="neutral" className="text-xs">
+                                                            <Badge variant="neutral" className={`text-xs ${!team.isActive ? 'opacity-60' : ''}`}>
                                                                 +{team.requestTypes.length - 2} more
                                                             </Badge>
                                                         )}
                                                     </div>
                                                 </div>
 
-                                        </div>
-                                    )}
+                                            {!team.isActive && (
+                                                <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-lg">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="flex-shrink-0 w-1.5 h-1.5 bg-amber-400 rounded-full"></div>
+                                                        <p className="text-sm text-amber-800 dark:text-amber-200">
+                                                            This team is currently inactive and won't receive new work order assignments.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            )}
 
-                                    {!team.isActive && (
-                                        <div className="text-center py-4 border border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
-                                                <RiTeamLine className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                                                    No team configured for {team.category.toLowerCase()} requests
-                                                </p>
-                                                <Button variant="primary" size="sm">
-                                                    Configure team
-                                                </Button>
-                                            </div>
-                                        )}
+                                        </div>
                                     </div>
                                 </Card>
                             )
