@@ -44,7 +44,7 @@ export default function WorkOrdersLayout({
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => router.push('/operations/work-orders/settings')}
+                        onClick={() => router.push('/operations/work-orders/settings/general')}
                         className="p-2 h-8 w-8"
                     >
                         <RiSettings3Line className="size-4" />
