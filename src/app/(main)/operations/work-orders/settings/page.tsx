@@ -9,7 +9,7 @@ import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { workOrderStatuses } from "@/data/statuses"
-import { RiAddLine, RiArrowLeftLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSettings3Line } from "@remixicon/react"
+import { RiAddLine, RiArrowLeftLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -385,8 +385,7 @@ export default function WorkOrdersSettings() {
                         variant="ghost" 
                         onClick={() => setIsSetupModalOpen(true)}
                     >
-                        <RiSettings3Line className="size-4 mr-1.5" />
-                        Setup
+                        Setup wizard
                     </Button>
                     <Button variant="primary">
                         Save

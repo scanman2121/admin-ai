@@ -11,7 +11,7 @@ import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
-import { RiAddLine, RiArrowDownSLine, RiArrowRightSLine, RiArrowLeftLine, RiBrushLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSearchLine, RiServiceLine, RiSettings3Line, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
+import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiBrushLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSearchLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -323,8 +323,7 @@ export default function WorkOrdersTeams() {
                         variant="ghost" 
                         onClick={() => setIsSetupModalOpen(true)}
                     >
-                        <RiSettings3Line className="size-4 mr-1.5" />
-                        Setup
+                        Setup wizard
                     </Button>
                 <Button variant="primary">
                         Save

@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/Checkbox"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { FullPageModal } from "@/components/ui/FullPageModal"
-import { RiArrowLeftLine, RiSettings3Line } from "@remixicon/react"
+import { RiArrowLeftLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -86,8 +86,7 @@ export default function WorkOrdersGeneralSettings() {
                         variant="ghost" 
                         onClick={() => setIsSetupModalOpen(true)}
                     >
-                        <RiSettings3Line className="size-4 mr-1.5" />
-                        Setup
+                        Setup wizard
                     </Button>
                     <Button variant="primary">
                         Save
