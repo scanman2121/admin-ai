@@ -7,7 +7,8 @@ import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { RiAddLine, RiArrowLeftLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line } from "@remixicon/react"
+import { FullPageModal } from "@/components/ui/FullPageModal"
+import { RiAddLine, RiArrowLeftLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSettings3Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -234,6 +235,7 @@ export default function WorkOrdersSettings() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
     const [editingServiceType, setEditingServiceType] = useState<typeof serviceTypesData[0] | null>(null)
     const [openDropdownId, setOpenDropdownId] = useState<number | null>(null)
+    const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)
     const [newServiceType, setNewServiceType] = useState({
         requestType: "",
         description: "",
@@ -343,9 +345,18 @@ export default function WorkOrdersSettings() {
                         Work order settings
                     </h1>
                 </div>
-                <Button variant="primary">
-                    Save
-                </Button>
+                <div className="flex items-center gap-3">
+                    <Button 
+                        variant="ghost" 
+                        onClick={() => setIsSetupModalOpen(true)}
+                    >
+                        <RiSettings3Line className="size-4 mr-1.5" />
+                        Setup
+                    </Button>
+                    <Button variant="primary">
+                        Save
+                    </Button>
+                </div>
             </div>
 
             {/* Tab Navigation */}
@@ -705,6 +716,14 @@ export default function WorkOrdersSettings() {
                     </div>
                 </DialogContent>
             </Dialog>
+
+            {/* Setup Modal */}
+            <FullPageModal
+                isOpen={isSetupModalOpen}
+                onClose={() => setIsSetupModalOpen(false)}
+                title="Service Request Setup"
+                iframeUrl="https://v0-workflow-system-design-sage.vercel.app/"
+            />
         </div>
     )
 }

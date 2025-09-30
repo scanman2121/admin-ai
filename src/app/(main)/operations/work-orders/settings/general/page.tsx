@@ -5,7 +5,8 @@ import { Card } from "@/components/Card"
 import { Checkbox } from "@/components/Checkbox"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { RiArrowLeftLine } from "@remixicon/react"
+import { FullPageModal } from "@/components/ui/FullPageModal"
+import { RiArrowLeftLine, RiSettings3Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -37,6 +38,9 @@ export default function WorkOrdersGeneralSettings() {
         notifyOnStatusChanges: true,
         notifyOnReassignment: false
     })
+    
+    // Setup modal state
+    const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)
     
     const handleFormFieldToggle = (field: keyof typeof formFields) => {
         setFormFields(prev => ({
@@ -76,9 +80,18 @@ export default function WorkOrdersGeneralSettings() {
                         Work order settings
                     </h1>
                 </div>
-                <Button variant="primary">
-                    Save
-                </Button>
+                <div className="flex items-center gap-3">
+                    <Button 
+                        variant="ghost" 
+                        onClick={() => setIsSetupModalOpen(true)}
+                    >
+                        <RiSettings3Line className="size-4 mr-1.5" />
+                        Setup
+                    </Button>
+                    <Button variant="primary">
+                        Save
+                    </Button>
+                </div>
             </div>
 
             {/* Tab Navigation */}
@@ -348,6 +361,14 @@ export default function WorkOrdersGeneralSettings() {
                     </div>
                 </Card>
             </div>
+
+            {/* Setup Modal */}
+            <FullPageModal
+                isOpen={isSetupModalOpen}
+                onClose={() => setIsSetupModalOpen(false)}
+                title="Service Request Setup"
+                iframeUrl="https://v0-workflow-system-design-sage.vercel.app/"
+            />
         </div>
     )
 }

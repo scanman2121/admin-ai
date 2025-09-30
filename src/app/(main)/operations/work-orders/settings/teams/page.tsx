@@ -10,7 +10,8 @@ import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { RiAddLine, RiArrowLeftLine, RiBrushLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSearchLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
+import { FullPageModal } from "@/components/ui/FullPageModal"
+import { RiAddLine, RiArrowLeftLine, RiBrushLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSearchLine, RiServiceLine, RiSettings3Line, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -111,6 +112,7 @@ export default function WorkOrdersTeams() {
     const [userSearchQuery, setUserSearchQuery] = useState("")
     const [selectedUsers, setSelectedUsers] = useState<typeof sampleUsers>([])    
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null)
+    const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)
     const [newTeam, setNewTeam] = useState({
         name: "",
         description: "",
@@ -249,9 +251,18 @@ export default function WorkOrdersTeams() {
                         Work order settings
                     </h1>
                 </div>
-                <Button variant="primary">
-                    Save
-                </Button>
+                <div className="flex items-center gap-3">
+                    <Button 
+                        variant="ghost" 
+                        onClick={() => setIsSetupModalOpen(true)}
+                    >
+                        <RiSettings3Line className="size-4 mr-1.5" />
+                        Setup
+                    </Button>
+                    <Button variant="primary">
+                        Save
+                    </Button>
+                </div>
             </div>
 
             {/* Tab Navigation */}
@@ -566,6 +577,14 @@ export default function WorkOrdersTeams() {
             </div>
                 </DialogContent>
             </Dialog>
+
+            {/* Setup Modal */}
+            <FullPageModal
+                isOpen={isSetupModalOpen}
+                onClose={() => setIsSetupModalOpen(false)}
+                title="Service Request Setup"
+                iframeUrl="https://v0-workflow-system-design-sage.vercel.app/"
+            />
         </div>
     )
 }
