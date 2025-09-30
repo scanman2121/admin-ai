@@ -258,7 +258,11 @@ export default function WorkOrdersTeams() {
 
         // Expand the category if we're selecting it
         if (!allCategoryTypesSelected) {
-            setExpandedCategories(prev => new Set([...Array.from(prev), category]))
+            setExpandedCategories(prev => {
+                const newSet = new Set(prev)
+                newSet.add(category)
+                return newSet
+            })
         }
     }
 
