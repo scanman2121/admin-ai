@@ -16,6 +16,7 @@ const tabs = [
     { name: "Settings", href: "/operations/work-orders/settings/general" },
     { name: "Teams", href: "/operations/work-orders/settings/teams" },
     { name: "Categories", href: "/operations/work-orders/settings/categories" },
+    { name: "Statuses", href: "/operations/work-orders/settings/statuses" },
     { name: "Service Types", href: "/operations/work-orders/settings" },
 ]
 
