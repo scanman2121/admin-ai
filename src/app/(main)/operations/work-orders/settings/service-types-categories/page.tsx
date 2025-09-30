@@ -537,22 +537,37 @@ export default function WorkOrdersServiceTypesCategories() {
                 ))}
             </TabNavigation>
 
-            {/* Action Buttons */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <Button onClick={() => setIsAddCategoryModalOpen(true)}>
-                        <RiAddLine className="size-4 mr-1.5" />
-                        Add category
-                    </Button>
-                    <Button variant="secondary" onClick={() => setIsAddServiceTypeModalOpen(true)}>
-                        <RiAddLine className="size-4 mr-1.5" />
-                        Add service type
-                    </Button>
+            {/* Service Types and Categories Content */}
+            <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
+                            Service types and categories
+                        </h2>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Organize service requests by category and define specific service types with approval workflows
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Button 
+                            variant="ghost" 
+                            onClick={() => setIsAddCategoryModalOpen(true)}
+                        >
+                            <RiAddLine className="size-4 mr-1.5" />
+                            Add category
+                        </Button>
+                        <Button 
+                            variant="ghost" 
+                            onClick={() => setIsAddServiceTypeModalOpen(true)}
+                        >
+                            <RiAddLine className="size-4 mr-1.5" />
+                            Add service type
+                        </Button>
+                    </div>
                 </div>
-            </div>
 
-            {/* Search and Filters */}
-            <div className="flex items-center justify-between gap-4">
+                {/* Search and Filters */}
+                <div className="flex items-center justify-between gap-4">
                 <input
                     type="text"
                     placeholder="Search categories and service types..."
@@ -810,6 +825,7 @@ export default function WorkOrdersServiceTypesCategories() {
                         </p>
                     </div>
                 )}
+            </div>
             </div>
 
             {/* Add Category Modal */}
