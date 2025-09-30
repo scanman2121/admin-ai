@@ -101,7 +101,7 @@ export default function WorkOrdersGeneralSettings() {
                     <div className="p-6">
                         <div className="mb-6">
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-                                Request Form Settings
+                                Request form settings
                             </h2>
                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                 Configure which fields appear on service request forms and their validation requirements.
@@ -210,7 +210,7 @@ export default function WorkOrdersGeneralSettings() {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Urgency Level
+                                            Urgency level
                                         </h3>
                                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                             Low, medium, high urgency
@@ -242,7 +242,7 @@ export default function WorkOrdersGeneralSettings() {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Contact Info
+                                            Contact info
                                         </h3>
                                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                             Phone number or email
@@ -277,7 +277,7 @@ export default function WorkOrdersGeneralSettings() {
                     <div className="p-6">
                         <div className="mb-6">
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-                                Notification Preferences
+                                Notification preferences
                             </h2>
                             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                 Configure email notifications for work order events and status changes.
@@ -288,7 +288,7 @@ export default function WorkOrdersGeneralSettings() {
                             <div className="flex items-start justify-between gap-3 py-2">
                                 <div className="flex-1">
                                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                        Always Notify Requestor
+                                        Always notify requestor
                                     </h3>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                         Send confirmation and status updates to the person who submitted each request
@@ -303,7 +303,7 @@ export default function WorkOrdersGeneralSettings() {
                             <div className="flex items-start justify-between gap-3 py-2">
                                     <div className="flex-1">
                                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Notify Assigned Team
+                                            Notify assigned team
                                         </h3>
                                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                             Send email to assigned team when new requests are submitted
@@ -318,7 +318,7 @@ export default function WorkOrdersGeneralSettings() {
                                 <div className="flex items-start justify-between gap-3 py-2">
                                     <div className="flex-1">
                                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Notify on Status Changes
+                                            Notify on status changes
                                         </h3>
                                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                             Send email when request status is updated or comments are added
@@ -333,7 +333,7 @@ export default function WorkOrdersGeneralSettings() {
                                 <div className="flex items-start justify-between gap-3 py-2">
                                     <div className="flex-1">
                                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Notify on Reassignment
+                                            Notify on reassignment
                                         </h3>
                                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                             Send email to new assignee when requests are reassigned between teams
