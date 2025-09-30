@@ -18,7 +18,7 @@ import { useState } from "react"
 const tabs = [
     { name: "Settings", href: "/operations/work-orders/settings/general" },
     { name: "Teams", href: "/operations/work-orders/settings/teams" },
-    { name: "Service types and categories", href: "/operations/work-orders/settings/service-types-categories" },
+    { name: "Service types", href: "/operations/work-orders/settings/service-types-categories" },
     { name: "Statuses", href: "/operations/work-orders/settings/statuses" },
 ]
 
