@@ -98,7 +98,7 @@ export default function WorkOrdersGeneralSettings() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Request Form Settings Card */}
                 <Card className="h-fit">
-                    <div className="p-6">
+                    <div>
                         <div className="mb-6">
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
                                 Request form settings
@@ -274,7 +274,7 @@ export default function WorkOrdersGeneralSettings() {
 
                 {/* Notification Preferences Card */}
                 <Card className="h-fit">
-                    <div className="p-6">
+                    <div>
                         <div className="mb-6">
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
                                 Notification preferences

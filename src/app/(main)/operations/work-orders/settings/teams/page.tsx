@@ -292,7 +292,7 @@ export default function WorkOrdersTeams() {
                         {teams.map((team) => {
                             return (
                                 <Card key={team.id} className={!team.isActive ? 'opacity-60' : ''}>
-                                    <div className="p-6">
+                                    <div>
                                         <div className="flex items-start justify-between mb-4">
                                             <div className="flex-1">
                                                 <div className="flex items-start justify-between">
