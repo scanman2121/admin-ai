@@ -3,7 +3,7 @@
 import { Card } from "@/components/Card"
 import { Input } from "@/components/Input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Search, Users, X, Shield, Wrench, Brush, Headphones } from "lucide-react"
+import { Brush, Headphones, Search, Shield, Users, Wrench, X } from "lucide-react"
 import { useState } from "react"
 
 interface Personnel {
