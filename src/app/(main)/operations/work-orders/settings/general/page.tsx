@@ -284,28 +284,23 @@ export default function WorkOrdersGeneralSettings() {
                             </p>
                         </div>
                         
-                        <div className="space-y-5">
-                            {/* Always Notify Requestor - Highlighted */}
-                            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                                <div className="flex items-start justify-between gap-3">
-                                    <div className="flex-1">
-                                        <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                                            Always Notify Requestor
-                                        </h3>
-                                        <p className="text-xs text-blue-700 dark:text-blue-300 mt-1">
-                                            Send confirmation and status updates to the person who submitted each request
-                                        </p>
-                                    </div>
-                                    <Switch
-                                        checked={notifications.alwaysNotifyRequestor}
-                                        onCheckedChange={() => handleNotificationToggle('alwaysNotifyRequestor')}
-                                    />
+                        <div className="space-y-4">
+                            <div className="flex items-start justify-between gap-3 py-2">
+                                <div className="flex-1">
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        Always Notify Requestor
+                                    </h3>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                        Send confirmation and status updates to the person who submitted each request
+                                    </p>
                                 </div>
+                                <Switch
+                                    checked={notifications.alwaysNotifyRequestor}
+                                    onCheckedChange={() => handleNotificationToggle('alwaysNotifyRequestor')}
+                                />
                             </div>
                             
-                            {/* Other Notification Options */}
-                            <div className="space-y-4">
-                                <div className="flex items-start justify-between gap-3 py-2">
+                            <div className="flex items-start justify-between gap-3 py-2">
                                     <div className="flex-1">
                                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                             Notify Assigned Team
@@ -349,7 +344,6 @@ export default function WorkOrdersGeneralSettings() {
                                         onCheckedChange={() => handleNotificationToggle('notifyOnReassignment')}
                                     />
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </Card>
