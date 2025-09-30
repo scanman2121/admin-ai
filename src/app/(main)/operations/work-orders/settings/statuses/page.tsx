@@ -6,11 +6,11 @@ import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
+import { workOrderStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowLeftLine, RiDeleteBin6Line, RiEdit2Line, RiSettings3Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
-import { workOrderStatuses } from "@/data/statuses"
 
 // Define tabs for the Work Orders Settings page
 const tabs = [
@@ -24,6 +24,31 @@ const tabs = [
 // Use shared statuses data
 const defaultStatuses = workOrderStatuses
 
+// Color options for custom statuses
+const statusColors = [
+    { name: "Blue", value: "blue", bgClass: "bg-blue-400", textClass: "text-blue-800", bgLight: "bg-blue-50" },
+    { name: "Green", value: "green", bgClass: "bg-green-400", textClass: "text-green-800", bgLight: "bg-green-50" },
+    { name: "Yellow", value: "yellow", bgClass: "bg-yellow-400", textClass: "text-yellow-800", bgLight: "bg-yellow-50" },
+    { name: "Orange", value: "orange", bgClass: "bg-orange-400", textClass: "text-orange-800", bgLight: "bg-orange-50" },
+    { name: "Red", value: "red", bgClass: "bg-red-400", textClass: "text-red-800", bgLight: "bg-red-50" },
+    { name: "Purple", value: "purple", bgClass: "bg-purple-400", textClass: "text-purple-800", bgLight: "bg-purple-50" },
+    { name: "Gray", value: "gray", bgClass: "bg-gray-400", textClass: "text-gray-800", bgLight: "bg-gray-50" },
+    { name: "Pink", value: "pink", bgClass: "bg-pink-400", textClass: "text-pink-800", bgLight: "bg-pink-50" },
+    { name: "Indigo", value: "indigo", bgClass: "bg-indigo-400", textClass: "text-indigo-800", bgLight: "bg-indigo-50" },
+    { name: "Teal", value: "teal", bgClass: "bg-teal-400", textClass: "text-teal-800", bgLight: "bg-teal-50" },
+]
+
+// Preset status colors (cannot be changed)
+const presetStatusColors = {
+    "New": "yellow",
+    "Open": "blue", 
+    "In Progress": "purple",
+    "Pending": "orange",
+    "Completed": "green",
+    "Cancelled": "red",
+    "On Hold": "gray"
+}
+
 export default function WorkOrdersStatuses() {
     const pathname = usePathname()
     const [statuses, setStatuses] = useState(defaultStatuses)
@@ -34,13 +59,20 @@ export default function WorkOrdersStatuses() {
     const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)
     const [newStatus, setNewStatus] = useState({
         name: "",
-        description: ""
+        description: "",
+        color: "blue"
     })
 
     const handleStatusToggle = (id: number) => {
         setStatuses(prev => prev.map(status => 
             status.id === id ? { ...status, status: !status.status } : status
         ))
+    }
+
+    // Helper function to get color classes
+    const getColorClasses = (color: string) => {
+        const colorOption = statusColors.find(c => c.value === color)
+        return colorOption || statusColors[0] // Default to blue if not found
     }
 
     const handleAddStatus = () => {
@@ -52,12 +84,12 @@ export default function WorkOrdersStatuses() {
             name: newStatus.name,
             description: newStatus.description,
             status: true,
-            color: "blue",
+            color: newStatus.color,
             orderCount: 0
         }
 
         setStatuses(prev => [...prev, newStatusItem])
-        setNewStatus({ name: "", description: "" })
+        setNewStatus({ name: "", description: "", color: "blue" })
         setIsAddStatusModalOpen(false)
     }
 
@@ -65,7 +97,8 @@ export default function WorkOrdersStatuses() {
         setEditingStatus(status)
         setNewStatus({
             name: status.name,
-            description: status.description
+            description: status.description,
+            color: status.color
         })
         setIsAddStatusModalOpen(true)
     }
@@ -73,14 +106,24 @@ export default function WorkOrdersStatuses() {
     const handleUpdateStatus = () => {
         if (!newStatus.name.trim() || !newStatus.description.trim() || !editingStatus) return
 
+        // Only allow color changes for custom statuses (not preset ones)
+        const updatedStatus = {
+            ...editingStatus,
+            name: newStatus.name,
+            description: newStatus.description
+        }
+
+        // If it's not a preset status, allow color change
+        if (!presetStatusColors[editingStatus.name as keyof typeof presetStatusColors]) {
+            updatedStatus.color = newStatus.color
+        }
+
         setStatuses(prev => prev.map(status => 
-            status.id === editingStatus.id 
-                ? { ...status, name: newStatus.name, description: newStatus.description }
-                : status
+            status.id === editingStatus.id ? updatedStatus : status
         ))
         
         setEditingStatus(null)
-        setNewStatus({ name: "", description: "" })
+        setNewStatus({ name: "", description: "", color: "blue" })
         setIsAddStatusModalOpen(false)
     }
 
@@ -159,7 +202,7 @@ export default function WorkOrdersStatuses() {
                         variant="ghost" 
                         onClick={() => {
                             setEditingStatus(null)
-                            setNewStatus({ name: "", description: "" })
+                            setNewStatus({ name: "", description: "", color: "blue" })
                             setIsAddStatusModalOpen(true)
                         }}
                     >
@@ -207,7 +250,7 @@ export default function WorkOrdersStatuses() {
                                 <tr key={status.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center gap-3">
-                                            <div className={`w-3 h-3 rounded-full bg-${status.color}-400`}></div>
+                                            <div className={`w-3 h-3 rounded-full ${getColorClasses(status.color).bgClass}`}></div>
                                             <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                                 {status.name}
                                             </div>
@@ -260,7 +303,7 @@ export default function WorkOrdersStatuses() {
 
             {/* Add/Edit Status Modal */}
             <Dialog open={isAddStatusModalOpen} onOpenChange={setIsAddStatusModalOpen}>
-                <DialogContent className="max-w-md">
+                <DialogContent className="max-w-lg">
                     <DialogHeader>
                         <DialogTitle>{editingStatus ? 'Edit Status' : 'Add New Status'}</DialogTitle>
                     </DialogHeader>
@@ -289,6 +332,52 @@ export default function WorkOrdersStatuses() {
                                 className="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
+                        
+                        {/* Color Selection - Only for custom statuses */}
+                        {(!editingStatus || !presetStatusColors[editingStatus.name as keyof typeof presetStatusColors]) && (
+                            <div>
+                                <Label>Color</Label>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                    Choose a color for this status
+                                </p>
+                                <div className="grid grid-cols-5 gap-2">
+                                    {statusColors.map((colorOption) => (
+                                        <button
+                                            key={colorOption.value}
+                                            type="button"
+                                            onClick={() => setNewStatus(prev => ({ ...prev, color: colorOption.value }))}
+                                            className={`relative p-3 rounded-lg border-2 transition-all ${
+                                                newStatus.color === colorOption.value
+                                                    ? 'border-gray-900 dark:border-gray-100 ring-2 ring-offset-2 ring-gray-500'
+                                                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                            } ${colorOption.bgLight} ${colorOption.textClass}`}
+                                            title={colorOption.name}
+                                        >
+                                            <div className={`w-4 h-4 rounded-full ${colorOption.bgClass} mx-auto`}></div>
+                                            <div className="text-xs mt-1 text-center font-medium">
+                                                {colorOption.name}
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Show preset color info for default statuses */}
+                        {editingStatus && presetStatusColors[editingStatus.name as keyof typeof presetStatusColors] && (
+                            <div>
+                                <Label>Color</Label>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                    This is a default status with a preset color that cannot be changed
+                                </p>
+                                <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                    <div className={`w-4 h-4 rounded-full ${getColorClasses(editingStatus.color).bgClass}`}></div>
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        {getColorClasses(editingStatus.color).name}
+                                    </span>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     
                     <div className="flex items-center justify-end gap-3 mt-6">
@@ -297,7 +386,7 @@ export default function WorkOrdersStatuses() {
                             onClick={() => {
                                 setIsAddStatusModalOpen(false)
                                 setEditingStatus(null)
-                                setNewStatus({ name: "", description: "" })
+                                setNewStatus({ name: "", description: "", color: "blue" })
                             }}
                         >
                             Cancel
