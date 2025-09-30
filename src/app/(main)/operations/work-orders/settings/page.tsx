@@ -7,7 +7,7 @@ import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { RiAddLine, RiArrowLeftLine, RiEdit2Line } from "@remixicon/react"
+import { RiAddLine, RiArrowLeftLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -233,6 +233,7 @@ export default function WorkOrdersSettings() {
     const [isAddCustomModalOpen, setIsAddCustomModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
     const [editingServiceType, setEditingServiceType] = useState<typeof serviceTypesData[0] | null>(null)
+    const [openDropdownId, setOpenDropdownId] = useState<number | null>(null)
     const [newServiceType, setNewServiceType] = useState({
         requestType: "",
         description: "",
@@ -304,6 +305,11 @@ export default function WorkOrdersSettings() {
             assignedTo: ""
         })
         setIsEditModalOpen(false)
+    }
+
+    const handleDeleteServiceType = (id: number) => {
+        setServiceTypes(prev => prev.filter(item => item.id !== id))
+        setOpenDropdownId(null)
     }
 
     const filteredServiceTypes = serviceTypes.filter(item => {
@@ -463,14 +469,47 @@ export default function WorkOrdersSettings() {
                                         />
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="p-2 h-8 w-8"
-                                            onClick={() => handleEditServiceType(serviceType)}
-                                        >
-                                            <RiEdit2Line className="size-4" />
-                                        </Button>
+                                        <div className="flex items-center gap-1">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="p-2 h-8 w-8"
+                                                onClick={() => handleEditServiceType(serviceType)}
+                                            >
+                                                <RiEdit2Line className="size-4" />
+                                            </Button>
+                                            
+                                            <div className="relative">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="p-2 h-8 w-8"
+                                                    onClick={() => setOpenDropdownId(openDropdownId === serviceType.id ? null : serviceType.id)}
+                                                >
+                                                    <RiMore2Line className="size-4" />
+                                                </Button>
+                                                
+                                                {openDropdownId === serviceType.id && (
+                                                    <>
+                                                        {/* Backdrop to close dropdown */}
+                                                        <div 
+                                                            className="fixed inset-0 z-10" 
+                                                            onClick={() => setOpenDropdownId(null)}
+                                                        />
+                                                        {/* Dropdown menu */}
+                                                        <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                                                            <button
+                                                                onClick={() => handleDeleteServiceType(serviceType.id)}
+                                                                className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
+                                                            >
+                                                                <RiDeleteBin6Line className="size-4" />
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
