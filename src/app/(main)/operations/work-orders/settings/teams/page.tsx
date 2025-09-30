@@ -442,44 +442,10 @@ export default function WorkOrdersTeams() {
                         </div>
                         
                         <div>
-                            <Label htmlFor="team-category">Category</Label>
-                            <select
-                                id="team-category"
-                                value={newTeam.category}
-                                onChange={(e) => setNewTeam(prev => ({ ...prev, category: e.target.value }))}
-                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                                <option value="Security">Security</option>
-                                <option value="Maintenance">Maintenance</option>
-                                <option value="Cleaning">Cleaning</option>
-                                <option value="Concierge">Concierge</option>
-                            </select>
-                        </div>
-                        
-                        <div>
                             <Label>Team Members</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
                                 Search and add users to this team
                             </p>
-                            
-                            {/* Selected Users */}
-                            {selectedUsers.length > 0 && (
-                                <div className="mb-3">
-                                    <div className="flex flex-wrap gap-2">
-                                        {selectedUsers.map((user) => (
-                                            <div key={user.id} className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                                <span>{user.name}</span>
-                                                <button
-                                                    onClick={() => handleRemoveUser(user.id)}
-                                                    className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-200"
-                                                >
-                                                    ×
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
                             
                             {/* User Search */}
                             <div className="relative">
@@ -519,31 +485,73 @@ export default function WorkOrdersTeams() {
                                     ))}
                                 </div>
                             )}
+                            
+                            {/* Selected Users Chips - Now Below Search */}
+                            {selectedUsers.length > 0 && (
+                                <div className="mt-3">
+                                    <div className="flex flex-wrap gap-2">
+                                        {selectedUsers.map((user) => (
+                                            <div key={user.id} className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
+                                                <span>{user.name}</span>
+                                                <button
+                                                    onClick={() => handleRemoveUser(user.id)}
+                                                    className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-200"
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         
                         <div>
-                            <Label>Request Types</Label>
+                            <Label>Category and Request Types</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                                Select which request types this team will handle
+                                Select the category and which request types this team will handle
                             </p>
-                            <div className="space-y-2 max-h-32 overflow-y-auto">
-                                {[
-                                    'Access Request', 'Key Card Request', 'Visitor Access', 'Security Incident',
-                                    'HVAC Issue', 'Plumbing Repair', 'Electrical Problem', 'General Repair',
-                                    'Deep Cleaning', 'Carpet Cleaning', 'Window Cleaning', 'Waste Removal',
-                                    'Package Delivery', 'Event Setup', 'Guest Services', 'Information Request'
-                                ].map((requestType) => (
-                                    <div key={requestType} className="flex items-center space-x-2">
-                                        <Checkbox
-                                            id={`request-${requestType}`}
-                                            checked={newTeam.requestTypes.includes(requestType)}
-                                            onCheckedChange={() => handleRequestTypeToggle(requestType)}
-                                        />
-                                        <label htmlFor={`request-${requestType}`} className="text-sm text-gray-900 dark:text-gray-100">
-                                            {requestType}
-                                        </label>
+                            
+                            <div className="space-y-4">
+                                {/* Category Selection */}
+                                <div>
+                                    <Label htmlFor="team-category" className="text-xs font-medium text-gray-700 dark:text-gray-300">Category</Label>
+                                    <select
+                                        id="team-category"
+                                        value={newTeam.category}
+                                        onChange={(e) => setNewTeam(prev => ({ ...prev, category: e.target.value }))}
+                                        className="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    >
+                                        <option value="Security">Security</option>
+                                        <option value="Maintenance">Maintenance</option>
+                                        <option value="Cleaning">Cleaning</option>
+                                        <option value="Concierge">Concierge</option>
+                                    </select>
+                                </div>
+                                
+                                {/* Request Types */}
+                                <div>
+                                    <Label className="text-xs font-medium text-gray-700 dark:text-gray-300">Request Types</Label>
+                                    <div className="mt-2 space-y-2 max-h-32 overflow-y-auto">
+                                        {[
+                                            'Access Request', 'Key Card Request', 'Visitor Access', 'Security Incident',
+                                            'HVAC Issue', 'Plumbing Repair', 'Electrical Problem', 'General Repair',
+                                            'Deep Cleaning', 'Carpet Cleaning', 'Window Cleaning', 'Waste Removal',
+                                            'Package Delivery', 'Event Setup', 'Guest Services', 'Information Request'
+                                        ].map((requestType) => (
+                                            <div key={requestType} className="flex items-center space-x-2">
+                                                <Checkbox
+                                                    id={`request-${requestType}`}
+                                                    checked={newTeam.requestTypes.includes(requestType)}
+                                                    onCheckedChange={() => handleRequestTypeToggle(requestType)}
+                                                />
+                                                <label htmlFor={`request-${requestType}`} className="text-sm text-gray-900 dark:text-gray-100">
+                                                    {requestType}
+                                                </label>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
                             </div>
                         </div>
                     </div>
