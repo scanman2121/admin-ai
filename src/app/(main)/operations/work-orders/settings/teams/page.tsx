@@ -6,7 +6,7 @@ import { Card } from "@/components/Card"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { RiAddLine, RiArrowLeftLine, RiBrushLine, RiServiceLine, RiSettingsLine, RiShieldLine, RiTeamLine, RiToolsLine } from "@remixicon/react"
+import { RiArrowLeftLine, RiBrushLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -135,47 +135,30 @@ export default function WorkOrdersTeams() {
                 <div className="flex items-center justify-between">
                     <div>
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                            Default Teams
+                            Default teams
                         </h2>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
                             Pre-configured teams for common service categories
                             </p>
                         </div>
-                        <Button variant="primary" className="flex items-center gap-2">
-                            <RiAddLine className="h-4 w-4" />
-                            Add Custom Team
+                        <Button variant="primary">
+                            Add team
                         </Button>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {teams.map((team) => {
-                            const IconComponent = team.icon
-                            return (
+                    {teams.map((team) => {
+                        return (
                                 <Card key={team.id} className={!team.isActive ? 'opacity-60' : ''}>
                                     <div className="p-6">
                                         <div className="flex items-start justify-between mb-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`p-2 rounded-lg ${
-                                                    team.color === 'error' ? 'bg-red-100 dark:bg-red-900/20' :
-                                                    team.color === 'warning' ? 'bg-yellow-100 dark:bg-yellow-900/20' :
-                                                    team.color === 'success' ? 'bg-green-100 dark:bg-green-900/20' :
-                                                    'bg-blue-100 dark:bg-blue-900/20'
-                                                }`}>
-                                                    <IconComponent className={`h-5 w-5 ${
-                                                        team.color === 'error' ? 'text-red-600 dark:text-red-400' :
-                                                        team.color === 'warning' ? 'text-yellow-600 dark:text-yellow-400' :
-                                                        team.color === 'success' ? 'text-green-600 dark:text-green-400' :
-                                                        'text-blue-600 dark:text-blue-400'
-                                                    }`} />
-                                                </div>
-                                                <div>
-                                                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">
-                                                        {team.name}
-                                                    </h3>
-                                                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                        {team.description}
-                                                    </p>
-                                                </div>
+                                            <div>
+                                                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">
+                                                    {team.name}
+                                                </h3>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                    {team.description}
+                                                </p>
                                             </div>
                                                 <Switch
                                                     checked={team.isActive}
@@ -187,19 +170,14 @@ export default function WorkOrdersTeams() {
                                         <div className="space-y-4">
                                             <div>
                                                     <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
-                                                        Team Members ({team.members.length})
+                                                        Team members ({team.members.length})
                                                     </h4>
                                                 <div className="flex -space-x-2">
                                                         {team.members.map((member) => (
-                                                        <Avatar key={member.id} className="border-2 border-white dark:border-gray-800 relative">
+                                                        <Avatar key={member.id} className="border-2 border-white dark:border-gray-800">
                                                             <AvatarFallback className="text-xs font-medium bg-gray-100 dark:bg-gray-700">
                                                                             {member.initials}
                                                                         </AvatarFallback>
-                                                            {member.isLead && (
-                                                                <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full border border-white dark:border-gray-800">
-                                                                    <RiSettingsLine className="w-2 h-2 text-white absolute top-0.5 left-0.5" />
-                                                                </div>
-                                                                )}
                                                         </Avatar>
                                                         ))}
                                                     </div>
@@ -210,17 +188,20 @@ export default function WorkOrdersTeams() {
 
                                                 <div>
                                                     <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
-                                                    Assigned Request Types
+                                                        Service category and request types
                                                     </h4>
                                                     <div className="flex flex-wrap gap-1">
-                                                        {team.requestTypes.slice(0, 3).map((type) => (
+                                                        <Badge variant="success" className="text-xs">
+                                                            {team.category}
+                                                        </Badge>
+                                                        {team.requestTypes.slice(0, 2).map((type) => (
                                                             <Badge key={type} variant="neutral" className="text-xs">
                                                                 {type}
                                                             </Badge>
                                                         ))}
-                                                        {team.requestTypes.length > 3 && (
+                                                        {team.requestTypes.length > 2 && (
                                                             <Badge variant="neutral" className="text-xs">
-                                                                +{team.requestTypes.length - 3} more
+                                                                +{team.requestTypes.length - 2} more
                                                             </Badge>
                                                         )}
                                                     </div>
@@ -228,7 +209,7 @@ export default function WorkOrdersTeams() {
 
                                             <div className="pt-3 border-t border-gray-100 dark:border-gray-700">
                                                 <Button variant="ghost" size="sm" className="w-full">
-                                                    Configure Team Settings
+                                                    Configure team settings
                                                 </Button>
                                             </div>
                                         </div>
@@ -241,7 +222,7 @@ export default function WorkOrdersTeams() {
                                                     No team configured for {team.category.toLowerCase()} requests
                                                 </p>
                                                 <Button variant="primary" size="sm">
-                                                    Configure Team
+                                                    Configure team
                                                 </Button>
                                             </div>
                                         )}
