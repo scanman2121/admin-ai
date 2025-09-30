@@ -3,7 +3,7 @@
 import { Card } from "@/components/Card"
 import { Input } from "@/components/Input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Brush, Headphones, Search, Shield, Users, Wrench, X } from "lucide-react"
+import { Search, Users, X } from "lucide-react"
 import { useState } from "react"
 
 interface Personnel {
@@ -133,15 +133,6 @@ const mockTeamResults: Team[] = [
   }
 ]
 
-const getCategoryIcon = (category: string) => {
-  switch (category) {
-    case 'Security': return Shield
-    case 'Maintenance': return Wrench  
-    case 'Cleaning': return Brush
-    case 'Concierge': return Headphones
-    default: return Users
-  }
-}
 
 export function AssignedPersonnelCard({ 
   assignedPersonnel = [], 
@@ -220,11 +211,8 @@ export function AssignedPersonnelCard({
                 >
                   {result.type === 'team' ? (
                     <>
-                      <div className="size-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                        {(() => {
-                          const IconComponent = getCategoryIcon(result.category)
-                          return <IconComponent className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-                        })()}
+                      <div className="size-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                        <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                       </div>
                       <div className="text-left flex-1">
                         <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -281,26 +269,18 @@ export function AssignedPersonnelCard({
                   {assignment.type === 'team' ? (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="size-10 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center shadow-sm">
-                            {(() => {
-                              const IconComponent = getCategoryIcon(assignment.category)
-                              return <IconComponent className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                            })()}
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
-                                {assignment.name}
-                              </p>
-                              <div className="text-xs text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-800/50 px-2 py-0.5 rounded">
-                                Team
-                              </div>
-                            </div>
-                            <p className="text-xs text-blue-700 dark:text-blue-300">
-                              {assignment.description}
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
+                              {assignment.name}
                             </p>
+                            <div className="text-xs text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-800/50 px-2 py-0.5 rounded">
+                              Team
+                            </div>
                           </div>
+                          <p className="text-xs text-blue-700 dark:text-blue-300">
+                            {assignment.description}
+                          </p>
                         </div>
                         <button
                           onClick={() => handleRemoveAssignment(assignment.id)}
@@ -311,31 +291,31 @@ export function AssignedPersonnelCard({
                       </div>
                       
                       {/* Team Members */}
-                      <div className="ml-13">
-                        <div className="flex items-center gap-2 mb-2">
-                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300">
-                            Team Members ({assignment.members.length})
-                          </p>
-                        </div>
-                        <div className="flex -space-x-1">
-                          {assignment.members.slice(0, 4).map((member) => (
-                            <Avatar key={member.id} className="size-6 border-2 border-white dark:border-gray-800">
+                      <div className="space-y-2">
+                        {assignment.members.map((member) => (
+                          <div key={member.id} className="flex items-center gap-3 p-2 bg-white/50 dark:bg-gray-800/50 rounded-lg">
+                            <Avatar className="size-8">
                               <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
                                 {member.initials}
                               </AvatarFallback>
                             </Avatar>
-                          ))}
-                          {assignment.members.length > 4 && (
-                            <div className="size-6 rounded-full bg-gray-200 dark:bg-gray-600 border-2 border-white dark:border-gray-800 flex items-center justify-center">
-                              <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
-                                +{assignment.members.length - 4}
-                              </span>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                  {member.name}
+                                </p>
+                                {member.isLead && (
+                                  <div className="text-xs text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-800/50 px-2 py-0.5 rounded">
+                                    Lead
+                                  </div>
+                                )}
+                              </div>
+                              <p className="text-xs text-blue-700 dark:text-blue-300">
+                                {member.role}
+                              </p>
                             </div>
-                          )}
-                        </div>
-                        <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                          Lead: {assignment.members.find(m => m.isLead)?.name || 'Unassigned'}
-                        </p>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   ) : (
