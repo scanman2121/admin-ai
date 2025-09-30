@@ -363,9 +363,6 @@ export default function WorkOrdersTeams() {
                                                                     </Avatar>
                                                         ))}
                                                     </div>
-                                                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                                    {team.members.find(m => m.isLead)?.name} (Lead) + {team.members.filter(m => !m.isLead).length} members
-                                                    </div>
                                                 </div>
 
                                                 <div>
@@ -397,8 +394,8 @@ export default function WorkOrdersTeams() {
                                                             This team is currently inactive and won't receive new work order assignments.
                                                         </p>
                                                     </div>
-                                                </div>
-                                            )}
+                                            </div>
+                                        )}
 
                                         </div>
                                     </div>
