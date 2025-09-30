@@ -7,7 +7,7 @@ import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { RiAddLine, RiArrowLeftLine, RiSettings3Line } from "@remixicon/react"
+import { RiAddLine, RiArrowLeftLine, RiEdit2Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -231,6 +231,8 @@ export default function WorkOrdersSettings() {
     const [statusFilter, setStatusFilter] = useState("All")
     const [categoryFilter, setCategoryFilter] = useState("All Categories")
     const [isAddCustomModalOpen, setIsAddCustomModalOpen] = useState(false)
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const [editingServiceType, setEditingServiceType] = useState<typeof serviceTypesData[0] | null>(null)
     const [newServiceType, setNewServiceType] = useState({
         requestType: "",
         description: "",
@@ -268,6 +270,40 @@ export default function WorkOrdersSettings() {
             assignedTo: ""
         })
         setIsAddCustomModalOpen(false)
+    }
+
+    const handleEditServiceType = (serviceType: typeof serviceTypesData[0]) => {
+        setEditingServiceType(serviceType)
+        setNewServiceType({
+            requestType: serviceType.requestType,
+            description: serviceType.description,
+            category: serviceType.category,
+            approval: serviceType.approval,
+            assignedTo: serviceType.assignedTo
+        })
+        setIsEditModalOpen(true)
+    }
+
+    const handleUpdateServiceType = () => {
+        if (!editingServiceType || !newServiceType.requestType.trim() || !newServiceType.description.trim() || !newServiceType.assignedTo.trim()) {
+            return
+        }
+
+        setServiceTypes(prev => prev.map(item => 
+            item.id === editingServiceType.id 
+                ? { ...item, ...newServiceType }
+                : item
+        ))
+        
+        setEditingServiceType(null)
+        setNewServiceType({
+            requestType: "",
+            description: "",
+            category: "Security",
+            approval: "Direct",
+            assignedTo: ""
+        })
+        setIsEditModalOpen(false)
     }
 
     const filteredServiceTypes = serviceTypes.filter(item => {
@@ -431,8 +467,9 @@ export default function WorkOrdersSettings() {
                                             variant="ghost"
                                             size="sm"
                                             className="p-2 h-8 w-8"
+                                            onClick={() => handleEditServiceType(serviceType)}
                                         >
-                                            <RiSettings3Line className="size-4" />
+                                            <RiEdit2Line className="size-4" />
                                         </Button>
                                     </td>
                                 </tr>
@@ -530,6 +567,101 @@ export default function WorkOrdersSettings() {
                             disabled={!newServiceType.requestType.trim() || !newServiceType.description.trim() || !newServiceType.assignedTo.trim()}
                         >
                             Add Service Type
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Edit Service Type Modal */}
+            <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Edit Service Type</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                        <div>
+                            <Label htmlFor="edit-requestType">Request Type *</Label>
+                            <Input
+                                id="edit-requestType"
+                                placeholder="Enter request type name"
+                                value={newServiceType.requestType}
+                                onChange={(e) => setNewServiceType(prev => ({ ...prev, requestType: e.target.value }))}
+                            />
+                        </div>
+                        
+                        <div>
+                            <Label htmlFor="edit-description">Description *</Label>
+                            <Input
+                                id="edit-description"
+                                placeholder="Enter description"
+                                value={newServiceType.description}
+                                onChange={(e) => setNewServiceType(prev => ({ ...prev, description: e.target.value }))}
+                            />
+                        </div>
+                        
+                        <div>
+                            <Label htmlFor="edit-category">Category</Label>
+                            <select
+                                id="edit-category"
+                                value={newServiceType.category}
+                                onChange={(e) => setNewServiceType(prev => ({ ...prev, category: e.target.value }))}
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                <option>Security</option>
+                                <option>Maintenance</option>
+                                <option>Cleaning</option>
+                                <option>Concierge</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <Label htmlFor="edit-approval">Approval Type</Label>
+                            <select
+                                id="edit-approval"
+                                value={newServiceType.approval}
+                                onChange={(e) => setNewServiceType(prev => ({ ...prev, approval: e.target.value }))}
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                <option>Direct</option>
+                                <option>Tenant POC</option>
+                                <option>Manager Approval</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <Label htmlFor="edit-assignedTo">Assigned To *</Label>
+                            <Input
+                                id="edit-assignedTo"
+                                placeholder="Enter team or person responsible"
+                                value={newServiceType.assignedTo}
+                                onChange={(e) => setNewServiceType(prev => ({ ...prev, assignedTo: e.target.value }))}
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-end gap-3 mt-6">
+                        <Button
+                            variant="ghost"
+                            onClick={() => {
+                                setIsEditModalOpen(false)
+                                setEditingServiceType(null)
+                                setNewServiceType({
+                                    requestType: "",
+                                    description: "",
+                                    category: "Security",
+                                    approval: "Direct",
+                                    assignedTo: ""
+                                })
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleUpdateServiceType}
+                            disabled={!newServiceType.requestType.trim() || !newServiceType.description.trim() || !newServiceType.assignedTo.trim()}
+                        >
+                            Update Service Type
                         </Button>
                     </div>
                 </DialogContent>
