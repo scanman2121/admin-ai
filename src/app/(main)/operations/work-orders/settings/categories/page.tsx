@@ -283,7 +283,7 @@ export default function WorkOrdersCategories() {
                                                     onCheckedChange={() => handleStatusToggle(category.id)}
                                                 />
                                                 <Badge 
-                                                    variant={category.status ? "success" : "secondary"}
+                                                    variant={category.status ? "success" : "neutral"}
                                                 >
                                                     {category.status ? "Active" : "Inactive"}
                                                 </Badge>

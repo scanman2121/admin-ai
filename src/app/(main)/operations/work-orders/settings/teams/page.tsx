@@ -136,9 +136,9 @@ export default function WorkOrdersTeams() {
                     <div>
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
                             Default Teams
-                            </h2>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                Pre-configured teams for common service categories
+                        </h2>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Pre-configured teams for common service categories
                             </p>
                         </div>
                         <Button variant="primary" className="flex items-center gap-2">
@@ -177,66 +177,40 @@ export default function WorkOrdersTeams() {
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                <Button variant="ghost" size="sm">
-                                                    <RiSettingsLine className="h-4 w-4" />
-                                                </Button>
                                                 <Switch
                                                     checked={team.isActive}
                                                     onCheckedChange={() => handleTeamToggle(team.id)}
                                                 />
-                                            </div>
                                         </div>
 
-                                        {team.isActive ? (
-                                            <>
-                                                {/* Service Categories */}
-                                                <div className="mb-4">
-                                                    <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
-                                                        Service Categories
-                                                    </h4>
-                                                    <Badge variant={team.color}>
-                                                        {team.category}
-                                                    </Badge>
-                                                </div>
-
-                                                {/* Team Members */}
-                                                <div className="mb-4">
+                                    {team.isActive && (
+                                        <div className="space-y-4">
+                                            <div>
                                                     <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
                                                         Team Members ({team.members.length})
                                                     </h4>
-                                                    <div className="space-y-2">
+                                                <div className="flex -space-x-2">
                                                         {team.members.map((member) => (
-                                                            <div key={member.id} className="flex items-center justify-between">
-                                                                <div className="flex items-center gap-3">
-                                                                    <Avatar className="size-8">
-                                                                        <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                                                        <Avatar key={member.id} className="border-2 border-white dark:border-gray-800 relative">
+                                                            <AvatarFallback className="text-xs font-medium bg-gray-100 dark:bg-gray-700">
                                                                             {member.initials}
                                                                         </AvatarFallback>
-                                                                    </Avatar>
-                                                                    <div>
-                                                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                                            {member.name}
-                                                                        </p>
-                                                                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                                            {member.role}
-                                                                        </p>
-                                                                    </div>
+                                                            {member.isLead && (
+                                                                <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full border border-white dark:border-gray-800">
+                                                                    <RiSettingsLine className="w-2 h-2 text-white absolute top-0.5 left-0.5" />
                                                                 </div>
-                                                                {member.isLead && (
-                                                                    <Badge variant="default" className="text-xs">
-                                                                        Lead
-                                                                    </Badge>
                                                                 )}
-                                                            </div>
+                                                        </Avatar>
                                                         ))}
                                                     </div>
+                                                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                                    {team.members.find(m => m.isLead)?.name} (Lead) + {team.members.filter(m => !m.isLead).length} members
+                                                </div>
                                                 </div>
 
-                                                {/* Request Types */}
                                                 <div>
                                                     <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
-                                                        Handles Request Types
+                                                    Assigned Request Types
                                                     </h4>
                                                     <div className="flex flex-wrap gap-1">
                                                         {team.requestTypes.slice(0, 3).map((type) => (
@@ -251,11 +225,19 @@ export default function WorkOrdersTeams() {
                                                         )}
                                                     </div>
                                                 </div>
-                                            </>
-                                        ) : (
-                                            <div className="text-center py-8">
+
+                                            <div className="pt-3 border-t border-gray-100 dark:border-gray-700">
+                                                <Button variant="ghost" size="sm" className="w-full">
+                                                    Configure Team Settings
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {!team.isActive && (
+                                        <div className="text-center py-4 border border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
                                                 <RiTeamLine className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                                                     No team configured for {team.category.toLowerCase()} requests
                                                 </p>
                                                 <Button variant="primary" size="sm">
@@ -267,7 +249,6 @@ export default function WorkOrdersTeams() {
                                 </Card>
                             )
                         })}
-                    </div>
                 </div>
             </div>
         </div>
