@@ -122,6 +122,7 @@ export default function WorkOrdersTeams() {
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null)
     const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
+    const [expandedTeamCardCategories, setExpandedTeamCardCategories] = useState<Set<string>>(new Set())
     const [newTeam, setNewTeam] = useState({
         name: "",
         description: "",
@@ -297,6 +298,32 @@ export default function WorkOrdersTeams() {
          user.email.toLowerCase().includes(userSearchQuery.toLowerCase()))
     )
 
+    const toggleTeamCardCategoryExpansion = (categoryKey: string) => {
+        setExpandedTeamCardCategories(prev => {
+            const newSet = new Set(Array.from(prev))
+            if (newSet.has(categoryKey)) {
+                newSet.delete(categoryKey)
+            } else {
+                newSet.add(categoryKey)
+            }
+            return newSet
+        })
+    }
+
+    const getTeamRequestTypesByCategory = (team: typeof defaultTeams[0]) => {
+        const categorizedTypes: Record<string, string[]> = {}
+        
+        // Group the team's request types by category
+        Object.entries(requestTypesByCategory).forEach(([category, categoryTypes]) => {
+            const teamTypesInCategory = team.requestTypes.filter(type => categoryTypes.includes(type))
+            if (teamTypesInCategory.length > 0) {
+                categorizedTypes[category] = teamTypesInCategory
+            }
+        })
+        
+        return categorizedTypes
+    }
+
     return (
         <div className="space-y-6">
             {/* Header with back navigation */}
@@ -434,7 +461,7 @@ export default function WorkOrdersTeams() {
                                                         {team.members.map((member) => (
                                                         <div key={member.id} className={`text-sm ${team.isActive ? 'text-gray-700 dark:text-gray-300' : 'text-gray-500 dark:text-gray-500'}`}>
                                                                             {member.name}
-                                                                        </div>
+                                                            </div>
                                                         ))}
                                                     </div>
                                                 </div>
@@ -443,20 +470,43 @@ export default function WorkOrdersTeams() {
                                                     <h4 className={`text-sm font-medium mb-2 ${team.isActive ? 'text-gray-900 dark:text-gray-100' : 'text-gray-500 dark:text-gray-500'}`}>
                                                         Service category and request types
                                                     </h4>
-                                                    <div className="flex flex-wrap gap-1">
-                                                        <Badge variant={team.isActive ? "success" : "neutral"} className={`text-xs ${!team.isActive ? 'opacity-60' : ''}`}>
-                                                            {team.category}
-                                                        </Badge>
-                                                        {team.requestTypes.slice(0, 2).map((type) => (
-                                                            <Badge key={type} variant="neutral" className={`text-xs ${!team.isActive ? 'opacity-60' : ''}`}>
-                                                                {type}
+                                                    <div className="space-y-2">
+                                                        {Object.entries(getTeamRequestTypesByCategory(team)).map(([category, requestTypes]) => {
+                                                            const categoryKey = `${team.id}-${category}`
+                                                            const isExpanded = expandedTeamCardCategories.has(categoryKey)
+                                                            
+                                                            return (
+                                                                <div key={category} className="border border-gray-200 dark:border-gray-700 rounded-md">
+                                                                    <button
+                                                                        onClick={() => toggleTeamCardCategoryExpansion(categoryKey)}
+                                                                        className={`w-full px-3 py-2 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors ${!team.isActive ? 'opacity-60' : ''}`}
+                                                                    >
+                                                                        <div className="flex items-center gap-2">
+                                                                            <Badge variant={team.isActive ? "success" : "neutral"} className="text-xs">
+                                                                                {category}
                                                             </Badge>
-                                                        ))}
-                                                        {team.requestTypes.length > 2 && (
-                                                            <Badge variant="neutral" className={`text-xs ${!team.isActive ? 'opacity-60' : ''}`}>
-                                                                +{team.requestTypes.length - 2} more
-                                                            </Badge>
-                                                        )}
+                                                                            <span className={`text-xs ${team.isActive ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'}`}>
+                                                                                ({requestTypes.length} types)
+                                                                            </span>
+                                                                        </div>
+                                                                        {isExpanded ? (
+                                                                            <RiArrowDownSLine className={`size-4 ${team.isActive ? 'text-gray-400' : 'text-gray-500'}`} />
+                                                                        ) : (
+                                                                            <RiArrowRightSLine className={`size-4 ${team.isActive ? 'text-gray-400' : 'text-gray-500'}`} />
+                                                                        )}
+                                                                    </button>
+                                                                    {isExpanded && (
+                                                                        <div className="px-3 pb-2 space-y-1">
+                                                                            {requestTypes.map((type) => (
+                                                                                <div key={type} className={`pl-4 text-xs ${team.isActive ? 'text-gray-600 dark:text-gray-300' : 'text-gray-500 dark:text-gray-500'}`}>
+                                                                                    • {type}
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )
+                                                        })}
                                                     </div>
                                                 </div>
 
