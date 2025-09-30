@@ -1,9 +1,6 @@
 "use client"
 
-import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
-import { Card } from "@/components/Card"
-import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
@@ -213,109 +210,101 @@ export default function WorkOrdersCategories() {
                     </Button>
                 </div>
 
-                {/* Filters */}
+                {/* Search and Filters */}
                 <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                        <Input
+                    <div className="relative flex-1 max-w-md">
+                        <input
+                            type="text"
                             placeholder="Search categories..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                     </div>
-                    <div>
-                        <select 
-                            className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-50"
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                        >
-                            <option value="All">All Categories</option>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                    </div>
+                    
+                    <select 
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        <option>All</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
                 </div>
 
-                {/* Categories List */}
-                <Card>
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="border-b border-gray-200 dark:border-gray-700">
-                                <tr>
-                                    <th className="text-left py-3 px-4 font-medium text-sm text-gray-600 dark:text-gray-300">
-                                        Category Name
-                                    </th>
-                                    <th className="text-left py-3 px-4 font-medium text-sm text-gray-600 dark:text-gray-300">
-                                        Description
-                                    </th>
-                                    <th className="text-left py-3 px-4 font-medium text-sm text-gray-600 dark:text-gray-300">
-                                        Service Types
-                                    </th>
-                                    <th className="text-left py-3 px-4 font-medium text-sm text-gray-600 dark:text-gray-300">
-                                        Status
-                                    </th>
-                                    <th className="text-left py-3 px-4 font-medium text-sm text-gray-600 dark:text-gray-300">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredCategories.map((category) => (
-                                    <tr key={category.id} className="border-b border-gray-100 dark:border-gray-700/50 last:border-0">
-                                        <td className="py-4 px-4">
-                                            <div className="font-medium text-gray-900 dark:text-gray-50">
-                                                {category.name}
-                                            </div>
-                                        </td>
-                                        <td className="py-4 px-4">
-                                            <div className="text-sm text-gray-600 dark:text-gray-300">
-                                                {category.description}
-                                            </div>
-                                        </td>
-                                        <td className="py-4 px-4">
-                                            <div className="text-sm text-gray-600 dark:text-gray-300">
-                                                {category.serviceCount} types
-                                            </div>
-                                        </td>
-                                        <td className="py-4 px-4">
-                                            <div className="flex items-center gap-2">
-                                                <Switch
-                                                    checked={category.status}
-                                                    onCheckedChange={() => handleStatusToggle(category.id)}
-                                                />
-                                                <Badge 
-                                                    variant={category.status ? "success" : "neutral"}
-                                                >
-                                                    {category.status ? "Active" : "Inactive"}
-                                                </Badge>
-                                            </div>
-                                        </td>
-                                        <td className="py-4 px-4">
-                                            <div className="flex items-center gap-2">
+                {/* Categories Table */}
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead className="bg-gray-50 dark:bg-gray-800">
+                            <tr>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Category Name
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Description
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Service Types
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Enable
+                                </th>
+                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                            {filteredCategories.map((category) => (
+                                <tr key={category.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                            {category.name}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                                            {category.description}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
+                                        {category.serviceCount} types
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <Switch
+                                            checked={category.status}
+                                            onCheckedChange={() => handleStatusToggle(category.id)}
+                                        />
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <div className="flex items-center gap-1">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="p-2 h-8 w-8"
+                                                onClick={() => handleEditCategory(category)}
+                                            >
+                                                <RiEdit2Line className="size-4" />
+                                            </Button>
+                                            
+                                            {category.serviceCount === 0 && (
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => handleEditCategory(category)}
+                                                    className="p-2 h-8 w-8 text-red-600 hover:text-red-700"
+                                                    onClick={() => handleDeleteCategory(category.id)}
                                                 >
-                                                    <RiEdit2Line className="size-4" />
+                                                    <RiDeleteBin6Line className="size-4" />
                                                 </Button>
-                                                {category.serviceCount === 0 && (
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => handleDeleteCategory(category.id)}
-                                                        className="text-red-600 hover:text-red-700"
-                                                    >
-                                                        <RiDeleteBin6Line className="size-4" />
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </Card>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* Add/Edit Category Modal */}
@@ -329,20 +318,24 @@ export default function WorkOrdersCategories() {
                     <div className="space-y-4 py-4">
                         <div className="space-y-2">
                             <Label htmlFor="category-name">Category name</Label>
-                            <Input
+                            <input
+                                type="text"
                                 id="category-name"
                                 placeholder="e.g., Security"
                                 value={newCategory.name}
                                 onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))}
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="category-description">Description</Label>
-                            <Input
+                            <input
+                                type="text"
                                 id="category-description"
                                 placeholder="Brief description of this category"
                                 value={newCategory.description}
                                 onChange={(e) => setNewCategory(prev => ({ ...prev, description: e.target.value }))}
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
                     </div>
