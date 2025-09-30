@@ -6,7 +6,7 @@ import { Card } from "@/components/Card"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { RiArrowLeftLine, RiBrushLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine } from "@remixicon/react"
+import { RiAddLine, RiArrowLeftLine, RiBrushLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -141,7 +141,8 @@ export default function WorkOrdersTeams() {
                             Pre-configured teams for common service categories
                             </p>
                         </div>
-                        <Button variant="primary">
+                        <Button variant="ghost">
+                            <RiAddLine className="size-4 mr-1.5" />
                             Add team
                         </Button>
                     </div>
