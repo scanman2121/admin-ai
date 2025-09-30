@@ -27,9 +27,7 @@ export default function WorkOrdersGeneralSettings() {
     const [formFields, setFormFields] = useState({
         location: { enabled: true, required: true },
         description: { enabled: true, required: true },
-        attachments: { enabled: true, required: false },
-        urgencyLevel: { enabled: false, required: false },
-        contactInfo: { enabled: false, required: false }
+        attachments: { enabled: true, required: false }
     })
     
     // Notifications state
@@ -211,70 +209,6 @@ export default function WorkOrdersGeneralSettings() {
                                                 onCheckedChange={() => handleRequiredFieldToggle('attachments')}
                                             />
                                             <label htmlFor="required-attachments" className="text-xs text-gray-600 dark:text-gray-400">
-                                                Required field
-                                            </label>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Urgency Level Field */}
-                            <div className="space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Urgency level
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                            Low, medium, high urgency
-                                        </p>
-                                    </div>
-                                    <Switch
-                                        checked={formFields.urgencyLevel.enabled}
-                                        onCheckedChange={() => handleFormFieldToggle('urgencyLevel')}
-                                    />
-                                </div>
-                                {formFields.urgencyLevel.enabled && (
-                                    <div className="ml-4 pl-3 border-l-2 border-gray-100 dark:border-gray-700">
-                                        <div className="flex items-center space-x-3">
-                                            <Checkbox
-                                                id="required-urgency"
-                                                checked={formFields.urgencyLevel.required}
-                                                onCheckedChange={() => handleRequiredFieldToggle('urgencyLevel')}
-                                            />
-                                            <label htmlFor="required-urgency" className="text-xs text-gray-600 dark:text-gray-400">
-                                                Required field
-                                            </label>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Contact Info Field */}
-                            <div className="space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Contact info
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                            Phone number or email
-                                        </p>
-                                    </div>
-                                    <Switch
-                                        checked={formFields.contactInfo.enabled}
-                                        onCheckedChange={() => handleFormFieldToggle('contactInfo')}
-                                    />
-                                </div>
-                                {formFields.contactInfo.enabled && (
-                                    <div className="ml-4 pl-3 border-l-2 border-gray-100 dark:border-gray-700">
-                                        <div className="flex items-center space-x-3">
-                                            <Checkbox
-                                                id="required-contact"
-                                                checked={formFields.contactInfo.required}
-                                                onCheckedChange={() => handleRequiredFieldToggle('contactInfo')}
-                                            />
-                                            <label htmlFor="required-contact" className="text-xs text-gray-600 dark:text-gray-400">
                                                 Required field
                                             </label>
                                         </div>

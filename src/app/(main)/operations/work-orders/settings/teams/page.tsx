@@ -8,7 +8,6 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiBrushLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSearchLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
@@ -431,13 +430,11 @@ export default function WorkOrdersTeams() {
                                                     <h4 className={`text-sm font-medium mb-3 ${team.isActive ? 'text-gray-900 dark:text-gray-100' : 'text-gray-500 dark:text-gray-500'}`}>
                                                         Team members ({team.members.length})
                                                     </h4>
-                                                <div className="flex -space-x-2">
+                                                <div className="space-y-1">
                                                         {team.members.map((member) => (
-                                                        <Avatar key={member.id} className="border-2 border-white dark:border-gray-800">
-                                                            <AvatarFallback className={`text-xs font-medium ${team.isActive ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-50 dark:bg-gray-800 text-gray-400'}`}>
-                                                                            {member.initials}
-                                                                        </AvatarFallback>
-                                                                    </Avatar>
+                                                        <div key={member.id} className={`text-sm ${team.isActive ? 'text-gray-700 dark:text-gray-300' : 'text-gray-500 dark:text-gray-500'}`}>
+                                                                            {member.name}
+                                                                        </div>
                                                         ))}
                                                     </div>
                                                 </div>
