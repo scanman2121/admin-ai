@@ -98,7 +98,7 @@ export function ApproverCard({
 
   return (
     <Card>
-      <div className="p-4">
+      <div>
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
           Approver
         </h3>

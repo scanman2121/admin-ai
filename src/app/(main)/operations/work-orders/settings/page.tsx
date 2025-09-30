@@ -262,7 +262,7 @@ export default function WorkOrdersSettings() {
         requestType: "",
         description: "",
         category: "Security",
-        approval: "Direct",
+        approval: "None",
         assignedTo: "",
         statuses: [] as string[]
     })
@@ -292,7 +292,7 @@ export default function WorkOrdersSettings() {
             requestType: "",
             description: "",
             category: "Security",
-            approval: "Direct",
+            approval: "None",
             assignedTo: "",
             statuses: []
         })
@@ -328,7 +328,7 @@ export default function WorkOrdersSettings() {
             requestType: "",
             description: "",
             category: "Security",
-            approval: "Direct",
+            approval: "None",
             assignedTo: "",
             statuses: []
         })
@@ -601,7 +601,7 @@ export default function WorkOrdersSettings() {
                     
                     <div className="space-y-4">
                         <div>
-                            <Label htmlFor="requestType">Request Type *</Label>
+                            <Label htmlFor="requestType">Request type *</Label>
                             <Input
                                 id="requestType"
                                 placeholder="Enter request type name"
@@ -636,13 +636,14 @@ export default function WorkOrdersSettings() {
                         </div>
                         
                         <div>
-                            <Label htmlFor="approval">Approval Type</Label>
+                            <Label htmlFor="approval">Approval type</Label>
                             <select
                                 id="approval"
                                 value={newServiceType.approval}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, approval: e.target.value }))}
                                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
+                                <option>None</option>
                                 <option>Direct</option>
                                 <option>Tenant POC</option>
                                 <option>Manager Approval</option>
@@ -650,7 +651,7 @@ export default function WorkOrdersSettings() {
                         </div>
                         
                         <div>
-                            <Label htmlFor="assignedTo">Assigned To *</Label>
+                            <Label htmlFor="assignedTo">Assigned to *</Label>
                             <Input
                                 id="assignedTo"
                                 placeholder="Enter team or person responsible"
@@ -660,7 +661,7 @@ export default function WorkOrdersSettings() {
                         </div>
                         
                         <div>
-                            <Label>Available Statuses</Label>
+                            <Label>Available statuses</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
                                 Select which statuses are available for this service type
                             </p>
@@ -692,7 +693,7 @@ export default function WorkOrdersSettings() {
                                     requestType: "",
                                     description: "",
                                     category: "Security",
-                                    approval: "Direct",
+                                    approval: "None",
                                     assignedTo: "",
                                     statuses: []
                                 })
@@ -719,7 +720,7 @@ export default function WorkOrdersSettings() {
                     
                     <div className="space-y-4">
                         <div>
-                            <Label htmlFor="edit-requestType">Request Type *</Label>
+                            <Label htmlFor="edit-requestType">Request type *</Label>
                             <Input
                                 id="edit-requestType"
                                 placeholder="Enter request type name"
@@ -754,13 +755,14 @@ export default function WorkOrdersSettings() {
                         </div>
                         
                         <div>
-                            <Label htmlFor="edit-approval">Approval Type</Label>
+                            <Label htmlFor="edit-approval">Approval type</Label>
                             <select
                                 id="edit-approval"
                                 value={newServiceType.approval}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, approval: e.target.value }))}
                                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
+                                <option>None</option>
                                 <option>Direct</option>
                                 <option>Tenant POC</option>
                                 <option>Manager Approval</option>
@@ -768,7 +770,7 @@ export default function WorkOrdersSettings() {
                         </div>
                         
                         <div>
-                            <Label htmlFor="edit-assignedTo">Assigned To *</Label>
+                            <Label htmlFor="edit-assignedTo">Assigned to *</Label>
                             <Input
                                 id="edit-assignedTo"
                                 placeholder="Enter team or person responsible"
@@ -778,7 +780,7 @@ export default function WorkOrdersSettings() {
                         </div>
                         
                         <div>
-                            <Label>Available Statuses</Label>
+                            <Label>Available statuses</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
                                 Select which statuses are available for this service type
                             </p>
@@ -811,7 +813,7 @@ export default function WorkOrdersSettings() {
                                     requestType: "",
                                     description: "",
                                     category: "Security",
-                                    approval: "Direct",
+                                    approval: "None",
                                     assignedTo: "",
                                     statuses: []
                                 })

@@ -265,7 +265,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                 <div className="lg:col-span-2 space-y-6">
                     {/* Request Details */}
                     <Card>
-                        <div>
+                        <div className="p-4">
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Request Details</h2>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -328,7 +328,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                     {/* Messages */}
                     <Card>
-                        <div>
+                        <div className="p-4">
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Messages</h2>
                             
                             {/* Message thread */}
@@ -398,7 +398,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                     {/* Internal Notes */}
                     <Card>
-                        <div>
+                        <div className="p-4">
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Internal Notes</h2>
                             
                             {/* Existing notes */}
@@ -430,7 +430,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                     {/* Activity Log */}
                     <Card>
-                        <div>
+                        <div className="p-4">
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Activity Log</h2>
                             
                             <div className="space-y-3">
@@ -471,7 +471,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                     {/* Case Files */}
                     <Card>
-                        <div>
+                        <div className="p-4">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Case Files</h3>
                             
                             <div className="space-y-4">
