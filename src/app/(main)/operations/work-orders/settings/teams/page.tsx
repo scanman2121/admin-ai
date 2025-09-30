@@ -188,6 +188,16 @@ export default function WorkOrdersTeams() {
             members: team.members.map(member => ({ ...member, email: `${member.name.toLowerCase().replace(' ', '.')}@company.com` }))
         })
         setSelectedUsers(team.members.map(member => ({ ...member, email: `${member.name.toLowerCase().replace(' ', '.')}@company.com` })))
+        
+        // Auto-expand categories that have selected request types
+        const categoriesToExpand = new Set<string>()
+        Object.entries(requestTypesByCategory).forEach(([category, requestTypes]) => {
+            if (requestTypes.some(type => team.requestTypes.includes(type))) {
+                categoriesToExpand.add(category)
+            }
+        })
+        setExpandedCategories(categoriesToExpand)
+        
         setIsAddTeamModalOpen(true)
     }
 
@@ -243,12 +253,12 @@ export default function WorkOrdersTeams() {
             ...prev,
             requestTypes: allCategoryTypesSelected
                 ? prev.requestTypes.filter(type => !categoryRequestTypes.includes(type))
-                : [...new Set([...prev.requestTypes, ...categoryRequestTypes])]
+                : Array.from(new Set([...prev.requestTypes, ...categoryRequestTypes]))
         }))
 
         // Expand the category if we're selecting it
         if (!allCategoryTypesSelected) {
-            setExpandedCategories(prev => new Set([...prev, category]))
+            setExpandedCategories(prev => new Set([...Array.from(prev), category]))
         }
     }
 
@@ -593,8 +603,7 @@ export default function WorkOrdersTeams() {
                                                 </button>
                                                 <Checkbox
                                                     id={`category-${category}`}
-                                                    checked={isFullySelected}
-                                                    indeterminate={isPartiallySelected}
+                                                    checked={isFullySelected ? true : isPartiallySelected ? "indeterminate" : false}
                                                     onCheckedChange={() => handleCategoryToggle(category)}
                                                 />
                                                 <label 
