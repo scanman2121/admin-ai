@@ -3,7 +3,6 @@
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Checkbox } from "@/components/Checkbox"
-import { Select } from "@/components/Select"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { RiArrowLeftLine } from "@remixicon/react"
@@ -45,8 +44,7 @@ export default function WorkOrdersGeneralSettings() {
             description: true,
             attachments: false,
             contactInfo: false
-        },
-        maxAttachments: "5"
+        }
     })
     
     const handleFormFieldToggle = (field: keyof typeof formFields) => {
@@ -327,70 +325,6 @@ export default function WorkOrdersGeneralSettings() {
                     </div>
                 </Card>
 
-                {/* File & Attachment Settings Card */}
-                <Card>
-                    <div className="p-6">
-                        <div className="mb-6">
-                            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                                File & Attachment Settings
-                            </h2>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                Configure file upload limits and attachment handling for service requests.
-                            </p>
-                        </div>
-                        
-                        <div className="space-y-6">
-                            <div>
-                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
-                                    Maximum Attachments
-                                </h3>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
-                                    Limit the number of files users can upload per request
-                                </p>
-                                
-                                <div className="max-w-xs">
-                                    <Select
-                                        value={formConfig.maxAttachments}
-                                        onValueChange={(value) => setFormConfig(prev => ({ ...prev, maxAttachments: value }))}
-                                    >
-                                        <option value="1">1 file</option>
-                                        <option value="3">3 files</option>
-                                        <option value="5">5 files</option>
-                                        <option value="10">10 files</option>
-                                        <option value="unlimited">Unlimited</option>
-                                    </Select>
-                                </div>
-                            </div>
-
-                            {/* Future settings can be added here */}
-                            <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-                                <div className="flex items-center justify-between py-2">
-                                    <div>
-                                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Auto-compress Images
-                                        </h4>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                                            Automatically compress uploaded images to save storage
-                                        </p>
-                                    </div>
-                                    <Switch checked={true} disabled />
-                                </div>
-                                
-                                <div className="flex items-center justify-between py-2">
-                                    <div>
-                                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Virus Scanning
-                                        </h4>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                                            Scan all uploaded files for security threats
-                                        </p>
-                                    </div>
-                                    <Switch checked={true} disabled />
-                                </div>
-                            </div>
-                    </div>
-                </div>
-                </Card>
             </div>
         </div>
     )
