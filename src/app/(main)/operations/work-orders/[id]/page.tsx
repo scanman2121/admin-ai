@@ -5,6 +5,7 @@ import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/Dropdown"
 import { AssignedPersonnelCard } from "@/components/ui/AssignedPersonnelCard"
+import { ApproverCard } from "@/components/ui/ApproverCard"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Textarea } from "@/components/ui/textarea"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
@@ -32,21 +33,31 @@ const getWorkOrderDetailData = (workOrderId: string) => {
         hqoRequestId: "9f7f8c9a-8c7f-4a6e-3e65-339b7d8a8d01",
         externalCaseId: null,
         assignedPersonnel: [
+            // Auto-assigned team based on "HVAC Issue" category -> Maintenance Team
             {
-                id: "1",
-                name: "John Smith",
-                role: "Technician",
-                avatar: null,
-                initials: "JS"
-            },
-            {
-                id: "2", 
-                name: "Alex Johnson",
-                role: "Supervisor",
-                avatar: null,
-                initials: "AJ"
+                id: 'maintenance',
+                name: 'Maintenance Team',
+                description: 'Handles property-related requests and maintenance coordination',
+                category: 'Maintenance',
+                members: [
+                    { id: '4', name: 'John Smith', role: 'Maintenance Manager', initials: 'JS', isLead: true },
+                    { id: '5', name: 'Sarah Johnson', role: 'Technician', initials: 'SJ', isLead: false },
+                    { id: '6', name: 'Mike Thompson', role: 'Technician', initials: 'MT', isLead: false }
+                ],
+                requestTypes: ['HVAC Issue', 'Plumbing Repair', 'Electrical Problem', 'General Repair'],
+                isActive: true,
+                type: 'team' as const
             }
         ],
+        approver: {
+            id: "approver-2",
+            name: "Sarah Williams",
+            email: "sarah.williams@company.com",
+            avatar: "/avatars/sarah-williams.jpg",
+            initials: "SW",
+            role: "Facilities Director", 
+            department: "Facilities"
+        },
         messages: [
             {
                 id: "1",
@@ -137,21 +148,11 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
     
     const workOrderDetail = getWorkOrderDetailData(params.id)
     
-    const [assignedPersonnel, setAssignedPersonnel] = useState<Array<{
-        id: string
-        name: string
-        email: string
-        initials: string
-        role?: string
-    }>>(
-        workOrderDetail?.assignedPersonnel.map(person => ({
-            id: person.id,
-            name: person.name,
-            email: `${person.name.toLowerCase().replace(' ', '.')}@company.com`,
-            initials: person.initials,
-            role: person.role
-        })) || []
+    const [assignedPersonnel, setAssignedPersonnel] = useState(
+        workOrderDetail?.assignedPersonnel || []
     )
+    
+    const [approver, setApprover] = useState(workOrderDetail?.approver || null)
     
     // Status management
     const [currentStatus, setCurrentStatus] = useState(workOrderDetail?.status || 'Open')
@@ -187,12 +188,20 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
         setSelectedUser(null)
     }
 
-    const handleAssignPersonnel = (person: { id: string; name: string; email: string; initials: string; role?: string }) => {
-        setAssignedPersonnel(prev => [...prev, person])
+    const handleAssignPersonnel = (assignment: any) => {
+        setAssignedPersonnel(prev => [...prev, assignment])
     }
 
-    const handleRemovePersonnel = (personId: string) => {
-        setAssignedPersonnel(prev => prev.filter(person => person.id !== personId))
+    const handleRemovePersonnel = (assignmentId: string) => {
+        setAssignedPersonnel(prev => prev.filter(assignment => assignment.id !== assignmentId))
+    }
+
+    const handleAssignApprover = (selectedApprover: any) => {
+        setApprover(selectedApprover)
+    }
+
+    const handleRemoveApprover = () => {
+        setApprover(null)
     }
 
     const handleStatusChange = (newStatus: string) => {
@@ -446,6 +455,13 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                 {/* Right Column - 1/3 width */}
                 <div className="lg:col-span-1 space-y-6">
+                    {/* Approver */}
+                    <ApproverCard
+                        approver={approver}
+                        onAssignApprover={handleAssignApprover}
+                        onRemoveApprover={handleRemoveApprover}
+                    />
+
                     {/* Assigned Personnel */}
                     <AssignedPersonnelCard
                         assignedPersonnel={assignedPersonnel}
