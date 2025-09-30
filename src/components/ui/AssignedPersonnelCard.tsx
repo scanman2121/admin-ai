@@ -150,7 +150,6 @@ export function AssignedPersonnelCard({
 }: AssignedPersonnelCardProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [showSearchResults, setShowSearchResults] = useState(false)
-  const [searchType, setSearchType] = useState<'all' | 'individuals' | 'teams'>('all')
 
   // Combine and filter both individuals and teams
   const allSearchResults: Assignment[] = [
@@ -163,14 +162,10 @@ export function AssignedPersonnelCard({
       ('email' in result && result.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
       ('description' in result && result.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
       ('category' in result && result.category.toLowerCase().includes(searchTerm.toLowerCase()))
-    
-    const matchesType = searchType === 'all' || 
-      (searchType === 'individuals' && result.type === 'individual') ||
-      (searchType === 'teams' && result.type === 'team')
 
     const notAlreadyAssigned = !assignedPersonnel.find(assigned => assigned.id === result.id)
     
-    return matchesSearch && matchesType && notAlreadyAssigned
+    return matchesSearch && notAlreadyAssigned
   })
 
   const handleSearchFocus = () => {
@@ -199,42 +194,8 @@ export function AssignedPersonnelCard({
           Assigned personnel
         </h3>
         
-        {/* Search Input and Filter */}
+        {/* Search Input */}
         <div className="relative mb-4">
-          {/* Search Type Filter */}
-          <div className="flex gap-2 mb-3">
-            <button
-              onClick={() => setSearchType('all')}
-              className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                searchType === 'all' 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' 
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600'
-              }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setSearchType('individuals')}
-              className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                searchType === 'individuals' 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' 
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600'
-              }`}
-            >
-              Individuals
-            </button>
-            <button
-              onClick={() => setSearchType('teams')}
-              className={`px-3 py-1 text-xs rounded-full transition-colors ${
-                searchType === 'teams' 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' 
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600'
-              }`}
-            >
-              Teams
-            </button>
-          </div>
-
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input

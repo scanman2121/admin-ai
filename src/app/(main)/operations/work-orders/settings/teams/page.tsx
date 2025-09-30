@@ -11,7 +11,7 @@ import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
-import { RiAddLine, RiArrowLeftLine, RiBrushLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSearchLine, RiServiceLine, RiSettings3Line, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
+import { RiAddLine, RiArrowDownSLine, RiArrowRightSLine, RiArrowLeftLine, RiBrushLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSearchLine, RiServiceLine, RiSettings3Line, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -102,6 +102,14 @@ const defaultTeams = [
     }
 ]
 
+// Request types organized by category
+const requestTypesByCategory = {
+    Security: ['Access Request', 'Key Card Request', 'Visitor Access', 'Security Incident'],
+    Maintenance: ['HVAC Issue', 'Plumbing Repair', 'Electrical Problem', 'General Repair'],
+    Cleaning: ['Deep Cleaning', 'Carpet Cleaning', 'Window Cleaning', 'Waste Removal'],
+    Concierge: ['Package Delivery', 'Event Setup', 'Guest Services', 'Information Request']
+}
+
 export default function WorkOrdersTeams() {
     const pathname = usePathname()
     
@@ -114,6 +122,7 @@ export default function WorkOrdersTeams() {
     const [selectedUsers, setSelectedUsers] = useState<typeof sampleUsers>([])    
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null)
     const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)
+    const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
     const [newTeam, setNewTeam] = useState({
         name: "",
         description: "",
@@ -197,6 +206,7 @@ export default function WorkOrdersTeams() {
         })
         setSelectedUsers([])
         setUserSearchQuery("")
+        setExpandedCategories(new Set())
         setIsEditMode(false)
         setEditingTeam(null)
         setIsAddTeamModalOpen(false)
@@ -209,6 +219,48 @@ export default function WorkOrdersTeams() {
                 ? prev.requestTypes.filter(type => type !== requestType)
                 : [...prev.requestTypes, requestType]
         }))
+    }
+
+    const toggleCategoryExpansion = (category: string) => {
+        setExpandedCategories(prev => {
+            const newExpanded = new Set(prev)
+            if (newExpanded.has(category)) {
+                newExpanded.delete(category)
+            } else {
+                newExpanded.add(category)
+            }
+            return newExpanded
+        })
+    }
+
+    const handleCategoryToggle = (category: string) => {
+        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
+        const allCategoryTypesSelected = categoryRequestTypes.every(type => 
+            newTeam.requestTypes.includes(type)
+        )
+
+        setNewTeam(prev => ({
+            ...prev,
+            requestTypes: allCategoryTypesSelected
+                ? prev.requestTypes.filter(type => !categoryRequestTypes.includes(type))
+                : [...new Set([...prev.requestTypes, ...categoryRequestTypes])]
+        }))
+
+        // Expand the category if we're selecting it
+        if (!allCategoryTypesSelected) {
+            setExpandedCategories(prev => new Set([...prev, category]))
+        }
+    }
+
+    const isCategoryFullySelected = (category: string) => {
+        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
+        return categoryRequestTypes.every(type => newTeam.requestTypes.includes(type))
+    }
+
+    const isCategoryPartiallySelected = (category: string) => {
+        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
+        return categoryRequestTypes.some(type => newTeam.requestTypes.includes(type)) &&
+               !categoryRequestTypes.every(type => newTeam.requestTypes.includes(type))
     }
 
     const handleAddUser = (user: typeof sampleUsers[0]) => {
@@ -260,9 +312,9 @@ export default function WorkOrdersTeams() {
                         <RiSettings3Line className="size-4 mr-1.5" />
                         Setup
                     </Button>
-                    <Button variant="primary">
+                <Button variant="primary">
                         Save
-                    </Button>
+                </Button>
                 </div>
             </div>
 
@@ -513,51 +565,70 @@ export default function WorkOrdersTeams() {
                         </div>
                         
                         <div>
-                            <Label>Category and Request Types</Label>
+                            <Label>Service Categories & Request Types</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                                Select the category and which request types this team will handle
+                                Select categories to automatically include all their request types, or customize individual selections
                             </p>
                             
-                            <div className="space-y-4">
-                                {/* Category Selection */}
-                                <div>
-                                    <Label htmlFor="team-category" className="text-xs font-medium text-gray-700 dark:text-gray-300">Category</Label>
-                                    <select
-                                        id="team-category"
-                                        value={newTeam.category}
-                                        onChange={(e) => setNewTeam(prev => ({ ...prev, category: e.target.value }))}
-                                        className="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    >
-                                        <option value="Security">Security</option>
-                                        <option value="Maintenance">Maintenance</option>
-                                        <option value="Cleaning">Cleaning</option>
-                                        <option value="Concierge">Concierge</option>
-                                    </select>
-                                </div>
-                                
-                                {/* Request Types */}
-                                <div>
-                                    <Label className="text-xs font-medium text-gray-700 dark:text-gray-300">Request Types</Label>
-                                    <div className="mt-2 space-y-2 max-h-32 overflow-y-auto">
-                                        {[
-                                            'Access Request', 'Key Card Request', 'Visitor Access', 'Security Incident',
-                                            'HVAC Issue', 'Plumbing Repair', 'Electrical Problem', 'General Repair',
-                                            'Deep Cleaning', 'Carpet Cleaning', 'Window Cleaning', 'Waste Removal',
-                                            'Package Delivery', 'Event Setup', 'Guest Services', 'Information Request'
-                                        ].map((requestType) => (
-                                            <div key={requestType} className="flex items-center space-x-2">
+                            <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+                                {Object.entries(requestTypesByCategory).map(([category, requestTypes]) => {
+                                    const isExpanded = expandedCategories.has(category)
+                                    const isFullySelected = isCategoryFullySelected(category)
+                                    const isPartiallySelected = isCategoryPartiallySelected(category)
+                                    
+                                    return (
+                                        <div key={category} className="space-y-2">
+                                            {/* Category Header */}
+                                            <div className="flex items-center space-x-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => toggleCategoryExpansion(category)}
+                                                    className="flex items-center justify-center w-4 h-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                                >
+                                                    {isExpanded ? (
+                                                        <RiArrowDownSLine className="w-4 h-4" />
+                                                    ) : (
+                                                        <RiArrowRightSLine className="w-4 h-4" />
+                                                    )}
+                                                </button>
                                                 <Checkbox
-                                                    id={`request-${requestType}`}
-                                                    checked={newTeam.requestTypes.includes(requestType)}
-                                                    onCheckedChange={() => handleRequestTypeToggle(requestType)}
+                                                    id={`category-${category}`}
+                                                    checked={isFullySelected}
+                                                    indeterminate={isPartiallySelected}
+                                                    onCheckedChange={() => handleCategoryToggle(category)}
                                                 />
-                                                <label htmlFor={`request-${requestType}`} className="text-sm text-gray-900 dark:text-gray-100">
-                                                    {requestType}
+                                                <label 
+                                                    htmlFor={`category-${category}`} 
+                                                    className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer"
+                                                    onClick={() => toggleCategoryExpansion(category)}
+                                                >
+                                                    {category}
                                                 </label>
+                                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                    ({requestTypes.filter(type => newTeam.requestTypes.includes(type)).length}/{requestTypes.length})
+                                                </span>
                                             </div>
-                                        ))}
-                                    </div>
-                                </div>
+                                            
+                                            {/* Request Types (when expanded) */}
+                                            {isExpanded && (
+                                                <div className="ml-6 space-y-1.5">
+                                                    {requestTypes.map((requestType) => (
+                                                        <div key={requestType} className="flex items-center space-x-2">
+                                                            <Checkbox
+                                                                id={`request-${requestType}`}
+                                                                checked={newTeam.requestTypes.includes(requestType)}
+                                                                onCheckedChange={() => handleRequestTypeToggle(requestType)}
+                                                            />
+                                                            <label htmlFor={`request-${requestType}`} className="text-sm text-gray-700 dark:text-gray-300">
+                                                                {requestType}
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </div>
                     </div>
