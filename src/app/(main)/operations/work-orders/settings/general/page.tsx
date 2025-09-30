@@ -13,9 +13,10 @@ import { useState } from "react"
 
 // Define tabs for the Work Orders Settings page
 const tabs = [
-    { name: "Service Types", href: "/operations/work-orders/settings" },
-    { name: "Teams", href: "/operations/work-orders/settings/teams" },
     { name: "Settings", href: "/operations/work-orders/settings/general" },
+    { name: "Teams", href: "/operations/work-orders/settings/teams" },
+    { name: "Categories", href: "/operations/work-orders/settings/categories" },
+    { name: "Service Types", href: "/operations/work-orders/settings" },
 ]
 
 export default function WorkOrdersGeneralSettings() {
@@ -80,11 +81,11 @@ export default function WorkOrdersGeneralSettings() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                        Work Order Settings
+                        Work order settings
                     </h1>
                 </div>
                 <Button variant="primary">
-                    Save Changes
+                    Save
                 </Button>
             </div>
 

@@ -3,8 +3,6 @@
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
-import { Checkbox } from "@/components/Checkbox"
-import { Select } from "@/components/Select"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -15,9 +13,10 @@ import { useState } from "react"
 
 // Define tabs for the Work Orders Settings page
 const tabs = [
-    { name: "Service Types", href: "/operations/work-orders/settings" },
-    { name: "Teams", href: "/operations/work-orders/settings/teams" },
     { name: "Settings", href: "/operations/work-orders/settings/general" },
+    { name: "Teams", href: "/operations/work-orders/settings/teams" },
+    { name: "Categories", href: "/operations/work-orders/settings/categories" },
+    { name: "Service Types", href: "/operations/work-orders/settings" },
 ]
 
 // Default teams data
@@ -86,28 +85,6 @@ export default function WorkOrdersTeams() {
     
     // Team management state
     const [teams, setTeams] = useState(defaultTeams)
-    const [teamConfig, setTeamConfig] = useState({
-        autoRouting: true,
-        loadBalancing: true,
-        escalationEnabled: true,
-        responseTimeTracking: true
-    })
-    
-    // Routing rules state
-    const [routingRules, setRoutingRules] = useState({
-        priorityBased: true,
-        locationBased: false,
-        skillBased: true,
-        timeBasedRouting: false
-    })
-    
-    const handleTeamConfigToggle = (key: keyof typeof teamConfig) => {
-        setTeamConfig(prev => ({ ...prev, [key]: !prev[key] }))
-    }
-    
-    const handleRoutingRuleToggle = (key: keyof typeof routingRules) => {
-        setRoutingRules(prev => ({ ...prev, [key]: !prev[key] }))
-    }
     
     const handleTeamToggle = (teamId: string) => {
         setTeams(prev => prev.map(team => 
@@ -132,11 +109,11 @@ export default function WorkOrdersTeams() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                        Work Order Settings
+                        Work order settings
                     </h1>
                 </div>
                 <Button variant="primary">
-                    Save Changes
+                    Save
                 </Button>
             </div>
 
@@ -153,237 +130,12 @@ export default function WorkOrdersTeams() {
                 ))}
             </TabNavigation>
 
-            {/* Team Management Content */}
-            <div className="space-y-8">
-                {/* Team Management Section */}
+            {/* Default Teams Content */}
                 <div className="space-y-6">
+                <div className="flex items-center justify-between">
                     <div>
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                            Team Management
-                        </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Configure teams and routing rules for service requests
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Category-based Team Routing */}
-                        <Card>
-                            <div className="p-6">
-                                <div className="mb-6">
-                                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                                        Category-based Team Routing
-                                    </h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                                        Automatically route requests based on service categories and team specializations.
-                                    </p>
-                                </div>
-                                
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between py-2">
-                                        <div>
-                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                Auto-routing
-                                            </h4>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                Automatically assign requests to appropriate teams
-                                            </p>
-                                        </div>
-                                        <Switch
-                                            checked={teamConfig.autoRouting}
-                                            onCheckedChange={() => handleTeamConfigToggle('autoRouting')}
-                                        />
-                                    </div>
-                                    
-                                    <div className="flex items-center justify-between py-2">
-                                        <div>
-                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                Load Balancing
-                                            </h4>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                Distribute workload evenly across team members
-                                            </p>
-                                        </div>
-                                        <Switch
-                                            checked={teamConfig.loadBalancing}
-                                            onCheckedChange={() => handleTeamConfigToggle('loadBalancing')}
-                                        />
-                                    </div>
-                                    
-                                    <div className="flex items-center justify-between py-2">
-                                        <div>
-                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                Escalation Enabled
-                                            </h4>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                Escalate unresolved requests to team leads
-                                            </p>
-                                        </div>
-                                        <Switch
-                                            checked={teamConfig.escalationEnabled}
-                                            onCheckedChange={() => handleTeamConfigToggle('escalationEnabled')}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </Card>
-
-                        {/* Routing Rule Customization */}
-                        <Card>
-                            <div className="p-6">
-                                <div className="mb-6">
-                                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                                        Routing Rule Customization
-                                    </h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                                        Configure advanced routing rules for optimal request assignment.
-                                    </p>
-                                </div>
-                                
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-between py-2">
-                                        <div>
-                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                Priority-based Routing
-                                            </h4>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                Route high-priority requests to senior team members
-                                            </p>
-                                        </div>
-                                        <Switch
-                                            checked={routingRules.priorityBased}
-                                            onCheckedChange={() => handleRoutingRuleToggle('priorityBased')}
-                                        />
-                                    </div>
-                                    
-                                    <div className="flex items-center justify-between py-2">
-                                        <div>
-                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                Location-based Routing
-                                            </h4>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                Assign requests based on geographical proximity
-                                            </p>
-                                        </div>
-                                        <Switch
-                                            checked={routingRules.locationBased}
-                                            onCheckedChange={() => handleRoutingRuleToggle('locationBased')}
-                                        />
-                                    </div>
-                                    
-                                    <div className="flex items-center justify-between py-2">
-                                        <div>
-                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                Skill-based Routing
-                                            </h4>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                Match requests with team member expertise
-                                            </p>
-                                        </div>
-                                        <Switch
-                                            checked={routingRules.skillBased}
-                                            onCheckedChange={() => handleRoutingRuleToggle('skillBased')}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </Card>
-
-                        {/* Team Member Management */}
-                        <Card>
-                            <div className="p-6">
-                                <div className="mb-6">
-                                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                                        Team Member Management
-                                    </h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                                        Manage team member roles, permissions, and availability.
-                                    </p>
-                                </div>
-                                
-                                <div className="space-y-4">
-                                    <div>
-                                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
-                                            Member Assignment Rules
-                                        </h4>
-                                        <div className="space-y-3">
-                                            <div className="flex items-center space-x-3">
-                                                <Checkbox id="auto-assign" defaultChecked />
-                                                <label htmlFor="auto-assign" className="text-sm text-gray-900 dark:text-gray-100">
-                                                    Auto-assign to available members
-                                                </label>
-                                            </div>
-                                            <div className="flex items-center space-x-3">
-                                                <Checkbox id="lead-approval" defaultChecked />
-                                                <label htmlFor="lead-approval" className="text-sm text-gray-900 dark:text-gray-100">
-                                                    Require team lead approval
-                                                </label>
-                                            </div>
-                                            <div className="flex items-center space-x-3">
-                                                <Checkbox id="backup-assignment" />
-                                                <label htmlFor="backup-assignment" className="text-sm text-gray-900 dark:text-gray-100">
-                                                    Enable backup member assignment
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </Card>
-
-                        {/* Workload Distribution Settings */}
-                        <Card>
-                            <div className="p-6">
-                                <div className="mb-6">
-                                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                                        Workload Distribution Settings
-                                    </h3>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                                        Configure how requests are distributed among team members.
-                                    </p>
-                                </div>
-                                
-                                <div className="space-y-4">
-                                    <div>
-                                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
-                                            Distribution Method
-                                        </h4>
-                                        <Select defaultValue="round-robin">
-                                            <option value="round-robin">Round Robin</option>
-                                            <option value="load-based">Load-based</option>
-                                            <option value="skill-based">Skill-based</option>
-                                            <option value="availability">Availability-based</option>
-                                        </Select>
-                                    </div>
-                                    
-                                    <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-                                        <div className="flex items-center justify-between py-2">
-                                            <div>
-                                                <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                    Response Time Tracking
-                                                </h4>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                    Monitor and optimize response times
-                                                </p>
-                                            </div>
-                                            <Switch
-                                                checked={teamConfig.responseTimeTracking}
-                                                onCheckedChange={() => handleTeamConfigToggle('responseTimeTracking')}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </Card>
-                    </div>
-                </div>
-
-                {/* Default Teams Section */}
-                <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                                Default Teams
+                            Default Teams
                             </h2>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
                                 Pre-configured teams for common service categories

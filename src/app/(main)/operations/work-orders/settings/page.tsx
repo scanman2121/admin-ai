@@ -2,21 +2,22 @@
 
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
+import { Input } from "@/components/Input"
+import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Input } from "@/components/Input"
-import { Label } from "@/components/Label"
-import { RiArrowLeftLine, RiSettings3Line, RiAddLine } from "@remixicon/react"
+import { RiAddLine, RiArrowLeftLine, RiSettings3Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 
 // Define tabs for the Work Orders Settings page
 const tabs = [
-    { name: "Service Types", href: "/operations/work-orders/settings" },
-    { name: "Teams", href: "/operations/work-orders/settings/teams" },
     { name: "Settings", href: "/operations/work-orders/settings/general" },
+    { name: "Teams", href: "/operations/work-orders/settings/teams" },
+    { name: "Categories", href: "/operations/work-orders/settings/categories" },
+    { name: "Service Types", href: "/operations/work-orders/settings" },
 ]
 
 // Comprehensive service types data based on the v0 prototype
@@ -297,11 +298,11 @@ export default function WorkOrdersSettings() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                        Work Order Settings
+                        Work order settings
                     </h1>
                 </div>
                 <Button variant="primary">
-                    Save Changes
+                    Save
                 </Button>
             </div>
 
