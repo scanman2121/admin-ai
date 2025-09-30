@@ -390,11 +390,6 @@ export default function WorkOrdersTeams() {
                                                     </div>
                                                 </div>
 
-                                            <div className="pt-3 border-t border-gray-100 dark:border-gray-700">
-                                                <Button variant="ghost" size="sm" className="w-full">
-                                                    Configure team settings
-                                                </Button>
-                                            </div>
                                         </div>
                                     )}
 
