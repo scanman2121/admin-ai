@@ -212,25 +212,28 @@ export default function WorkOrdersStatuses() {
                 </div>
 
                 {/* Search and Filter */}
-                <div className="flex items-center gap-4">
-                    <div className="flex-1 max-w-sm">
+                <div className="flex items-center justify-between gap-4">
+                    <div className="relative max-w-sm">
                         <input
                             type="text"
                             placeholder="Search by status name..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                     </div>
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                        <option value="All">All statuses</option>
-                        <option value="Enabled">Enabled only</option>
-                        <option value="Disabled">Disabled only</option>
-                    </select>
+                    
+                    <div className="flex items-center gap-3">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                            <option value="All">All statuses</option>
+                            <option value="Enabled">Enabled only</option>
+                            <option value="Disabled">Disabled only</option>
+                        </select>
+                    </div>
                 </div>
 
                 {/* Statuses Table */}
