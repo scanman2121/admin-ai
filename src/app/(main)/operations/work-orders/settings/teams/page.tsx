@@ -3,9 +3,13 @@
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
+import { Checkbox } from "@/components/Checkbox"
+import { Input } from "@/components/Input"
+import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { RiAddLine, RiArrowLeftLine, RiBrushLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -85,11 +89,68 @@ export default function WorkOrdersTeams() {
     
     // Team management state
     const [teams, setTeams] = useState(defaultTeams)
+    const [isAddTeamModalOpen, setIsAddTeamModalOpen] = useState(false)
+    const [newTeam, setNewTeam] = useState({
+        name: "",
+        description: "",
+        category: "Security",
+        requestTypes: [] as string[]
+    })
     
     const handleTeamToggle = (teamId: string) => {
         setTeams(prev => prev.map(team => 
             team.id === teamId ? { ...team, isActive: !team.isActive } : team
         ))
+    }
+
+    const handleAddTeam = () => {
+        if (!newTeam.name.trim() || !newTeam.description.trim()) {
+            return
+        }
+
+        const teamId = newTeam.name.toLowerCase().replace(/\s+/g, '-')
+        const categoryIconMap = {
+            Security: RiShieldLine,
+            Maintenance: RiToolsLine,
+            Cleaning: RiBrushLine,
+            Concierge: RiServiceLine
+        }
+        const categoryColorMap = {
+            Security: 'error' as const,
+            Maintenance: 'warning' as const,
+            Cleaning: 'success' as const,
+            Concierge: 'default' as const
+        }
+
+        const team = {
+            id: teamId,
+            name: newTeam.name,
+            description: newTeam.description,
+            category: newTeam.category,
+            icon: categoryIconMap[newTeam.category as keyof typeof categoryIconMap] || RiTeamLine,
+            color: categoryColorMap[newTeam.category as keyof typeof categoryColorMap],
+            members: [],
+            requestTypes: newTeam.requestTypes,
+            isActive: true
+        }
+
+        setTeams(prev => [...prev, team])
+        setNewTeam({
+            name: "",
+            description: "",
+            category: "Security",
+            requestTypes: []
+        })
+        setIsAddTeamModalOpen(false)
+    }
+
+    const handleRequestTypeToggle = (requestType: string) => {
+        setNewTeam(prev => ({
+            ...prev,
+            requestTypes: prev.requestTypes.includes(requestType)
+                ? prev.requestTypes.filter(type => type !== requestType)
+                : [...prev.requestTypes, requestType]
+        }))
     }
 
     return (
@@ -141,7 +202,7 @@ export default function WorkOrdersTeams() {
                             Pre-configured teams for common service categories
                             </p>
                         </div>
-                        <Button variant="ghost">
+                        <Button variant="ghost" onClick={() => setIsAddTeamModalOpen(true)}>
                             <RiAddLine className="size-4 mr-1.5" />
                             Add team
                         </Button>
@@ -233,6 +294,101 @@ export default function WorkOrdersTeams() {
                         })}
                 </div>
             </div>
+
+            {/* Add Team Modal */}
+            <Dialog open={isAddTeamModalOpen} onOpenChange={setIsAddTeamModalOpen}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Add New Team</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                        <div>
+                            <Label htmlFor="team-name">Team Name *</Label>
+                            <Input
+                                id="team-name"
+                                placeholder="Enter team name"
+                                value={newTeam.name}
+                                onChange={(e) => setNewTeam(prev => ({ ...prev, name: e.target.value }))}
+                            />
+                        </div>
+                        
+                        <div>
+                            <Label htmlFor="team-description">Description *</Label>
+                            <Input
+                                id="team-description"
+                                placeholder="Enter team description"
+                                value={newTeam.description}
+                                onChange={(e) => setNewTeam(prev => ({ ...prev, description: e.target.value }))}
+                            />
+                        </div>
+                        
+                        <div>
+                            <Label htmlFor="team-category">Category</Label>
+                            <select
+                                id="team-category"
+                                value={newTeam.category}
+                                onChange={(e) => setNewTeam(prev => ({ ...prev, category: e.target.value }))}
+                                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                <option value="Security">Security</option>
+                                <option value="Maintenance">Maintenance</option>
+                                <option value="Cleaning">Cleaning</option>
+                                <option value="Concierge">Concierge</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <Label>Request Types</Label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                Select which request types this team will handle
+                            </p>
+                            <div className="space-y-2 max-h-32 overflow-y-auto">
+                                {[
+                                    'Access Request', 'Key Card Request', 'Visitor Access', 'Security Incident',
+                                    'HVAC Issue', 'Plumbing Repair', 'Electrical Problem', 'General Repair',
+                                    'Deep Cleaning', 'Carpet Cleaning', 'Window Cleaning', 'Waste Removal',
+                                    'Package Delivery', 'Event Setup', 'Guest Services', 'Information Request'
+                                ].map((requestType) => (
+                                    <div key={requestType} className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id={`request-${requestType}`}
+                                            checked={newTeam.requestTypes.includes(requestType)}
+                                            onCheckedChange={() => handleRequestTypeToggle(requestType)}
+                                        />
+                                        <label htmlFor={`request-${requestType}`} className="text-sm text-gray-900 dark:text-gray-100">
+                                            {requestType}
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-end gap-3 mt-6">
+                        <Button
+                            variant="ghost"
+                            onClick={() => {
+                                setIsAddTeamModalOpen(false)
+                                setNewTeam({
+                                    name: "",
+                                    description: "",
+                                    category: "Security",
+                                    requestTypes: []
+                                })
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleAddTeam}
+                            disabled={!newTeam.name.trim() || !newTeam.description.trim()}
+                        >
+                            Add Team
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
