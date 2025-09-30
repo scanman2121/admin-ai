@@ -519,7 +519,7 @@ export default function WorkOrdersTeams() {
                             </p>
                             
                             {/* User Search */}
-                            <div className="relative">
+                            <div className="relative w-full">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <RiSearchLine className="size-4 text-gray-400" />
                                 </div>
@@ -527,7 +527,7 @@ export default function WorkOrdersTeams() {
                                     placeholder="Search users by name or email..."
                                     value={userSearchQuery}
                                     onChange={(e) => setUserSearchQuery(e.target.value)}
-                                    className="pl-10"
+                                    className="w-full pl-10"
                                 />
                             </div>
                             
