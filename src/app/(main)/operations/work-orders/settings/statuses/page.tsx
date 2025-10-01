@@ -77,7 +77,8 @@ export default function WorkOrdersStatuses() {
         name: "",
         description: "",
         color: "blue",
-        requestTypes: [] as string[]
+        requestTypes: [] as string[],
+        notificationSettings: {} as Record<string, { notifyRequestor: boolean; notifyAssignee: boolean }>
     })
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
 
@@ -106,11 +107,44 @@ export default function WorkOrdersStatuses() {
     }
 
     const handleRequestTypeToggle = (requestType: string) => {
-        setNewStatus(prev => ({
-            ...prev,
-            requestTypes: prev.requestTypes.includes(requestType)
+        setNewStatus(prev => {
+            const isCurrentlySelected = prev.requestTypes.includes(requestType)
+            const newRequestTypes = isCurrentlySelected
                 ? prev.requestTypes.filter(type => type !== requestType)
                 : [...prev.requestTypes, requestType]
+            
+            // Update notification settings
+            const newNotificationSettings = { ...prev.notificationSettings }
+            if (isCurrentlySelected) {
+                // Remove notification settings when deselecting
+                delete newNotificationSettings[requestType]
+            } else {
+                // Add default notification settings when selecting
+                newNotificationSettings[requestType] = {
+                    notifyRequestor: true,
+                    notifyAssignee: true
+                }
+            }
+            
+            return {
+                ...prev,
+                requestTypes: newRequestTypes,
+                notificationSettings: newNotificationSettings
+            }
+        })
+    }
+
+    const handleNotificationToggle = (requestType: string, notificationType: 'requestor' | 'assignee') => {
+        setNewStatus(prev => ({
+            ...prev,
+            notificationSettings: {
+                ...prev.notificationSettings,
+                [requestType]: {
+                    ...prev.notificationSettings[requestType],
+                    [notificationType === 'requestor' ? 'notifyRequestor' : 'notifyAssignee']: 
+                        !prev.notificationSettings[requestType]?.[notificationType === 'requestor' ? 'notifyRequestor' : 'notifyAssignee']
+                }
+            }
         }))
     }
 
@@ -120,12 +154,34 @@ export default function WorkOrdersStatuses() {
             newStatus.requestTypes.includes(type)
         )
 
-        setNewStatus(prev => ({
-            ...prev,
-            requestTypes: allCategoryTypesSelected
+        setNewStatus(prev => {
+            const newRequestTypes = allCategoryTypesSelected
                 ? prev.requestTypes.filter(type => !categoryRequestTypes.includes(type))
                 : Array.from(new Set([...prev.requestTypes, ...categoryRequestTypes]))
-        }))
+            
+            // Update notification settings
+            const newNotificationSettings = { ...prev.notificationSettings }
+            if (allCategoryTypesSelected) {
+                // Remove notification settings for all types in this category
+                categoryRequestTypes.forEach(type => {
+                    delete newNotificationSettings[type]
+                })
+            } else {
+                // Add default notification settings for all types in this category
+                categoryRequestTypes.forEach(type => {
+                    newNotificationSettings[type] = {
+                        notifyRequestor: true,
+                        notifyAssignee: true
+                    }
+                })
+            }
+            
+            return {
+                ...prev,
+                requestTypes: newRequestTypes,
+                notificationSettings: newNotificationSettings
+            }
+        })
 
         // Expand the category if we're selecting it
         if (!allCategoryTypesSelected) {
@@ -169,7 +225,7 @@ export default function WorkOrdersStatuses() {
             localStorage.setItem('workOrderStatuses', JSON.stringify(updatedStatuses))
         }
         
-        setNewStatus({ name: "", description: "", color: "blue", requestTypes: [] })
+        setNewStatus({ name: "", description: "", color: "blue", requestTypes: [], notificationSettings: {} })
         setExpandedCategories(new Set())
         setIsAddStatusModalOpen(false)
     }
@@ -180,7 +236,8 @@ export default function WorkOrdersStatuses() {
             name: status.name,
             description: status.description,
             color: status.color,
-            requestTypes: (status as any).requestTypes || []
+            requestTypes: (status as any).requestTypes || [],
+            notificationSettings: (status as any).notificationSettings || {}
         })
         
         // Auto-expand categories that have selected request types
@@ -203,7 +260,8 @@ export default function WorkOrdersStatuses() {
             ...editingStatus,
             name: newStatus.name,
             description: newStatus.description,
-            requestTypes: newStatus.requestTypes
+            requestTypes: newStatus.requestTypes,
+            notificationSettings: newStatus.notificationSettings
         }
 
         // If it's not a preset status, allow color change
@@ -222,7 +280,7 @@ export default function WorkOrdersStatuses() {
         }
         
         setEditingStatus(null)
-        setNewStatus({ name: "", description: "", color: "blue", requestTypes: [] })
+        setNewStatus({ name: "", description: "", color: "blue", requestTypes: [], notificationSettings: {} })
         setExpandedCategories(new Set())
         setIsAddStatusModalOpen(false)
     }
@@ -307,7 +365,7 @@ export default function WorkOrdersStatuses() {
                         variant="ghost" 
                         onClick={() => {
                             setEditingStatus(null)
-                            setNewStatus({ name: "", description: "", color: "blue", requestTypes: [] })
+                            setNewStatus({ name: "", description: "", color: "blue", requestTypes: [], notificationSettings: {} })
                             setExpandedCategories(new Set())
                             setIsAddStatusModalOpen(true)
                         }}
@@ -492,67 +550,148 @@ export default function WorkOrdersStatuses() {
                         <div>
                             <Label>Service categories & request types</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                                Select categories to automatically include all their request types, or customize individual selections
+                                Select categories and configure notification settings for each
                             </p>
                             
-                            <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-3">
-                                {Object.entries(requestTypesByCategory).map(([category, requestTypes]) => {
-                                    const isExpanded = expandedCategories.has(category)
-                                    const isFullySelected = isCategoryFullySelected(category)
-                                    const isPartiallySelected = isCategoryPartiallySelected(category)
-                                    
-                                    return (
-                                        <div key={category} className="space-y-2">
-                                            {/* Category Header */}
-                                            <div className="flex items-center space-x-2">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => toggleCategoryExpansion(category)}
-                                                    className="flex items-center justify-center w-4 h-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                                                >
-                                                    {isExpanded ? (
-                                                        <RiArrowDownSLine className="w-4 h-4" />
-                                                    ) : (
-                                                        <RiArrowRightSLine className="w-4 h-4" />
-                                                    )}
-                                                </button>
-                                                <Checkbox
-                                                    id={`category-${category}`}
-                                                    checked={isFullySelected ? true : isPartiallySelected ? "indeterminate" : false}
-                                                    onCheckedChange={() => handleCategoryToggle(category)}
-                                                />
-                                                <label 
-                                                    htmlFor={`category-${category}`} 
-                                                    className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer"
-                                                    onClick={() => toggleCategoryExpansion(category)}
-                                                >
-                                                    {category}
-                                                </label>
-                                                <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                    ({requestTypes.filter(type => newStatus.requestTypes.includes(type)).length}/{requestTypes.length})
-                                                </span>
-                                            </div>
+                            <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                                <table className="min-w-full">
+                                    <thead className="bg-gray-50 dark:bg-gray-800">
+                                        <tr>
+                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Category / Request type
+                                            </th>
+                                            <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Notify requestor
+                                            </th>
+                                            <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Notify assignee
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                                        {Object.entries(requestTypesByCategory).map(([category, requestTypes]) => {
+                                            const isExpanded = expandedCategories.has(category)
+                                            const isFullySelected = isCategoryFullySelected(category)
+                                            const isPartiallySelected = isCategoryPartiallySelected(category)
                                             
-                                            {/* Request Types (when expanded) */}
-                                            {isExpanded && (
-                                                <div className="ml-6 space-y-1.5">
-                                                    {requestTypes.map((requestType) => (
-                                                        <div key={requestType} className="flex items-center space-x-2">
-                                                            <Checkbox
-                                                                id={`request-${requestType}`}
-                                                                checked={newStatus.requestTypes.includes(requestType)}
-                                                                onCheckedChange={() => handleRequestTypeToggle(requestType)}
-                                                            />
-                                                            <label htmlFor={`request-${requestType}`} className="text-sm text-gray-700 dark:text-gray-300">
-                                                                {requestType}
-                                                            </label>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    )
-                                })}
+                                            return (
+                                                <>
+                                                    {/* Category Row */}
+                                                    <tr key={`category-${category}`} className="bg-gray-50 dark:bg-gray-800/50">
+                                                        <td className="px-3 py-2">
+                                                            <div className="flex items-center space-x-2">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => toggleCategoryExpansion(category)}
+                                                                    className="flex items-center justify-center w-4 h-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                                                >
+                                                                    {isExpanded ? (
+                                                                        <RiArrowDownSLine className="w-4 h-4" />
+                                                                    ) : (
+                                                                        <RiArrowRightSLine className="w-4 h-4" />
+                                                                    )}
+                                                                </button>
+                                                                <Checkbox
+                                                                    id={`category-${category}`}
+                                                                    checked={isFullySelected ? true : isPartiallySelected ? "indeterminate" : false}
+                                                                    onCheckedChange={() => handleCategoryToggle(category)}
+                                                                />
+                                                                <label 
+                                                                    htmlFor={`category-${category}`} 
+                                                                    className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer"
+                                                                    onClick={() => toggleCategoryExpansion(category)}
+                                                                >
+                                                                    {category}
+                                                                </label>
+                                                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                                    ({requestTypes.filter(type => newStatus.requestTypes.includes(type)).length}/{requestTypes.length})
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-3 py-2 text-center">
+                                                            {isFullySelected || isPartiallySelected ? (
+                                                                <Switch
+                                                                    checked={true}
+                                                                    onCheckedChange={() => {
+                                                                        // Toggle all request types in this category
+                                                                        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
+                                                                        categoryRequestTypes.forEach(type => {
+                                                                            if (newStatus.requestTypes.includes(type)) {
+                                                                                handleNotificationToggle(type, 'requestor')
+                                                                            }
+                                                                        })
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                <span className="text-gray-400 dark:text-gray-500">-</span>
+                                                            )}
+                                                        </td>
+                                                        <td className="px-3 py-2 text-center">
+                                                            {isFullySelected || isPartiallySelected ? (
+                                                                <Switch
+                                                                    checked={true}
+                                                                    onCheckedChange={() => {
+                                                                        // Toggle all request types in this category
+                                                                        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
+                                                                        categoryRequestTypes.forEach(type => {
+                                                                            if (newStatus.requestTypes.includes(type)) {
+                                                                                handleNotificationToggle(type, 'assignee')
+                                                                            }
+                                                                        })
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                <span className="text-gray-400 dark:text-gray-500">-</span>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                    {/* Request Types (when expanded) */}
+                                                    {isExpanded && requestTypes.map((requestType) => {
+                                                        const isSelected = newStatus.requestTypes.includes(requestType)
+                                                        
+                                                        return (
+                                                            <tr key={`request-${requestType}`} className="bg-white dark:bg-gray-900">
+                                                                <td className="px-3 py-2 pl-8">
+                                                                    <div className="flex items-center space-x-2">
+                                                                        <Checkbox
+                                                                            id={`request-${requestType}`}
+                                                                            checked={isSelected}
+                                                                            onCheckedChange={() => handleRequestTypeToggle(requestType)}
+                                                                        />
+                                                                        <label htmlFor={`request-${requestType}`} className="text-sm text-gray-700 dark:text-gray-300">
+                                                                            {requestType}
+                                                                        </label>
+                                                                    </div>
+                                                                </td>
+                                                                <td className="px-3 py-2 text-center">
+                                                                    {isSelected ? (
+                                                                        <Switch
+                                                                            checked={newStatus.notificationSettings[requestType]?.notifyRequestor || false}
+                                                                            onCheckedChange={() => handleNotificationToggle(requestType, 'requestor')}
+                                                                        />
+                                                                    ) : (
+                                                                        <span className="text-gray-400 dark:text-gray-500">-</span>
+                                                                    )}
+                                                                </td>
+                                                                <td className="px-3 py-2 text-center">
+                                                                    {isSelected ? (
+                                                                        <Switch
+                                                                            checked={newStatus.notificationSettings[requestType]?.notifyAssignee || false}
+                                                                            onCheckedChange={() => handleNotificationToggle(requestType, 'assignee')}
+                                                                        />
+                                                                    ) : (
+                                                                        <span className="text-gray-400 dark:text-gray-500">-</span>
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -563,7 +702,7 @@ export default function WorkOrdersStatuses() {
                             onClick={() => {
                                 setIsAddStatusModalOpen(false)
                                 setEditingStatus(null)
-                                setNewStatus({ name: "", description: "", color: "blue", requestTypes: [] })
+                                setNewStatus({ name: "", description: "", color: "blue", requestTypes: [], notificationSettings: {} })
                                 setExpandedCategories(new Set())
                             }}
                         >
