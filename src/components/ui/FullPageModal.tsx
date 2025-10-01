@@ -1,7 +1,7 @@
 "use client"
 
-import { RiCloseLine } from "@remixicon/react"
 import { Button } from "@/components/Button"
+import { RiCloseLine } from "@remixicon/react"
 
 interface FullPageModalProps {
   isOpen: boolean
