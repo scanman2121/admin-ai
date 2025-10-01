@@ -1,13 +1,14 @@
 "use client"
 
 import { Button } from "@/components/Button"
+import { Checkbox } from "@/components/Checkbox"
 import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { workOrderStatuses } from "@/data/statuses"
-import { RiAddLine, RiArrowLeftLine, RiDeleteBin6Line, RiEdit2Line } from "@remixicon/react"
+import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiEdit2Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -22,6 +23,14 @@ const tabs = [
 
 // Use shared statuses data - this will be updated when new statuses are created
 const defaultStatuses = workOrderStatuses
+
+// Request types organized by category (copied from teams page)
+const requestTypesByCategory = {
+    Security: ['Access Request', 'Key Card Request', 'Visitor Access', 'Security Incident'],
+    Maintenance: ['HVAC Issue', 'Plumbing Repair', 'Electrical Problem', 'General Repair'],
+    Cleaning: ['Deep Cleaning', 'Carpet Cleaning', 'Window Cleaning', 'Waste Removal'],
+    Concierge: ['Package Delivery', 'Event Setup', 'Guest Services', 'Information Request']
+}
 
 // Color options for custom statuses
 const statusColors = [
@@ -67,8 +76,10 @@ export default function WorkOrdersStatuses() {
     const [newStatus, setNewStatus] = useState({
         name: "",
         description: "",
-        color: "blue"
+        color: "blue",
+        requestTypes: [] as string[]
     })
+    const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
 
     const handleStatusToggle = (id: number) => {
         setStatuses(prev => prev.map(status => 
@@ -80,6 +91,61 @@ export default function WorkOrdersStatuses() {
     const getColorClasses = (color: string) => {
         const colorOption = statusColors.find(c => c.value === color)
         return colorOption || statusColors[0] // Default to blue if not found
+    }
+
+    const toggleCategoryExpansion = (category: string) => {
+        setExpandedCategories(prev => {
+            const newExpanded = new Set(prev)
+            if (newExpanded.has(category)) {
+                newExpanded.delete(category)
+            } else {
+                newExpanded.add(category)
+            }
+            return newExpanded
+        })
+    }
+
+    const handleRequestTypeToggle = (requestType: string) => {
+        setNewStatus(prev => ({
+            ...prev,
+            requestTypes: prev.requestTypes.includes(requestType)
+                ? prev.requestTypes.filter(type => type !== requestType)
+                : [...prev.requestTypes, requestType]
+        }))
+    }
+
+    const handleCategoryToggle = (category: string) => {
+        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
+        const allCategoryTypesSelected = categoryRequestTypes.every(type => 
+            newStatus.requestTypes.includes(type)
+        )
+
+        setNewStatus(prev => ({
+            ...prev,
+            requestTypes: allCategoryTypesSelected
+                ? prev.requestTypes.filter(type => !categoryRequestTypes.includes(type))
+                : Array.from(new Set([...prev.requestTypes, ...categoryRequestTypes]))
+        }))
+
+        // Expand the category if we're selecting it
+        if (!allCategoryTypesSelected) {
+            setExpandedCategories(prev => {
+                const newSet = new Set(prev)
+                newSet.add(category)
+                return newSet
+            })
+        }
+    }
+
+    const isCategoryFullySelected = (category: string) => {
+        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
+        return categoryRequestTypes.every(type => newStatus.requestTypes.includes(type))
+    }
+
+    const isCategoryPartiallySelected = (category: string) => {
+        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
+        return categoryRequestTypes.some(type => newStatus.requestTypes.includes(type)) &&
+               !categoryRequestTypes.every(type => newStatus.requestTypes.includes(type))
     }
 
     const handleAddStatus = () => {
@@ -103,7 +169,8 @@ export default function WorkOrdersStatuses() {
             localStorage.setItem('workOrderStatuses', JSON.stringify(updatedStatuses))
         }
         
-        setNewStatus({ name: "", description: "", color: "blue" })
+        setNewStatus({ name: "", description: "", color: "blue", requestTypes: [] })
+        setExpandedCategories(new Set())
         setIsAddStatusModalOpen(false)
     }
 
@@ -112,8 +179,19 @@ export default function WorkOrdersStatuses() {
         setNewStatus({
             name: status.name,
             description: status.description,
-            color: status.color
+            color: status.color,
+            requestTypes: (status as any).requestTypes || []
         })
+        
+        // Auto-expand categories that have selected request types
+        const categoriesToExpand = new Set<string>()
+        Object.entries(requestTypesByCategory).forEach(([category, requestTypes]) => {
+            if (requestTypes.some(type => ((status as any).requestTypes || []).includes(type))) {
+                categoriesToExpand.add(category)
+            }
+        })
+        setExpandedCategories(categoriesToExpand)
+        
         setIsAddStatusModalOpen(true)
     }
 
@@ -124,7 +202,8 @@ export default function WorkOrdersStatuses() {
         const updatedStatus = {
             ...editingStatus,
             name: newStatus.name,
-            description: newStatus.description
+            description: newStatus.description,
+            requestTypes: newStatus.requestTypes
         }
 
         // If it's not a preset status, allow color change
@@ -143,7 +222,8 @@ export default function WorkOrdersStatuses() {
         }
         
         setEditingStatus(null)
-        setNewStatus({ name: "", description: "", color: "blue" })
+        setNewStatus({ name: "", description: "", color: "blue", requestTypes: [] })
+        setExpandedCategories(new Set())
         setIsAddStatusModalOpen(false)
     }
 
@@ -268,7 +348,7 @@ export default function WorkOrdersStatuses() {
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Name</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Count</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type count</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enable</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
@@ -406,6 +486,74 @@ export default function WorkOrdersStatuses() {
                                 </div>
                             </div>
                         )}
+
+                        {/* Service categories & request types section */}
+                        <div>
+                            <Label>Service categories & request types</Label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                Select categories to automatically include all their request types, or customize individual selections
+                            </p>
+                            
+                            <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+                                {Object.entries(requestTypesByCategory).map(([category, requestTypes]) => {
+                                    const isExpanded = expandedCategories.has(category)
+                                    const isFullySelected = isCategoryFullySelected(category)
+                                    const isPartiallySelected = isCategoryPartiallySelected(category)
+                                    
+                                    return (
+                                        <div key={category} className="space-y-2">
+                                            {/* Category Header */}
+                                            <div className="flex items-center space-x-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => toggleCategoryExpansion(category)}
+                                                    className="flex items-center justify-center w-4 h-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                                >
+                                                    {isExpanded ? (
+                                                        <RiArrowDownSLine className="w-4 h-4" />
+                                                    ) : (
+                                                        <RiArrowRightSLine className="w-4 h-4" />
+                                                    )}
+                                                </button>
+                                                <Checkbox
+                                                    id={`category-${category}`}
+                                                    checked={isFullySelected ? true : isPartiallySelected ? "indeterminate" : false}
+                                                    onCheckedChange={() => handleCategoryToggle(category)}
+                                                />
+                                                <label 
+                                                    htmlFor={`category-${category}`} 
+                                                    className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer"
+                                                    onClick={() => toggleCategoryExpansion(category)}
+                                                >
+                                                    {category}
+                                                </label>
+                                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                    ({requestTypes.filter(type => newStatus.requestTypes.includes(type)).length}/{requestTypes.length})
+                                                </span>
+                                            </div>
+                                            
+                                            {/* Request Types (when expanded) */}
+                                            {isExpanded && (
+                                                <div className="ml-6 space-y-1.5">
+                                                    {requestTypes.map((requestType) => (
+                                                        <div key={requestType} className="flex items-center space-x-2">
+                                                            <Checkbox
+                                                                id={`request-${requestType}`}
+                                                                checked={newStatus.requestTypes.includes(requestType)}
+                                                                onCheckedChange={() => handleRequestTypeToggle(requestType)}
+                                                            />
+                                                            <label htmlFor={`request-${requestType}`} className="text-sm text-gray-700 dark:text-gray-300">
+                                                                {requestType}
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
                     </div>
                     
                     <div className="flex items-center justify-end gap-3 mt-6">
@@ -414,7 +562,8 @@ export default function WorkOrdersStatuses() {
                             onClick={() => {
                                 setIsAddStatusModalOpen(false)
                                 setEditingStatus(null)
-                                setNewStatus({ name: "", description: "", color: "blue" })
+                                setNewStatus({ name: "", description: "", color: "blue", requestTypes: [] })
+                                setExpandedCategories(new Set())
                             }}
                         >
                             Cancel
