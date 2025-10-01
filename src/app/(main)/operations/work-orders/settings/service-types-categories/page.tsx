@@ -65,6 +65,12 @@ const categoriesData = [
         name: "Landscaping",
         description: "Outdoor maintenance and landscaping",
         status: false,
+    },
+    {
+        id: 8,
+        name: "Other",
+        description: "Miscellaneous service requests and general inquiries",
+        status: true,
     }
 ]
 
@@ -310,6 +316,8 @@ export default function WorkOrdersServiceTypesCategories() {
                 return 'warning' as const
             case 'Landscaping':
                 return 'success' as const
+            case 'Other':
+                return 'neutral' as const
             default:
                 return 'default' as const
         }
@@ -598,6 +606,7 @@ export default function WorkOrdersServiceTypesCategories() {
                         <option>IT Support</option>
                         <option>HVAC</option>
                         <option>Landscaping</option>
+                        <option>Other</option>
                     </select>
                 </div>
             </div>
@@ -961,6 +970,7 @@ export default function WorkOrdersServiceTypesCategories() {
                                 <option>IT Support</option>
                                 <option>HVAC</option>
                                 <option>Landscaping</option>
+                                <option>Other</option>
                             </select>
                         </div>
                         
@@ -1063,6 +1073,7 @@ export default function WorkOrdersServiceTypesCategories() {
                                 <option>IT Support</option>
                                 <option>HVAC</option>
                                 <option>Landscaping</option>
+                                <option>Other</option>
                             </select>
                         </div>
                         
