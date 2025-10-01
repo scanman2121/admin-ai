@@ -20,7 +20,7 @@ const tabs = [
     { name: "Statuses", href: "/operations/work-orders/settings/statuses" },
 ]
 
-// Use shared statuses data
+// Use shared statuses data - this will be updated when new statuses are created
 const defaultStatuses = workOrderStatuses
 
 // Color options for custom statuses
@@ -50,7 +50,15 @@ const presetStatusColors = {
 
 export default function WorkOrdersStatuses() {
     const pathname = usePathname()
-    const [statuses, setStatuses] = useState(defaultStatuses)
+    
+    // Load statuses from localStorage or use default
+    const [statuses, setStatuses] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('workOrderStatuses')
+            return saved ? JSON.parse(saved) : defaultStatuses
+        }
+        return defaultStatuses
+    })
     const [searchQuery, setSearchQuery] = useState("")
     const [statusFilter, setStatusFilter] = useState("All")
     const [isAddStatusModalOpen, setIsAddStatusModalOpen] = useState(false)
@@ -87,7 +95,14 @@ export default function WorkOrdersStatuses() {
             orderCount: 0
         }
 
-        setStatuses(prev => [...prev, newStatusItem])
+        const updatedStatuses = [...statuses, newStatusItem]
+        setStatuses(updatedStatuses)
+        
+        // Save to localStorage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('workOrderStatuses', JSON.stringify(updatedStatuses))
+        }
+        
         setNewStatus({ name: "", description: "", color: "blue" })
         setIsAddStatusModalOpen(false)
     }
@@ -117,9 +132,15 @@ export default function WorkOrdersStatuses() {
             updatedStatus.color = newStatus.color
         }
 
-        setStatuses(prev => prev.map(status => 
+        const updatedStatuses = statuses.map(status => 
             status.id === editingStatus.id ? updatedStatus : status
-        ))
+        )
+        setStatuses(updatedStatuses)
+        
+        // Save to localStorage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('workOrderStatuses', JSON.stringify(updatedStatuses))
+        }
         
         setEditingStatus(null)
         setNewStatus({ name: "", description: "", color: "blue" })
@@ -127,7 +148,13 @@ export default function WorkOrdersStatuses() {
     }
 
     const handleDeleteStatus = (id: number) => {
-        setStatuses(prev => prev.filter(status => status.id !== id))
+        const updatedStatuses = statuses.filter(status => status.id !== id)
+        setStatuses(updatedStatuses)
+        
+        // Save to localStorage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('workOrderStatuses', JSON.stringify(updatedStatuses))
+        }
     }
 
     const filteredStatuses = statuses.filter(status => {

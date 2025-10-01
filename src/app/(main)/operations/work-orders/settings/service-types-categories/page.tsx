@@ -308,6 +308,36 @@ export default function WorkOrdersServiceTypesCategories() {
         description: ""
     })
 
+    // New status creation states
+    const [isAddingNewStatus, setIsAddingNewStatus] = useState(false)
+    const [newStatus, setNewStatus] = useState({
+        name: "",
+        color: "blue"
+    })
+    
+    // Load statuses from localStorage or use default
+    const [availableStatuses, setAvailableStatuses] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('workOrderStatuses')
+            return saved ? JSON.parse(saved) : workOrderStatuses
+        }
+        return workOrderStatuses
+    })
+
+    // Color options for custom statuses
+    const statusColors = [
+        { name: "Blue", value: "blue", bgClass: "bg-blue-400", textClass: "text-blue-800", bgLight: "bg-blue-50" },
+        { name: "Green", value: "green", bgClass: "bg-green-400", textClass: "text-green-800", bgLight: "bg-green-50" },
+        { name: "Yellow", value: "yellow", bgClass: "bg-yellow-400", textClass: "text-yellow-800", bgLight: "bg-yellow-50" },
+        { name: "Orange", value: "orange", bgClass: "bg-orange-400", textClass: "text-orange-800", bgLight: "bg-orange-50" },
+        { name: "Red", value: "red", bgClass: "bg-red-400", textClass: "text-red-800", bgLight: "bg-red-50" },
+        { name: "Purple", value: "purple", bgClass: "bg-purple-400", textClass: "text-purple-800", bgLight: "bg-purple-50" },
+        { name: "Gray", value: "gray", bgClass: "bg-gray-400", textClass: "text-gray-800", bgLight: "bg-gray-50" },
+        { name: "Pink", value: "pink", bgClass: "bg-pink-400", textClass: "text-pink-800", bgLight: "bg-pink-50" },
+        { name: "Indigo", value: "indigo", bgClass: "bg-indigo-400", textClass: "text-indigo-800", bgLight: "bg-indigo-50" },
+        { name: "Teal", value: "teal", bgClass: "bg-teal-400", textClass: "text-teal-800", bgLight: "bg-teal-50" },
+    ]
+
     // Sample users and teams data
     const sampleUsers = [
         { id: '1', name: 'David Wilson', role: 'Security Lead', type: 'user' },
@@ -572,6 +602,52 @@ export default function WorkOrdersServiceTypesCategories() {
         (item as any).role?.toLowerCase().includes(assignedToSearchQuery.toLowerCase()) ||
         (item as any).description?.toLowerCase().includes(assignedToSearchQuery.toLowerCase())
     )
+
+    // Helper function to get color classes
+    const getColorClasses = (color: string) => {
+        const colorOption = statusColors.find(c => c.value === color)
+        return colorOption || statusColors[0] // Default to blue if not found
+    }
+
+    const handleAddNewStatus = () => {
+        if (!newStatus.name.trim()) return
+
+        const newId = Math.max(...availableStatuses.map(s => s.id)) + 1
+        const newStatusItem = {
+            id: newId,
+            name: newStatus.name,
+            description: `Custom status: ${newStatus.name}`,
+            status: true,
+            color: newStatus.color,
+            orderCount: 0
+        }
+
+        const updatedStatuses = [...availableStatuses, newStatusItem]
+        setAvailableStatuses(updatedStatuses)
+        
+        // Save to localStorage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('workOrderStatuses', JSON.stringify(updatedStatuses))
+        }
+        
+        // Also add to the service type's statuses
+        setNewServiceType(prev => ({
+            ...prev,
+            statuses: [...prev.statuses, {
+                name: newStatus.name,
+                notifyRequestor: true,
+                notifyAssignee: true
+            }]
+        }))
+
+        setNewStatus({ name: "", color: "blue" })
+        setIsAddingNewStatus(false)
+    }
+
+    const handleCancelNewStatus = () => {
+        setNewStatus({ name: "", color: "blue" })
+        setIsAddingNewStatus(false)
+    }
 
     const filteredCategories = categories.filter(category => {
         const matchesSearch = category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -1175,7 +1251,7 @@ export default function WorkOrdersServiceTypesCategories() {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                                        {workOrderStatuses.map((status) => {
+                                        {availableStatuses.map((status) => {
                                             const isSelected = newServiceType.statuses.some(s => s.name === status.name)
                                             const selectedStatus = newServiceType.statuses.find(s => s.name === status.name)
                                             
@@ -1189,7 +1265,10 @@ export default function WorkOrdersServiceTypesCategories() {
                                                                 onChange={() => handleStatusToggleInModal(status.name)}
                                                                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                                             />
-                                                            <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
+                                                            <div className="flex items-center gap-2">
+                                                                <div className={`w-3 h-3 rounded-full ${getColorClasses(status.color).bgClass}`}></div>
+                                                                <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
+                                                            </div>
                                                         </label>
                                                     </td>
                                                     <td className="px-3 py-2 text-center">
@@ -1215,6 +1294,77 @@ export default function WorkOrdersServiceTypesCategories() {
                                                 </tr>
                                             )
                                         })}
+                                        
+                                        {/* Add New Status Row */}
+                                        {!isAddingNewStatus && (
+                                            <tr className="border-t border-gray-200 dark:border-gray-700">
+                                                <td colSpan={3} className="px-3 py-2">
+                                                    <button
+                                                        onClick={() => setIsAddingNewStatus(true)}
+                                                        className="w-full text-left text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-2 py-2"
+                                                    >
+                                                        <RiAddLine className="size-4" />
+                                                        Add new status
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        )}
+                                        
+                                        {/* New Status Creation Card */}
+                                        {isAddingNewStatus && (
+                                            <tr className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+                                                <td colSpan={3} className="px-3 py-4">
+                                                    <div className="space-y-3">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className={`w-3 h-3 rounded-full ${getColorClasses(newStatus.color).bgClass}`}></div>
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Enter status name"
+                                                                value={newStatus.name}
+                                                                onChange={(e) => setNewStatus(prev => ({ ...prev, name: e.target.value }))}
+                                                                className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                            />
+                                                        </div>
+                                                        
+                                                        <div>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Choose a color:</p>
+                                                            <div className="flex flex-wrap gap-1">
+                                                                {statusColors.map((colorOption) => (
+                                                                    <button
+                                                                        key={colorOption.value}
+                                                                        type="button"
+                                                                        onClick={() => setNewStatus(prev => ({ ...prev, color: colorOption.value }))}
+                                                                        className={`w-6 h-6 rounded-full border-2 transition-all ${
+                                                                            newStatus.color === colorOption.value
+                                                                                ? 'border-gray-900 dark:border-gray-100 ring-2 ring-offset-1 ring-gray-500'
+                                                                                : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                                                        } ${colorOption.bgClass}`}
+                                                                        title={colorOption.name}
+                                                                    />
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div className="flex items-center gap-2">
+                                                            <Button
+                                                                size="sm"
+                                                                onClick={handleAddNewStatus}
+                                                                disabled={!newStatus.name.trim()}
+                                                            >
+                                                                Add status
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={handleCancelNewStatus}
+                                                            >
+                                                                Cancel
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -1387,7 +1537,7 @@ export default function WorkOrdersServiceTypesCategories() {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                                        {workOrderStatuses.map((status) => {
+                                        {availableStatuses.map((status) => {
                                             const isSelected = newServiceType.statuses.some(s => s.name === status.name)
                                             const selectedStatus = newServiceType.statuses.find(s => s.name === status.name)
                                             
@@ -1401,7 +1551,10 @@ export default function WorkOrdersServiceTypesCategories() {
                                                                 onChange={() => handleStatusToggleInModal(status.name)}
                                                                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                                             />
-                                                            <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
+                                                            <div className="flex items-center gap-2">
+                                                                <div className={`w-3 h-3 rounded-full ${getColorClasses(status.color).bgClass}`}></div>
+                                                                <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
+                                                            </div>
                                                         </label>
                                                     </td>
                                                     <td className="px-3 py-2 text-center">
@@ -1427,6 +1580,77 @@ export default function WorkOrdersServiceTypesCategories() {
                                                 </tr>
                                             )
                                         })}
+                                        
+                                        {/* Add New Status Row */}
+                                        {!isAddingNewStatus && (
+                                            <tr className="border-t border-gray-200 dark:border-gray-700">
+                                                <td colSpan={3} className="px-3 py-2">
+                                                    <button
+                                                        onClick={() => setIsAddingNewStatus(true)}
+                                                        className="w-full text-left text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-2 py-2"
+                                                    >
+                                                        <RiAddLine className="size-4" />
+                                                        Add new status
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        )}
+                                        
+                                        {/* New Status Creation Card */}
+                                        {isAddingNewStatus && (
+                                            <tr className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+                                                <td colSpan={3} className="px-3 py-4">
+                                                    <div className="space-y-3">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className={`w-3 h-3 rounded-full ${getColorClasses(newStatus.color).bgClass}`}></div>
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Enter status name"
+                                                                value={newStatus.name}
+                                                                onChange={(e) => setNewStatus(prev => ({ ...prev, name: e.target.value }))}
+                                                                className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                            />
+                                                        </div>
+                                                        
+                                                        <div>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Choose a color:</p>
+                                                            <div className="flex flex-wrap gap-1">
+                                                                {statusColors.map((colorOption) => (
+                                                                    <button
+                                                                        key={colorOption.value}
+                                                                        type="button"
+                                                                        onClick={() => setNewStatus(prev => ({ ...prev, color: colorOption.value }))}
+                                                                        className={`w-6 h-6 rounded-full border-2 transition-all ${
+                                                                            newStatus.color === colorOption.value
+                                                                                ? 'border-gray-900 dark:border-gray-100 ring-2 ring-offset-1 ring-gray-500'
+                                                                                : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                                                        } ${colorOption.bgClass}`}
+                                                                        title={colorOption.name}
+                                                                    />
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div className="flex items-center gap-2">
+                                                            <Button
+                                                                size="sm"
+                                                                onClick={handleAddNewStatus}
+                                                                disabled={!newStatus.name.trim()}
+                                                            >
+                                                                Add status
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                onClick={handleCancelNewStatus}
+                                                            >
+                                                                Cancel
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
