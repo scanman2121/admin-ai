@@ -1010,7 +1010,7 @@ export default function WorkOrdersServiceTypesCategories() {
 
             {/* Add Category Modal */}
             <Dialog open={isAddCategoryModalOpen} onOpenChange={setIsAddCategoryModalOpen}>
-                <DialogContent className="max-w-md">
+                <DialogContent className="max-w-2xl">
                     <DialogHeader>
                         <DialogTitle>Add new category</DialogTitle>
                     </DialogHeader>
@@ -1054,7 +1054,7 @@ export default function WorkOrdersServiceTypesCategories() {
 
             {/* Edit Category Modal */}
             <Dialog open={isEditCategoryModalOpen} onOpenChange={setIsEditCategoryModalOpen}>
-                <DialogContent className="max-w-md">
+                <DialogContent className="max-w-2xl">
                     <DialogHeader>
                         <DialogTitle>Edit category</DialogTitle>
                     </DialogHeader>
@@ -1098,7 +1098,7 @@ export default function WorkOrdersServiceTypesCategories() {
 
             {/* Add Service Type Modal */}
             <Dialog open={isAddServiceTypeModalOpen} onOpenChange={setIsAddServiceTypeModalOpen}>
-                <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>Add service type</DialogTitle>
                     </DialogHeader>
@@ -1384,7 +1384,7 @@ export default function WorkOrdersServiceTypesCategories() {
 
             {/* Edit Service Type Modal */}
             <Dialog open={isEditServiceTypeModalOpen} onOpenChange={setIsEditServiceTypeModalOpen}>
-                <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>Edit service type</DialogTitle>
                     </DialogHeader>

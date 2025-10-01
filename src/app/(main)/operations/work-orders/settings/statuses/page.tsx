@@ -470,7 +470,7 @@ export default function WorkOrdersStatuses() {
 
             {/* Add/Edit Status Modal */}
             <Dialog open={isAddStatusModalOpen} onOpenChange={setIsAddStatusModalOpen}>
-                <DialogContent className="max-w-lg">
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>{editingStatus ? 'Edit status' : 'Add new status'}</DialogTitle>
                     </DialogHeader>

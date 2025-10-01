@@ -594,7 +594,7 @@ export default function WorkOrdersTeams() {
             <Dialog open={isAddTeamModalOpen} onOpenChange={(open) => {
                 if (!open) resetModal()
             }}>
-                <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>{isEditMode ? 'Edit team' : 'Add new team'}</DialogTitle>
                     </DialogHeader>
