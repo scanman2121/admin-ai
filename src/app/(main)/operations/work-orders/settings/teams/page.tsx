@@ -135,7 +135,8 @@ export default function WorkOrdersTeams() {
         lastName: "",
         email: "",
         phone: "",
-        role: ""
+        title: "",
+        inviteToPlatform: true
     })
     
     const handleTeamToggle = (teamId: string) => {
@@ -232,7 +233,8 @@ export default function WorkOrdersTeams() {
             lastName: "",
             email: "",
             phone: "",
-            role: ""
+            title: "",
+            inviteToPlatform: true
         })
     }
 
@@ -312,7 +314,7 @@ export default function WorkOrdersTeams() {
         const userData = {
             id: newUserId,
             name: fullName,
-            role: newUser.role || "Team Member",
+            role: newUser.title || "Team Member",
             initials: initials,
             email: newUser.email
         }
@@ -325,13 +327,20 @@ export default function WorkOrdersTeams() {
         setSelectedUsers(newSelectedUsers)
         setNewTeam(prev => ({ ...prev, members: newSelectedUsers }))
 
+        // TODO: Send invite email if inviteToPlatform is true
+        if (newUser.inviteToPlatform) {
+            console.log(`Sending invite email to ${newUser.email}`)
+            // In a real app, this would trigger an email invitation
+        }
+
         // Reset form and close modal
         setNewUser({
             firstName: "",
             lastName: "",
             email: "",
             phone: "",
-            role: ""
+            title: "",
+            inviteToPlatform: true
         })
         setIsAddUserModalOpen(false)
         setUserSearchQuery("")
@@ -831,12 +840,26 @@ export default function WorkOrdersTeams() {
                         </div>
                         
                         <div>
-                            <Label htmlFor="role">Role</Label>
+                            <Label htmlFor="title">Title</Label>
                             <Input
-                                id="role"
-                                placeholder="Enter role (optional)"
-                                value={newUser.role}
-                                onChange={(e) => setNewUser(prev => ({ ...prev, role: e.target.value }))}
+                                id="title"
+                                placeholder="Enter title (optional)"
+                                value={newUser.title}
+                                onChange={(e) => setNewUser(prev => ({ ...prev, title: e.target.value }))}
+                            />
+                        </div>
+                        
+                        <div className="flex items-center justify-between py-2">
+                            <div>
+                                <Label htmlFor="invite-platform">Invite to platform</Label>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                    User will receive an invitation email to join the platform
+                                </p>
+                            </div>
+                            <Switch
+                                id="invite-platform"
+                                checked={newUser.inviteToPlatform}
+                                onCheckedChange={(checked) => setNewUser(prev => ({ ...prev, inviteToPlatform: checked }))}
                             />
                         </div>
                         
