@@ -413,7 +413,7 @@ export default function WorkOrdersStatuses() {
             <Dialog open={isAddStatusModalOpen} onOpenChange={setIsAddStatusModalOpen}>
                 <DialogContent className="max-w-lg">
                     <DialogHeader>
-                        <DialogTitle>{editingStatus ? 'Edit Status' : 'Add New Status'}</DialogTitle>
+                        <DialogTitle>{editingStatus ? 'Edit status' : 'Add new status'}</DialogTitle>
                     </DialogHeader>
                     
                     <div className="space-y-4">
@@ -572,7 +572,7 @@ export default function WorkOrdersStatuses() {
                             variant="primary" 
                             onClick={editingStatus ? handleUpdateStatus : handleAddStatus}
                         >
-                            {editingStatus ? "Update" : "Add"} Status
+                            {editingStatus ? "Update" : "Add"} status
                         </Button>
                     </div>
                 </DialogContent>
