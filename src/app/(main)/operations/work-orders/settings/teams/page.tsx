@@ -663,7 +663,7 @@ export default function WorkOrdersTeams() {
                                                 <RiUserAddLine className="size-4 text-gray-400" />
                                             </button>
                                         ))
-                                    ) : (
+                                    ) : !isAddingNewUser && (
                                         <button
                                             onClick={() => setIsAddingNewUser(true)}
                                             className="w-full px-3 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-t border-gray-200 dark:border-gray-600"
