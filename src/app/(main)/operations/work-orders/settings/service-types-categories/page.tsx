@@ -292,7 +292,11 @@ export default function WorkOrdersServiceTypesCategories() {
         category: "Security",
         approval: "None",
         assignedTo: "",
-        statuses: [] as string[]
+        statuses: [] as Array<{
+            name: string;
+            notifyRequestor: boolean;
+            notifyAssignee: boolean;
+        }>
     })
 
     const [newCategory, setNewCategory] = useState({
@@ -413,7 +417,8 @@ export default function WorkOrdersServiceTypesCategories() {
         const serviceType = {
             id: newId,
             ...newServiceType,
-            status: true
+            status: true,
+            statuses: newServiceType.statuses.map(s => s.name) // Convert back to simple array for display
         }
 
         setServiceTypes(prev => [...prev, serviceType])
@@ -436,7 +441,11 @@ export default function WorkOrdersServiceTypesCategories() {
             category: serviceType.category,
             approval: serviceType.approval,
             assignedTo: serviceType.assignedTo,
-            statuses: serviceType.statuses || []
+            statuses: (serviceType.statuses || []).map(statusName => ({
+                name: statusName,
+                notifyRequestor: true,
+                notifyAssignee: true
+            }))
         })
         setIsEditServiceTypeModalOpen(true)
     }
@@ -448,7 +457,11 @@ export default function WorkOrdersServiceTypesCategories() {
 
         setServiceTypes(prev => prev.map(item => 
             item.id === editingServiceType.id 
-                ? { ...item, ...newServiceType }
+                ? { 
+                    ...item, 
+                    ...newServiceType,
+                    statuses: newServiceType.statuses.map(s => s.name) // Convert back to simple array for display
+                }
                 : item
         ))
         
@@ -470,11 +483,40 @@ export default function WorkOrdersServiceTypesCategories() {
     }
 
     const handleStatusToggleInModal = (statusName: string) => {
+        setNewServiceType(prev => {
+            const existingStatus = prev.statuses.find(s => s.name === statusName)
+            if (existingStatus) {
+                // Remove status
+                return {
+                    ...prev,
+                    statuses: prev.statuses.filter(s => s.name !== statusName)
+                }
+            } else {
+                // Add status with default notification settings
+                return {
+                    ...prev,
+                    statuses: [...prev.statuses, {
+                        name: statusName,
+                        notifyRequestor: true,
+                        notifyAssignee: true
+                    }]
+                }
+            }
+        })
+    }
+
+    const handleNotificationToggle = (statusName: string, notificationType: 'requestor' | 'assignee') => {
         setNewServiceType(prev => ({
             ...prev,
-            statuses: prev.statuses.includes(statusName)
-                ? prev.statuses.filter(s => s !== statusName)
-                : [...prev.statuses, statusName]
+            statuses: prev.statuses.map(status => 
+                status.name === statusName 
+                    ? {
+                        ...status,
+                        [notificationType === 'requestor' ? 'notifyRequestor' : 'notifyAssignee']: 
+                            !status[notificationType === 'requestor' ? 'notifyRequestor' : 'notifyAssignee']
+                    }
+                    : status
+            )
         }))
     }
 
@@ -1001,18 +1043,68 @@ export default function WorkOrdersServiceTypesCategories() {
 
                         <div>
                             <Label>Available statuses</Label>
-                            <div className="grid grid-cols-2 gap-2 mt-2">
-                                {workOrderStatuses.map((status) => (
-                                    <label key={status.name} className="flex items-center space-x-2">
-                                        <input
-                                            type="checkbox"
-                                            checked={newServiceType.statuses.includes(status.name)}
-                                            onChange={() => handleStatusToggleInModal(status.name)}
-                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                        />
-                                        <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
-                                    </label>
-                                ))}
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                Select statuses and configure notification settings for each
+                            </p>
+                            
+                            <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                                <table className="min-w-full">
+                                    <thead className="bg-gray-50 dark:bg-gray-800">
+                                        <tr>
+                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Status
+                                            </th>
+                                            <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Notify requestor
+                                            </th>
+                                            <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Notify assignee
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                                        {workOrderStatuses.map((status) => {
+                                            const isSelected = newServiceType.statuses.some(s => s.name === status.name)
+                                            const selectedStatus = newServiceType.statuses.find(s => s.name === status.name)
+                                            
+                                            return (
+                                                <tr key={status.name} className={isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''}>
+                                                    <td className="px-3 py-2">
+                                                        <label className="flex items-center space-x-2 cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={isSelected}
+                                                                onChange={() => handleStatusToggleInModal(status.name)}
+                                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                            />
+                                                            <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
+                                                        </label>
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center">
+                                                        {isSelected ? (
+                                                            <Switch
+                                                                checked={selectedStatus?.notifyRequestor || false}
+                                                                onCheckedChange={() => handleNotificationToggle(status.name, 'requestor')}
+                                                            />
+                                                        ) : (
+                                                            <span className="text-gray-400 dark:text-gray-500">-</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center">
+                                                        {isSelected ? (
+                                                            <Switch
+                                                                checked={selectedStatus?.notifyAssignee || false}
+                                                                onCheckedChange={() => handleNotificationToggle(status.name, 'assignee')}
+                                                            />
+                                                        ) : (
+                                                            <span className="text-gray-400 dark:text-gray-500">-</span>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         
@@ -1104,18 +1196,68 @@ export default function WorkOrdersServiceTypesCategories() {
 
                         <div>
                             <Label>Available statuses</Label>
-                            <div className="grid grid-cols-2 gap-2 mt-2">
-                                {workOrderStatuses.map((status) => (
-                                    <label key={status.name} className="flex items-center space-x-2">
-                                        <input
-                                            type="checkbox"
-                                            checked={newServiceType.statuses.includes(status.name)}
-                                            onChange={() => handleStatusToggleInModal(status.name)}
-                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                        />
-                                        <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
-                                    </label>
-                                ))}
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                Select statuses and configure notification settings for each
+                            </p>
+                            
+                            <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                                <table className="min-w-full">
+                                    <thead className="bg-gray-50 dark:bg-gray-800">
+                                        <tr>
+                                            <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Status
+                                            </th>
+                                            <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Notify requestor
+                                            </th>
+                                            <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Notify assignee
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                                        {workOrderStatuses.map((status) => {
+                                            const isSelected = newServiceType.statuses.some(s => s.name === status.name)
+                                            const selectedStatus = newServiceType.statuses.find(s => s.name === status.name)
+                                            
+                                            return (
+                                                <tr key={status.name} className={isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''}>
+                                                    <td className="px-3 py-2">
+                                                        <label className="flex items-center space-x-2 cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={isSelected}
+                                                                onChange={() => handleStatusToggleInModal(status.name)}
+                                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                            />
+                                                            <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
+                                                        </label>
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center">
+                                                        {isSelected ? (
+                                                            <Switch
+                                                                checked={selectedStatus?.notifyRequestor || false}
+                                                                onCheckedChange={() => handleNotificationToggle(status.name, 'requestor')}
+                                                            />
+                                                        ) : (
+                                                            <span className="text-gray-400 dark:text-gray-500">-</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center">
+                                                        {isSelected ? (
+                                                            <Switch
+                                                                checked={selectedStatus?.notifyAssignee || false}
+                                                                onCheckedChange={() => handleNotificationToggle(status.name, 'assignee')}
+                                                            />
+                                                        ) : (
+                                                            <span className="text-gray-400 dark:text-gray-500">-</span>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         
