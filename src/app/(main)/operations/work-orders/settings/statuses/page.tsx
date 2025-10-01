@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/Checkbox"
 import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { workOrderStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiEdit2Line } from "@remixicon/react"
@@ -475,7 +475,7 @@ export default function WorkOrdersStatuses() {
                         <DialogTitle>{editingStatus ? 'Edit status' : 'Add new status'}</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4">
+                    <div className="space-y-4 px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="status-name">Status name *</Label>
                             <input
@@ -666,7 +666,7 @@ export default function WorkOrdersStatuses() {
                         </div>
                     </div>
                     
-                    <div className="flex items-center justify-end gap-3 mt-6">
+                    <DialogFooter>
                         <Button 
                             variant="ghost" 
                             onClick={() => {
@@ -684,7 +684,7 @@ export default function WorkOrdersStatuses() {
                         >
                             {editingStatus ? "Update" : "Add"} status
                         </Button>
-                    </div>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
 

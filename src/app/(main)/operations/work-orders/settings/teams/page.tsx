@@ -8,7 +8,7 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiBrushLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSearchLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
 import Link from "next/link"
@@ -599,7 +599,7 @@ export default function WorkOrdersTeams() {
                         <DialogTitle>{isEditMode ? 'Edit team' : 'Add new team'}</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4">
+                    <div className="space-y-4 px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="team-name">Team name *</Label>
                             <Input
@@ -873,7 +873,7 @@ export default function WorkOrdersTeams() {
                         </div>
                     </div>
                     
-                    <div className="flex items-center justify-end gap-3 mt-6">
+                    <DialogFooter>
                         <Button
                             variant="ghost"
                             onClick={resetModal}
@@ -886,7 +886,7 @@ export default function WorkOrdersTeams() {
                         >
                             {isEditMode ? 'Update team' : 'Add team'}
                         </Button>
-            </div>
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
 

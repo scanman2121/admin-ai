@@ -6,7 +6,7 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { workOrderStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line } from "@remixicon/react"
@@ -1015,7 +1015,7 @@ export default function WorkOrdersServiceTypesCategories() {
                         <DialogTitle>Add new category</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4">
+                    <div className="space-y-4 px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="category-name">Category name *</Label>
                             <input
@@ -1040,14 +1040,14 @@ export default function WorkOrdersServiceTypesCategories() {
                             />
                         </div>
                         
-                        <div className="flex justify-end gap-2 pt-4">
+                        <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsAddCategoryModalOpen(false)}>
                                 Cancel
                             </Button>
                             <Button onClick={handleAddCategory}>
                                 Add category
                             </Button>
-                        </div>
+                        </DialogFooter>
                     </div>
                 </DialogContent>
             </Dialog>
@@ -1059,7 +1059,7 @@ export default function WorkOrdersServiceTypesCategories() {
                         <DialogTitle>Edit category</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4">
+                    <div className="space-y-4 px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="edit-category-name">Category name *</Label>
                             <input
@@ -1084,14 +1084,14 @@ export default function WorkOrdersServiceTypesCategories() {
                             />
                         </div>
                         
-                        <div className="flex justify-end gap-2 pt-4">
+                        <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsEditCategoryModalOpen(false)}>
                                 Cancel
                             </Button>
                             <Button onClick={handleUpdateCategory}>
                                 Update category
                             </Button>
-                        </div>
+                        </DialogFooter>
                     </div>
                 </DialogContent>
             </Dialog>
@@ -1103,7 +1103,7 @@ export default function WorkOrdersServiceTypesCategories() {
                         <DialogTitle>Add service type</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4">
+                    <div className="space-y-4 px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="service-type-name">Request type *</Label>
                             <Input
@@ -1370,14 +1370,14 @@ export default function WorkOrdersServiceTypesCategories() {
                             </div>
                         </div>
                         
-                        <div className="flex justify-end gap-2 pt-4">
+                        <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsAddServiceTypeModalOpen(false)}>
                                 Cancel
                             </Button>
                             <Button onClick={handleAddServiceType}>
                                 Add service type
                             </Button>
-                        </div>
+                        </DialogFooter>
                     </div>
                 </DialogContent>
             </Dialog>
@@ -1389,7 +1389,7 @@ export default function WorkOrdersServiceTypesCategories() {
                         <DialogTitle>Edit service type</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4">
+                    <div className="space-y-4 px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="edit-service-type-name">Request type *</Label>
                             <Input
@@ -1656,14 +1656,14 @@ export default function WorkOrdersServiceTypesCategories() {
                             </div>
                         </div>
                         
-                        <div className="flex justify-end gap-2 pt-4">
+                        <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsEditServiceTypeModalOpen(false)}>
                                 Cancel
                             </Button>
                             <Button onClick={handleUpdateServiceType}>
                                 Update service type
                             </Button>
-                        </div>
+                        </DialogFooter>
                     </div>
                 </DialogContent>
             </Dialog>
