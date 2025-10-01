@@ -120,7 +120,7 @@ export default function WorkOrdersTeams() {
     const [selectedUsers, setSelectedUsers] = useState<typeof sampleUsers>([])    
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null)
     const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)
-    const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false)
+    const [isAddingNewUser, setIsAddingNewUser] = useState(false)
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
     const [expandedTeamCardCategories, setExpandedTeamCardCategories] = useState<Set<string>>(new Set())
     const [newTeam, setNewTeam] = useState({
@@ -228,6 +228,7 @@ export default function WorkOrdersTeams() {
         setIsEditMode(false)
         setEditingTeam(null)
         setIsAddTeamModalOpen(false)
+        setIsAddingNewUser(false)
         setNewUser({
             firstName: "",
             lastName: "",
@@ -333,7 +334,7 @@ export default function WorkOrdersTeams() {
             // In a real app, this would trigger an email invitation
         }
 
-        // Reset form and close modal
+        // Reset form and close expanded view
         setNewUser({
             firstName: "",
             lastName: "",
@@ -342,7 +343,7 @@ export default function WorkOrdersTeams() {
             title: "",
             inviteToPlatform: true
         })
-        setIsAddUserModalOpen(false)
+        setIsAddingNewUser(false)
         setUserSearchQuery("")
     }
 
@@ -664,7 +665,7 @@ export default function WorkOrdersTeams() {
                                         ))
                                     ) : (
                                         <button
-                                            onClick={() => setIsAddUserModalOpen(true)}
+                                            onClick={() => setIsAddingNewUser(true)}
                                             className="w-full px-3 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-t border-gray-200 dark:border-gray-600"
                                         >
                                             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
@@ -683,6 +684,107 @@ export default function WorkOrdersTeams() {
                                 </div>
                             )}
                             
+                            {/* Add New User Form - Expanded */}
+                            {isAddingNewUser && (
+                                <div className="mt-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                            Add new user
+                                        </h4>
+                                        <button
+                                            onClick={() => setIsAddingNewUser(false)}
+                                            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div>
+                                                <Label htmlFor="first-name">First name *</Label>
+                                                <Input
+                                                    id="first-name"
+                                                    placeholder="Enter first name"
+                                                    value={newUser.firstName}
+                                                    onChange={(e) => setNewUser(prev => ({ ...prev, firstName: e.target.value }))}
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="last-name">Last name *</Label>
+                                                <Input
+                                                    id="last-name"
+                                                    placeholder="Enter last name"
+                                                    value={newUser.lastName}
+                                                    onChange={(e) => setNewUser(prev => ({ ...prev, lastName: e.target.value }))}
+                                                />
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <Label htmlFor="email">Email *</Label>
+                                            <Input
+                                                id="email"
+                                                type="email"
+                                                placeholder="Enter email address"
+                                                value={newUser.email}
+                                                onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
+                                            />
+                                        </div>
+                                        
+                                        <div>
+                                            <Label htmlFor="phone">Phone number</Label>
+                                            <Input
+                                                id="phone"
+                                                type="tel"
+                                                placeholder="Enter phone number (optional)"
+                                                value={newUser.phone}
+                                                onChange={(e) => setNewUser(prev => ({ ...prev, phone: e.target.value }))}
+                                            />
+                                        </div>
+                                        
+                                        <div>
+                                            <Label htmlFor="title">Title</Label>
+                                            <Input
+                                                id="title"
+                                                placeholder="Enter title (optional)"
+                                                value={newUser.title}
+                                                onChange={(e) => setNewUser(prev => ({ ...prev, title: e.target.value }))}
+                                            />
+                                        </div>
+                                        
+                                        <div className="flex items-center justify-between py-2">
+                                            <div>
+                                                <Label htmlFor="invite-platform">Invite to platform</Label>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                                    User will receive an invitation email to join the platform
+                                                </p>
+                                            </div>
+                                            <Switch
+                                                id="invite-platform"
+                                                checked={newUser.inviteToPlatform}
+                                                onCheckedChange={(checked) => setNewUser(prev => ({ ...prev, inviteToPlatform: checked }))}
+                                            />
+                                        </div>
+                                        
+                                        <div className="flex justify-end gap-2 pt-2">
+                                            <Button 
+                                                variant="ghost" 
+                                                onClick={() => setIsAddingNewUser(false)}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button 
+                                                onClick={handleAddNewUser}
+                                                disabled={!newUser.firstName.trim() || !newUser.lastName.trim() || !newUser.email.trim()}
+                                            >
+                                                Add user
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Selected Users Chips - Now Below Search */}
                             {selectedUsers.length > 0 && (
                                 <div className="mt-3">
@@ -788,98 +890,6 @@ export default function WorkOrdersTeams() {
                 </DialogContent>
             </Dialog>
 
-            {/* Add New User Modal */}
-            <Dialog open={isAddUserModalOpen} onOpenChange={setIsAddUserModalOpen}>
-                <DialogContent className="max-w-md">
-                    <DialogHeader>
-                        <DialogTitle>Add new user</DialogTitle>
-                    </DialogHeader>
-                    
-                    <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-3">
-                            <div>
-                                <Label htmlFor="first-name">First name *</Label>
-                                <Input
-                                    id="first-name"
-                                    placeholder="Enter first name"
-                                    value={newUser.firstName}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, firstName: e.target.value }))}
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="last-name">Last name *</Label>
-                                <Input
-                                    id="last-name"
-                                    placeholder="Enter last name"
-                                    value={newUser.lastName}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, lastName: e.target.value }))}
-                                />
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <Label htmlFor="email">Email *</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="Enter email address"
-                                value={newUser.email}
-                                onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
-                            />
-                        </div>
-                        
-                        <div>
-                            <Label htmlFor="phone">Phone number</Label>
-                            <Input
-                                id="phone"
-                                type="tel"
-                                placeholder="Enter phone number (optional)"
-                                value={newUser.phone}
-                                onChange={(e) => setNewUser(prev => ({ ...prev, phone: e.target.value }))}
-                            />
-                        </div>
-                        
-                        <div>
-                            <Label htmlFor="title">Title</Label>
-                            <Input
-                                id="title"
-                                placeholder="Enter title (optional)"
-                                value={newUser.title}
-                                onChange={(e) => setNewUser(prev => ({ ...prev, title: e.target.value }))}
-                            />
-                        </div>
-                        
-                        <div className="flex items-center justify-between py-2">
-                            <div>
-                                <Label htmlFor="invite-platform">Invite to platform</Label>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                    User will receive an invitation email to join the platform
-                                </p>
-                            </div>
-                            <Switch
-                                id="invite-platform"
-                                checked={newUser.inviteToPlatform}
-                                onCheckedChange={(checked) => setNewUser(prev => ({ ...prev, inviteToPlatform: checked }))}
-                            />
-                        </div>
-                        
-                        <div className="flex justify-end gap-2 pt-4">
-                            <Button 
-                                variant="ghost" 
-                                onClick={() => setIsAddUserModalOpen(false)}
-                            >
-                                Cancel
-                            </Button>
-                            <Button 
-                                onClick={handleAddNewUser}
-                                disabled={!newUser.firstName.trim() || !newUser.lastName.trim() || !newUser.email.trim()}
-                            >
-                                Add user
-                            </Button>
-                        </div>
-                    </div>
-                </DialogContent>
-            </Dialog>
 
             {/* Setup Modal */}
             <FullPageModal
