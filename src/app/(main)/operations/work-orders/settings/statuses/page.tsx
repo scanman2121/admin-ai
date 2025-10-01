@@ -419,7 +419,7 @@ export default function WorkOrdersStatuses() {
                     
                     <div className="space-y-4">
                         <div>
-                            <Label htmlFor="status-name">Status Name *</Label>
+                            <Label htmlFor="status-name">Status name *</Label>
                             <input
                                 id="status-name"
                                 type="text"
