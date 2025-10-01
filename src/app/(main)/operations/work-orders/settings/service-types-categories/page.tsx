@@ -718,7 +718,7 @@ export default function WorkOrdersServiceTypesCategories() {
 
             {/* Service Types and Categories Content */}
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between">
                     <div>
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
                             Service types and categories
@@ -727,26 +727,26 @@ export default function WorkOrdersServiceTypesCategories() {
                             Organize service requests by category and define specific service types with approval workflows
                         </p>
                     </div>
-                    <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3">
                         <Button 
                             variant="ghost" 
                             onClick={() => setIsAddCategoryModalOpen(true)}
                         >
-                            <RiAddLine className="size-4 mr-1.5" />
-                            Add category
-                        </Button>
+                        <RiAddLine className="size-4 mr-1.5" />
+                        Add category
+                    </Button>
                         <Button 
                             variant="ghost" 
                             onClick={() => setIsAddServiceTypeModalOpen(true)}
                         >
-                            <RiAddLine className="size-4 mr-1.5" />
-                            Add service type
-                        </Button>
-                    </div>
+                        <RiAddLine className="size-4 mr-1.5" />
+                        Add service type
+                    </Button>
                 </div>
+            </div>
 
-                {/* Search and Filters */}
-                <div className="flex items-center justify-between gap-4">
+            {/* Search and Filters */}
+            <div className="flex items-center justify-between gap-4">
                 <input
                     type="text"
                     placeholder="Search categories and service types..."
@@ -1163,8 +1163,8 @@ export default function WorkOrdersServiceTypesCategories() {
                         <div>
                             <Label htmlFor="service-type-assigned">Assigned to *</Label>
                             <div className="relative">
-                                <Input
-                                    id="service-type-assigned"
+                            <Input
+                                id="service-type-assigned"
                                     placeholder="Search users and teams..."
                                     value={assignedToSearchQuery}
                                     onChange={(e) => {
@@ -1259,17 +1259,17 @@ export default function WorkOrdersServiceTypesCategories() {
                                                 <tr key={status.name} className={isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''}>
                                                     <td className="px-3 py-2">
                                                         <label className="flex items-center space-x-2 cursor-pointer">
-                                                            <input
-                                                                type="checkbox"
+                                        <input
+                                            type="checkbox"
                                                                 checked={isSelected}
-                                                                onChange={() => handleStatusToggleInModal(status.name)}
-                                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                                            />
+                                            onChange={() => handleStatusToggleInModal(status.name)}
+                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        />
                                                             <div className="flex items-center gap-2">
                                                                 <div className={`w-3 h-3 rounded-full ${getColorClasses(status.color).bgClass}`}></div>
-                                                                <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
+                                        <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
                                                             </div>
-                                                        </label>
+                                    </label>
                                                     </td>
                                                     <td className="px-3 py-2 text-center">
                                                         {isSelected ? (
@@ -1449,8 +1449,8 @@ export default function WorkOrdersServiceTypesCategories() {
                         <div>
                             <Label htmlFor="edit-service-type-assigned">Assigned to *</Label>
                             <div className="relative">
-                                <Input
-                                    id="edit-service-type-assigned"
+                            <Input
+                                id="edit-service-type-assigned"
                                     placeholder="Search users and teams..."
                                     value={assignedToSearchQuery}
                                     onChange={(e) => {
@@ -1545,17 +1545,17 @@ export default function WorkOrdersServiceTypesCategories() {
                                                 <tr key={status.name} className={isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''}>
                                                     <td className="px-3 py-2">
                                                         <label className="flex items-center space-x-2 cursor-pointer">
-                                                            <input
-                                                                type="checkbox"
+                                        <input
+                                            type="checkbox"
                                                                 checked={isSelected}
-                                                                onChange={() => handleStatusToggleInModal(status.name)}
-                                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                                            />
+                                            onChange={() => handleStatusToggleInModal(status.name)}
+                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        />
                                                             <div className="flex items-center gap-2">
                                                                 <div className={`w-3 h-3 rounded-full ${getColorClasses(status.color).bgClass}`}></div>
-                                                                <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
+                                        <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
                                                             </div>
-                                                        </label>
+                                    </label>
                                                     </td>
                                                     <td className="px-3 py-2 text-center">
                                                         {isSelected ? (

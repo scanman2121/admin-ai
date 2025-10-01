@@ -31,6 +31,7 @@ export default function WorkOrdersGeneralSettings() {
     
     // Notifications state
     const [notifications, setNotifications] = useState({
+        notifyRequestor: true,
         notifyAssignedTeam: true,
         notifyOnStatusChanges: true
     })
@@ -232,6 +233,21 @@ export default function WorkOrdersGeneralSettings() {
                             <div className="flex items-start justify-between gap-3 py-2">
                                 <div className="flex-1">
                                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        Notify requestor
+                                    </h3>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                        Send confirmation and status updates to the person who submitted each request
+                                    </p>
+                                </div>
+                                <Switch
+                                    checked={notifications.notifyRequestor}
+                                    onCheckedChange={() => handleNotificationToggle('notifyRequestor')}
+                                />
+                            </div>
+                            
+                            <div className="flex items-start justify-between gap-3 py-2">
+                                <div className="flex-1">
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                         Notify assigned team
                                     </h3>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
@@ -250,7 +266,7 @@ export default function WorkOrdersGeneralSettings() {
                                         Notify on status changes
                                     </h3>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                        Send email when request status is updated or comments are added
+                                        Send email when request status is updated or comments are added. You can customize which statuses trigger notifications in the Service types or Statuses tabs.
                                     </p>
                                 </div>
                                 <Switch
