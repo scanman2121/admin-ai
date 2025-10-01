@@ -31,10 +31,8 @@ export default function WorkOrdersGeneralSettings() {
     
     // Notifications state
     const [notifications, setNotifications] = useState({
-        alwaysNotifyRequestor: true,
         notifyAssignedTeam: true,
-        notifyOnStatusChanges: true,
-        notifyOnReassignment: false
+        notifyOnStatusChanges: true
     })
     
     // Setup modal state
@@ -234,62 +232,32 @@ export default function WorkOrdersGeneralSettings() {
                             <div className="flex items-start justify-between gap-3 py-2">
                                 <div className="flex-1">
                                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                        Always notify requestor
+                                        Notify assigned team
                                     </h3>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                        Send confirmation and status updates to the person who submitted each request
+                                        Send email to assigned team when new requests are submitted
                                     </p>
                                 </div>
                                 <Switch
-                                    checked={notifications.alwaysNotifyRequestor}
-                                    onCheckedChange={() => handleNotificationToggle('alwaysNotifyRequestor')}
+                                    checked={notifications.notifyAssignedTeam}
+                                    onCheckedChange={() => handleNotificationToggle('notifyAssignedTeam')}
                                 />
                             </div>
                             
                             <div className="flex items-start justify-between gap-3 py-2">
-                                    <div className="flex-1">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Notify assigned team
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                            Send email to assigned team when new requests are submitted
-                                        </p>
-                                    </div>
-                                    <Switch
-                                        checked={notifications.notifyAssignedTeam}
-                                        onCheckedChange={() => handleNotificationToggle('notifyAssignedTeam')}
-                                    />
+                                <div className="flex-1">
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                        Notify on status changes
+                                    </h3>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                        Send email when request status is updated or comments are added
+                                    </p>
                                 </div>
-                                
-                                <div className="flex items-start justify-between gap-3 py-2">
-                                    <div className="flex-1">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Notify on status changes
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                            Send email when request status is updated or comments are added
-                                        </p>
-                                    </div>
-                                    <Switch
-                                        checked={notifications.notifyOnStatusChanges}
-                                        onCheckedChange={() => handleNotificationToggle('notifyOnStatusChanges')}
-                                    />
-                                </div>
-                                
-                                <div className="flex items-start justify-between gap-3 py-2">
-                                    <div className="flex-1">
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            Notify on reassignment
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                            Send email to new assignee when requests are reassigned between teams
-                                        </p>
-                                    </div>
-                                    <Switch
-                                        checked={notifications.notifyOnReassignment}
-                                        onCheckedChange={() => handleNotificationToggle('notifyOnReassignment')}
-                                    />
-                                </div>
+                                <Switch
+                                    checked={notifications.notifyOnStatusChanges}
+                                    onCheckedChange={() => handleNotificationToggle('notifyOnStatusChanges')}
+                                />
+                            </div>
                         </div>
                     </div>
                 </Card>
