@@ -609,40 +609,10 @@ export default function WorkOrdersStatuses() {
                                                             </div>
                                                         </td>
                                                         <td className="px-3 py-2 text-center">
-                                                            {isFullySelected || isPartiallySelected ? (
-                                                                <Switch
-                                                                    checked={true}
-                                                                    onCheckedChange={() => {
-                                                                        // Toggle all request types in this category
-                                                                        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
-                                                                        categoryRequestTypes.forEach(type => {
-                                                                            if (newStatus.requestTypes.includes(type)) {
-                                                                                handleNotificationToggle(type, 'requestor')
-                                                                            }
-                                                                        })
-                                                                    }}
-                                                                />
-                                                            ) : (
-                                                                <span className="text-gray-400 dark:text-gray-500">-</span>
-                                                            )}
+                                                            <span className="text-gray-400 dark:text-gray-500">-</span>
                                                         </td>
                                                         <td className="px-3 py-2 text-center">
-                                                            {isFullySelected || isPartiallySelected ? (
-                                                                <Switch
-                                                                    checked={true}
-                                                                    onCheckedChange={() => {
-                                                                        // Toggle all request types in this category
-                                                                        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
-                                                                        categoryRequestTypes.forEach(type => {
-                                                                            if (newStatus.requestTypes.includes(type)) {
-                                                                                handleNotificationToggle(type, 'assignee')
-                                                                            }
-                                                                        })
-                                                                    }}
-                                                                />
-                                                            ) : (
-                                                                <span className="text-gray-400 dark:text-gray-500">-</span>
-                                                            )}
+                                                            <span className="text-gray-400 dark:text-gray-500">-</span>
                                                         </td>
                                                     </tr>
                                                     
