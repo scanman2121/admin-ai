@@ -316,7 +316,7 @@ export default function WorkOrdersServiceTypesCategories() {
     })
     
     // Load statuses from localStorage or use default
-    const [availableStatuses, setAvailableStatuses] = useState(() => {
+    const [availableStatuses, setAvailableStatuses] = useState<typeof workOrderStatuses>(() => {
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem('workOrderStatuses')
             return saved ? JSON.parse(saved) : workOrderStatuses

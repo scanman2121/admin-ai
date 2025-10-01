@@ -61,7 +61,7 @@ export default function WorkOrdersStatuses() {
     const pathname = usePathname()
     
     // Load statuses from localStorage or use default
-    const [statuses, setStatuses] = useState(() => {
+    const [statuses, setStatuses] = useState<typeof defaultStatuses>(() => {
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem('workOrderStatuses')
             return saved ? JSON.parse(saved) : defaultStatuses
@@ -307,7 +307,8 @@ export default function WorkOrdersStatuses() {
                         variant="ghost" 
                         onClick={() => {
                             setEditingStatus(null)
-                            setNewStatus({ name: "", description: "", color: "blue" })
+                            setNewStatus({ name: "", description: "", color: "blue", requestTypes: [] })
+                            setExpandedCategories(new Set())
                             setIsAddStatusModalOpen(true)
                         }}
                     >
