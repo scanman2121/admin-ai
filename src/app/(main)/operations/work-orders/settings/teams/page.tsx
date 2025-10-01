@@ -120,6 +120,7 @@ export default function WorkOrdersTeams() {
     const [selectedUsers, setSelectedUsers] = useState<typeof sampleUsers>([])    
     const [openDropdownId, setOpenDropdownId] = useState<string | null>(null)
     const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)
+    const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false)
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
     const [expandedTeamCardCategories, setExpandedTeamCardCategories] = useState<Set<string>>(new Set())
     const [newTeam, setNewTeam] = useState({
@@ -128,6 +129,13 @@ export default function WorkOrdersTeams() {
         category: "Security",
         requestTypes: [] as string[],
         members: [] as typeof sampleUsers
+    })
+    const [newUser, setNewUser] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        role: ""
     })
     
     const handleTeamToggle = (teamId: string) => {
@@ -219,6 +227,13 @@ export default function WorkOrdersTeams() {
         setIsEditMode(false)
         setEditingTeam(null)
         setIsAddTeamModalOpen(false)
+        setNewUser({
+            firstName: "",
+            lastName: "",
+            email: "",
+            phone: "",
+            role: ""
+        })
     }
 
     const handleRequestTypeToggle = (requestType: string) => {
@@ -282,6 +297,43 @@ export default function WorkOrdersTeams() {
             setSelectedUsers(newSelectedUsers)
             setNewTeam(prev => ({ ...prev, members: newSelectedUsers }))
         }
+        setUserSearchQuery("")
+    }
+
+    const handleAddNewUser = () => {
+        if (!newUser.firstName.trim() || !newUser.lastName.trim() || !newUser.email.trim()) {
+            return
+        }
+
+        const newUserId = (Math.max(...sampleUsers.map(u => parseInt(u.id))) + 1).toString()
+        const fullName = `${newUser.firstName} ${newUser.lastName}`
+        const initials = `${newUser.firstName[0]}${newUser.lastName[0]}`.toUpperCase()
+        
+        const userData = {
+            id: newUserId,
+            name: fullName,
+            role: newUser.role || "Team Member",
+            initials: initials,
+            email: newUser.email
+        }
+
+        // Add to sample users (in a real app, this would be an API call)
+        sampleUsers.push(userData)
+
+        // Add to selected users
+        const newSelectedUsers = [...selectedUsers, userData]
+        setSelectedUsers(newSelectedUsers)
+        setNewTeam(prev => ({ ...prev, members: newSelectedUsers }))
+
+        // Reset form and close modal
+        setNewUser({
+            firstName: "",
+            lastName: "",
+            email: "",
+            phone: "",
+            role: ""
+        })
+        setIsAddUserModalOpen(false)
         setUserSearchQuery("")
     }
 
@@ -578,28 +630,47 @@ export default function WorkOrdersTeams() {
                             </div>
                             
                             {/* User Search Results */}
-                            {userSearchQuery && filteredUsers.length > 0 && (
+                            {userSearchQuery && (
                                 <div className="mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md">
-                                    {filteredUsers.slice(0, 5).map((user) => (
+                                    {filteredUsers.length > 0 ? (
+                                        filteredUsers.slice(0, 5).map((user) => (
+                                            <button
+                                                key={user.id}
+                                                onClick={() => handleAddUser(user)}
+                                                className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
+                                            >
+                                                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
+                                                    {user.initials}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                        {user.name}
+                                                    </div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {user.role} • {user.email}
+                                                    </div>
+                                                </div>
+                                                <RiUserAddLine className="size-4 text-gray-400" />
+                                            </button>
+                                        ))
+                                    ) : (
                                         <button
-                                            key={user.id}
-                                            onClick={() => handleAddUser(user)}
-                                            className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
+                                            onClick={() => setIsAddUserModalOpen(true)}
+                                            className="w-full px-3 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3 border-t border-gray-200 dark:border-gray-600"
                                         >
-                                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
-                                                {user.initials}
+                                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                                                <RiUserAddLine className="size-4" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                    {user.name}
+                                                <div className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                                                    Add new user
                                                 </div>
                                                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                                                    {user.role} • {user.email}
+                                                    Can't find the user? Create a new one
                                                 </div>
                                             </div>
-                                            <RiUserAddLine className="size-4 text-gray-400" />
                                         </button>
-                                    ))}
+                                    )}
                                 </div>
                             )}
                             
@@ -705,6 +776,85 @@ export default function WorkOrdersTeams() {
                             {isEditMode ? 'Update team' : 'Add team'}
                         </Button>
             </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Add New User Modal */}
+            <Dialog open={isAddUserModalOpen} onOpenChange={setIsAddUserModalOpen}>
+                <DialogContent className="max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Add new user</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <Label htmlFor="first-name">First name *</Label>
+                                <Input
+                                    id="first-name"
+                                    placeholder="Enter first name"
+                                    value={newUser.firstName}
+                                    onChange={(e) => setNewUser(prev => ({ ...prev, firstName: e.target.value }))}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="last-name">Last name *</Label>
+                                <Input
+                                    id="last-name"
+                                    placeholder="Enter last name"
+                                    value={newUser.lastName}
+                                    onChange={(e) => setNewUser(prev => ({ ...prev, lastName: e.target.value }))}
+                                />
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <Label htmlFor="email">Email *</Label>
+                            <Input
+                                id="email"
+                                type="email"
+                                placeholder="Enter email address"
+                                value={newUser.email}
+                                onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
+                            />
+                        </div>
+                        
+                        <div>
+                            <Label htmlFor="phone">Phone number</Label>
+                            <Input
+                                id="phone"
+                                type="tel"
+                                placeholder="Enter phone number (optional)"
+                                value={newUser.phone}
+                                onChange={(e) => setNewUser(prev => ({ ...prev, phone: e.target.value }))}
+                            />
+                        </div>
+                        
+                        <div>
+                            <Label htmlFor="role">Role</Label>
+                            <Input
+                                id="role"
+                                placeholder="Enter role (optional)"
+                                value={newUser.role}
+                                onChange={(e) => setNewUser(prev => ({ ...prev, role: e.target.value }))}
+                            />
+                        </div>
+                        
+                        <div className="flex justify-end gap-2 pt-4">
+                            <Button 
+                                variant="ghost" 
+                                onClick={() => setIsAddUserModalOpen(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button 
+                                onClick={handleAddNewUser}
+                                disabled={!newUser.firstName.trim() || !newUser.lastName.trim() || !newUser.email.trim()}
+                            >
+                                Add user
+                            </Button>
+                        </div>
+                    </div>
                 </DialogContent>
             </Dialog>
 
