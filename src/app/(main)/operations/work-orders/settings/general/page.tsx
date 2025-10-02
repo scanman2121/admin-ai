@@ -3,11 +3,11 @@
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Checkbox } from "@/components/Checkbox"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/Dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/Dialog"
 import { Input } from "@/components/Input"
-import { Select } from "@/components/Select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
 import { Switch } from "@/components/Switch"
-import { Table, TableHead, TableHeaderCell, TableBody, TableRow, TableCell } from "@/components/Table"
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { RiAddLine, RiArrowLeftLine, RiDeleteBinLine, RiEditLine } from "@remixicon/react"
@@ -472,11 +472,16 @@ export default function WorkOrdersGeneralSettings() {
                                 value={newField.type}
                                 onValueChange={(value) => handleNewFieldChange('type', value)}
                             >
-                                {fieldTypes.map((type) => (
-                                    <Select.Item key={type.value} value={type.value}>
-                                        {type.label}
-                                    </Select.Item>
-                                ))}
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select field type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {fieldTypes.map((type) => (
+                                        <SelectItem key={type.value} value={type.value}>
+                                            {type.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
                             </Select>
                         </div>
                         
@@ -611,11 +616,16 @@ export default function WorkOrdersGeneralSettings() {
                                     value={newField.type || editingField.type}
                                     onValueChange={(value) => handleNewFieldChange('type', value)}
                                 >
-                                    {fieldTypes.map((type) => (
-                                        <Select.Item key={type.value} value={type.value}>
-                                            {type.label}
-                                        </Select.Item>
-                                    ))}
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select field type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {fieldTypes.map((type) => (
+                                            <SelectItem key={type.value} value={type.value}>
+                                                {type.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
                                 </Select>
                             </div>
                             
