@@ -10,7 +10,7 @@ import { Switch } from "@/components/Switch"
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { FullPageModal } from "@/components/ui/FullPageModal"
-import { RiAddLine, RiArrowLeftLine, RiDeleteBinLine, RiEditLine } from "@remixicon/react"
+import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBinLine, RiEditLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -43,6 +43,14 @@ const serviceTypes = [
     { value: "facilities", label: "Facilities" },
     { value: "all", label: "All Service Types" }
 ]
+
+// Request types organized by category
+const requestTypesByCategory = {
+    Security: ['Access Request', 'Key Card Request', 'Visitor Access', 'Security Incident'],
+    Maintenance: ['HVAC Issue', 'Plumbing Repair', 'Electrical Problem', 'General Repair'],
+    Cleaning: ['Deep Cleaning', 'Carpet Cleaning', 'Window Cleaning', 'Waste Removal'],
+    Concierge: ['Package Delivery', 'Event Setup', 'Guest Services', 'Information Request']
+}
 
 export default function WorkOrdersGeneralSettings() {
     const pathname = usePathname()
@@ -98,6 +106,7 @@ export default function WorkOrdersGeneralSettings() {
     const [isAddFieldModalOpen, setIsAddFieldModalOpen] = useState(false)
     const [isEditFieldModalOpen, setIsEditFieldModalOpen] = useState(false)
     const [editingField, setEditingField] = useState<typeof formFields[0] | null>(null)
+    const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
     
     // New field form state
     const [newField, setNewField] = useState({
@@ -212,6 +221,51 @@ export default function WorkOrdersGeneralSettings() {
         setNewField(prev => ({
             ...prev,
             options: prev.options.filter((_, i) => i !== index)
+        }))
+    }
+    
+    const toggleCategoryExpansion = (category: string) => {
+        setExpandedCategories(prev => {
+            const newExpanded = new Set(prev)
+            if (newExpanded.has(category)) {
+                newExpanded.delete(category)
+            } else {
+                newExpanded.add(category)
+            }
+            return newExpanded
+        })
+    }
+    
+    const handleCategoryToggle = (category: string) => {
+        const categoryRequestTypes = requestTypesByCategory[category as keyof typeof requestTypesByCategory]
+        const allCategoryTypesSelected = categoryRequestTypes.every(type => 
+            newField.serviceTypes.includes(type.toLowerCase().replace(/\s+/g, '-'))
+        )
+
+        setNewField(prev => ({
+            ...prev,
+            serviceTypes: allCategoryTypesSelected
+                ? prev.serviceTypes.filter(type => !categoryRequestTypes.some(rt => rt.toLowerCase().replace(/\s+/g, '-') === type))
+                : Array.from(new Set([...prev.serviceTypes, ...categoryRequestTypes.map(rt => rt.toLowerCase().replace(/\s+/g, '-'))]))
+        }))
+
+        // Expand the category if we're selecting it
+        if (!allCategoryTypesSelected) {
+            setExpandedCategories(prev => {
+                const newSet = new Set(prev)
+                newSet.add(category)
+                return newSet
+            })
+        }
+    }
+    
+    const handleRequestTypeToggle = (requestType: string) => {
+        const typeKey = requestType.toLowerCase().replace(/\s+/g, '-')
+        setNewField(prev => ({
+            ...prev,
+            serviceTypes: prev.serviceTypes.includes(typeKey)
+                ? prev.serviceTypes.filter(type => type !== typeKey)
+                : [...prev.serviceTypes, typeKey]
         }))
     }
 
@@ -444,7 +498,7 @@ export default function WorkOrdersGeneralSettings() {
                     <div className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Field Name
+                                Field name
                             </label>
                             <Input
                                 value={newField.name}
@@ -466,7 +520,7 @@ export default function WorkOrdersGeneralSettings() {
                         
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Field Type
+                                Field type
                             </label>
                             <Select
                                 value={newField.type}
@@ -485,36 +539,10 @@ export default function WorkOrdersGeneralSettings() {
                             </Select>
                         </div>
                         
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Service Types
-                            </label>
-                            <div className="space-y-2">
-                                {serviceTypes.map((serviceType) => (
-                                    <div key={serviceType.value} className="flex items-center space-x-2">
-                                        <Checkbox
-                                            id={`service-${serviceType.value}`}
-                                            checked={newField.serviceTypes.includes(serviceType.value)}
-                                            onCheckedChange={(checked) => {
-                                                if (checked) {
-                                                    handleNewFieldChange('serviceTypes', [...newField.serviceTypes, serviceType.value])
-                                                } else {
-                                                    handleNewFieldChange('serviceTypes', newField.serviceTypes.filter(st => st !== serviceType.value))
-                                                }
-                                            }}
-                                        />
-                                        <label htmlFor={`service-${serviceType.value}`} className="text-sm text-gray-700 dark:text-gray-300">
-                                            {serviceType.label}
-                                        </label>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        
                         {newField.type === 'dropdown' && (
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Dropdown Options
+                                    Dropdown options
                                 </label>
                                 <div className="space-y-2">
                                     {newField.options.map((option, index) => (
@@ -541,7 +569,7 @@ export default function WorkOrdersGeneralSettings() {
                                         className="text-blue-600 hover:text-blue-700"
                                     >
                                         <RiAddLine className="size-4 mr-1" />
-                                        Add Option
+                                        Add option
                                     </Button>
                                 </div>
                             </div>
@@ -556,6 +584,80 @@ export default function WorkOrdersGeneralSettings() {
                             <label htmlFor="required-field" className="text-sm text-gray-700 dark:text-gray-300">
                                 Required field
                             </label>
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Service categories & request types
+                            </label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                Select categories to automatically include all their request types, or customize individual selections
+                            </p>
+                            
+                            <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+                                {Object.entries(requestTypesByCategory).map(([category, requestTypes]) => {
+                                    const isExpanded = expandedCategories.has(category)
+                                    const isFullySelected = newField.serviceTypes.includes('all') || 
+                                        requestTypes.every(type => newField.serviceTypes.includes(type.toLowerCase().replace(/\s+/g, '-')))
+                                    const isPartiallySelected = !isFullySelected && 
+                                        requestTypes.some(type => newField.serviceTypes.includes(type.toLowerCase().replace(/\s+/g, '-')))
+                                    
+                                    return (
+                                        <div key={category} className="space-y-2">
+                                            {/* Category Header */}
+                                            <div className="flex items-center space-x-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => toggleCategoryExpansion(category)}
+                                                    className="flex items-center justify-center w-4 h-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                                >
+                                                    {isExpanded ? (
+                                                        <RiArrowDownSLine className="w-4 h-4" />
+                                                    ) : (
+                                                        <RiArrowRightSLine className="w-4 h-4" />
+                                                    )}
+                                                </button>
+                                                <Checkbox
+                                                    id={`category-${category}`}
+                                                    checked={isFullySelected ? true : isPartiallySelected ? "indeterminate" : false}
+                                                    onCheckedChange={() => handleCategoryToggle(category)}
+                                                />
+                                                <label 
+                                                    htmlFor={`category-${category}`} 
+                                                    className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer"
+                                                    onClick={() => toggleCategoryExpansion(category)}
+                                                >
+                                                    {category}
+                                                </label>
+                                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                    ({requestTypes.filter(type => newField.serviceTypes.includes(type.toLowerCase().replace(/\s+/g, '-'))).length}/{requestTypes.length})
+                                                </span>
+                                            </div>
+                                            
+                                            {/* Request Types (when expanded) */}
+                                            {isExpanded && (
+                                                <div className="ml-6 space-y-1.5">
+                                                    {requestTypes.map((requestType) => {
+                                                        const typeKey = requestType.toLowerCase().replace(/\s+/g, '-')
+                                                        return (
+                                                            <div key={requestType} className="flex items-center space-x-2">
+                                                                <Checkbox
+                                                                    id={`request-${requestType}`}
+                                                                    checked={newField.serviceTypes.includes(typeKey)}
+                                                                    onCheckedChange={() => handleRequestTypeToggle(requestType)}
+                                                                />
+                                                                <label htmlFor={`request-${requestType}`} className="text-sm text-gray-700 dark:text-gray-300">
+                                                                    {requestType}
+                                                                </label>
+                                                            </div>
+                                                        )
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )
+                                })}
+                            </div>
                         </div>
                     </div>
                     
@@ -588,7 +690,7 @@ export default function WorkOrdersGeneralSettings() {
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Field Name
+                                    Field name
                                 </label>
                                 <Input
                                     value={newField.name || editingField.name}
@@ -610,7 +712,7 @@ export default function WorkOrdersGeneralSettings() {
                             
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Field Type
+                                    Field type
                                 </label>
                                 <Select
                                     value={newField.type || editingField.type}
@@ -629,37 +731,10 @@ export default function WorkOrdersGeneralSettings() {
                                 </Select>
                             </div>
                             
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Service Types
-                                </label>
-                                <div className="space-y-2">
-                                    {serviceTypes.map((serviceType) => (
-                                        <div key={serviceType.value} className="flex items-center space-x-2">
-                                            <Checkbox
-                                                id={`edit-service-${serviceType.value}`}
-                                                checked={(newField.serviceTypes.length > 0 ? newField.serviceTypes : editingField.serviceTypes).includes(serviceType.value)}
-                                                onCheckedChange={(checked) => {
-                                                    const currentServiceTypes = newField.serviceTypes.length > 0 ? newField.serviceTypes : editingField.serviceTypes
-                                                    if (checked) {
-                                                        handleNewFieldChange('serviceTypes', [...currentServiceTypes, serviceType.value])
-                                                    } else {
-                                                        handleNewFieldChange('serviceTypes', currentServiceTypes.filter(st => st !== serviceType.value))
-                                                    }
-                                                }}
-                                            />
-                                            <label htmlFor={`edit-service-${serviceType.value}`} className="text-sm text-gray-700 dark:text-gray-300">
-                                                {serviceType.label}
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            
                             {(newField.type || editingField.type) === 'dropdown' && (
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Dropdown Options
+                                        Dropdown options
                                     </label>
                                     <div className="space-y-2">
                                         {(newField.options.length > 0 ? newField.options : editingField.options).map((option, index) => (
@@ -686,7 +761,7 @@ export default function WorkOrdersGeneralSettings() {
                                             className="text-blue-600 hover:text-blue-700"
                                         >
                                             <RiAddLine className="size-4 mr-1" />
-                                            Add Option
+                                            Add option
                                         </Button>
                                     </div>
                                 </div>
@@ -701,6 +776,81 @@ export default function WorkOrdersGeneralSettings() {
                                 <label htmlFor="edit-required-field" className="text-sm text-gray-700 dark:text-gray-300">
                                     Required field
                                 </label>
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Service categories & request types
+                                </label>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                    Select categories to automatically include all their request types, or customize individual selections
+                                </p>
+                                
+                                <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+                                    {Object.entries(requestTypesByCategory).map(([category, requestTypes]) => {
+                                        const isExpanded = expandedCategories.has(category)
+                                        const currentServiceTypes = newField.serviceTypes.length > 0 ? newField.serviceTypes : editingField.serviceTypes
+                                        const isFullySelected = currentServiceTypes.includes('all') || 
+                                            requestTypes.every(type => currentServiceTypes.includes(type.toLowerCase().replace(/\s+/g, '-')))
+                                        const isPartiallySelected = !isFullySelected && 
+                                            requestTypes.some(type => currentServiceTypes.includes(type.toLowerCase().replace(/\s+/g, '-')))
+                                        
+                                        return (
+                                            <div key={category} className="space-y-2">
+                                                {/* Category Header */}
+                                                <div className="flex items-center space-x-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => toggleCategoryExpansion(category)}
+                                                        className="flex items-center justify-center w-4 h-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                                    >
+                                                        {isExpanded ? (
+                                                            <RiArrowDownSLine className="w-4 h-4" />
+                                                        ) : (
+                                                            <RiArrowRightSLine className="w-4 h-4" />
+                                                        )}
+                                                    </button>
+                                                    <Checkbox
+                                                        id={`edit-category-${category}`}
+                                                        checked={isFullySelected ? true : isPartiallySelected ? "indeterminate" : false}
+                                                        onCheckedChange={() => handleCategoryToggle(category)}
+                                                    />
+                                                    <label 
+                                                        htmlFor={`edit-category-${category}`} 
+                                                        className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer"
+                                                        onClick={() => toggleCategoryExpansion(category)}
+                                                    >
+                                                        {category}
+                                                    </label>
+                                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                        ({requestTypes.filter(type => currentServiceTypes.includes(type.toLowerCase().replace(/\s+/g, '-'))).length}/{requestTypes.length})
+                                                    </span>
+                                                </div>
+                                                
+                                                {/* Request Types (when expanded) */}
+                                                {isExpanded && (
+                                                    <div className="ml-6 space-y-1.5">
+                                                        {requestTypes.map((requestType) => {
+                                                            const typeKey = requestType.toLowerCase().replace(/\s+/g, '-')
+                                                            return (
+                                                                <div key={requestType} className="flex items-center space-x-2">
+                                                                    <Checkbox
+                                                                        id={`edit-request-${requestType}`}
+                                                                        checked={currentServiceTypes.includes(typeKey)}
+                                                                        onCheckedChange={() => handleRequestTypeToggle(requestType)}
+                                                                    />
+                                                                    <label htmlFor={`edit-request-${requestType}`} className="text-sm text-gray-700 dark:text-gray-300">
+                                                                        {requestType}
+                                                                    </label>
+                                                                </div>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )
+                                    })}
+                                </div>
                             </div>
                         </div>
                     )}
