@@ -351,7 +351,7 @@ export function AssignedPersonnelCard({
               No assignments yet
             </h4>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Search for teams or individuals to assign to this work order
+              Search for teams or individuals to assign to this service request
             </p>
           </div>
         )}

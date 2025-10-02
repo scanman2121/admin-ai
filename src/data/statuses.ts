@@ -1,9 +1,9 @@
-// Shared statuses data for work orders
-export const workOrderStatuses = [
+// Shared statuses data for service requests
+export const serviceRequestStatuses = [
     {
         id: 1,
         name: "New",
-        description: "Newly created work orders awaiting review",
+        description: "Newly created service requests awaiting review",
         status: true,
         color: "yellow",
         orderCount: 45
@@ -11,7 +11,7 @@ export const workOrderStatuses = [
     {
         id: 2,
         name: "Open",
-        description: "Work orders that have been reviewed and are ready to be worked on",
+        description: "Service requests that have been reviewed and are ready to be worked on",
         status: true,
         color: "blue",
         orderCount: 23
@@ -19,7 +19,7 @@ export const workOrderStatuses = [
     {
         id: 3,
         name: "In Progress",
-        description: "Work orders currently being worked on",
+        description: "Service requests currently being worked on",
         status: true,
         color: "purple",
         orderCount: 18
@@ -27,7 +27,7 @@ export const workOrderStatuses = [
     {
         id: 4,
         name: "Pending",
-        description: "Work orders waiting for additional information or resources",
+        description: "Service requests waiting for additional information or resources",
         status: true,
         color: "orange",
         orderCount: 12
@@ -35,7 +35,7 @@ export const workOrderStatuses = [
     {
         id: 5,
         name: "Completed",
-        description: "Successfully completed work orders",
+        description: "Successfully completed service requests",
         status: true,
         color: "green",
         orderCount: 156

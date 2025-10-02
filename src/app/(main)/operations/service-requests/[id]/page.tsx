@@ -9,24 +9,24 @@ import { AssignedPersonnelCard } from "@/components/ui/AssignedPersonnelCard"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Textarea } from "@/components/ui/textarea"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
-import { workOrders } from "@/data/data"
+import { serviceRequests } from "@/data/data"
 import { ChevronDown, ChevronLeft, Download, ExternalLink, FileText, MapPin, Paperclip, Send, Upload } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { useState } from "react"
 
-// Mock additional work order data for detail page
-const getWorkOrderDetailData = (workOrderId: string) => {
-    const baseWorkOrder = workOrders.find(wo => wo.id === workOrderId)
+// Mock additional service request data for detail page
+const getServiceRequestDetailData = (serviceRequestId: string) => {
+    const baseServiceRequest = serviceRequests.find(sr => sr.id === serviceRequestId)
     
-    if (!baseWorkOrder) return null
+    if (!baseServiceRequest) return null
     
     return {
-        ...baseWorkOrder,
-        requestorDetails: baseWorkOrder.requestorDetails, // Include the full requestor details
+        ...baseServiceRequest,
+        requestorDetails: baseServiceRequest.requestorDetails, // Include the full requestor details
         location: {
-            building: baseWorkOrder.building,
-            floor: baseWorkOrder.floor,
+            building: baseServiceRequest.building,
+            floor: baseServiceRequest.floor,
             room: "Conference Room A",
             address: "125 Lincoln, Floor 12"
         },
@@ -146,16 +146,16 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
     } | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
     
-    const workOrderDetail = getWorkOrderDetailData(params.id)
+    const serviceRequestDetail = getServiceRequestDetailData(params.id)
     
     const [assignedPersonnel, setAssignedPersonnel] = useState(
-        workOrderDetail?.assignedPersonnel || []
+        serviceRequestDetail?.assignedPersonnel || []
     )
     
-    const [approver, setApprover] = useState(workOrderDetail?.approver || null)
+    const [approver, setApprover] = useState(serviceRequestDetail?.approver || null)
     
     // Status management
-    const [currentStatus, setCurrentStatus] = useState(workOrderDetail?.status || 'Open')
+    const [currentStatus, setCurrentStatus] = useState(serviceRequestDetail?.status || 'Open')
     
     // Available status options
     const statusOptions = [
@@ -172,13 +172,13 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
         return option?.variant || 'warning'
     }
     
-    if (!workOrderDetail) {
+    if (!serviceRequestDetail) {
         notFound()
     }
 
     const handleRequestorClick = () => {
-        if (workOrderDetail.requestorDetails) {
-            setSelectedUser(workOrderDetail.requestorDetails)
+        if (serviceRequestDetail.requestorDetails) {
+            setSelectedUser(serviceRequestDetail.requestorDetails)
             setIsModalOpen(true)
         }
     }
@@ -216,13 +216,13 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <Link 
-                        href="/operations/work-orders"
+                        href="/operations/service-requests"
                         className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9"
                     >
                         <ChevronLeft className="h-4 w-4" />
                     </Link>
                     <h1 className="text-xl font-medium text-gray-900 dark:text-gray-50">
-                        {workOrderDetail.request}
+                        {serviceRequestDetail.request}
                     </h1>
                 </div>
                 
@@ -275,11 +275,11 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                                             onClick={handleRequestorClick}
                                             className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer underline hover:no-underline"
                                         >
-                                            {workOrderDetail.requestorDetails?.name || workOrderDetail.requestor.split(' - ')[0]}
+                                            {serviceRequestDetail.requestorDetails?.name || serviceRequestDetail.requestor.split(' - ')[0]}
                                         </button>
                                         <span className="text-gray-500 mx-1">·</span>
                                         <span className="text-sm text-gray-600 dark:text-gray-400">
-                                            {workOrderDetail.requestorDetails?.company || workOrderDetail.requestor.split(' - ')[1]}
+                                            {serviceRequestDetail.requestorDetails?.company || serviceRequestDetail.requestor.split(' - ')[1]}
                                         </span>
                                     </div>
                                     <p className="text-xs text-gray-500">Requested By</p>
@@ -287,38 +287,38 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
 
                                 <div>
                                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                                        {workOrderDetail.dateTime}
+                                        {serviceRequestDetail.dateTime}
                                     </h3>
                                     <p className="text-xs text-gray-500">Requested Date</p>
                                 </div>
 
                                 <div className="md:col-span-2">
                                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1 break-all">
-                                        {workOrderDetail.hqoRequestId}
+                                        {serviceRequestDetail.hqoRequestId}
                                     </h3>
                                     <p className="text-xs text-gray-500">HqO Request ID</p>
                                 </div>
 
                                 <div className="md:col-span-2">
                                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                                        {workOrderDetail.description || "The air conditioning unit in Conference Room A has stopped working. The room temperature is rising and affecting meeting comfort. Please investigate and repair as soon as possible."}
+                                        {serviceRequestDetail.description || "The air conditioning unit in Conference Room A has stopped working. The room temperature is rising and affecting meeting comfort. Please investigate and repair as soon as possible."}
                                     </h3>
                                     <p className="text-xs text-gray-500">Description</p>
                                 </div>
 
                                 <div>
                                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                                        {workOrderDetail.location.address}
+                                        {serviceRequestDetail.location.address}
                                     </h3>
                                     <h4 className="text-sm text-gray-600 dark:text-gray-400">
-                                        {workOrderDetail.location.room}
+                                        {serviceRequestDetail.location.room}
                                     </h4>
                                     <p className="text-xs text-gray-500">Location</p>
                                 </div>
 
                                 <div>
                                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                                        {workOrderDetail.externalCaseId || "-"}
+                                        {serviceRequestDetail.externalCaseId || "-"}
                                     </h3>
                                     <p className="text-xs text-gray-500">External Case ID</p>
                                 </div>
@@ -341,7 +341,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                                 </div>
 
                                 {/* File attachments */}
-                                {workOrderDetail.messages.filter(m => m.type === 'file').map((file) => (
+                                {serviceRequestDetail.messages.filter(m => m.type === 'file').map((file) => (
                                     <div key={file.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                         <div className="flex items-center gap-3">
                                             <Paperclip className="h-4 w-4 text-gray-400" />
@@ -357,7 +357,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                                 ))}
 
                                 {/* Message from user */}
-                                {workOrderDetail.messages.filter(m => m.type === 'message').map((message) => (
+                                {serviceRequestDetail.messages.filter(m => m.type === 'message').map((message) => (
                                     <div key={message.id} className="flex items-start gap-3">
                                         <Avatar className="size-8">
                                             <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
@@ -403,7 +403,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                             
                             {/* Existing notes */}
                             <div className="space-y-3 mb-4">
-                                {workOrderDetail.internalNotes.map((note) => (
+                                {serviceRequestDetail.internalNotes.map((note) => (
                                     <div key={note.id} className="p-3 bg-gray-50 rounded-lg">
                                         <p className="text-sm text-gray-900 mb-1">{note.content}</p>
                                         <p className="text-xs text-gray-500">{note.timestamp}</p>
@@ -434,7 +434,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Activity Log</h2>
                             
                             <div className="space-y-3">
-                                {workOrderDetail.activityLog.map((activity) => (
+                                {serviceRequestDetail.activityLog.map((activity) => (
                                     <div key={activity.id} className="flex items-start gap-3">
                                         <div className="size-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mt-1">
                                             <activity.icon className="size-4 text-blue-600" />
@@ -475,7 +475,7 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Case Files</h3>
                             
                             <div className="space-y-4">
-                                {workOrderDetail.caseFiles.map((file) => (
+                                {serviceRequestDetail.caseFiles.map((file) => (
                                     <div key={file.id} className="space-y-2">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
@@ -504,8 +504,8 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
                             <div className="flex items-start gap-3">
                                 <MapPin className="h-4 w-4 text-gray-400 mt-1" />
                                 <div>
-                                    <p className="text-sm font-medium text-gray-900">{workOrderDetail.location.address}</p>
-                                    <p className="text-xs text-gray-500">Floor 12, {workOrderDetail.location.room}</p>
+                                    <p className="text-sm font-medium text-gray-900">{serviceRequestDetail.location.address}</p>
+                                    <p className="text-xs text-gray-500">Floor 12, {serviceRequestDetail.location.room}</p>
                                 </div>
                             </div>
                         </div>

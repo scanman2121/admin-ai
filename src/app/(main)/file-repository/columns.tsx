@@ -20,7 +20,7 @@ interface Document {
   | "Asset Valuation Report"
   | "Capital Expenditure (CapEx) Request"
   | "Financial Statements"
-  | "Work Order"
+  | "Service Request"
   | "Maintenance Schedule"
   | "Inspection Report"
   | "Incident Report"

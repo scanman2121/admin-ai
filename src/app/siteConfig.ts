@@ -42,7 +42,7 @@ export const siteConfig = {
       visitorManagement: "/operations/visitor-management",
       capacityManager: "/operations/capacity-manager",
       resourceBooking: "/operations/resource-booking",
-      workOrders: "/operations/work-orders",
+      serviceRequests: "/operations/service-requests",
       parking: "/operations/parking",
       energyConsumption: "/operations/energy-consumption",
     },

@@ -7,22 +7,22 @@ import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
-import { workOrderStatuses } from "@/data/statuses"
+import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiEdit2Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 
-// Define tabs for the Work Orders Settings page
+// Define tabs for the Service Requests Settings page
 const tabs = [
-    { name: "Settings", href: "/operations/work-orders/settings/general" },
-    { name: "Teams", href: "/operations/work-orders/settings/teams" },
-    { name: "Service types", href: "/operations/work-orders/settings/service-types-categories" },
-    { name: "Statuses", href: "/operations/work-orders/settings/statuses" },
+    { name: "Settings", href: "/operations/service-requests/settings/general" },
+    { name: "Teams", href: "/operations/service-requests/settings/teams" },
+    { name: "Service types", href: "/operations/service-requests/settings/service-types-categories" },
+    { name: "Statuses", href: "/operations/service-requests/settings/statuses" },
 ]
 
 // Use shared statuses data - this will be updated when new statuses are created
-const defaultStatuses = workOrderStatuses
+const defaultStatuses = serviceRequestStatuses
 
 // Request types organized by category (copied from teams page)
 const requestTypesByCategory = {
@@ -57,7 +57,7 @@ const presetStatusColors = {
     "On Hold": "gray"
 }
 
-export default function WorkOrdersStatuses() {
+export default function ServiceRequestsStatuses() {
     const pathname = usePathname()
     
     // Load statuses from localStorage or use default
@@ -309,11 +309,11 @@ export default function WorkOrdersStatuses() {
             {/* Header with back navigation */}
             <div className="flex items-center gap-3">
                 <Link 
-                    href="/operations/work-orders"
+                    href="/operations/service-requests"
                     className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
                     <RiArrowLeftLine className="mr-1 size-4" />
-                    Work Orders
+                    Service Requests
                 </Link>
             </div>
 
@@ -321,7 +321,7 @@ export default function WorkOrdersStatuses() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                        Work order settings
+                        Service request settings
                     </h1>
                 </div>
                 <div className="flex items-center gap-3">

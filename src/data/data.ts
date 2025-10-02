@@ -833,7 +833,7 @@ export const visitors = [
   },
 ]
 
-export const workOrderStatuses: { value: string; label: string; variant: string }[] = [
+export const serviceRequestStatuses: { value: string; label: string; variant: string }[] = [
   {
     value: "New",
     label: "New",
@@ -955,7 +955,7 @@ const marcusRodriguezUser = getUserById("marcus-rodriguez-new");
 const amandaKimUser = getUserById("amanda-kim-contractor");
 const brianWilsonUser = getUserById("brian-wilson-suspended");
 
-export const workOrders = [
+export const serviceRequests = [
   // ACCESS REQUEST WORK ORDERS (These show up in work orders AND create the service requests in access control)
   
   // Different types of access requests

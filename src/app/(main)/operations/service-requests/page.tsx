@@ -1,14 +1,14 @@
 "use client"
 
 import { Badge } from "@/components/Badge"
-import { WorkOrdersDataTable } from "@/components/ui/data-table/WorkOrdersDataTable"
+import { ServiceRequestsDataTable } from "@/components/ui/data-table/ServiceRequestsDataTable"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
-import { workOrders, workOrderStatuses } from "@/data/data"
+import { serviceRequests, serviceRequestStatuses } from "@/data/data"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 // Factory function to create columns with click handlers
-const createWorkOrdersColumns = (onRequestorClick: (requestorDetails: any) => void) => [
+const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) => void) => [
     {
         accessorKey: "request",
         header: "Request",
@@ -112,7 +112,7 @@ const createWorkOrdersColumns = (onRequestorClick: (requestorDetails: any) => vo
         header: "Status",
         cell: ({ row }: { row: any }) => {
             const status = row.getValue("status") as string;
-            const statusConfig = workOrderStatuses.find(s => s.value === status);
+            const statusConfig = serviceRequestStatuses.find(s => s.value === status);
             
             let badgeVariant: "default" | "success" | "warning" | "error" = "default";
             if (statusConfig?.variant === "success") badgeVariant = "success";
@@ -159,8 +159,8 @@ const createWorkOrdersColumns = (onRequestorClick: (requestorDetails: any) => vo
     },
 ]
 
-export default function WorkOrders() {
-    const [data] = useState(workOrders)
+export default function ServiceRequests() {
+    const [data] = useState(serviceRequests)
     const [selectedUser, setSelectedUser] = useState<{
         id: string
         name: string
@@ -177,9 +177,9 @@ export default function WorkOrders() {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const router = useRouter()
 
-    const handleRowClick = (workOrder: any) => {
-        // Generate work order ID for navigation
-        router.push(`/operations/work-orders/${workOrder.id}`)
+    const handleRowClick = (serviceRequest: any) => {
+        // Generate service request ID for navigation
+        router.push(`/operations/service-requests/${serviceRequest.id}`)
     }
 
     const handleRequestorClick = (requestorDetails: any) => {
@@ -192,12 +192,12 @@ export default function WorkOrders() {
         setSelectedUser(null)
     }
 
-    const workOrdersColumns = createWorkOrdersColumns(handleRequestorClick)
+    const serviceRequestsColumns = createServiceRequestsColumns(handleRequestorClick)
 
     return (
         <div>
-            <WorkOrdersDataTable 
-                columns={workOrdersColumns} 
+            <ServiceRequestsDataTable 
+                columns={serviceRequestsColumns} 
                 data={data} 
                 onRowClick={handleRowClick} 
                 searchKey="request" 

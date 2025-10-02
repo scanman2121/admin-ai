@@ -15,12 +15,12 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 
-// Define tabs for the Work Orders Settings page
+// Define tabs for the Service Requests Settings page
 const tabs = [
-    { name: "Settings", href: "/operations/work-orders/settings/general" },
-    { name: "Teams", href: "/operations/work-orders/settings/teams" },
-    { name: "Service types", href: "/operations/work-orders/settings/service-types-categories" },
-    { name: "Statuses", href: "/operations/work-orders/settings/statuses" },
+    { name: "Settings", href: "/operations/service-requests/settings/general" },
+    { name: "Teams", href: "/operations/service-requests/settings/teams" },
+    { name: "Service types", href: "/operations/service-requests/settings/service-types-categories" },
+    { name: "Statuses", href: "/operations/service-requests/settings/statuses" },
 ]
 
 // Field types for custom fields
@@ -52,7 +52,7 @@ const requestTypesByCategory = {
     Concierge: ['Package Delivery', 'Event Setup', 'Guest Services', 'Information Request']
 }
 
-export default function WorkOrdersGeneralSettings() {
+export default function ServiceRequestsGeneralSettings() {
     const pathname = usePathname()
     
     // Form Fields state with enhanced structure for custom fields
@@ -274,11 +274,11 @@ export default function WorkOrdersGeneralSettings() {
             {/* Header with back navigation */}
             <div className="flex items-center gap-3">
                 <Link 
-                    href="/operations/work-orders"
+                    href="/operations/service-requests"
                     className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
                     <RiArrowLeftLine className="mr-1 size-4" />
-                    Work Orders
+                    Service Requests
                 </Link>
             </div>
 
@@ -286,7 +286,7 @@ export default function WorkOrdersGeneralSettings() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-                        Work order settings
+                        Service request settings
                     </h1>
                 </div>
                 <div className="flex items-center gap-3">

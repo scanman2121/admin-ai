@@ -65,7 +65,7 @@ const operationsItems = [
   { name: "Access control", href: siteConfig.baseLinks.operations.accessControl },
   { name: "Visitor management", href: siteConfig.baseLinks.operations.visitorManagement },
   { name: "Resource booking", href: siteConfig.baseLinks.operations.resourceBooking },
-  { name: "Work orders", href: siteConfig.baseLinks.operations.workOrders },
+  { name: "Service requests", href: siteConfig.baseLinks.operations.serviceRequests },
 ] as const
 
 // Settings and setup sub-navigation items

@@ -393,10 +393,10 @@ export function CommunicationsPanel({
         console.log(`Creating visitor for tenant ${selectedTenant}`)
     }
 
-    const handleCreateWorkOrder = () => {
+    const handleCreateServiceRequest = () => {
         setShowActionMenu(false)
-        // In a real app, you would open a work order creation form
-        console.log(`Creating work order for tenant ${selectedTenant}`)
+        // In a real app, you would open a service request creation form
+        console.log(`Creating service request for tenant ${selectedTenant}`)
     }
 
     const handleBookResource = () => {
@@ -763,10 +763,10 @@ export function CommunicationsPanel({
                                                             <button
                                                                 type="button"
                                                                 className="flex items-center gap-2 w-full px-4 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-                                                                onClick={handleCreateWorkOrder}
+                                                                onClick={handleCreateServiceRequest}
                                                             >
                                                                 <RiToolsLine className="size-4 text-gray-500 dark:text-gray-400" />
-                                                                <span>Create work order</span>
+                                                                <span>Create service request</span>
                                                             </button>
                                                             <button
                                                                 type="button"

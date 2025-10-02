@@ -102,10 +102,10 @@ export function CreatePopover() {
             href: "/visitors/new"
         },
         {
-            id: "create-work-order",
-            label: "Create work order",
+            id: "create-service-request",
+            label: "Create service request",
             icon: <RiToolsLine className="size-5" />,
-            href: "/work-orders/new"
+            href: "/service-requests/new"
         }
     ]
 

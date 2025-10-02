@@ -103,7 +103,7 @@ export const spaceInsights: MetricInsight[] = [
 // Operations Insights
 export const operationsInsights: MetricInsight[] = [
     {
-        title: "Work Orders",
+        title: "Service Requests",
         value: "42",
         comparison: "15 pending approval",
         trend: "down",

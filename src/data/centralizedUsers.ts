@@ -1,5 +1,5 @@
 // Centralized user database for demo consistency
-// This data is used across work orders, visitors, access control, and user management
+// This data is used across service requests, visitors, access control, and user management
 
 export interface CentralizedUser {
   id: string
@@ -19,11 +19,11 @@ export interface CentralizedUser {
   badgeId: string
   startDate: string
   manager?: string
-  // Additional fields for access control and work orders
+  // Additional fields for access control and service requests
   acsStatus: "active" | "inactive" | "pending" | "suspended"
   // For visitor management
   canHostVisitors: boolean
-  // For work orders
+  // For service requests
   preferredContactMethod: "email" | "phone" | "both"
 }
 

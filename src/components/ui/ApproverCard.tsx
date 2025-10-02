@@ -192,7 +192,7 @@ export function ApproverCard({
               No approver assigned
             </h4>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              This work order doesn't require approval
+              This service request doesn't require approval
             </p>
           </div>
         )}
