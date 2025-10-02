@@ -58,7 +58,7 @@ export default function WorkOrdersGeneralSettings() {
             required: true,
             serviceTypes: ["all"],
             isCore: true,
-            options: []
+            options: [] as string[]
         },
         {
             id: "description",
@@ -69,7 +69,7 @@ export default function WorkOrdersGeneralSettings() {
             required: true,
             serviceTypes: ["all"],
             isCore: true,
-            options: []
+            options: [] as string[]
         },
         {
             id: "attachments",
@@ -80,7 +80,7 @@ export default function WorkOrdersGeneralSettings() {
             required: false,
             serviceTypes: ["all"],
             isCore: true,
-            options: []
+            options: [] as string[]
         }
     ])
     
