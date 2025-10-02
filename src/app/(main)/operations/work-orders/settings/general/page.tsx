@@ -44,9 +44,6 @@ const serviceTypes = [
     { value: "all", label: "All Service Types" }
 ]
 
-// Core fields that cannot be deleted
-const coreFields = ["location", "description", "attachments"]
-
 export default function WorkOrdersGeneralSettings() {
     const pathname = usePathname()
     
