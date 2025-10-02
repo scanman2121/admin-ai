@@ -106,7 +106,7 @@ export default function WorkOrdersGeneralSettings() {
         type: "text",
         required: false,
         serviceTypes: ["all"],
-        options: []
+        options: [] as string[]
     })
     
     const handleFormFieldToggle = (fieldId: string) => {
