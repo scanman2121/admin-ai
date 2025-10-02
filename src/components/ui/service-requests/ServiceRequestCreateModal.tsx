@@ -58,7 +58,7 @@ export function ServiceRequestCreateModal({ isOpen, onClose, onSubmit }: Service
     const [assignToOpen, setAssignToOpen] = useState(false)
     const [buildingOpen, setBuildingOpen] = useState(false)
 
-    const handleInputChange = (field: keyof WorkOrderData, value: string) => {
+    const handleInputChange = (field: keyof ServiceRequestData, value: string) => {
         setFormData(prev => ({
             ...prev,
             [field]: value
