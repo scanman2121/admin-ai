@@ -58,4 +58,4 @@ export const serviceRequestStatuses = [
     }
 ]
 
-export type WorkOrderStatus = typeof workOrderStatuses[0]
+export type ServiceRequestStatus = typeof serviceRequestStatuses[0]

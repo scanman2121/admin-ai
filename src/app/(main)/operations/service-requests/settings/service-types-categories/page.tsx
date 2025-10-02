@@ -6,9 +6,9 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
-import { workOrderStatuses } from "@/data/statuses"
+import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -316,12 +316,12 @@ export default function ServiceRequestsServiceTypesCategories() {
     })
     
     // Load statuses from localStorage or use default
-    const [availableStatuses, setAvailableStatuses] = useState<typeof workOrderStatuses>(() => {
+    const [availableStatuses, setAvailableStatuses] = useState<typeof serviceRequestStatuses>(() => {
         if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('workOrderStatuses')
-            return saved ? JSON.parse(saved) : workOrderStatuses
+            const saved = localStorage.getItem('serviceRequestStatuses')
+            return saved ? JSON.parse(saved) : serviceRequestStatuses
         }
-        return workOrderStatuses
+        return serviceRequestStatuses
     })
 
     // Color options for custom statuses
@@ -627,7 +627,7 @@ export default function ServiceRequestsServiceTypesCategories() {
         
         // Save to localStorage
         if (typeof window !== 'undefined') {
-            localStorage.setItem('workOrderStatuses', JSON.stringify(updatedStatuses))
+            localStorage.setItem('serviceRequestStatuses', JSON.stringify(updatedStatuses))
         }
         
         // Also add to the service type's statuses

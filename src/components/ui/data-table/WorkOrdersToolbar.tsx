@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { DataTableFacetedFilter } from "@/components/ui/data-table/DataTableFacetedFilter"
 import { DataTableViewOptions } from "@/components/ui/data-table/DataTableViewOptions"
 import { Input } from "@/components/ui/input"
-import { buildings, companies, issueTypes, workOrderStatuses } from "@/data/data"
+import { buildings, companies, issueTypes, serviceRequestStatuses } from "@/data/data"
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
 
@@ -59,7 +59,7 @@ export function WorkOrdersToolbar<TData>({
                     <DataTableFacetedFilter
                         column={table.getColumn("status")}
                         title="Status"
-                        options={workOrderStatuses.map(status => ({ 
+                        options={serviceRequestStatuses.map(status => ({ 
                             value: status.value, 
                             label: status.label 
                         }))}

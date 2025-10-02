@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/Checkbox"
 import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiEdit2Line } from "@remixicon/react"
@@ -63,7 +63,7 @@ export default function ServiceRequestsStatuses() {
     // Load statuses from localStorage or use default
     const [statuses, setStatuses] = useState<typeof defaultStatuses>(() => {
         if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('workOrderStatuses')
+            const saved = localStorage.getItem('serviceRequestStatuses')
             return saved ? JSON.parse(saved) : defaultStatuses
         }
         return defaultStatuses
@@ -222,7 +222,7 @@ export default function ServiceRequestsStatuses() {
         
         // Save to localStorage
         if (typeof window !== 'undefined') {
-            localStorage.setItem('workOrderStatuses', JSON.stringify(updatedStatuses))
+            localStorage.setItem('serviceRequestStatuses', JSON.stringify(updatedStatuses))
         }
         
         setNewStatus({ name: "", description: "", color: "blue", requestTypes: [], notificationSettings: {} })
@@ -276,7 +276,7 @@ export default function ServiceRequestsStatuses() {
         
         // Save to localStorage
         if (typeof window !== 'undefined') {
-            localStorage.setItem('workOrderStatuses', JSON.stringify(updatedStatuses))
+            localStorage.setItem('serviceRequestStatuses', JSON.stringify(updatedStatuses))
         }
         
         setEditingStatus(null)
@@ -291,7 +291,7 @@ export default function ServiceRequestsStatuses() {
         
         // Save to localStorage
         if (typeof window !== 'undefined') {
-            localStorage.setItem('workOrderStatuses', JSON.stringify(updatedStatuses))
+            localStorage.setItem('serviceRequestStatuses', JSON.stringify(updatedStatuses))
         }
     }
 
