@@ -7,7 +7,7 @@ import { Dialog } from "@/components/Dialog"
 import { Input } from "@/components/Input"
 import { Select } from "@/components/Select"
 import { Switch } from "@/components/Switch"
-import { Table } from "@/components/Table"
+import { Table, TableHead, TableHeaderCell, TableBody, TableRow, TableCell } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { RiAddLine, RiArrowLeftLine, RiDeleteBinLine, RiEditLine } from "@remixicon/react"
@@ -285,20 +285,20 @@ export default function WorkOrdersGeneralSettings() {
                 </div>
 
                 <Table>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.Head>Field Name</Table.Head>
-                            <Table.Head>Type</Table.Head>
-                            <Table.Head>Service Types</Table.Head>
-                            <Table.Head>Required</Table.Head>
-                            <Table.Head>Enabled</Table.Head>
-                            <Table.Head className="text-right">Actions</Table.Head>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
+                    <TableHead>
+                        <TableRow>
+                            <TableHeaderCell>Field Name</TableHeaderCell>
+                            <TableHeaderCell>Type</TableHeaderCell>
+                            <TableHeaderCell>Service Types</TableHeaderCell>
+                            <TableHeaderCell>Required</TableHeaderCell>
+                            <TableHeaderCell>Enabled</TableHeaderCell>
+                            <TableHeaderCell className="text-right">Actions</TableHeaderCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
                         {formFields.map((field) => (
-                            <Table.Row key={field.id}>
-                                <Table.Cell>
+                            <TableRow key={field.id}>
+                                <TableCell>
                                     <div>
                                         <div className="font-medium text-gray-900 dark:text-gray-100">
                                             {field.name}
@@ -307,13 +307,13 @@ export default function WorkOrdersGeneralSettings() {
                                             {field.description}
                                         </div>
                                     </div>
-                                </Table.Cell>
-                                <Table.Cell>
+                                </TableCell>
+                                <TableCell>
                                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                         {fieldTypes.find(ft => ft.value === field.type)?.label || field.type}
                                     </span>
-                                </Table.Cell>
-                                <Table.Cell>
+                                </TableCell>
+                                <TableCell>
                                     <div className="flex flex-wrap gap-1">
                                         {field.serviceTypes.map((serviceType) => (
                                             <span 
@@ -324,20 +324,20 @@ export default function WorkOrdersGeneralSettings() {
                                             </span>
                                         ))}
                                     </div>
-                                </Table.Cell>
-                                <Table.Cell>
+                                </TableCell>
+                                <TableCell>
                                     <Switch
                                         checked={field.required}
                                         onCheckedChange={() => handleRequiredFieldToggle(field.id)}
                                     />
-                                </Table.Cell>
-                                <Table.Cell>
+                                </TableCell>
+                                <TableCell>
                                     <Switch
                                         checked={field.enabled}
                                         onCheckedChange={() => handleFormFieldToggle(field.id)}
                                     />
-                                </Table.Cell>
-                                <Table.Cell className="text-right">
+                                </TableCell>
+                                <TableCell className="text-right">
                                     <div className="flex items-center justify-end gap-2">
                                         <Button
                                             variant="ghost"
@@ -358,10 +358,10 @@ export default function WorkOrdersGeneralSettings() {
                                             </Button>
                                         )}
                                     </div>
-                                </Table.Cell>
-                            </Table.Row>
+                                </TableCell>
+                            </TableRow>
                         ))}
-                    </Table.Body>
+                    </TableBody>
                 </Table>
             </Card>
 
