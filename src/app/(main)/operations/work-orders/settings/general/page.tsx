@@ -97,7 +97,7 @@ export default function WorkOrdersGeneralSettings() {
     // Field management modal states
     const [isAddFieldModalOpen, setIsAddFieldModalOpen] = useState(false)
     const [isEditFieldModalOpen, setIsEditFieldModalOpen] = useState(false)
-    const [editingField, setEditingField] = useState(null)
+    const [editingField, setEditingField] = useState<typeof formFields[0] | null>(null)
     
     // New field form state
     const [newField, setNewField] = useState({
