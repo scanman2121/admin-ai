@@ -3,7 +3,7 @@
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Checkbox } from "@/components/Checkbox"
-import { Dialog } from "@/components/Dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/Dialog"
 import { Input } from "@/components/Input"
 import { Select } from "@/components/Select"
 import { Switch } from "@/components/Switch"
@@ -435,155 +435,19 @@ export default function WorkOrdersGeneralSettings() {
             />
 
             {/* Add Field Modal */}
-            <Dialog
-                isOpen={isAddFieldModalOpen}
-                onClose={() => setIsAddFieldModalOpen(false)}
-                title="Add Custom Field"
-            >
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Field Name
-                        </label>
-                        <Input
-                            value={newField.name}
-                            onChange={(e) => handleNewFieldChange('name', e.target.value)}
-                            placeholder="Enter field name"
-                        />
-                    </div>
+            <Dialog open={isAddFieldModalOpen} onOpenChange={setIsAddFieldModalOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Add Custom Field</DialogTitle>
+                    </DialogHeader>
                     
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Description
-                        </label>
-                        <Input
-                            value={newField.description}
-                            onChange={(e) => handleNewFieldChange('description', e.target.value)}
-                            placeholder="Enter field description"
-                        />
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Field Type
-                        </label>
-                        <Select
-                            value={newField.type}
-                            onValueChange={(value) => handleNewFieldChange('type', value)}
-                        >
-                            {fieldTypes.map((type) => (
-                                <Select.Item key={type.value} value={type.value}>
-                                    {type.label}
-                                </Select.Item>
-                            ))}
-                        </Select>
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Service Types
-                        </label>
-                        <div className="space-y-2">
-                            {serviceTypes.map((serviceType) => (
-                                <div key={serviceType.value} className="flex items-center space-x-2">
-                                    <Checkbox
-                                        id={`service-${serviceType.value}`}
-                                        checked={newField.serviceTypes.includes(serviceType.value)}
-                                        onCheckedChange={(checked) => {
-                                            if (checked) {
-                                                handleNewFieldChange('serviceTypes', [...newField.serviceTypes, serviceType.value])
-                                            } else {
-                                                handleNewFieldChange('serviceTypes', newField.serviceTypes.filter(st => st !== serviceType.value))
-                                            }
-                                        }}
-                                    />
-                                    <label htmlFor={`service-${serviceType.value}`} className="text-sm text-gray-700 dark:text-gray-300">
-                                        {serviceType.label}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    
-                    {newField.type === 'dropdown' && (
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Dropdown Options
-                            </label>
-                            <div className="space-y-2">
-                                {newField.options.map((option, index) => (
-                                    <div key={index} className="flex items-center space-x-2">
-                                        <Input
-                                            value={option}
-                                            onChange={(e) => handleOptionChange(index, e.target.value)}
-                                            placeholder={`Option ${index + 1}`}
-                                        />
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => handleRemoveOption(index)}
-                                            className="text-red-600 hover:text-red-700"
-                                        >
-                                            <RiDeleteBinLine className="size-4" />
-                                        </Button>
-                                    </div>
-                                ))}
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={handleAddOption}
-                                    className="text-blue-600 hover:text-blue-700"
-                                >
-                                    <RiAddLine className="size-4 mr-1" />
-                                    Add Option
-                                </Button>
-                            </div>
-                        </div>
-                    )}
-                    
-                    <div className="flex items-center space-x-2">
-                        <Checkbox
-                            id="required-field"
-                            checked={newField.required}
-                            onCheckedChange={(checked) => handleNewFieldChange('required', checked)}
-                        />
-                        <label htmlFor="required-field" className="text-sm text-gray-700 dark:text-gray-300">
-                            Required field
-                        </label>
-                    </div>
-                </div>
-                
-                <div className="flex justify-end space-x-3 mt-6">
-                    <Button
-                        variant="ghost"
-                        onClick={() => setIsAddFieldModalOpen(false)}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="primary"
-                        onClick={handleAddField}
-                        disabled={!newField.name.trim()}
-                    >
-                        Add Field
-                    </Button>
-                </div>
-            </Dialog>
-
-            {/* Edit Field Modal */}
-            <Dialog
-                isOpen={isEditFieldModalOpen}
-                onClose={() => setIsEditFieldModalOpen(false)}
-                title="Edit Field"
-            >
-                {editingField && (
                     <div className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Field Name
                             </label>
                             <Input
-                                value={newField.name || editingField.name}
+                                value={newField.name}
                                 onChange={(e) => handleNewFieldChange('name', e.target.value)}
                                 placeholder="Enter field name"
                             />
@@ -594,7 +458,7 @@ export default function WorkOrdersGeneralSettings() {
                                 Description
                             </label>
                             <Input
-                                value={newField.description || editingField.description}
+                                value={newField.description}
                                 onChange={(e) => handleNewFieldChange('description', e.target.value)}
                                 placeholder="Enter field description"
                             />
@@ -605,7 +469,7 @@ export default function WorkOrdersGeneralSettings() {
                                 Field Type
                             </label>
                             <Select
-                                value={newField.type || editingField.type}
+                                value={newField.type}
                                 onValueChange={(value) => handleNewFieldChange('type', value)}
                             >
                                 {fieldTypes.map((type) => (
@@ -624,18 +488,17 @@ export default function WorkOrdersGeneralSettings() {
                                 {serviceTypes.map((serviceType) => (
                                     <div key={serviceType.value} className="flex items-center space-x-2">
                                         <Checkbox
-                                            id={`edit-service-${serviceType.value}`}
-                                            checked={(newField.serviceTypes.length > 0 ? newField.serviceTypes : editingField.serviceTypes).includes(serviceType.value)}
+                                            id={`service-${serviceType.value}`}
+                                            checked={newField.serviceTypes.includes(serviceType.value)}
                                             onCheckedChange={(checked) => {
-                                                const currentServiceTypes = newField.serviceTypes.length > 0 ? newField.serviceTypes : editingField.serviceTypes
                                                 if (checked) {
-                                                    handleNewFieldChange('serviceTypes', [...currentServiceTypes, serviceType.value])
+                                                    handleNewFieldChange('serviceTypes', [...newField.serviceTypes, serviceType.value])
                                                 } else {
-                                                    handleNewFieldChange('serviceTypes', currentServiceTypes.filter(st => st !== serviceType.value))
+                                                    handleNewFieldChange('serviceTypes', newField.serviceTypes.filter(st => st !== serviceType.value))
                                                 }
                                             }}
                                         />
-                                        <label htmlFor={`edit-service-${serviceType.value}`} className="text-sm text-gray-700 dark:text-gray-300">
+                                        <label htmlFor={`service-${serviceType.value}`} className="text-sm text-gray-700 dark:text-gray-300">
                                             {serviceType.label}
                                         </label>
                                     </div>
@@ -643,13 +506,13 @@ export default function WorkOrdersGeneralSettings() {
                             </div>
                         </div>
                         
-                        {(newField.type || editingField.type) === 'dropdown' && (
+                        {newField.type === 'dropdown' && (
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Dropdown Options
                                 </label>
                                 <div className="space-y-2">
-                                    {(newField.options.length > 0 ? newField.options : editingField.options).map((option, index) => (
+                                    {newField.options.map((option, index) => (
                                         <div key={index} className="flex items-center space-x-2">
                                             <Input
                                                 value={option}
@@ -681,43 +544,184 @@ export default function WorkOrdersGeneralSettings() {
                         
                         <div className="flex items-center space-x-2">
                             <Checkbox
-                                id="edit-required-field"
-                                checked={newField.required !== undefined ? newField.required : editingField.required}
+                                id="required-field"
+                                checked={newField.required}
                                 onCheckedChange={(checked) => handleNewFieldChange('required', checked)}
                             />
-                            <label htmlFor="edit-required-field" className="text-sm text-gray-700 dark:text-gray-300">
+                            <label htmlFor="required-field" className="text-sm text-gray-700 dark:text-gray-300">
                                 Required field
                             </label>
                         </div>
                     </div>
-                )}
-                
-                <div className="flex justify-end space-x-3 mt-6">
-                    <Button
-                        variant="ghost"
-                        onClick={() => {
-                            setIsEditFieldModalOpen(false)
-                            setEditingField(null)
-                            setNewField({
-                                name: "",
-                                description: "",
-                                type: "text",
-                                required: false,
-                                serviceTypes: ["all"],
-                                options: []
-                            })
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        variant="primary"
-                        onClick={handleUpdateField}
-                        disabled={!newField.name.trim()}
-                    >
-                        Update Field
-                    </Button>
-                </div>
+                    
+                    <DialogFooter>
+                        <Button
+                            variant="ghost"
+                            onClick={() => setIsAddFieldModalOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={handleAddField}
+                            disabled={!newField.name.trim()}
+                        >
+                            Add Field
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Edit Field Modal */}
+            <Dialog open={isEditFieldModalOpen} onOpenChange={setIsEditFieldModalOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Edit Field</DialogTitle>
+                    </DialogHeader>
+                    
+                    {editingField && (
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Field Name
+                                </label>
+                                <Input
+                                    value={newField.name || editingField.name}
+                                    onChange={(e) => handleNewFieldChange('name', e.target.value)}
+                                    placeholder="Enter field name"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Description
+                                </label>
+                                <Input
+                                    value={newField.description || editingField.description}
+                                    onChange={(e) => handleNewFieldChange('description', e.target.value)}
+                                    placeholder="Enter field description"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Field Type
+                                </label>
+                                <Select
+                                    value={newField.type || editingField.type}
+                                    onValueChange={(value) => handleNewFieldChange('type', value)}
+                                >
+                                    {fieldTypes.map((type) => (
+                                        <Select.Item key={type.value} value={type.value}>
+                                            {type.label}
+                                        </Select.Item>
+                                    ))}
+                                </Select>
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Service Types
+                                </label>
+                                <div className="space-y-2">
+                                    {serviceTypes.map((serviceType) => (
+                                        <div key={serviceType.value} className="flex items-center space-x-2">
+                                            <Checkbox
+                                                id={`edit-service-${serviceType.value}`}
+                                                checked={(newField.serviceTypes.length > 0 ? newField.serviceTypes : editingField.serviceTypes).includes(serviceType.value)}
+                                                onCheckedChange={(checked) => {
+                                                    const currentServiceTypes = newField.serviceTypes.length > 0 ? newField.serviceTypes : editingField.serviceTypes
+                                                    if (checked) {
+                                                        handleNewFieldChange('serviceTypes', [...currentServiceTypes, serviceType.value])
+                                                    } else {
+                                                        handleNewFieldChange('serviceTypes', currentServiceTypes.filter(st => st !== serviceType.value))
+                                                    }
+                                                }}
+                                            />
+                                            <label htmlFor={`edit-service-${serviceType.value}`} className="text-sm text-gray-700 dark:text-gray-300">
+                                                {serviceType.label}
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            {(newField.type || editingField.type) === 'dropdown' && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Dropdown Options
+                                    </label>
+                                    <div className="space-y-2">
+                                        {(newField.options.length > 0 ? newField.options : editingField.options).map((option, index) => (
+                                            <div key={index} className="flex items-center space-x-2">
+                                                <Input
+                                                    value={option}
+                                                    onChange={(e) => handleOptionChange(index, e.target.value)}
+                                                    placeholder={`Option ${index + 1}`}
+                                                />
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => handleRemoveOption(index)}
+                                                    className="text-red-600 hover:text-red-700"
+                                                >
+                                                    <RiDeleteBinLine className="size-4" />
+                                                </Button>
+                                            </div>
+                                        ))}
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={handleAddOption}
+                                            className="text-blue-600 hover:text-blue-700"
+                                        >
+                                            <RiAddLine className="size-4 mr-1" />
+                                            Add Option
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id="edit-required-field"
+                                    checked={newField.required !== undefined ? newField.required : editingField.required}
+                                    onCheckedChange={(checked) => handleNewFieldChange('required', checked)}
+                                />
+                                <label htmlFor="edit-required-field" className="text-sm text-gray-700 dark:text-gray-300">
+                                    Required field
+                                </label>
+                            </div>
+                        </div>
+                    )}
+                    
+                    <DialogFooter>
+                        <Button
+                            variant="ghost"
+                            onClick={() => {
+                                setIsEditFieldModalOpen(false)
+                                setEditingField(null)
+                                setNewField({
+                                    name: "",
+                                    description: "",
+                                    type: "text",
+                                    required: false,
+                                    serviceTypes: ["all"],
+                                    options: []
+                                })
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={handleUpdateField}
+                            disabled={!newField.name.trim()}
+                        >
+                            Update Field
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
             </Dialog>
         </div>
     )
