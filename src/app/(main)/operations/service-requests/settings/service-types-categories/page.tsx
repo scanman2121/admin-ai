@@ -30,48 +30,64 @@ const categoriesData = [
         name: "Security",
         description: "Security-related service requests and incidents",
         status: true,
+        assignedTo: "Security Team",
+        assignedToType: "team" as "user" | "team",
     },
     {
         id: 2,
         name: "Maintenance",
         description: "Building maintenance and repair requests",
         status: true,
+        assignedTo: "Maintenance Team",
+        assignedToType: "team" as "user" | "team",
     },
     {
         id: 3,
         name: "Cleaning",
         description: "Cleaning and janitorial service requests",
         status: true,
+        assignedTo: "Housekeeping Team",
+        assignedToType: "team" as "user" | "team",
     },
     {
         id: 4,
         name: "Concierge",
         description: "Concierge and guest services",
         status: true,
+        assignedTo: "Concierge Team",
+        assignedToType: "team" as "user" | "team",
     },
     {
         id: 5,
         name: "IT Support",
         description: "Technology and IT-related requests",
         status: true,
+        assignedTo: "IT Team",
+        assignedToType: "team" as "user" | "team",
     },
     {
         id: 6,
         name: "HVAC",
         description: "Heating, ventilation, and air conditioning",
         status: false,
+        assignedTo: "",
+        assignedToType: "user" as "user" | "team",
     },
     {
         id: 7,
         name: "Landscaping",
         description: "Outdoor maintenance and landscaping",
         status: false,
+        assignedTo: "",
+        assignedToType: "user" as "user" | "team",
     },
     {
         id: 8,
         name: "Other",
         description: "Miscellaneous service requests and general inquiries",
         status: true,
+        assignedTo: "",
+        assignedToType: "user" as "user" | "team",
     }
 ]
 
@@ -306,7 +322,9 @@ export default function ServiceRequestsServiceTypesCategories() {
 
     const [newCategory, setNewCategory] = useState({
         name: "",
-        description: ""
+        description: "",
+        assignedTo: "",
+        assignedToType: "user" as "user" | "team"
     })
 
     // New status creation states
@@ -429,7 +447,9 @@ export default function ServiceRequestsServiceTypesCategories() {
         setCategories(prev => [...prev, category])
         setNewCategory({
             name: "",
-            description: ""
+            description: "",
+            assignedTo: "",
+            assignedToType: "user"
         })
         setIsAddCategoryModalOpen(false)
     }
@@ -438,7 +458,9 @@ export default function ServiceRequestsServiceTypesCategories() {
         setEditingCategory(category)
         setNewCategory({
             name: category.name,
-            description: category.description
+            description: category.description,
+            assignedTo: category.assignedTo || "",
+            assignedToType: category.assignedToType || "user"
         })
         setIsEditCategoryModalOpen(true)
     }
@@ -457,7 +479,9 @@ export default function ServiceRequestsServiceTypesCategories() {
         setEditingCategory(null)
         setNewCategory({
             name: "",
-            description: ""
+            description: "",
+            assignedTo: "",
+            assignedToType: "user"
         })
         setIsEditCategoryModalOpen(false)
     }
@@ -468,7 +492,16 @@ export default function ServiceRequestsServiceTypesCategories() {
     }
 
     const handleAddServiceType = () => {
-        if (!newServiceType.requestType.trim() || !newServiceType.description.trim() || !newServiceType.assignedTo.trim()) {
+        if (!newServiceType.requestType.trim() || !newServiceType.description.trim()) {
+            return
+        }
+
+        // Get the category's assigned to value if not set at service type level
+        const selectedCategory = categories.find(cat => cat.name === newServiceType.category)
+        const finalAssignedTo = newServiceType.assignedTo || selectedCategory?.assignedTo || ""
+        const finalAssignedToType = newServiceType.assignedTo ? newServiceType.assignedToType : (selectedCategory?.assignedToType || "user")
+
+        if (!finalAssignedTo.trim()) {
             return
         }
 
@@ -476,6 +509,8 @@ export default function ServiceRequestsServiceTypesCategories() {
         const serviceType = {
             id: newId,
             ...newServiceType,
+            assignedTo: finalAssignedTo,
+            assignedToType: finalAssignedToType,
             status: true,
             statuses: newServiceType.statuses.map(s => s.name) // Convert back to simple array for display
         }
@@ -516,7 +551,16 @@ export default function ServiceRequestsServiceTypesCategories() {
     }
 
     const handleUpdateServiceType = () => {
-        if (!editingServiceType || !newServiceType.requestType.trim() || !newServiceType.description.trim() || !newServiceType.assignedTo.trim()) {
+        if (!editingServiceType || !newServiceType.requestType.trim() || !newServiceType.description.trim()) {
+            return
+        }
+
+        // Get the category's assigned to value if not set at service type level
+        const selectedCategory = categories.find(cat => cat.name === newServiceType.category)
+        const finalAssignedTo = newServiceType.assignedTo || selectedCategory?.assignedTo || ""
+        const finalAssignedToType = newServiceType.assignedTo ? newServiceType.assignedToType : (selectedCategory?.assignedToType || "user")
+
+        if (!finalAssignedTo.trim()) {
             return
         }
 
@@ -525,6 +569,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                 ? { 
                     ...item, 
                     ...newServiceType,
+                    assignedTo: finalAssignedTo,
+                    assignedToType: finalAssignedToType,
                     statuses: newServiceType.statuses.map(s => s.name) // Convert back to simple array for display
                 }
                 : item
@@ -590,6 +636,16 @@ export default function ServiceRequestsServiceTypesCategories() {
 
     const handleAssignedToSelect = (item: typeof allAssignableItems[0]) => {
         setNewServiceType(prev => ({
+            ...prev,
+            assignedTo: item.name,
+            assignedToType: item.type as "user" | "team"
+        }))
+        setAssignedToSearchQuery("")
+        setIsAssignedToDropdownOpen(false)
+    }
+
+    const handleCategoryAssignedToSelect = (item: typeof allAssignableItems[0]) => {
+        setNewCategory(prev => ({
             ...prev,
             assignedTo: item.name,
             assignedToType: item.type as "user" | "team"
@@ -1041,6 +1097,78 @@ export default function ServiceRequestsServiceTypesCategories() {
                             />
                         </div>
                         
+                        <div>
+                            <Label htmlFor="category-assigned">Assigned to (optional)</Label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                                If set, this will be the default assigned to value for all service types in this category
+                            </p>
+                            <div className="relative">
+                                <Input
+                                    id="category-assigned"
+                                    placeholder="Search users and teams..."
+                                    value={assignedToSearchQuery}
+                                    onChange={(e) => {
+                                        setAssignedToSearchQuery(e.target.value)
+                                        setIsAssignedToDropdownOpen(true)
+                                    }}
+                                    onFocus={() => setIsAssignedToDropdownOpen(true)}
+                                />
+                                
+                                {isAssignedToDropdownOpen && (
+                                    <>
+                                        <div 
+                                            className="fixed inset-0 z-10" 
+                                            onClick={() => setIsAssignedToDropdownOpen(false)}
+                                        />
+                                        <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                            {filteredAssignableItems.length > 0 ? (
+                                                filteredAssignableItems.map((item) => (
+                                                    <button
+                                                        key={item.id}
+                                                        onClick={() => handleCategoryAssignedToSelect(item)}
+                                                        className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
+                                                    >
+                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
+                                                            {item.type === 'user' ? 'U' : 'T'}
+                                                        </div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                {item.name}
+                                                            </div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                                {(item as any).role || (item as any).description} • {item.type === 'user' ? 'User' : 'Team'}
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                ))
+                                            ) : (
+                                                <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+                                                    No users or teams found
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+                                
+                                {newCategory.assignedTo && (
+                                    <div className="mt-2 flex items-center gap-2">
+                                        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
+                                            <span className="text-xs font-medium">
+                                                {newCategory.assignedToType === 'user' ? 'U' : 'T'}
+                                            </span>
+                                            <span>{newCategory.assignedTo}</span>
+                                            <button
+                                                onClick={() => setNewCategory(prev => ({ ...prev, assignedTo: "", assignedToType: "user" }))}
+                                                className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-200"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        
                         <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsAddCategoryModalOpen(false)}>
                                 Cancel
@@ -1083,6 +1211,78 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 onChange={(e) => setNewCategory(prev => ({ ...prev, description: e.target.value }))}
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             />
+                        </div>
+                        
+                        <div>
+                            <Label htmlFor="edit-category-assigned">Assigned to (optional)</Label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                                If set, this will be the default assigned to value for all service types in this category
+                            </p>
+                            <div className="relative">
+                                <Input
+                                    id="edit-category-assigned"
+                                    placeholder="Search users and teams..."
+                                    value={assignedToSearchQuery}
+                                    onChange={(e) => {
+                                        setAssignedToSearchQuery(e.target.value)
+                                        setIsAssignedToDropdownOpen(true)
+                                    }}
+                                    onFocus={() => setIsAssignedToDropdownOpen(true)}
+                                />
+                                
+                                {isAssignedToDropdownOpen && (
+                                    <>
+                                        <div 
+                                            className="fixed inset-0 z-10" 
+                                            onClick={() => setIsAssignedToDropdownOpen(false)}
+                                        />
+                                        <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                            {filteredAssignableItems.length > 0 ? (
+                                                filteredAssignableItems.map((item) => (
+                                                    <button
+                                                        key={item.id}
+                                                        onClick={() => handleCategoryAssignedToSelect(item)}
+                                                        className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
+                                                    >
+                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
+                                                            {item.type === 'user' ? 'U' : 'T'}
+                                                        </div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                {item.name}
+                                                            </div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                                {(item as any).role || (item as any).description} • {item.type === 'user' ? 'User' : 'Team'}
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                ))
+                                            ) : (
+                                                <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+                                                    No users or teams found
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+                                
+                                {newCategory.assignedTo && (
+                                    <div className="mt-2 flex items-center gap-2">
+                                        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
+                                            <span className="text-xs font-medium">
+                                                {newCategory.assignedToType === 'user' ? 'U' : 'T'}
+                                            </span>
+                                            <span>{newCategory.assignedTo}</span>
+                                            <button
+                                                onClick={() => setNewCategory(prev => ({ ...prev, assignedTo: "", assignedToType: "user" }))}
+                                                className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-200"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         
                         <DialogFooter>
@@ -1163,71 +1363,94 @@ export default function ServiceRequestsServiceTypesCategories() {
                         
                         <div>
                             <Label htmlFor="service-type-assigned">Assigned to *</Label>
-                            <div className="relative">
-                            <Input
-                                id="service-type-assigned"
-                                    placeholder="Search users and teams..."
-                                    value={assignedToSearchQuery}
-                                    onChange={(e) => {
-                                        setAssignedToSearchQuery(e.target.value)
-                                        setIsAssignedToDropdownOpen(true)
-                                    }}
-                                    onFocus={() => setIsAssignedToDropdownOpen(true)}
-                                />
+                            {(() => {
+                                const selectedCategory = categories.find(cat => cat.name === newServiceType.category)
+                                const hasCategoryAssignedTo = selectedCategory?.assignedTo
                                 
-                                {isAssignedToDropdownOpen && (
-                                    <>
-                                        <div 
-                                            className="fixed inset-0 z-10" 
-                                            onClick={() => setIsAssignedToDropdownOpen(false)}
+                                if (hasCategoryAssignedTo) {
+                                    return (
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-md text-sm">
+                                                <span className="text-xs font-medium">
+                                                    {selectedCategory?.assignedToType === 'user' ? 'U' : 'T'}
+                                                </span>
+                                                <span>{selectedCategory?.assignedTo}</span>
+                                            </div>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Assigned to is set at the category level
+                                            </p>
+                                        </div>
+                                    )
+                                }
+                                
+                                return (
+                                    <div className="relative">
+                                        <Input
+                                            id="service-type-assigned"
+                                            placeholder="Search users and teams..."
+                                            value={assignedToSearchQuery}
+                                            onChange={(e) => {
+                                                setAssignedToSearchQuery(e.target.value)
+                                                setIsAssignedToDropdownOpen(true)
+                                            }}
+                                            onFocus={() => setIsAssignedToDropdownOpen(true)}
                                         />
-                                        <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                                            {filteredAssignableItems.length > 0 ? (
-                                                filteredAssignableItems.map((item) => (
-                                                    <button
-                                                        key={item.id}
-                                                        onClick={() => handleAssignedToSelect(item)}
-                                                        className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
-                                                    >
-                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
-                                                            {item.type === 'user' ? 'U' : 'T'}
-                                                        </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                                {item.name}
-                                                            </div>
-                                                            <div className="text-xs text-gray-500 dark:text-gray-400">
-                                                                {(item as any).role || (item as any).description} • {item.type === 'user' ? 'User' : 'Team'}
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                ))
-                                            ) : (
-                                                <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-                                                    No users or teams found
-                                                </div>
-                                            )}
-                                        </div>
-                                    </>
-                                )}
                                 
-                                {newServiceType.assignedTo && (
-                                    <div className="mt-2 flex items-center gap-2">
-                                        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                            <span className="text-xs font-medium">
-                                                {newServiceType.assignedToType === 'user' ? 'U' : 'T'}
-                                            </span>
-                                            <span>{newServiceType.assignedTo}</span>
-                                            <button
-                                                onClick={() => setNewServiceType(prev => ({ ...prev, assignedTo: "", assignedToType: "user" }))}
-                                                className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-200"
-                                            >
-                                                ×
-                                            </button>
-                                        </div>
+                                        {isAssignedToDropdownOpen && (
+                                            <>
+                                                <div 
+                                                    className="fixed inset-0 z-10" 
+                                                    onClick={() => setIsAssignedToDropdownOpen(false)}
+                                                />
+                                                <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                                    {filteredAssignableItems.length > 0 ? (
+                                                        filteredAssignableItems.map((item) => (
+                                                            <button
+                                                                key={item.id}
+                                                                onClick={() => handleAssignedToSelect(item)}
+                                                                className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
+                                                            >
+                                                                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
+                                                                    {item.type === 'user' ? 'U' : 'T'}
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                        {item.name}
+                                                                    </div>
+                                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                                        {(item as any).role || (item as any).description} • {item.type === 'user' ? 'User' : 'Team'}
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                        ))
+                                                    ) : (
+                                                        <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+                                                            No users or teams found
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </>
+                                        )}
+                                        
+                                        {newServiceType.assignedTo && (
+                                            <div className="mt-2 flex items-center gap-2">
+                                                <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
+                                                    <span className="text-xs font-medium">
+                                                        {newServiceType.assignedToType === 'user' ? 'U' : 'T'}
+                                                    </span>
+                                                    <span>{newServiceType.assignedTo}</span>
+                                                    <button
+                                                        onClick={() => setNewServiceType(prev => ({ ...prev, assignedTo: "", assignedToType: "user" }))}
+                                                        className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-200"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
+                                )
+                            })()}
                         </div>
 
                         <div>
@@ -1449,71 +1672,94 @@ export default function ServiceRequestsServiceTypesCategories() {
                         
                         <div>
                             <Label htmlFor="edit-service-type-assigned">Assigned to *</Label>
-                            <div className="relative">
-                            <Input
-                                id="edit-service-type-assigned"
-                                    placeholder="Search users and teams..."
-                                    value={assignedToSearchQuery}
-                                    onChange={(e) => {
-                                        setAssignedToSearchQuery(e.target.value)
-                                        setIsAssignedToDropdownOpen(true)
-                                    }}
-                                    onFocus={() => setIsAssignedToDropdownOpen(true)}
-                                />
+                            {(() => {
+                                const selectedCategory = categories.find(cat => cat.name === newServiceType.category)
+                                const hasCategoryAssignedTo = selectedCategory?.assignedTo
                                 
-                                {isAssignedToDropdownOpen && (
-                                    <>
-                                        <div 
-                                            className="fixed inset-0 z-10" 
-                                            onClick={() => setIsAssignedToDropdownOpen(false)}
+                                if (hasCategoryAssignedTo) {
+                                    return (
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-md text-sm">
+                                                <span className="text-xs font-medium">
+                                                    {selectedCategory?.assignedToType === 'user' ? 'U' : 'T'}
+                                                </span>
+                                                <span>{selectedCategory?.assignedTo}</span>
+                                            </div>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Assigned to is set at the category level
+                                            </p>
+                                        </div>
+                                    )
+                                }
+                                
+                                return (
+                                    <div className="relative">
+                                        <Input
+                                            id="edit-service-type-assigned"
+                                            placeholder="Search users and teams..."
+                                            value={assignedToSearchQuery}
+                                            onChange={(e) => {
+                                                setAssignedToSearchQuery(e.target.value)
+                                                setIsAssignedToDropdownOpen(true)
+                                            }}
+                                            onFocus={() => setIsAssignedToDropdownOpen(true)}
                                         />
-                                        <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                                            {filteredAssignableItems.length > 0 ? (
-                                                filteredAssignableItems.map((item) => (
-                                                    <button
-                                                        key={item.id}
-                                                        onClick={() => handleAssignedToSelect(item)}
-                                                        className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
-                                                    >
-                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
-                                                            {item.type === 'user' ? 'U' : 'T'}
+                                        
+                                        {isAssignedToDropdownOpen && (
+                                            <>
+                                                <div 
+                                                    className="fixed inset-0 z-10" 
+                                                    onClick={() => setIsAssignedToDropdownOpen(false)}
+                                                />
+                                                <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                                    {filteredAssignableItems.length > 0 ? (
+                                                        filteredAssignableItems.map((item) => (
+                                                            <button
+                                                                key={item.id}
+                                                                onClick={() => handleAssignedToSelect(item)}
+                                                                className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
+                                                            >
+                                                                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
+                                                                    {item.type === 'user' ? 'U' : 'T'}
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                        {item.name}
+                                                                    </div>
+                                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                                        {(item as any).role || (item as any).description} • {item.type === 'user' ? 'User' : 'Team'}
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                        ))
+                                                    ) : (
+                                                        <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
+                                                            No users or teams found
                                                         </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                                {item.name}
-                                                            </div>
-                                                            <div className="text-xs text-gray-500 dark:text-gray-400">
-                                                                {(item as any).role || (item as any).description} • {item.type === 'user' ? 'User' : 'Team'}
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                ))
-                                            ) : (
-                                                <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-                                                    No users or teams found
+                                                    )}
                                                 </div>
-                                            )}
-                                        </div>
-                                    </>
-                                )}
-                                
-                                {newServiceType.assignedTo && (
-                                    <div className="mt-2 flex items-center gap-2">
-                                        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                            <span className="text-xs font-medium">
-                                                {newServiceType.assignedToType === 'user' ? 'U' : 'T'}
-                                            </span>
-                                            <span>{newServiceType.assignedTo}</span>
-                                            <button
-                                                onClick={() => setNewServiceType(prev => ({ ...prev, assignedTo: "", assignedToType: "user" }))}
-                                                className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-200"
-                                            >
-                                                ×
-                                            </button>
-                                        </div>
+                                            </>
+                                        )}
+                                        
+                                        {newServiceType.assignedTo && (
+                                            <div className="mt-2 flex items-center gap-2">
+                                                <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
+                                                    <span className="text-xs font-medium">
+                                                        {newServiceType.assignedToType === 'user' ? 'U' : 'T'}
+                                                    </span>
+                                                    <span>{newServiceType.assignedTo}</span>
+                                                    <button
+                                                        onClick={() => setNewServiceType(prev => ({ ...prev, assignedTo: "", assignedToType: "user" }))}
+                                                        className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-200"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
+                                )
+                            })()}
                         </div>
 
                         <div>
