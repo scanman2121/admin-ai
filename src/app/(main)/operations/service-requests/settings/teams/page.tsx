@@ -10,7 +10,8 @@ import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
-import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiBrushLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line, RiSearchLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
+import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiBrushLine, RiDeleteBin6Line, RiMore2Line, RiSearchLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
+import { Pencil } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -494,7 +495,7 @@ export default function ServiceRequestsTeams() {
                                                                             }}
                                                                             className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
                                                                         >
-                                                                            <RiEdit2Line className="size-4" />
+                                                                            <Pencil className="size-4" style={{ color: '#696E72' }} />
                                                                             Edit
                                                                         </button>
                                                                         <button

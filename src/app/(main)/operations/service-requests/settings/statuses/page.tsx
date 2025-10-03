@@ -8,7 +8,8 @@ import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { serviceRequestStatuses } from "@/data/statuses"
-import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiEdit2Line } from "@remixicon/react"
+import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line } from "@remixicon/react"
+import { Pencil } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -445,7 +446,7 @@ export default function ServiceRequestsStatuses() {
                                                 onClick={() => handleEditStatus(status)}
                                                 className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                                             >
-                                                <RiEdit2Line className="size-4" />
+                                                <Pencil className="size-4" style={{ color: '#696E72' }} />
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteStatus(status.id)}

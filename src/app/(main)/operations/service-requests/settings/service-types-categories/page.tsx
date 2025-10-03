@@ -9,7 +9,8 @@ import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { serviceRequestStatuses } from "@/data/statuses"
-import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiEdit2Line, RiMore2Line } from "@remixicon/react"
+import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiMore2Line } from "@remixicon/react"
+import { Pencil } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -867,7 +868,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     className="p-2 h-8 w-8"
                                                     onClick={() => handleEditCategory(category)}
                                                 >
-                                                    <RiEdit2Line className="size-4" />
+                                                    <Pencil className="size-4" style={{ color: '#696E72' }} />
                                                 </Button>
                                                 
                                                 <div className="relative">
@@ -957,7 +958,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                         className="p-2 h-8 w-8"
                                                         onClick={() => handleEditServiceType(serviceType)}
                                                     >
-                                                        <RiEdit2Line className="size-4" />
+                                                        <Pencil className="size-4" style={{ color: '#696E72' }} />
                                                     </Button>
                                                     
                                                     <div className="relative">

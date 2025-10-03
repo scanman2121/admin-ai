@@ -10,7 +10,8 @@ import { Switch } from "@/components/Switch"
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { FullPageModal } from "@/components/ui/FullPageModal"
-import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBinLine, RiEditLine } from "@remixicon/react"
+import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBinLine } from "@remixicon/react"
+import { Pencil } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -399,7 +400,7 @@ export default function ServiceRequestsGeneralSettings() {
                                             onClick={() => handleEditField(field.id)}
                                             className="h-8 w-8 p-0"
                                         >
-                                            <RiEditLine className="size-4" />
+                                            <Pencil className="size-4" style={{ color: '#696E72' }} />
                                         </Button>
                                         {!field.isCore && (
                                             <Button
