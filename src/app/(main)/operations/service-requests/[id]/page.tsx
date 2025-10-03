@@ -128,7 +128,7 @@ const getServiceRequestDetailData = (serviceRequestId: string) => {
     }
 }
 
-export default function WorkOrderDetailPage({ params }: { params: { id: string } }) {
+export default function ServiceRequestDetailPage({ params }: { params: { id: string } }) {
     const [newMessage, setNewMessage] = useState("")
     const [newNote, setNewNote] = useState("")
     const [selectedUser, setSelectedUser] = useState<{
@@ -155,16 +155,17 @@ export default function WorkOrderDetailPage({ params }: { params: { id: string }
     const [approver, setApprover] = useState(serviceRequestDetail?.approver || null)
     
     // Status management
-    const [currentStatus, setCurrentStatus] = useState(serviceRequestDetail?.status || 'Open')
+    const [currentStatus, setCurrentStatus] = useState(serviceRequestDetail?.status || 'New')
     
     // Available status options
     const statusOptions = [
-        { label: 'Open', variant: 'warning' as const },
-        { label: 'In Progress', variant: 'default' as const },
-        { label: 'Pending', variant: 'warning' as const },
+        { label: 'New', variant: 'default' as const },
+        { label: 'In Progress', variant: 'warning' as const },
         { label: 'Completed', variant: 'success' as const },
+        { label: 'Denied', variant: 'error' as const },
         { label: 'Cancelled', variant: 'error' as const },
-        { label: 'On Hold', variant: 'neutral' as const }
+        { label: 'Assigned to Building', variant: 'default' as const },
+        { label: 'Failed', variant: 'error' as const }
     ]
     
     const getCurrentStatusVariant = (status: string) => {

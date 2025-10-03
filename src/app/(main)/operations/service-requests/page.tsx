@@ -119,6 +119,12 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
             else if (statusConfig?.variant === "warning") badgeVariant = "warning";
             else if (statusConfig?.variant === "error") badgeVariant = "error";
             else if (statusConfig?.variant === "blue") badgeVariant = "default";
+            
+            // Map status names to appropriate badge variants
+            if (status === "Completed") badgeVariant = "success";
+            else if (status === "In Progress") badgeVariant = "warning";
+            else if (status === "Denied" || status === "Failed" || status === "Cancelled") badgeVariant = "error";
+            else if (status === "New" || status === "Assigned to Building") badgeVariant = "default";
 
             return (
                 <Badge variant={badgeVariant}>
