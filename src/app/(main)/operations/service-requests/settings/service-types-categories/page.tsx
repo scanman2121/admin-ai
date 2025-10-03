@@ -927,13 +927,15 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             -
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <Switch
-                                                checked={category.status}
-                                                onCheckedChange={() => handleCategoryStatusToggle(category.id)}
-                                            />
+                                            <div className="flex justify-start">
+                                                <Switch
+                                                    checked={category.status}
+                                                    onCheckedChange={() => handleCategoryStatusToggle(category.id)}
+                                                />
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div className="flex items-center gap-1">
+                                            <div className="flex items-center gap-1 justify-start">
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
@@ -1037,13 +1039,15 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <Switch
-                                                    checked={serviceType.status}
-                                                    onCheckedChange={() => handleServiceTypeStatusToggle(serviceType.id)}
-                                                />
+                                                <div className="flex justify-start">
+                                                    <Switch
+                                                        checked={serviceType.status}
+                                                        onCheckedChange={() => handleServiceTypeStatusToggle(serviceType.id)}
+                                                    />
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <div className="flex items-center gap-1">
+                                                <div className="flex items-center gap-1 justify-start">
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
@@ -1458,8 +1462,12 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                 onClick={() => handleAssignedToSelect(item)}
                                                                 className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
                                                             >
-                                                                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
-                                                                    {item.type === 'user' ? 'U' : 'T'}
+                                                                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700">
+                                                                    {item.type === 'user' ? (
+                                                                        <User className="size-4 text-gray-500" />
+                                                                    ) : (
+                                                                        <Users className="size-4 text-gray-500" />
+                                                                    )}
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
                                                                     <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -1769,8 +1777,12 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                 onClick={() => handleAssignedToSelect(item)}
                                                                 className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
                                                             >
-                                                                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
-                                                                    {item.type === 'user' ? 'U' : 'T'}
+                                                                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700">
+                                                                    {item.type === 'user' ? (
+                                                                        <User className="size-4 text-gray-500" />
+                                                                    ) : (
+                                                                        <Users className="size-4 text-gray-500" />
+                                                                    )}
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
                                                                     <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
