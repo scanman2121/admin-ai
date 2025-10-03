@@ -1008,9 +1008,6 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                     </span>
                                                                     <span>{serviceType.assignedTo}</span>
                                                                 </div>
-                                                                <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                                    (from category)
-                                                                </span>
                                                             </div>
                                                         )
                                                     }
