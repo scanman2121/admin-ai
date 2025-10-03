@@ -907,6 +907,20 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             -
                                         </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            {category.assignedTo ? (
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
+                                                        <span className="text-xs font-medium">
+                                                            {category.assignedToType === 'user' ? 'U' : 'T'}
+                                                        </span>
+                                                        <span>{category.assignedTo}</span>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <span className="text-gray-400 dark:text-gray-500">-</span>
+                                            )}
+                                        </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             -
                                         </td>
@@ -981,7 +995,28 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 {serviceType.approval}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
-                                                {serviceType.assignedTo}
+                                                {(() => {
+                                                    const categoryAssignedTo = category.assignedTo
+                                                    const isUsingCategoryAssignedTo = categoryAssignedTo && serviceType.assignedTo === categoryAssignedTo
+                                                    
+                                                    if (isUsingCategoryAssignedTo) {
+                                                        return (
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
+                                                                    <span className="text-xs font-medium">
+                                                                        {category.assignedToType === 'user' ? 'U' : 'T'}
+                                                                    </span>
+                                                                    <span>{serviceType.assignedTo}</span>
+                                                                </div>
+                                                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                                    (from category)
+                                                                </span>
+                                                            </div>
+                                                        )
+                                                    }
+                                                    
+                                                    return serviceType.assignedTo
+                                                })()}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex flex-wrap gap-1">
