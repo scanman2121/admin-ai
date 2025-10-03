@@ -5,56 +5,56 @@ export const serviceRequestStatuses = [
         name: "New",
         description: "Newly created service requests awaiting review",
         status: true,
-        color: "yellow",
+        color: "purple",
         orderCount: 45
     },
     {
         id: 2,
-        name: "Open",
-        description: "Service requests that have been reviewed and are ready to be worked on",
-        status: true,
-        color: "blue",
-        orderCount: 23
-    },
-    {
-        id: 3,
         name: "In Progress",
         description: "Service requests currently being worked on",
         status: true,
-        color: "purple",
+        color: "orange",
         orderCount: 18
     },
     {
-        id: 4,
-        name: "Pending",
-        description: "Service requests waiting for additional information or resources",
-        status: true,
-        color: "orange",
-        orderCount: 12
-    },
-    {
-        id: 5,
+        id: 3,
         name: "Completed",
-        description: "Successfully completed service requests",
+        description: "Service requests that have been successfully completed",
         status: true,
         color: "green",
         orderCount: 156
     },
     {
-        id: 6,
-        name: "Cancelled",
-        description: "Work orders that have been cancelled",
+        id: 4,
+        name: "Denied",
+        description: "Service requests that have been denied",
         status: true,
-        color: "red",
+        color: "pink",
+        orderCount: 3
+    },
+    {
+        id: 5,
+        name: "Cancelled",
+        description: "Service requests that have been cancelled",
+        status: true,
+        color: "gray",
         orderCount: 8
     },
     {
-        id: 7,
-        name: "On Hold",
-        description: "Work orders temporarily paused or suspended",
+        id: 6,
+        name: "Assigned to Building",
+        description: "Service requests assigned to building management",
         status: true,
-        color: "gray",
-        orderCount: 5
+        color: "blue",
+        orderCount: 12
+    },
+    {
+        id: 7,
+        name: "Failed",
+        description: "Service requests that have failed to complete",
+        status: true,
+        color: "red",
+        orderCount: 2
     }
 ]
 

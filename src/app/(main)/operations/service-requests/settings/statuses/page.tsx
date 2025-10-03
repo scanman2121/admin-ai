@@ -48,13 +48,13 @@ const statusColors = [
 
 // Preset status colors (cannot be changed)
 const presetStatusColors = {
-    "New": "yellow",
-    "Open": "blue", 
-    "In Progress": "purple",
-    "Pending": "orange",
+    "New": "purple",
+    "In Progress": "orange",
     "Completed": "green",
-    "Cancelled": "red",
-    "On Hold": "gray"
+    "Denied": "pink",
+    "Cancelled": "gray",
+    "Assigned to Building": "blue",
+    "Failed": "red"
 }
 
 export default function ServiceRequestsStatuses() {
@@ -358,7 +358,7 @@ export default function ServiceRequestsStatuses() {
                             Status management
                         </h2>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Manage work order statuses and define custom status types for your workflow
+                            Manage service request statuses and define custom status types for your workflow
                         </p>
                     </div>
                     <Button 
