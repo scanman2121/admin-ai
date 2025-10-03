@@ -904,9 +904,6 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             -
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                            -
-                                        </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {category.assignedTo ? (
                                                 <div className="flex items-center gap-2">
@@ -920,6 +917,9 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             ) : (
                                                 <span className="text-gray-400 dark:text-gray-500">-</span>
                                             )}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                            -
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             -
