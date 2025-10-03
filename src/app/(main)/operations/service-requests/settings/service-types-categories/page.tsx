@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiMore2Line } from "@remixicon/react"
-import { Pencil } from "lucide-react"
+import { Pencil, User, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -908,9 +908,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             {category.assignedTo ? (
                                                 <div className="flex items-center gap-2">
                                                     <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                                        <span className="text-xs font-medium">
-                                                            {category.assignedToType === 'user' ? 'U' : 'T'}
-                                                        </span>
+                                                        {category.assignedToType === 'user' ? (
+                                                            <User className="size-3 text-gray-500" />
+                                                        ) : (
+                                                            <Users className="size-3 text-gray-500" />
+                                                        )}
                                                         <span>{category.assignedTo}</span>
                                                     </div>
                                                 </div>
@@ -975,9 +977,9 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     
                                     {/* Service Type Rows (shown when expanded) */}
                                     {isExpanded && categoryServiceTypes.map((serviceType) => (
-                                        <tr key={`service-${serviceType.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900">
-                                            <td className="px-6 py-4 whitespace-nowrap pl-12">
-                                                <div>
+                                        <tr key={`service-${serviceType.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
+                                            <td className="px-6 py-4 pl-12">
+                                                <div className="space-y-1">
                                                     <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
                                                         {serviceType.requestType}
                                                     </div>
@@ -994,7 +996,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
                                                 {serviceType.approval}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
+                                            <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-50">
                                                 {(() => {
                                                     const categoryAssignedTo = category.assignedTo
                                                     const isUsingCategoryAssignedTo = categoryAssignedTo && serviceType.assignedTo === categoryAssignedTo
@@ -1003,9 +1005,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                         return (
                                                             <div className="flex items-center gap-2">
                                                                 <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                                                    <span className="text-xs font-medium">
-                                                                        {category.assignedToType === 'user' ? 'U' : 'T'}
-                                                                    </span>
+                                                                    {category.assignedToType === 'user' ? (
+                                                                        <User className="size-3 text-gray-500" />
+                                                                    ) : (
+                                                                        <Users className="size-3 text-gray-500" />
+                                                                    )}
                                                                     <span>{serviceType.assignedTo}</span>
                                                                 </div>
                                                             </div>
@@ -1015,8 +1019,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     return serviceType.assignedTo
                                                 })()}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex flex-wrap gap-1">
+                                            <td className="px-6 py-4">
+                                                <div className="flex flex-wrap gap-1 min-h-[32px]">
                                                     {serviceType.statuses?.slice(0, 3).map((status) => (
                                                         <span
                                                             key={status}
@@ -1160,8 +1164,12 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                         onClick={() => handleCategoryAssignedToSelect(item)}
                                                         className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
                                                     >
-                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
-                                                            {item.type === 'user' ? 'U' : 'T'}
+                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700">
+                                                            {item.type === 'user' ? (
+                                                                <User className="size-4 text-gray-500" />
+                                                            ) : (
+                                                                <Users className="size-4 text-gray-500" />
+                                                            )}
                                                         </div>
                                                         <div className="flex-1 min-w-0">
                                                             <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -1185,9 +1193,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 {newCategory.assignedTo && (
                                     <div className="mt-2 flex items-center gap-2">
                                         <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                            <span className="text-xs font-medium">
-                                                {newCategory.assignedToType === 'user' ? 'U' : 'T'}
-                                            </span>
+                                            {newCategory.assignedToType === 'user' ? (
+                                                <User className="size-3 text-gray-500" />
+                                            ) : (
+                                                <Users className="size-3 text-gray-500" />
+                                            )}
                                             <span>{newCategory.assignedTo}</span>
                                             <button
                                                 onClick={() => setNewCategory(prev => ({ ...prev, assignedTo: "", assignedToType: "user" }))}
@@ -1276,8 +1286,12 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                         onClick={() => handleCategoryAssignedToSelect(item)}
                                                         className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-3"
                                                     >
-                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-sm font-medium">
-                                                            {item.type === 'user' ? 'U' : 'T'}
+                                                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700">
+                                                            {item.type === 'user' ? (
+                                                                <User className="size-4 text-gray-500" />
+                                                            ) : (
+                                                                <Users className="size-4 text-gray-500" />
+                                                            )}
                                                         </div>
                                                         <div className="flex-1 min-w-0">
                                                             <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -1301,9 +1315,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 {newCategory.assignedTo && (
                                     <div className="mt-2 flex items-center gap-2">
                                         <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                            <span className="text-xs font-medium">
-                                                {newCategory.assignedToType === 'user' ? 'U' : 'T'}
-                                            </span>
+                                            {newCategory.assignedToType === 'user' ? (
+                                                <User className="size-3 text-gray-500" />
+                                            ) : (
+                                                <Users className="size-3 text-gray-500" />
+                                            )}
                                             <span>{newCategory.assignedTo}</span>
                                             <button
                                                 onClick={() => setNewCategory(prev => ({ ...prev, assignedTo: "", assignedToType: "user" }))}
@@ -1467,9 +1483,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         {newServiceType.assignedTo && (
                                             <div className="mt-2 flex items-center gap-2">
                                                 <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                                    <span className="text-xs font-medium">
-                                                        {newServiceType.assignedToType === 'user' ? 'U' : 'T'}
-                                                    </span>
+                                                    {newServiceType.assignedToType === 'user' ? (
+                                                        <User className="size-3 text-gray-500" />
+                                                    ) : (
+                                                        <Users className="size-3 text-gray-500" />
+                                                    )}
                                                     <span>{newServiceType.assignedTo}</span>
                                                     <button
                                                         onClick={() => setNewServiceType(prev => ({ ...prev, assignedTo: "", assignedToType: "user" }))}
@@ -1776,9 +1794,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         {newServiceType.assignedTo && (
                                             <div className="mt-2 flex items-center gap-2">
                                                 <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                                    <span className="text-xs font-medium">
-                                                        {newServiceType.assignedToType === 'user' ? 'U' : 'T'}
-                                                    </span>
+                                                    {newServiceType.assignedToType === 'user' ? (
+                                                        <User className="size-3 text-gray-500" />
+                                                    ) : (
+                                                        <Users className="size-3 text-gray-500" />
+                                                    )}
                                                     <span>{newServiceType.assignedTo}</span>
                                                     <button
                                                         onClick={() => setNewServiceType(prev => ({ ...prev, assignedTo: "", assignedToType: "user" }))}
