@@ -62,7 +62,7 @@ const DialogContent = React.forwardRef<
             // border color
             "border-gray-200 dark:border-gray-900",
             // background color
-            "bg-white dark:bg-[#090E1A]",
+            "bg-white dark:bg-gray-900",
             // transition
             "data-[state=open]:animate-dialogContentShow",
             focusRing,
@@ -138,12 +138,13 @@ const DialogFooter = ({
 DialogFooter.displayName = "DialogFooter"
 
 export {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
 }
+
