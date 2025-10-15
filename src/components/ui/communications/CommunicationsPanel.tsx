@@ -8,6 +8,7 @@ import {
     RiCloseLine,
     RiEmotionLine,
     RiFullscreenLine,
+    RiGroup2Line,
     RiMessage2Line,
     RiSearchLine,
     RiSendPlaneFill,
@@ -32,20 +33,22 @@ interface TenantContact {
     avatar?: string
     initials: string
     email: string
+    companyName: string
+    building: string
 }
 
-interface Tenant {
+interface Conversation {
     id: string
+    type: "group" | "individual"
     name: string
+    companyName: string
     building: string
-    avatar?: string
-    initials: string
+    participants: TenantContact[]
     unread: number
-    contacts: TenantContact[]
     lastMessage?: {
         text: string
         time: string
-        isFromTenant: boolean
+        senderId: string
     }
 }
 
@@ -53,7 +56,6 @@ interface Message {
     id: string
     text: string
     time: string
-    isFromTenant: boolean
     sender: string
     senderId: string
     read: boolean
@@ -65,13 +67,19 @@ export function CommunicationsPanel({
     onExpand,
     isExpanded = false
 }: CommunicationsPanelProps) {
-    const [selectedTenant, setSelectedTenant] = useState<string | null>(null)
-    const [selectedContact, setSelectedContact] = useState<string | null>(null)
+    const [selectedConversation, setSelectedConversation] = useState<string | null>(null)
     const [searchQuery, setSearchQuery] = useState("")
     const [messageInput, setMessageInput] = useState("")
     const [showActionMenu, setShowActionMenu] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
     const [showMobileView, setShowMobileView] = useState(false)
+    const [showServiceRequestCard, setShowServiceRequestCard] = useState(false)
+    const [serviceRequestType, setServiceRequestType] = useState("")
+    const [serviceRequestDescription, setServiceRequestDescription] = useState("")
+    const [serviceRequestLocation, setServiceRequestLocation] = useState("")
+    const [showNewMessageModal, setShowNewMessageModal] = useState(false)
+    const [newMessageSearch, setNewMessageSearch] = useState("")
+    const [selectedContacts, setSelectedContacts] = useState<string[]>([])
     const actionMenuRef = useRef<HTMLDivElement>(null)
 
     // Check for mobile screen size
@@ -102,35 +110,39 @@ export function CommunicationsPanel({
         }
     }, [])
 
-    // Show mobile view when a tenant is selected on mobile
+    // Show mobile view when a conversation is selected on mobile
     useEffect(() => {
-        if (isMobile && selectedTenant) {
+        if (isMobile && selectedConversation) {
             setShowMobileView(true)
         }
-    }, [isMobile, selectedTenant])
+    }, [isMobile, selectedConversation])
 
     // Handle closing mobile view
     const handleCloseMobileView = () => {
         setShowMobileView(false)
-        // Optionally reset selected tenant if you want to go back to the tenant list
-        // setSelectedTenant(null)
+        // Optionally reset selected conversation if you want to go back to the conversation list
+        // setSelectedConversation(null)
     }
 
-    // Sample tenant data with contacts
-    const tenants: Tenant[] = [
+    // Sample conversation data - mix of group and individual conversations
+    const conversations: Conversation[] = [
+        // Group conversation with Acme Inc
         {
             id: "1",
-            name: "Acme Inc",
+            type: "group",
+            name: "Acme Inc - Team",
+            companyName: "Acme Inc",
             building: "Empire State Building",
-            initials: "AI",
             unread: 3,
-            contacts: [
+            participants: [
                 {
                     id: "1-1",
                     name: "John Smith",
                     role: "Office Manager",
                     initials: "JS",
-                    email: "john.smith@acme.com"
+                    email: "john.smith@acme.com",
+                    companyName: "Acme Inc",
+                    building: "Empire State Building"
                 },
                 {
                     id: "1-2",
@@ -138,112 +150,146 @@ export function CommunicationsPanel({
                     role: "Facilities Director",
                     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                     initials: "SJ",
-                    email: "sarah.johnson@acme.com"
+                    email: "sarah.johnson@acme.com",
+                    companyName: "Acme Inc",
+                    building: "Empire State Building"
                 },
                 {
                     id: "1-3",
                     name: "Robert Chen",
                     role: "CEO",
                     initials: "RC",
-                    email: "robert.chen@acme.com"
+                    email: "robert.chen@acme.com",
+                    companyName: "Acme Inc",
+                    building: "Empire State Building"
                 }
             ],
             lastMessage: {
                 text: "When will the elevator maintenance be completed?",
                 time: "10:30 AM",
-                isFromTenant: true
+                senderId: "1-1"
             }
         },
+        // Individual conversation with Emily Davis from Global Tech
         {
             id: "2",
-            name: "Global Tech",
+            type: "individual",
+            name: "Emily Davis",
+            companyName: "Global Tech",
             building: "Rockefeller Center",
-            avatar: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            initials: "GT",
             unread: 0,
-            contacts: [
+            participants: [
                 {
                     id: "2-1",
                     name: "Emily Davis",
                     role: "Office Administrator",
                     avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                     initials: "ED",
-                    email: "emily.davis@globaltech.com"
-                },
-                {
-                    id: "2-2",
-                    name: "Michael Wong",
-                    role: "IT Director",
-                    initials: "MW",
-                    email: "michael.wong@globaltech.com"
+                    email: "emily.davis@globaltech.com",
+                    companyName: "Global Tech",
+                    building: "Rockefeller Center"
                 }
             ],
             lastMessage: {
                 text: "Thanks for addressing our concerns about the HVAC system.",
                 time: "Yesterday",
-                isFromTenant: true
+                senderId: "2-1"
             }
         },
+        // Group conversation with Innovate Solutions
         {
             id: "3",
-            name: "Innovate Solutions",
+            type: "group",
+            name: "Innovate Solutions - Management",
+            companyName: "Innovate Solutions",
             building: "One World Trade Center",
-            initials: "IS",
             unread: 1,
-            contacts: [
+            participants: [
                 {
                     id: "3-1",
                     name: "Jessica Martinez",
                     role: "Office Manager",
                     avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2522&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                     initials: "JM",
-                    email: "jessica.martinez@innovate.com"
+                    email: "jessica.martinez@innovate.com",
+                    companyName: "Innovate Solutions",
+                    building: "One World Trade Center"
                 },
                 {
                     id: "3-2",
                     name: "David Wilson",
                     role: "Facilities Coordinator",
                     initials: "DW",
-                    email: "david.wilson@innovate.com"
+                    email: "david.wilson@innovate.com",
+                    companyName: "Innovate Solutions",
+                    building: "One World Trade Center"
                 }
             ],
             lastMessage: {
                 text: "We've scheduled the tenant event for next Friday at 3 PM.",
                 time: "Yesterday",
-                isFromTenant: false
+                senderId: "you"
             }
         },
+        // Individual conversation with Alex Thompson
         {
             id: "4",
-            name: "Creative Studios",
+            type: "individual",
+            name: "Alex Thompson",
+            companyName: "Creative Studios",
             building: "Chrysler Building",
-            initials: "CS",
             unread: 0,
-            contacts: [
+            participants: [
                 {
                     id: "4-1",
                     name: "Alex Thompson",
                     role: "Studio Manager",
                     initials: "AT",
-                    email: "alex.thompson@creative.com"
+                    email: "alex.thompson@creative.com",
+                    companyName: "Creative Studios",
+                    building: "Chrysler Building"
                 }
             ],
             lastMessage: {
                 text: "Our team would like to discuss the upcoming renovations.",
                 time: "Jun 10",
-                isFromTenant: true
+                senderId: "4-1"
+            }
+        },
+        // Individual conversation with Michael Wong from Global Tech
+        {
+            id: "5",
+            type: "individual",
+            name: "Michael Wong",
+            companyName: "Global Tech",
+            building: "Rockefeller Center",
+            unread: 2,
+            participants: [
+                {
+                    id: "2-2",
+                    name: "Michael Wong",
+                    role: "IT Director",
+                    initials: "MW",
+                    email: "michael.wong@globaltech.com",
+                    companyName: "Global Tech",
+                    building: "Rockefeller Center"
+                }
+            ],
+            lastMessage: {
+                text: "The access card system needs immediate attention.",
+                time: "9:15 AM",
+                senderId: "2-2"
             }
         }
     ]
 
-    // Sample messages for the selected tenant
+    // Sample messages for the selected conversation
     const messages: Record<string, Message[]> = {
         "1": [
             {
                 id: "1-1",
                 text: "Hello, we've noticed that the elevator in the north wing has been out of service for two days now.",
                 time: "Yesterday, 4:30 PM",
-                isFromTenant: true,
                 sender: "John Smith",
                 senderId: "1-1",
                 read: true
@@ -252,25 +298,30 @@ export function CommunicationsPanel({
                 id: "1-2",
                 text: "Hi John, thank you for bringing this to our attention. Our maintenance team is aware of the issue and working on it.",
                 time: "Yesterday, 5:15 PM",
-                isFromTenant: false,
                 sender: "You",
                 senderId: "you",
                 read: true
             },
             {
                 id: "1-3",
+                text: "I also wanted to follow up on the heating in our conference room.",
+                time: "Today, 9:30 AM",
+                sender: "Sarah Johnson",
+                senderId: "1-2",
+                read: true
+            },
+            {
+                id: "1-4",
                 text: "Do you have an estimated time for when it will be fixed? It's causing significant inconvenience for our staff.",
                 time: "Today, 9:45 AM",
-                isFromTenant: true,
                 sender: "John Smith",
                 senderId: "1-1",
                 read: true
             },
             {
-                id: "1-4",
+                id: "1-5",
                 text: "When will the elevator maintenance be completed?",
                 time: "Today, 10:30 AM",
-                isFromTenant: true,
                 sender: "John Smith",
                 senderId: "1-1",
                 read: false
@@ -281,7 +332,6 @@ export function CommunicationsPanel({
                 id: "2-1",
                 text: "We've been experiencing temperature fluctuations in our office space on the 15th floor.",
                 time: "Monday, 11:20 AM",
-                isFromTenant: true,
                 sender: "Emily Davis",
                 senderId: "2-1",
                 read: true
@@ -290,7 +340,6 @@ export function CommunicationsPanel({
                 id: "2-2",
                 text: "I'll have our facilities team look into this right away. Can you provide more details about when you notice the fluctuations?",
                 time: "Monday, 1:05 PM",
-                isFromTenant: false,
                 sender: "You",
                 senderId: "you",
                 read: true
@@ -299,7 +348,6 @@ export function CommunicationsPanel({
                 id: "2-3",
                 text: "It seems to happen mostly in the afternoon, between 2-4 PM. The temperature rises significantly making it uncomfortable to work.",
                 time: "Monday, 2:30 PM",
-                isFromTenant: true,
                 sender: "Emily Davis",
                 senderId: "2-1",
                 read: true
@@ -308,7 +356,6 @@ export function CommunicationsPanel({
                 id: "2-4",
                 text: "Our technicians have identified the issue with the HVAC system and made the necessary adjustments. Please let us know if you continue to experience problems.",
                 time: "Tuesday, 9:15 AM",
-                isFromTenant: false,
                 sender: "You",
                 senderId: "you",
                 read: true
@@ -317,7 +364,6 @@ export function CommunicationsPanel({
                 id: "2-5",
                 text: "Thanks for addressing our concerns about the HVAC system.",
                 time: "Yesterday, 3:45 PM",
-                isFromTenant: true,
                 sender: "Emily Davis",
                 senderId: "2-1",
                 read: true
@@ -328,7 +374,6 @@ export function CommunicationsPanel({
                 id: "3-1",
                 text: "We're interested in hosting a company event in the building's common area next week. Is that possible?",
                 time: "Tuesday, 10:00 AM",
-                isFromTenant: true,
                 sender: "Jessica Martinez",
                 senderId: "3-1",
                 read: true
@@ -337,7 +382,6 @@ export function CommunicationsPanel({
                 id: "3-2",
                 text: "Absolutely! We'd be happy to accommodate your event. Could you provide details on the date, time, and expected number of attendees?",
                 time: "Tuesday, 11:30 AM",
-                isFromTenant: false,
                 sender: "You",
                 senderId: "you",
                 read: true
@@ -346,77 +390,183 @@ export function CommunicationsPanel({
                 id: "3-3",
                 text: "We're looking at next Friday, around 3-5 PM. We'll have approximately 50 attendees.",
                 time: "Tuesday, 2:15 PM",
-                isFromTenant: true,
                 sender: "Jessica Martinez",
                 senderId: "3-1",
                 read: true
             },
             {
                 id: "3-4",
+                text: "I can help with the setup and catering arrangements if needed.",
+                time: "Tuesday, 3:00 PM",
+                sender: "David Wilson",
+                senderId: "3-2",
+                read: true
+            },
+            {
+                id: "3-5",
                 text: "We've scheduled the tenant event for next Friday at 3 PM.",
                 time: "Yesterday, 4:00 PM",
-                isFromTenant: false,
                 sender: "You",
                 senderId: "you",
+                read: false
+            }
+        ],
+        "4": [
+            {
+                id: "4-1",
+                text: "Our team would like to discuss the upcoming renovations.",
+                time: "Jun 10",
+                sender: "Alex Thompson",
+                senderId: "4-1",
+                read: true
+            }
+        ],
+        "5": [
+            {
+                id: "5-1",
+                text: "The access card system has been malfunctioning since this morning.",
+                time: "Today, 8:45 AM",
+                sender: "Michael Wong",
+                senderId: "2-2",
+                read: true
+            },
+            {
+                id: "5-2",
+                text: "Several of our employees are unable to access the parking garage.",
+                time: "Today, 9:00 AM",
+                sender: "Michael Wong",
+                senderId: "2-2",
+                read: false
+            },
+            {
+                id: "5-3",
+                text: "The access card system needs immediate attention.",
+                time: "Today, 9:15 AM",
+                sender: "Michael Wong",
+                senderId: "2-2",
                 read: false
             }
         ]
     }
 
-    const filteredTenants = tenants.filter(tenant =>
-        tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tenant.building.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredConversations = conversations.filter(conversation =>
+        conversation.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        conversation.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        conversation.building.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
     const handleSendMessage = (e: React.FormEvent) => {
         e.preventDefault()
-        if (!messageInput.trim() || !selectedTenant) return
+        if (!messageInput.trim() || !selectedConversation) return
 
         // In a real app, you would send the message to an API
-        console.log(`Sending message to tenant ${selectedTenant}: ${messageInput}`)
+        console.log(`Sending message to conversation ${selectedConversation}: ${messageInput}`)
         setMessageInput("")
     }
 
-    // Get the current tenant
-    const currentTenant = tenants.find(t => t.id === selectedTenant)
+    // Get the current conversation
+    const currentConversation = conversations.find(c => c.id === selectedConversation)
 
-    // Filter messages by selected contact if one is selected
-    const filteredMessages = selectedTenant && messages[selectedTenant]
-        ? (selectedContact
-            ? messages[selectedTenant].filter(m => m.isFromTenant ? m.senderId === selectedContact : true)
-            : messages[selectedTenant])
+    // Get messages for selected conversation
+    const conversationMessages = selectedConversation && messages[selectedConversation]
+        ? messages[selectedConversation]
         : []
 
     const handleCreateVisitor = () => {
         setShowActionMenu(false)
         // In a real app, you would open a visitor creation form
-        console.log(`Creating visitor for tenant ${selectedTenant}`)
+        console.log(`Creating visitor for conversation ${selectedConversation}`)
     }
 
     const handleCreateServiceRequest = () => {
         setShowActionMenu(false)
-        // In a real app, you would open a service request creation form
-        console.log(`Creating service request for tenant ${selectedTenant}`)
+        setShowServiceRequestCard(true)
+    }
+
+    const handleSubmitServiceRequest = () => {
+        // In a real app, you would submit the service request to an API
+        console.log('Service request submitted:', {
+            conversation: selectedConversation,
+            type: serviceRequestType,
+            description: serviceRequestDescription,
+            location: serviceRequestLocation
+        })
+        
+        // Reset the form
+        setShowServiceRequestCard(false)
+        setServiceRequestType("")
+        setServiceRequestDescription("")
+        setServiceRequestLocation("")
+    }
+
+    const handleCancelServiceRequest = () => {
+        setShowServiceRequestCard(false)
+        setServiceRequestType("")
+        setServiceRequestDescription("")
+        setServiceRequestLocation("")
     }
 
     const handleBookResource = () => {
         setShowActionMenu(false)
         // In a real app, you would open a resource booking form
-        console.log(`Booking resource for tenant ${selectedTenant}`)
+        console.log(`Booking resource for conversation ${selectedConversation}`)
     }
+
+    const handleStartNewMessage = () => {
+        setShowNewMessageModal(true)
+    }
+
+    const handleCloseNewMessage = () => {
+        setShowNewMessageModal(false)
+        setNewMessageSearch("")
+        setSelectedContacts([])
+    }
+
+    const toggleContactSelection = (contactId: string) => {
+        setSelectedContacts(prev => 
+            prev.includes(contactId) 
+                ? prev.filter(id => id !== contactId)
+                : [...prev, contactId]
+        )
+    }
+
+    const handleStartConversation = () => {
+        if (selectedContacts.length === 0) return
+
+        // In a real app, you would create a new conversation with the selected contacts
+        console.log('Starting new conversation with:', selectedContacts)
+        
+        // For demo purposes, just close the modal
+        handleCloseNewMessage()
+    }
+
+    // Get all available contacts from all conversations
+    const allAvailableContacts = Array.from(
+        new Map(
+            conversations.flatMap(conv => 
+                conv.participants.map(p => [p.id, p])
+            )
+        ).values()
+    )
+
+    const filteredAvailableContacts = allAvailableContacts.filter(contact =>
+        contact.name.toLowerCase().includes(newMessageSearch.toLowerCase()) ||
+        contact.companyName.toLowerCase().includes(newMessageSearch.toLowerCase()) ||
+        contact.role.toLowerCase().includes(newMessageSearch.toLowerCase())
+    )
 
     // Render mobile view if on mobile device and showMobileView is true
     if (isMobile && showMobileView) {
-        // Get the messages for the selected tenant
-        const tenantMessages = selectedTenant ? messages[selectedTenant] || [] : [];
+        // Get the messages for the selected conversation
+        const conversationMessagesForMobile = selectedConversation ? messages[selectedConversation] || [] : [];
 
         return (
             <FullScreenTenantContacts
                 onClose={handleCloseMobileView}
-                tenants={tenants}
-                messages={tenantMessages}
-                selectedTenant={selectedTenant}
-                setSelectedTenant={setSelectedTenant}
+                conversations={conversations}
+                messages={conversationMessagesForMobile}
+                selectedConversation={selectedConversation}
+                setSelectedConversation={setSelectedConversation}
             />
         )
     }
@@ -481,14 +631,25 @@ export function CommunicationsPanel({
 
             {/* Content */}
             <div className="flex flex-1 overflow-hidden">
-                {/* Tenant List */}
+                {/* Conversation List */}
                 <div className="w-1/3 border-r border-gray-200 dark:border-gray-800 flex flex-col">
-                    {/* Search */}
-                    <div className="p-3 border-b border-gray-200 dark:border-gray-800">
+                    {/* Search and New Message Button */}
+                    <div className="p-3 border-b border-gray-200 dark:border-gray-800 space-y-2">
+                        <button
+                            onClick={handleStartNewMessage}
+                            className={cn(
+                                "w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium",
+                                "bg-primary text-white hover:bg-primary-dark",
+                                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                            )}
+                        >
+                            <RiAddLine className="size-4" />
+                            New message
+                        </button>
                         <div className="relative">
                             <input
                                 type="text"
-                                placeholder="Search tenants..."
+                                placeholder="Search conversations..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className={cn(
@@ -501,67 +662,75 @@ export function CommunicationsPanel({
                         </div>
                     </div>
 
-                    {/* Tenant List */}
+                    {/* Conversation List */}
                     <div className="flex-1 overflow-y-auto">
-                        {filteredTenants.length > 0 ? (
-                            filteredTenants.map(tenant => (
+                        {filteredConversations.length > 0 ? (
+                            filteredConversations.map(conversation => (
                                 <div
-                                    key={tenant.id}
+                                    key={conversation.id}
                                     className={cn(
                                         "p-3 cursor-pointer border-b border-gray-100 dark:border-gray-800",
                                         "hover:bg-gray-50 dark:hover:bg-gray-900",
-                                        selectedTenant === tenant.id && "bg-gray-100 dark:bg-gray-800"
+                                        selectedConversation === conversation.id && "bg-gray-100 dark:bg-gray-800"
                                     )}
-                                    onClick={() => {
-                                        setSelectedTenant(tenant.id)
-                                        setSelectedContact(null) // Reset selected contact when changing tenant
-                                    }}
+                                    onClick={() => setSelectedConversation(conversation.id)}
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className="relative flex-shrink-0">
-                                            {tenant.avatar ? (
+                                            {conversation.type === "individual" && conversation.participants[0] ? (
+                                                conversation.participants[0].avatar ? (
                                                 <div className="relative size-10 overflow-hidden rounded-full">
                                                     <Image
-                                                        src={tenant.avatar}
-                                                        alt={tenant.name}
+                                                            src={conversation.participants[0].avatar}
+                                                            alt={conversation.participants[0].name}
                                                         fill
                                                         className="object-cover"
                                                     />
                                                 </div>
                                             ) : (
                                                 <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary dark:bg-primary/20">
-                                                    <span className="text-sm font-medium">{tenant.initials}</span>
+                                                        <span className="text-sm font-medium">{conversation.participants[0].initials}</span>
+                                                    </div>
+                                                )
+                                            ) : (
+                                                <div className="flex size-10 items-center justify-center rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
+                                                    <RiGroup2Line className="size-5" />
                                                 </div>
                                             )}
-                                            {tenant.unread > 0 && (
+                                            {conversation.unread > 0 && (
                                                 <span className="absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
-                                                    {tenant.unread}
+                                                    {conversation.unread}
                                                 </span>
                                             )}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between items-center">
+                                                <div className="flex items-center gap-1.5 min-w-0">
                                                 <h3 className="font-medium text-sm text-gray-900 dark:text-gray-50 truncate">
-                                                    {tenant.name}
+                                                        {conversation.name}
                                                 </h3>
-                                                {tenant.lastMessage && (
+                                                    {conversation.type === "group" && (
+                                                        <RiGroup2Line className="size-3.5 text-gray-400 flex-shrink-0" />
+                                                    )}
+                                                </div>
+                                                {conversation.lastMessage && (
                                                     <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                        {tenant.lastMessage.time}
+                                                        {conversation.lastMessage.time}
                                                     </span>
                                                 )}
                                             </div>
                                             <div className="flex items-center gap-1">
                                                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                                    {tenant.building}
+                                                    {conversation.companyName} • {conversation.building}
                                                 </p>
                                             </div>
-                                            {tenant.lastMessage && (
+                                            {conversation.lastMessage && (
                                                 <p className={cn(
                                                     "text-xs mt-1 truncate",
-                                                    tenant.unread > 0 ? "font-medium text-gray-900 dark:text-gray-50" : "text-gray-500 dark:text-gray-400"
+                                                    conversation.unread > 0 ? "font-medium text-gray-900 dark:text-gray-50" : "text-gray-500 dark:text-gray-400"
                                                 )}>
-                                                    {tenant.lastMessage.isFromTenant ? "" : "You: "}
-                                                    {tenant.lastMessage.text}
+                                                    {conversation.lastMessage.senderId === "you" ? "You: " : ""}
+                                                    {conversation.lastMessage.text}
                                                 </p>
                                             )}
                                         </div>
@@ -570,7 +739,7 @@ export function CommunicationsPanel({
                             ))
                         ) : (
                             <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-                                No tenants found
+                                No conversations found
                             </div>
                         )}
                     </div>
@@ -578,129 +747,114 @@ export function CommunicationsPanel({
 
                 {/* Conversation */}
                 <div className="w-2/3 flex flex-col">
-                    {selectedTenant ? (
+                    {selectedConversation ? (
                         <>
-                            {/* Conversation Header with Tenant Contacts */}
+                            {/* Conversation Header with Participants */}
                             <div className="p-3 border-b border-gray-200 dark:border-gray-800">
-                                <div className="flex items-center justify-between">
+                                <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-3">
-                                        {(() => {
-                                            const tenant = tenants.find(t => t.id === selectedTenant)
-                                            if (!tenant) return null
-
-                                            return (
-                                                <>
-                                                    {tenant.avatar ? (
+                                        {currentConversation && (
+                                            <>
+                                                {currentConversation.type === "individual" && currentConversation.participants[0] ? (
+                                                    currentConversation.participants[0].avatar ? (
                                                         <div className="relative size-8 overflow-hidden rounded-full">
                                                             <Image
-                                                                src={tenant.avatar}
-                                                                alt={tenant.name}
+                                                                src={currentConversation.participants[0].avatar}
+                                                                alt={currentConversation.participants[0].name}
                                                                 fill
                                                                 className="object-cover"
                                                             />
                                                         </div>
                                                     ) : (
                                                         <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary dark:bg-primary/20">
-                                                            <span className="text-xs font-medium">{tenant.initials}</span>
+                                                            <span className="text-xs font-medium">{currentConversation.participants[0].initials}</span>
+                                                        </div>
+                                                    )
+                                                ) : (
+                                                    <div className="flex size-8 items-center justify-center rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
+                                                        <RiGroup2Line className="size-5" />
                                                         </div>
                                                     )}
                                                     <div>
+                                                    <div className="flex items-center gap-1.5">
                                                         <h3 className="font-medium text-sm text-gray-900 dark:text-gray-50">
-                                                            {tenant.name}
+                                                            {currentConversation.name}
                                                         </h3>
+                                                        {currentConversation.type === "group" && (
+                                                            <RiGroup2Line className="size-3.5 text-gray-400" />
+                                                        )}
+                                                    </div>
                                                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                            {tenant.building}
+                                                        {currentConversation.companyName} • {currentConversation.building}
                                                         </p>
                                                     </div>
                                                 </>
-                                            )
-                                        })()}
+                                        )}
                                     </div>
 
-                                    {/* Tenant Contacts Avatars */}
-                                    {currentTenant && (
-                                        <div className="flex items-center">
-                                            <div className="flex -space-x-2 mr-2">
-                                                {currentTenant.contacts.map(contact => (
-                                                    <button
-                                                        key={contact.id}
-                                                        onClick={() => setSelectedContact(selectedContact === contact.id ? null : contact.id)}
-                                                        className={cn(
-                                                            "relative rounded-full border-2",
-                                                            selectedContact === contact.id
-                                                                ? "border-primary"
-                                                                : "border-white dark:border-gray-900 hover:border-gray-200 dark:hover:border-gray-700",
-                                                            "transition-all"
-                                                        )}
-                                                        title={`${contact.name} - ${contact.role}`}
-                                                    >
-                                                        {contact.avatar ? (
-                                                            <div className="relative size-8 overflow-hidden rounded-full">
+                                    {/* Participant Count for Groups */}
+                                    {currentConversation && currentConversation.type === "group" && (
+                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                            {currentConversation.participants.length} participants
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Participants */}
+                                {currentConversation && (
+                                    <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                                        {currentConversation.participants.map(participant => (
+                                            <div
+                                                key={participant.id}
+                                                className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-md px-2 py-1 flex-shrink-0"
+                                                title={`${participant.name} - ${participant.role}`}
+                                            >
+                                                {participant.avatar ? (
+                                                    <div className="relative size-6 overflow-hidden rounded-full">
                                                                 <Image
-                                                                    src={contact.avatar}
-                                                                    alt={contact.name}
+                                                            src={participant.avatar}
+                                                            alt={participant.name}
                                                                     fill
                                                                     className="object-cover"
                                                                 />
                                                             </div>
                                                         ) : (
-                                                            <div className="flex size-8 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-                                                                <span className="text-xs font-medium">{contact.initials}</span>
+                                                    <div className="flex size-6 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                                        <span className="text-[10px] font-medium">{participant.initials}</span>
                                                             </div>
                                                         )}
-                                                    </button>
-                                                ))}
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs font-medium text-gray-900 dark:text-gray-50">
+                                                        {participant.name}
+                                                    </span>
+                                                    <span className="text-[10px] text-gray-500 dark:text-gray-400">
+                                                        {participant.role}
+                                                    </span>
                                             </div>
-                                            {selectedContact && (
-                                                <button
-                                                    onClick={() => setSelectedContact(null)}
-                                                    className="text-xs text-primary hover:text-primary-dark whitespace-nowrap"
-                                                    title="Show all contacts"
-                                                >
-                                                    Show all
-                                                </button>
-                                            )}
                                         </div>
-                                    )}
-                                </div>
-
-                                {/* Selected Contact Info */}
-                                {selectedContact && currentTenant && (
-                                    <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-md">
-                                        <div className="flex items-center gap-2">
-                                            {(() => {
-                                                const contact = currentTenant.contacts.find(c => c.id === selectedContact)
-                                                if (!contact) return null
-
-                                                return (
-                                                    <>
-                                                        <p className="text-xs text-gray-700 dark:text-gray-300">
-                                                            Filtered to messages with <span className="font-medium">{contact.name}</span> ({contact.role})
-                                                        </p>
-                                                    </>
-                                                )
-                                            })()}
-                                        </div>
+                                        ))}
                                     </div>
                                 )}
                             </div>
 
                             {/* Messages */}
                             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                                {filteredMessages.length > 0 ? (
-                                    filteredMessages.map(message => (
+                                {conversationMessages.length > 0 ? (
+                                    conversationMessages.map(message => {
+                                        const isFromYou = message.senderId === "you"
+                                        return (
                                         <div
                                             key={message.id}
                                             className={cn(
                                                 "flex",
-                                                message.isFromTenant ? "justify-start" : "justify-end"
+                                                    isFromYou ? "justify-end" : "justify-start"
                                             )}
                                         >
                                             <div className={cn(
                                                 "max-w-[70%] rounded-lg p-3 text-sm",
-                                                message.isFromTenant
-                                                    ? "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50"
-                                                    : "bg-primary text-white"
+                                                    isFromYou
+                                                        ? "bg-primary text-white"
+                                                        : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50"
                                             )}>
                                                 <div className="flex justify-between items-center gap-4 mb-1">
                                                     <span className="font-medium text-xs">
@@ -713,10 +867,111 @@ export function CommunicationsPanel({
                                                 <p>{message.text}</p>
                                             </div>
                                         </div>
-                                    ))
+                                        )
+                                    })
                                 ) : (
                                     <div className="flex flex-col items-center justify-center h-full text-center text-gray-500 dark:text-gray-400 p-4">
-                                        <p>No messages found with this contact.</p>
+                                        <p>No messages yet. Start the conversation!</p>
+                                    </div>
+                                )}
+
+                                {/* Service Request Card */}
+                                {showServiceRequestCard && currentConversation && (
+                                    <div className="flex justify-end">
+                                        <div className="max-w-[85%] bg-gray-100 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                                            <div className="mb-3">
+                                                <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
+                                                    Create service request
+                                                </h4>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                    For: {currentConversation.companyName} • {currentConversation.building}
+                                                </p>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                {/* Type Dropdown */}
+                                                <div>
+                                                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                        Type
+                                                    </label>
+                                                    <select
+                                                        value={serviceRequestType}
+                                                        onChange={(e) => setServiceRequestType(e.target.value)}
+                                                        className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                                    >
+                                                        <option value="">Select type</option>
+                                                        <option value="maintenance">Maintenance</option>
+                                                        <option value="hvac">HVAC</option>
+                                                        <option value="plumbing">Plumbing</option>
+                                                        <option value="electrical">Electrical</option>
+                                                        <option value="cleaning">Cleaning</option>
+                                                        <option value="security">Security</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+
+                                                {/* Description Field */}
+                                                <div>
+                                                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                        Description
+                                                    </label>
+                                                    <textarea
+                                                        value={serviceRequestDescription}
+                                                        onChange={(e) => setServiceRequestDescription(e.target.value)}
+                                                        placeholder="Describe the issue..."
+                                                        rows={3}
+                                                        className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                                                    />
+                                                </div>
+
+                                                {/* Location Dropdown */}
+                                                <div>
+                                                    <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                        Location
+                                                    </label>
+                                                    <select
+                                                        value={serviceRequestLocation}
+                                                        onChange={(e) => setServiceRequestLocation(e.target.value)}
+                                                        className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                                    >
+                                                        <option value="">Select location</option>
+                                                        <option value="lobby">Lobby</option>
+                                                        <option value="office">Office space</option>
+                                                        <option value="parking">Parking garage</option>
+                                                        <option value="restroom">Restroom</option>
+                                                        <option value="conference">Conference room</option>
+                                                        <option value="elevator">Elevator</option>
+                                                        <option value="stairwell">Stairwell</option>
+                                                        <option value="rooftop">Rooftop</option>
+                                                        <option value="common-area">Common area</option>
+                                                    </select>
+                                                </div>
+
+                                                {/* Action Buttons */}
+                                                <div className="flex gap-2 pt-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleSubmitServiceRequest}
+                                                        disabled={!serviceRequestType || !serviceRequestDescription || !serviceRequestLocation}
+                                                        className={cn(
+                                                            "flex-1 px-3 py-2 text-sm font-medium rounded-md",
+                                                            "bg-primary text-white hover:bg-primary-dark",
+                                                            "disabled:opacity-50 disabled:cursor-not-allowed",
+                                                            "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                                                        )}
+                                                    >
+                                                        Submit request
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleCancelServiceRequest}
+                                                        className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                             </div>
@@ -727,9 +982,7 @@ export function CommunicationsPanel({
                                     <div className="flex-1 relative">
                                         <input
                                             type="text"
-                                            placeholder={selectedContact
-                                                ? `Message to ${currentTenant?.contacts.find(c => c.id === selectedContact)?.name}...`
-                                                : "Type a message..."}
+                                            placeholder="Type a message..."
                                             value={messageInput}
                                             onChange={(e) => setMessageInput(e.target.value)}
                                             className={cn(
@@ -812,15 +1065,156 @@ export function CommunicationsPanel({
                         <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
                             <RiMessage2Line className="size-12 text-gray-300 dark:text-gray-700 mb-4" />
                             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
-                                Select a tenant to start messaging
+                                Select a conversation to start messaging
                             </h3>
                             <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">
-                                Choose a tenant from the list to view your conversation history and send messages.
+                                Choose a conversation from the list to view messages and communicate with tenants.
                             </p>
                         </div>
                     )}
                 </div>
             </div>
+
+            {/* New Message Modal */}
+            {showNewMessageModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]">
+                    <div className="bg-white dark:bg-gray-950 rounded-lg shadow-xl border border-gray-200 dark:border-gray-800 w-full max-w-md m-4">
+                        {/* Modal Header */}
+                        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+                            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50">
+                                New message
+                            </h3>
+                            <button
+                                onClick={handleCloseNewMessage}
+                                className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
+                            >
+                                <RiCloseLine className="size-5" />
+                            </button>
+                        </div>
+
+                        {/* Search Contacts */}
+                        <div className="p-4 border-b border-gray-200 dark:border-gray-800">
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    placeholder="Search by name, company, or role..."
+                                    value={newMessageSearch}
+                                    onChange={(e) => setNewMessageSearch(e.target.value)}
+                                    className={cn(
+                                        "w-full rounded-md border border-gray-300 dark:border-gray-700 pl-9 pr-3 py-2 text-sm",
+                                        "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50",
+                                        "focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    )}
+                                />
+                                <RiSearchLine className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-gray-400" />
+                            </div>
+
+                            {/* Selected Contacts */}
+                            {selectedContacts.length > 0 && (
+                                <div className="mt-3 flex flex-wrap gap-2">
+                                    {selectedContacts.map(contactId => {
+                                        const contact = allAvailableContacts.find(c => c.id === contactId)
+                                        if (!contact) return null
+                                        return (
+                                            <div
+                                                key={contactId}
+                                                className="flex items-center gap-1 bg-primary/10 text-primary dark:bg-primary/20 rounded-md px-2 py-1"
+                                            >
+                                                <span className="text-xs font-medium">{contact.name}</span>
+                                                <button
+                                                    onClick={() => toggleContactSelection(contactId)}
+                                                    className="hover:bg-primary/20 dark:hover:bg-primary/30 rounded"
+                                                >
+                                                    <RiCloseLine className="size-3" />
+                                                </button>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Contact List */}
+                        <div className="max-h-96 overflow-y-auto">
+                            {filteredAvailableContacts.length > 0 ? (
+                                filteredAvailableContacts.map(contact => (
+                                    <button
+                                        key={contact.id}
+                                        onClick={() => toggleContactSelection(contact.id)}
+                                        className={cn(
+                                            "w-full flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-900 border-b border-gray-100 dark:border-gray-800",
+                                            selectedContacts.includes(contact.id) && "bg-primary/5 dark:bg-primary/10"
+                                        )}
+                                    >
+                                        {contact.avatar ? (
+                                            <div className="relative size-10 overflow-hidden rounded-full flex-shrink-0">
+                                                <Image
+                                                    src={contact.avatar}
+                                                    alt={contact.name}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary dark:bg-primary/20 flex-shrink-0">
+                                                <span className="text-sm font-medium">{contact.initials}</span>
+                                            </div>
+                                        )}
+                                        <div className="flex-1 min-w-0 text-left">
+                                            <div className="flex items-center gap-2">
+                                                <h4 className="font-medium text-sm text-gray-900 dark:text-gray-50 truncate">
+                                                    {contact.name}
+                                                </h4>
+                                                {selectedContacts.includes(contact.id) && (
+                                                    <div className="flex-shrink-0 size-5 rounded-full bg-primary flex items-center justify-center">
+                                                        <svg className="size-3 text-white" viewBox="0 0 16 16" fill="currentColor">
+                                                            <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                                                        </svg>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                                {contact.role}
+                                            </p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                                {contact.companyName} • {contact.building}
+                                            </p>
+                                        </div>
+                                    </button>
+                                ))
+                            ) : (
+                                <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                                    <p className="text-sm">No contacts found</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div className="p-4 border-t border-gray-200 dark:border-gray-800 flex gap-2">
+                            <button
+                                onClick={handleCloseNewMessage}
+                                className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleStartConversation}
+                                disabled={selectedContacts.length === 0}
+                                className={cn(
+                                    "flex-1 px-4 py-2 text-sm font-medium rounded-md",
+                                    "bg-primary text-white hover:bg-primary-dark",
+                                    "disabled:opacity-50 disabled:cursor-not-allowed",
+                                    "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                                )}
+                            >
+                                {selectedContacts.length > 1 
+                                    ? `Start group (${selectedContacts.length})` 
+                                    : 'Start conversation'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 } 
