@@ -109,12 +109,12 @@ export default function NewServiceRequestPage() {
                 <div className="lg:col-span-2 space-y-6">
                     {/* Service Request Details */}
                     <Card>
-                        <div className="p-6">
-                            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-6">
+                        <div className="p-4">
+                            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-4">
                                 Service Request Details
                             </h2>
                             
-                            <div className="space-y-6">
+                            <div className="space-y-4">
                                 {/* Requested By */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-2">
@@ -225,8 +225,8 @@ export default function NewServiceRequestPage() {
                 <div className="lg:col-span-1 space-y-6">
                     {/* Status */}
                     <Card>
-                        <div className="p-6">
-                            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-6">Status</h3>
+                        <div className="p-4">
+                            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-4">Status</h3>
                             
                             <div className="space-y-2">
                                 <Label htmlFor="status" className="text-sm font-medium text-gray-900 dark:text-gray-50">
@@ -249,8 +249,8 @@ export default function NewServiceRequestPage() {
 
                     {/* Attachments */}
                     <Card>
-                        <div className="p-6">
-                            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-6">Attachments</h3>
+                        <div className="p-4">
+                            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-4">Attachments</h3>
                             
                             <div className="space-y-4">
                                 {attachments.length === 0 ? (
