@@ -13,6 +13,7 @@ import { useRef, useState } from "react"
 
 // Mock data for dropdowns
 const buildings = [
+    { value: "125-highland-ave", label: "125 Highland Ave" },
     { value: "main-tower", label: "Main Tower" },
     { value: "east-wing", label: "East Wing" },
     { value: "west-building", label: "West Building" },
@@ -47,7 +48,7 @@ const users = [
 export default function NewServiceRequestPage() {
     const router = useRouter()
     const [formData, setFormData] = useState({
-        building: "",
+        building: "125-highland-ave",
         type: "",
         description: "",
         location: "",
