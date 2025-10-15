@@ -52,7 +52,7 @@ export default function NewServiceRequestPage() {
         type: "",
         description: "",
         location: "",
-        status: "",
+        status: "new",
         tenant: "",
         user: "",
     })
