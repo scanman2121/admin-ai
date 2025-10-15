@@ -61,6 +61,15 @@ interface Message {
     read: boolean
 }
 
+interface ServiceRequestCard {
+    id: string
+    srNumber: string
+    type: string
+    description: string
+    location: string
+    timestamp: string
+}
+
 export function CommunicationsPanel({
     onMinimize,
     onClose,
@@ -81,6 +90,8 @@ export function CommunicationsPanel({
     const [newMessageSearch, setNewMessageSearch] = useState("")
     const [selectedContacts, setSelectedContacts] = useState<string[]>([])
     const [showParticipants, setShowParticipants] = useState(false)
+    const [submittedServiceRequests, setSubmittedServiceRequests] = useState<Record<string, ServiceRequestCard[]>>({})
+    const [conversationNames, setConversationNames] = useState<Record<string, string>>({})
     const actionMenuRef = useRef<HTMLDivElement>(null)
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -468,10 +479,21 @@ export function CommunicationsPanel({
 
     // Get the current conversation
     const currentConversation = conversations.find(c => c.id === selectedConversation)
+    
+    // Get the display name (either custom SR name or original name)
+    const getConversationDisplayName = (convId: string | null) => {
+        if (!convId) return null
+        return conversationNames[convId] || conversations.find(c => c.id === convId)?.name
+    }
 
     // Get messages for selected conversation
     const conversationMessages = selectedConversation && messages[selectedConversation]
         ? messages[selectedConversation]
+        : []
+    
+    // Get submitted service requests for this conversation
+    const conversationServiceRequests = selectedConversation && submittedServiceRequests[selectedConversation]
+        ? submittedServiceRequests[selectedConversation]
         : []
 
     const handleCreateVisitor = () => {
@@ -490,8 +512,34 @@ export function CommunicationsPanel({
     }
 
     const handleSubmitServiceRequest = () => {
+        if (!selectedConversation) return
+        
         // Generate a service request number
         const srNumber = `SR-${Math.floor(10000 + Math.random() * 90000)}`
+        const now = new Date()
+        const timestamp = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+        
+        // Create service request card data
+        const srCard: ServiceRequestCard = {
+            id: `sr-${Date.now()}`,
+            srNumber,
+            type: serviceRequestType,
+            description: serviceRequestDescription,
+            location: serviceRequestLocation,
+            timestamp
+        }
+        
+        // Add the service request card to the conversation
+        setSubmittedServiceRequests(prev => ({
+            ...prev,
+            [selectedConversation]: [...(prev[selectedConversation] || []), srCard]
+        }))
+        
+        // Update the conversation name to the SR number
+        setConversationNames(prev => ({
+            ...prev,
+            [selectedConversation]: srNumber
+        }))
         
         // In a real app, you would submit the service request to an API
         console.log('Service request submitted:', {
@@ -502,18 +550,16 @@ export function CommunicationsPanel({
             location: serviceRequestLocation
         })
         
-        // Update the conversation name to the SR number
-        if (currentConversation) {
-            // In a real app, you would update this via API
-            // For now, we'll just log it
-            console.log(`Conversation renamed to: ${srNumber}`)
-        }
-        
         // Reset the form
         setShowServiceRequestCard(false)
         setServiceRequestType("")
         setServiceRequestDescription("")
         setServiceRequestLocation("")
+        
+        // Scroll to show the new card
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
     }
 
     const handleCancelServiceRequest = () => {
@@ -795,9 +841,9 @@ export function CommunicationsPanel({
                                                 <div>
                                                     <div className="flex items-center gap-1.5">
                                                         <h3 className="font-medium text-sm text-gray-900 dark:text-gray-50">
-                                                            {currentConversation.name}
+                                                            {getConversationDisplayName(selectedConversation) || currentConversation.name}
                                                         </h3>
-                                                        {currentConversation.type === "group" && (
+                                                        {currentConversation.type === "group" && !conversationNames[selectedConversation] && (
                                                             <RiGroup2Line className="size-3.5 text-gray-400" />
                                                         )}
                                                     </div>
@@ -994,6 +1040,60 @@ export function CommunicationsPanel({
                                         </div>
                                     </div>
                                 )}
+                                
+                                {/* Submitted Service Request Cards */}
+                                {conversationServiceRequests.map(srCard => (
+                                    <div key={srCard.id} className="flex justify-end">
+                                        <div className="max-w-[85%] bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                                            <div className="flex items-start gap-3 mb-3">
+                                                <div className="flex size-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 flex-shrink-0">
+                                                    <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center justify-between gap-2 mb-1">
+                                                        <h4 className="font-semibold text-sm text-green-900 dark:text-green-100">
+                                                            Service Request Created
+                                                        </h4>
+                                                        <span className="text-xs text-green-600 dark:text-green-400">
+                                                            {srCard.timestamp}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-xs font-medium text-green-800 dark:text-green-200 mb-2">
+                                                        {srCard.srNumber}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="space-y-2 mb-3">
+                                                <div>
+                                                    <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-0.5">Type</p>
+                                                    <p className="text-sm text-gray-900 dark:text-gray-100 capitalize">{srCard.type}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-0.5">Location</p>
+                                                    <p className="text-sm text-gray-900 dark:text-gray-100 capitalize">{srCard.location.replace('-', ' ')}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-0.5">Description</p>
+                                                    <p className="text-sm text-gray-900 dark:text-gray-100">{srCard.description}</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <button
+                                                className="w-full px-3 py-2 text-sm font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-900/60 rounded-md transition-colors"
+                                                onClick={() => {
+                                                    // In a real app, this would navigate to the service request
+                                                    console.log(`View service request: ${srCard.srNumber}`)
+                                                }}
+                                            >
+                                                View Service Request →
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                                
                                 <div ref={messagesEndRef} />
                             </div>
 
