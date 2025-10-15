@@ -865,7 +865,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                             return (
                                 <>
                                     {/* Category Row */}
-                                    <tr key={`category-${category.id}`} className="bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800">
+                                    <tr key={`category-${category.id}`} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <button
                                                 onClick={() => toggleCategoryExpansion(category.name)}

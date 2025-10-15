@@ -515,7 +515,7 @@ export default function ServiceRequestsUsersSettings() {
                                 return (
                                     <>
                                         {/* Tenant Row */}
-                                        <tr key={`tenant-${tenant.id}`} className="bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800">
+                                        <tr key={`tenant-${tenant.id}`} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <button
                                                     onClick={() => toggleTenantExpansion(tenant.name)}
