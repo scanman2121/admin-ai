@@ -61,6 +61,19 @@ export const siteConfig = {
       aboutIntelligence: "/intelligence/about",
       portfolioBenchmarks: "/intelligence/portfolio-benchmarks",
     },
+    // Tenant view section
+    tenant: {
+      home: "/tenant/home",
+      buildings: "/tenant/buildings",
+      employees: "/tenant/employees",
+      accessControl: "/tenant/access-control",
+      vendors: "/tenant/vendors",
+      visitors: "/tenant/visitors",
+      resourceBooking: "/tenant/resource-booking",
+      serviceRequests: "/tenant/service-requests",
+      credits: "/tenant/credits",
+      settings: "/tenant/settings",
+    },
   },
 }
 

@@ -4,7 +4,9 @@ import { CommunicationsTab } from "@/components/ui/communications/Communications
 import { FloatingActionBar } from "@/components/ui/navigation/FloatingActionBar"
 import { Header } from "@/components/ui/navigation/Header"
 import { Sidebar } from "@/components/ui/navigation/Sidebar"
+import { TenantSidebar } from "@/components/ui/navigation/TenantSidebar"
 import { SidebarToggle } from "@/components/ui/navigation/SidebarToggle"
+import { ViewProvider, useView } from "@/contexts/ViewContext"
 import { cn } from "@/lib/utils"
 import { createContext, useContext, useEffect, useState } from "react"
 
@@ -22,11 +24,12 @@ export const SidebarContext = createContext<SidebarContextType>({
 // Custom hook to use the sidebar context
 export const useSidebar = () => useContext(SidebarContext)
 
-export default function MainLayout({
+function MainLayoutContent({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const { view } = useView()
   const [collapsed, setCollapsed] = useState(false)
 
   // Load collapsed state from localStorage on mount
@@ -56,7 +59,7 @@ export default function MainLayout({
         Skip to main content
       </a>
       <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
-        <Sidebar />
+        {view === "tenant" ? <TenantSidebar /> : <Sidebar />}
         <SidebarToggle />
         <div className={cn(
           "flex flex-col flex-1 transition-all duration-300",
@@ -73,5 +76,17 @@ export default function MainLayout({
         </div>
       </div>
     </SidebarContext.Provider>
+  )
+}
+
+export default function MainLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <ViewProvider>
+      <MainLayoutContent>{children}</MainLayoutContent>
+    </ViewProvider>
   )
 }

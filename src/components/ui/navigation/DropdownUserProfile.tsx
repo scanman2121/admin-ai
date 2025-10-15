@@ -6,6 +6,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/Dropdown"
+import { useView } from "@/contexts/ViewContext"
 import {
     LogOut,
     Settings,
@@ -21,7 +22,7 @@ export function DropdownUserProfile({
   children,
   align = "start",
 }: DropdownUserProfileProps) {
-  const [view, setView] = React.useState<"landlord" | "tenant">("tenant")
+  const { view, setView } = useView()
 
   return (
     <>
@@ -63,7 +64,7 @@ export function DropdownUserProfile({
                   name="view"
                   value="landlord"
                   checked={view === "landlord"}
-                  onChange={(e) => setView(e.target.value as "landlord" | "tenant")}
+                  onChange={() => setView("landlord")}
                   className="w-4 h-4 text-primary border-gray-300 focus:ring-primary dark:border-gray-600"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">Landlord</span>
@@ -74,7 +75,7 @@ export function DropdownUserProfile({
                   name="view"
                   value="tenant"
                   checked={view === "tenant"}
-                  onChange={(e) => setView(e.target.value as "landlord" | "tenant")}
+                  onChange={() => setView("tenant")}
                   className="w-4 h-4 text-primary border-gray-300 focus:ring-primary dark:border-gray-600"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">Tenant</span>
