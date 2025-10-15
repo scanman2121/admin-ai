@@ -1146,7 +1146,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                 <table className="min-w-full">
                     <thead className="bg-gray-50 dark:bg-gray-800">
                         <tr>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            <th scope="col" className="w-72 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 Name / Request Type
                             </th>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -1178,21 +1178,21 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 <>
                                     {/* Category Row */}
                                     <tr key={`category-${category.id}`} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="w-72 px-6 py-4 whitespace-nowrap">
                                             <button
                                                 onClick={() => toggleCategoryExpansion(category.name)}
                                                 className="flex items-center gap-2 text-left w-full"
                                             >
                                                 {isExpanded ? (
-                                                    <RiArrowDownSLine className="size-4 text-gray-500" />
+                                                    <RiArrowDownSLine className="size-4 text-gray-500 flex-shrink-0" />
                                                 ) : (
-                                                    <RiArrowRightSLine className="size-4 text-gray-500" />
+                                                    <RiArrowRightSLine className="size-4 text-gray-500 flex-shrink-0" />
                                                 )}
-                                                <div>
-                                                    <div className="text-sm font-semibold text-gray-900 dark:text-gray-50">
+                                                <div className="min-w-0">
+                                                    <div className="text-sm font-semibold text-gray-900 dark:text-gray-50 truncate">
                                                         {category.name}
                                                     </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
                                                         {category.description} ({categoryServiceTypes.length} service types)
                                                     </div>
                                                 </div>
@@ -1279,12 +1279,12 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     {/* Service Type Rows (shown when expanded) */}
                                     {isExpanded && categoryServiceTypes.map((serviceType) => (
                                         <tr key={`service-${serviceType.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
-                                            <td className="px-6 py-4 pl-12">
+                                            <td className="w-72 px-6 py-4 pl-12">
                                                 <div className="space-y-1">
-                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-50 truncate">
                                                         {serviceType.requestType}
                                                     </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">
                                                         {serviceType.description}
                                                     </div>
                                                 </div>
