@@ -142,6 +142,14 @@ export default function ServiceRequestsUsersSettings() {
         }
     }, [])
 
+    // Close dropdowns when modal is closed
+    useEffect(() => {
+        if (!isAddModalOpen) {
+            setShowTenantDropdown(false)
+            setShowUserDropdown(false)
+        }
+    }, [isAddModalOpen])
+
     const filteredTenants = tenants.filter(tenant => 
         tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         tenant.users.some(user => 
@@ -427,14 +435,16 @@ export default function ServiceRequestsUsersSettings() {
 
             {/* Add Tenant User Modal */}
             <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="sm:max-w-[500px]">
                     <DialogHeader>
                         <DialogTitle>Add tenant user</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-4 py-4">
+                    <div className="space-y-6 py-4">
                         {/* Tenant Type-Ahead */}
                         <div className="space-y-2">
-                            <Label htmlFor="tenantSelect">Tenant</Label>
+                            <Label htmlFor="tenantSelect" className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                Tenant
+                            </Label>
                             <div className="relative" ref={tenantDropdownRef}>
                                 <Input
                                     id="tenantSelect"
@@ -448,26 +458,29 @@ export default function ServiceRequestsUsersSettings() {
                                         }
                                     }}
                                     onFocus={() => setShowTenantDropdown(true)}
+                                    className="w-full"
                                 />
                                 
                                 {showTenantDropdown && (
-                                    <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50">
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto z-[100]">
                                         {getFilteredTenantsForModal().length === 0 ? (
-                                            <div className="p-3 text-sm text-gray-500 dark:text-gray-400 text-center">
+                                            <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 text-center">
                                                 No tenants found
                                             </div>
                                         ) : (
-                                            getFilteredTenantsForModal().map((tenant) => (
-                                                <button
-                                                    key={tenant.id}
-                                                    onClick={() => handleSelectTenant(tenant.name)}
-                                                    className="w-full px-4 py-2.5 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
-                                                >
-                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                                                        {tenant.name}
-                                                    </div>
-                                                </button>
-                                            ))
+                                            <div className="py-1">
+                                                {getFilteredTenantsForModal().map((tenant) => (
+                                                    <button
+                                                        key={tenant.id}
+                                                        onClick={() => handleSelectTenant(tenant.name)}
+                                                        className="w-full px-4 py-2.5 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:bg-gray-100 dark:focus:bg-gray-700 focus:outline-none"
+                                                    >
+                                                        <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                            {tenant.name}
+                                                        </div>
+                                                    </button>
+                                                ))}
+                                            </div>
                                         )}
                                     </div>
                                 )}
@@ -476,20 +489,23 @@ export default function ServiceRequestsUsersSettings() {
 
                         {/* User Type-Ahead with Multiple Selection */}
                         <div className="space-y-2">
-                            <Label htmlFor="userSelect">Users</Label>
+                            <Label htmlFor="userSelect" className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                Users
+                            </Label>
                             
                             {/* Selected Users */}
                             {selectedUsers.length > 0 && (
-                                <div className="flex flex-wrap gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div className="flex flex-wrap gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-md border border-gray-200 dark:border-gray-700">
                                     {selectedUsers.map((user) => (
                                         <div
                                             key={user.id}
-                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
                                         >
                                             <span>{user.name}</span>
                                             <button
                                                 onClick={() => handleRemoveSelectedUser(user.id)}
-                                                className="hover:bg-blue-100 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
+                                                className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded p-0.5 transition-colors"
+                                                type="button"
                                             >
                                                 <RiCloseLine className="size-3.5" />
                                             </button>
@@ -501,44 +517,47 @@ export default function ServiceRequestsUsersSettings() {
                             <div className="relative" ref={userDropdownRef}>
                                 <Input
                                     id="userSelect"
-                                    placeholder="Search by name or email..."
+                                    placeholder={!selectedTenant ? "Select a tenant first..." : "Search by name or email..."}
                                     value={userSearch}
                                     onChange={(e) => {
                                         setUserSearch(e.target.value)
                                         setShowUserDropdown(true)
                                     }}
-                                    onFocus={() => setShowUserDropdown(true)}
+                                    onFocus={() => selectedTenant && setShowUserDropdown(true)}
                                     disabled={!selectedTenant}
+                                    className="w-full"
                                 />
                                 
                                 {showUserDropdown && selectedTenant && (
-                                    <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-64 overflow-y-auto z-[100]">
                                         {getFilteredUsersForModal().length === 0 ? (
-                                            <div className="p-3 text-sm text-gray-500 dark:text-gray-400 text-center">
-                                                No users found
+                                            <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400 text-center">
+                                                {userSearch ? "No users found" : "All users have been added"}
                                             </div>
                                         ) : (
-                                            getFilteredUsersForModal().map((user) => (
-                                                <button
-                                                    key={user.id}
-                                                    onClick={() => handleSelectUser(user)}
-                                                    className="w-full px-4 py-2.5 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
-                                                >
-                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                                                        {user.name}
-                                                    </div>
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                                                        {user.email}
-                                                    </div>
-                                                </button>
-                                            ))
+                                            <div className="py-1">
+                                                {getFilteredUsersForModal().map((user) => (
+                                                    <button
+                                                        key={user.id}
+                                                        onClick={() => handleSelectUser(user)}
+                                                        className="w-full px-4 py-2.5 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:bg-gray-100 dark:focus:bg-gray-700 focus:outline-none"
+                                                    >
+                                                        <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                            {user.name}
+                                                        </div>
+                                                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                                            {user.email}
+                                                        </div>
+                                                    </button>
+                                                ))}
+                                            </div>
                                         )}
                                     </div>
                                 )}
                             </div>
                             
                             {!selectedTenant && (
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
                                     Please select a tenant first
                                 </p>
                             )}
