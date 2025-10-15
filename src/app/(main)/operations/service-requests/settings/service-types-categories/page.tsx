@@ -28,62 +28,54 @@ const tabs = [
 const categoriesData = [
     {
         id: 1,
-        name: "Security",
-        description: "Security-related service requests and incidents",
+        name: "Cleaning & Waste",
+        description: "Need something cleaned, picked up, or removed — like trash, recycling, or windows?",
         status: true,
-        assignedTo: "Security Team",
+        assignedTo: "Housekeeping Team",
         assignedToType: "team" as "user" | "team",
     },
     {
         id: 2,
-        name: "Maintenance",
-        description: "Building maintenance and repair requests",
+        name: "Temperature & Air",
+        description: "Too hot, too cold, or something off with the air? Let us know.",
         status: true,
         assignedTo: "Maintenance Team",
         assignedToType: "team" as "user" | "team",
     },
     {
         id: 3,
-        name: "Cleaning",
-        description: "Cleaning and janitorial service requests",
+        name: "Repairs & Maintenance",
+        description: "Something broken, leaking, or not working right? We'll take care of it.",
         status: true,
-        assignedTo: "Housekeeping Team",
+        assignedTo: "Maintenance Team",
         assignedToType: "team" as "user" | "team",
     },
     {
         id: 4,
-        name: "Concierge",
-        description: "Concierge and guest services",
+        name: "Access & Security",
+        description: "Need help with a key, badge, lock, or getting into a space?",
+        status: true,
+        assignedTo: "Security Team",
+        assignedToType: "team" as "user" | "team",
+    },
+    {
+        id: 5,
+        name: "Hospitality & Concierge",
+        description: "Need a hand around the building — deliveries, event setup, or general help?",
         status: true,
         assignedTo: "Concierge Team",
         assignedToType: "team" as "user" | "team",
     },
     {
-        id: 5,
-        name: "IT Support",
-        description: "Technology and IT-related requests",
+        id: 6,
+        name: "Signage & Facilities",
+        description: "Need an update to signage, directories, or parking info?",
         status: true,
-        assignedTo: "IT Team",
+        assignedTo: "Facilities Team",
         assignedToType: "team" as "user" | "team",
     },
     {
-        id: 6,
-        name: "HVAC",
-        description: "Heating, ventilation, and air conditioning",
-        status: false,
-        assignedTo: "",
-        assignedToType: "user" as "user" | "team",
-    },
-    {
         id: 7,
-        name: "Landscaping",
-        description: "Outdoor maintenance and landscaping",
-        status: false,
-        assignedTo: "",
-        assignedToType: "user" as "user" | "team",
-    },
-    {
-        id: 8,
         name: "Other",
         description: "Miscellaneous service requests and general inquiries",
         status: true,
@@ -307,7 +299,7 @@ export default function ServiceRequestsServiceTypesCategories() {
     const [newServiceType, setNewServiceType] = useState({
         requestType: "",
         description: "",
-        category: "Security",
+        category: "Cleaning & Waste",
         approval: "None",
         assignedTo: "",
         assignedToType: "user" as "user" | "team",
@@ -384,20 +376,18 @@ export default function ServiceRequestsServiceTypesCategories() {
 
     const getCategoryBadgeVariant = (category: string) => {
         switch (category) {
-            case 'Security':
+            case 'Cleaning & Waste':
+                return 'success' as const
+            case 'Temperature & Air':
+                return 'warning' as const
+            case 'Repairs & Maintenance':
+                return 'warning' as const
+            case 'Access & Security':
                 return 'error' as const
-            case 'Maintenance':
-                return 'warning' as const
-            case 'Cleaning':
-                return 'success' as const
-            case 'Concierge':
+            case 'Hospitality & Concierge':
                 return 'default' as const
-            case 'IT Support':
+            case 'Signage & Facilities':
                 return 'neutral' as const
-            case 'HVAC':
-                return 'warning' as const
-            case 'Landscaping':
-                return 'success' as const
             case 'Other':
                 return 'neutral' as const
             default:
@@ -520,7 +510,7 @@ export default function ServiceRequestsServiceTypesCategories() {
         setNewServiceType({
             requestType: "",
             description: "",
-            category: "Security",
+            category: "Cleaning & Waste",
             approval: "None",
             assignedTo: "",
             assignedToType: "user",
@@ -581,7 +571,7 @@ export default function ServiceRequestsServiceTypesCategories() {
         setNewServiceType({
             requestType: "",
             description: "",
-            category: "Security",
+            category: "Cleaning & Waste",
             approval: "None",
             assignedTo: "",
             assignedToType: "user",
@@ -828,13 +818,12 @@ export default function ServiceRequestsServiceTypesCategories() {
                         className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                         <option>All Categories</option>
-                        <option>Security</option>
-                        <option>Maintenance</option>
-                        <option>Cleaning</option>
-                        <option>Concierge</option>
-                        <option>IT Support</option>
-                        <option>HVAC</option>
-                        <option>Landscaping</option>
+                        <option>Cleaning & Waste</option>
+                        <option>Temperature & Air</option>
+                        <option>Repairs & Maintenance</option>
+                        <option>Access & Security</option>
+                        <option>Hospitality & Concierge</option>
+                        <option>Signage & Facilities</option>
                         <option>Other</option>
                     </select>
                 </div>
@@ -1385,13 +1374,12 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, category: e.target.value }))}
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             >
-                                <option>Security</option>
-                                <option>Maintenance</option>
-                                <option>Cleaning</option>
-                                <option>Concierge</option>
-                                <option>IT Support</option>
-                                <option>HVAC</option>
-                                <option>Landscaping</option>
+                                <option>Cleaning & Waste</option>
+                                <option>Temperature & Air</option>
+                                <option>Repairs & Maintenance</option>
+                                <option>Access & Security</option>
+                                <option>Hospitality & Concierge</option>
+                                <option>Signage & Facilities</option>
                                 <option>Other</option>
                             </select>
                         </div>
@@ -1700,13 +1688,12 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, category: e.target.value }))}
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             >
-                                <option>Security</option>
-                                <option>Maintenance</option>
-                                <option>Cleaning</option>
-                                <option>Concierge</option>
-                                <option>IT Support</option>
-                                <option>HVAC</option>
-                                <option>Landscaping</option>
+                                <option>Cleaning & Waste</option>
+                                <option>Temperature & Air</option>
+                                <option>Repairs & Maintenance</option>
+                                <option>Access & Security</option>
+                                <option>Hospitality & Concierge</option>
+                                <option>Signage & Facilities</option>
                                 <option>Other</option>
                             </select>
                         </div>
