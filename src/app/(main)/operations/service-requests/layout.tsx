@@ -2,11 +2,9 @@
 
 import { Button } from "@/components/Button"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
-import { ServiceRequestCreateModal } from "@/components/ui/service-requests/ServiceRequestCreateModal"
 import { getPageInsights } from "@/lib/insights"
 import { RiSettings3Line } from "@remixicon/react"
 import { usePathname, useRouter } from "next/navigation"
-import { useState } from "react"
 
 export default function ServiceRequestsLayout({
     children,
@@ -16,21 +14,16 @@ export default function ServiceRequestsLayout({
     const pathname = usePathname()
     const router = useRouter()
     const insights = getPageInsights("operations")
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-
-    const handleCreateServiceRequest = (serviceRequestData: any) => {
-        // TODO: Implement service request creation logic
-        console.log('Creating service request:', serviceRequestData)
-    }
 
     // Check if we're on a service request detail page (e.g., /operations/service-requests/[id])
     const isServiceRequestDetailPage = pathname.match(/^\/operations\/service-requests\/[^\/]+$/) && pathname !== "/operations/service-requests"
     
-    // Check if we're on a service request settings page
+    // Check if we're on a service request settings page or new page
     const isServiceRequestSettingsPage = pathname.startsWith("/operations/service-requests/settings")
+    const isNewServiceRequestPage = pathname === "/operations/service-requests/new"
 
-    // If on service request detail page or settings page, render without header and tabs
-    if (isServiceRequestDetailPage || isServiceRequestSettingsPage) {
+    // If on service request detail page, settings page, or new page, render without header and tabs
+    if (isServiceRequestDetailPage || isServiceRequestSettingsPage || isNewServiceRequestPage) {
         return <div className="flex h-full w-full flex-col">{children}</div>
     }
 
@@ -50,7 +43,7 @@ export default function ServiceRequestsLayout({
                         <RiSettings3Line className="size-4" />
                     </Button>
                 </div>
-                <Button onClick={() => setIsCreateModalOpen(true)}>
+                <Button onClick={() => router.push('/operations/service-requests/new')}>
                     Add service request
                 </Button>
             </div>
@@ -60,13 +53,6 @@ export default function ServiceRequestsLayout({
             <div className="flex flex-col gap-4 w-full">
                 <div className="pt-6">{children}</div>
             </div>
-
-            {/* Service Request Create Modal */}
-            <ServiceRequestCreateModal
-                isOpen={isCreateModalOpen}
-                onClose={() => setIsCreateModalOpen(false)}
-                onSubmit={handleCreateServiceRequest}
-            />
         </div>
     )
 }
