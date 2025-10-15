@@ -783,7 +783,7 @@ export function CommunicationsPanel({
                 {/* Conversation List */}
                 <div className="w-1/3 border-r border-gray-200 dark:border-gray-800 flex flex-col relative">
                     {/* Search Bar */}
-                    <div className="p-3 border-b border-gray-200 dark:border-gray-800">
+                    <div className="p-3 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
                         <div className="relative">
                             <input
                                 type="text"
@@ -904,7 +904,7 @@ export function CommunicationsPanel({
                     {selectedConversation ? (
                         <>
                             {/* Conversation Header with Participants */}
-                            <div className="p-3 border-b border-gray-200 dark:border-gray-800">
+                            <div className="p-3 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         {currentConversation && (
