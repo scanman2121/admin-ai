@@ -24,7 +24,7 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
 
             return (
                 <div className="min-w-0 flex-1">
-                    <div className="font-medium text-gray-900 dark:text-gray-50 mb-1">
+                    <div className="font-medium text-gray-900 dark:text-gray-50 mb-1 line-clamp-2">
                         {request}
                     </div>
                     <div className="text-sm">
@@ -45,7 +45,7 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         },
         meta: {
             displayName: "Request",
-            className: "w-80 min-w-80",
+            className: "w-48 min-w-48",
         },
         enableSorting: true,
     },
