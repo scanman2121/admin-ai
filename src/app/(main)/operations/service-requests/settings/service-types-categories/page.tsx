@@ -1078,7 +1078,7 @@ export default function ServiceRequestsServiceTypesCategories() {
 
             {/* Service Types and Categories Content */}
             <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
                             Service types and categories
@@ -1087,7 +1087,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                             Organize service requests by category and define specific service types with approval workflows
                         </p>
                     </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-shrink-0">
                         <Button 
                             variant="ghost" 
                             onClick={() => setIsAddCategoryModalOpen(true)}
@@ -1106,7 +1106,7 @@ export default function ServiceRequestsServiceTypesCategories() {
             </div>
 
             {/* Search and Filters */}
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <input
                     type="text"
                     placeholder="Search categories and service types..."
@@ -1114,11 +1114,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-shrink-0">
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap"
                     >
                         <option>All</option>
                         <option>Active</option>
@@ -1127,7 +1127,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                     <select
                         value={categoryFilter}
                         onChange={(e) => setCategoryFilter(e.target.value)}
-                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap"
                     >
                         <option>All Categories</option>
                         <option>Cleaning & Waste</option>
@@ -1142,11 +1142,11 @@ export default function ServiceRequestsServiceTypesCategories() {
             </div>
 
             {/* Hierarchical Table */}
-            <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden overflow-x-auto">
                 <table className="min-w-full">
                     <thead className="bg-gray-50 dark:bg-gray-800">
                         <tr>
-                            <th scope="col" className="w-72 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            <th scope="col" className="min-w-72 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 Name / Request Type
                             </th>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -1178,7 +1178,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 <>
                                     {/* Category Row */}
                                     <tr key={`category-${category.id}`} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td className="w-72 px-6 py-4 whitespace-nowrap">
+                                        <td className="min-w-72 px-6 py-4 whitespace-nowrap">
                                             <button
                                                 onClick={() => toggleCategoryExpansion(category.name)}
                                                 className="flex items-center gap-2 text-left w-full"
@@ -1279,7 +1279,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     {/* Service Type Rows (shown when expanded) */}
                                     {isExpanded && categoryServiceTypes.map((serviceType) => (
                                         <tr key={`service-${serviceType.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
-                                            <td className="w-72 px-6 py-4 pl-12">
+                                            <td className="min-w-72 px-6 py-4 pl-12">
                                                 <div className="space-y-1">
                                                     <div className="text-sm font-medium text-gray-900 dark:text-gray-50 truncate">
                                                         {serviceType.requestType}
