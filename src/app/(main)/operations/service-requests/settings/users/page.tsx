@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { RiAddLine, RiArrowLeftLine, RiCloseLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState, useRef, useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 
 // Define tabs for the Service Requests Settings page
 const tabs = [
