@@ -911,34 +911,44 @@ export const buildings: { value: string; label: string }[] = [
 ]
 
 // Generate realistic work orders using centralized user database
-const createWorkOrderFromUser = (user: any, request: string, issueType: string, status: string, description: string = "", assignee: string = "Unassigned", priority: string = "Medium") => ({
-  id: `WO-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
-  request,
-  dateTime: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toLocaleDateString() + " " + 
-            new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-  description,
-  building: user.buildings[0] || "Main Tower",
-  floor: user.floorSuite.split(',')[0] || "Floor 1",
-  assignee,
-  status,
-  requestor: `${user.name} - ${user.company}`,
-  requestorDetails: {
-    id: user.id,
-    name: user.name,
-    email: user.email,
+const createWorkOrderFromUser = (user: any, request: string, issueType: string, status: string, description: string = "", assignee: string = "Unassigned", priority: string = "Medium") => {
+  const randomDaysAgo = Math.random() * 7;
+  const createdDate = new Date(Date.now() - randomDaysAgo * 24 * 60 * 60 * 1000);
+  
+  // Generate last updated time - could be same as created (new), or more recent (updated)
+  const hoursAgo = Math.random() * 48; // Updated within last 48 hours
+  const lastUpdatedDate = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
+  
+  return {
+    id: `WO-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+    request,
+    dateTime: createdDate.toLocaleDateString() + " " + 
+              createdDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+    lastUpdated: lastUpdatedDate.toISOString(),
+    description,
+    building: user.buildings[0] || "Main Tower",
+    floor: user.floorSuite.split(',')[0] || "Floor 1",
+    assignee,
+    status,
+    requestor: `${user.name} - ${user.company}`,
+    requestorDetails: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      company: user.company,
+      floorSuite: user.floorSuite,
+      serviceRequest: request,
+      serviceRequestType: issueType,
+      serviceRequestStatus: status,
+      acsStatus: user.acsStatus,
+      hasNotes: description.length > 0,
+      badgeId: user.badgeId
+    },
     company: user.company,
-    floorSuite: user.floorSuite,
-    serviceRequest: request,
-    serviceRequestType: issueType,
-    serviceRequestStatus: status,
-    acsStatus: user.acsStatus,
-    hasNotes: description.length > 0,
-    badgeId: user.badgeId
-  },
-  company: user.company,
-  issueType,
-  priority,
-});
+    issueType,
+    priority,
+  };
+};
 
 const evgenyUser = getUserById("evgeny-mahnovets");
 const sarahUser = getUserById("sarah-johnson-tech");

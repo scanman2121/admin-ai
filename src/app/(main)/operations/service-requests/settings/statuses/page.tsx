@@ -20,6 +20,7 @@ const tabs = [
     { name: "Teams", href: "/operations/service-requests/settings/teams" },
     { name: "Service types", href: "/operations/service-requests/settings/service-types-categories" },
     { name: "Statuses", href: "/operations/service-requests/settings/statuses" },
+    { name: "Users", href: "/operations/service-requests/settings/users" },
 ]
 
 // Use shared statuses data - this will be updated when new statuses are created

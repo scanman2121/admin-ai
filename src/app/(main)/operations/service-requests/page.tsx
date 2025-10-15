@@ -1,9 +1,11 @@
 "use client"
 
 import { Badge } from "@/components/Badge"
+import { DataTableColumnHeader } from "@/components/ui/data-table/DataTableColumnHeader"
 import { ServiceRequestsDataTable } from "@/components/ui/data-table/ServiceRequestsDataTable"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { serviceRequests, serviceRequestStatuses } from "@/data/data"
+import { getRelativeTime } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -11,7 +13,9 @@ import { useState } from "react"
 const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) => void) => [
     {
         accessorKey: "request",
-        header: "Request",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Request" />
+        ),
         cell: ({ row }: { row: any }) => {
             const request = row.getValue("request") as string;
             const requestorDetails = row.original.requestorDetails;
@@ -43,10 +47,13 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
             displayName: "Request",
             className: "w-80 min-w-80",
         },
+        enableSorting: true,
     },
     {
         accessorKey: "dateTime",
-        header: "Date & Time",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Date & Time" />
+        ),
         cell: ({ row }: { row: any }) => {
             const dateTime = row.getValue("dateTime") as string;
             return <span className="text-gray-600 dark:text-gray-400">{dateTime}</span>;
@@ -54,6 +61,7 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         meta: {
             displayName: "Date & Time",
         },
+        enableSorting: true,
     },
     {
         accessorKey: "description",
@@ -75,7 +83,9 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
     },
     {
         accessorKey: "building",
-        header: "Building",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Building" />
+        ),
         cell: ({ row }: { row: any }) => {
             const building = row.getValue("building") as string;
             const floor = row.original.floor as string;
@@ -95,10 +105,13 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         },
         filterFn: "equals" as const,
         enableColumnFilter: true,
+        enableSorting: true,
     },
     {
         accessorKey: "assignee",
-        header: "Assignee",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Assignee" />
+        ),
         cell: ({ row }: { row: any }) => {
             const assignee = row.getValue("assignee") as string;
             return <span className="text-gray-600 dark:text-gray-400">{assignee}</span>;
@@ -106,10 +119,32 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         meta: {
             displayName: "Assignee",
         },
+        enableSorting: true,
+    },
+    {
+        accessorKey: "lastUpdated",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Last updated" />
+        ),
+        cell: ({ row }: { row: any }) => {
+            const lastUpdated = row.getValue("lastUpdated") as string;
+            return <span className="text-gray-600 dark:text-gray-400">{getRelativeTime(lastUpdated)}</span>;
+        },
+        meta: {
+            displayName: "Last updated",
+        },
+        enableSorting: true,
+        sortingFn: (rowA: any, rowB: any) => {
+            const dateA = new Date(rowA.getValue("lastUpdated")).getTime();
+            const dateB = new Date(rowB.getValue("lastUpdated")).getTime();
+            return dateA - dateB;
+        },
     },
     {
         accessorKey: "status",
-        header: "Status",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Status" />
+        ),
         cell: ({ row }: { row: any }) => {
             const status = row.getValue("status") as string;
             const statusConfig = serviceRequestStatuses.find(s => s.value === status);
@@ -137,6 +172,7 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         },
         filterFn: "equals" as const,
         enableColumnFilter: true,
+        enableSorting: true,
     },
     // Hidden columns for filtering
     {
