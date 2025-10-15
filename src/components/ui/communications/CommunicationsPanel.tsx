@@ -781,20 +781,9 @@ export function CommunicationsPanel({
             {/* Content */}
             <div className="flex flex-1 overflow-hidden">
                 {/* Conversation List */}
-                <div className="w-1/3 border-r border-gray-200 dark:border-gray-800 flex flex-col">
-                    {/* Search and New Message Button */}
-                    <div className="p-3 border-b border-gray-200 dark:border-gray-800 space-y-2">
-                        <button
-                            onClick={handleStartNewMessage}
-                            className={cn(
-                                "w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium",
-                                "bg-primary text-white hover:bg-primary-dark",
-                                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                            )}
-                        >
-                            <RiAddLine className="size-4" />
-                            New message
-                        </button>
+                <div className="w-1/3 border-r border-gray-200 dark:border-gray-800 flex flex-col relative">
+                    {/* Search Bar */}
+                    <div className="p-3 border-b border-gray-200 dark:border-gray-800">
                         <div className="relative">
                             <input
                                 type="text"
@@ -812,7 +801,7 @@ export function CommunicationsPanel({
                     </div>
 
                     {/* Conversation List */}
-                    <div className="flex-1 overflow-y-auto">
+                    <div className="flex-1 overflow-y-auto pb-20">
                         {filteredConversations.length > 0 ? (
                             filteredConversations.map(conversation => (
                                 <div
@@ -891,6 +880,22 @@ export function CommunicationsPanel({
                                 No conversations found
                             </div>
                         )}
+                    </div>
+                    
+                    {/* Sticky New Message Button */}
+                    <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+                        <button
+                            onClick={handleStartNewMessage}
+                            className={cn(
+                                "w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-md text-sm font-medium",
+                                "bg-primary text-white hover:bg-primary-dark",
+                                "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                                "transition-colors"
+                            )}
+                        >
+                            <RiAddLine className="size-4" />
+                            New message
+                        </button>
                     </div>
                 </div>
 
