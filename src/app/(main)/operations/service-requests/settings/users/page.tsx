@@ -333,7 +333,7 @@ export default function ServiceRequestsUsersSettings() {
                                     Tenant
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Service Request Approvers
+                                    Service Request Tenant Admins
                                 </th>
                             </tr>
                         </thead>
