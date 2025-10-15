@@ -439,7 +439,7 @@ export default function ServiceRequestsUsersSettings() {
                     <DialogHeader>
                         <DialogTitle>Add tenant user</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-6 py-4">
+                    <div className="space-y-6 px-6 py-4">
                         {/* Tenant Type-Ahead */}
                         <div className="space-y-2">
                             <Label htmlFor="tenantSelect" className="text-sm font-medium text-gray-900 dark:text-gray-50">
