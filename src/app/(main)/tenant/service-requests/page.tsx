@@ -8,7 +8,6 @@ import { ServiceRequestsDataTable } from "@/components/ui/data-table/ServiceRequ
 import { serviceRequests, serviceRequestStatuses } from "@/data/data"
 import { getRelativeTime } from "@/lib/utils"
 import { RiAddLine } from "@remixicon/react"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 // Factory function to create columns
@@ -202,7 +201,6 @@ export default function TenantServiceRequestsPage() {
             (request) => request.company === tenantCompany
         )
     )
-    const router = useRouter()
 
     const handleRowClick = (serviceRequest: any) => {
         // For now, just log the click since we don't have detail pages set up for tenant
