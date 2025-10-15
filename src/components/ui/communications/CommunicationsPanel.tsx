@@ -770,9 +770,9 @@ export function CommunicationsPanel({
                                             <div className="flex justify-between items-center">
                                                 <div className="flex items-center gap-1.5 min-w-0">
                                                 <h3 className="font-medium text-sm text-gray-900 dark:text-gray-50 truncate">
-                                                        {conversation.name}
+                                                        {getConversationDisplayName(conversation.id) || conversation.name}
                                                 </h3>
-                                                    {conversation.type === "group" && (
+                                                    {conversation.type === "group" && !conversationNames[conversation.id] && (
                                                         <RiGroup2Line className="size-3.5 text-gray-400 flex-shrink-0" />
                                                     )}
                                                 </div>
