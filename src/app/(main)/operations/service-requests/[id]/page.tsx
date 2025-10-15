@@ -330,7 +330,12 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                     {/* Messages */}
                     <Card>
                         <div className="p-4">
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Messages</h2>
+                            <div className="mb-4">
+                                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Messages</h2>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                    Communication between you and the tenant
+                                </p>
+                            </div>
                             
                             {/* Message thread */}
                             <div className="space-y-3 mb-4">
@@ -400,7 +405,12 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                     {/* Internal Notes */}
                     <Card>
                         <div className="p-4">
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Internal Notes</h2>
+                            <div className="mb-4">
+                                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Internal Notes</h2>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                    Private notes — tenants do not see these
+                                </p>
+                            </div>
                             
                             {/* Existing notes */}
                             <div className="space-y-3 mb-4">
