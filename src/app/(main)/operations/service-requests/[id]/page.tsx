@@ -266,8 +266,8 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                 <div className="lg:col-span-2 space-y-6">
                     {/* Request Details */}
                     <Card>
-                        <div className="p-4">
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Request Details</h2>
+                        <div className="p-3">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-3">Request Details</h2>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -329,8 +329,8 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
 
                     {/* Messages */}
                     <Card>
-                        <div className="p-4">
-                            <div className="mb-4">
+                        <div className="p-3">
+                            <div className="mb-3">
                                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Messages</h2>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                     Communication between you and the tenant
@@ -338,7 +338,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                             </div>
                             
                             {/* Message thread */}
-                            <div className="space-y-3 mb-4">
+                            <div className="space-y-3 mb-3">
                                 {/* Image attachment */}
                                 <div className="flex items-start gap-3">
                                     <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
@@ -404,8 +404,8 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
 
                     {/* Internal Notes */}
                     <Card>
-                        <div className="p-4">
-                            <div className="mb-4">
+                        <div className="p-3">
+                            <div className="mb-3">
                                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Internal Notes</h2>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                     Private notes — tenants do not see these
@@ -413,7 +413,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                             </div>
                             
                             {/* Existing notes */}
-                            <div className="space-y-3 mb-4">
+                            <div className="space-y-3 mb-3">
                                 {serviceRequestDetail.internalNotes.map((note) => (
                                     <div key={note.id} className="p-3 bg-gray-50 rounded-lg">
                                         <p className="text-sm text-gray-900 mb-1">{note.content}</p>
@@ -441,8 +441,8 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
 
                     {/* Activity Log */}
                     <Card>
-                        <div className="p-4">
-                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Activity Log</h2>
+                        <div className="p-3">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-3">Activity Log</h2>
                             
                             <div className="space-y-3">
                                 {serviceRequestDetail.activityLog.map((activity) => (
@@ -482,8 +482,8 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
 
                     {/* Case Files */}
                     <Card>
-                        <div className="p-4">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Case Files</h3>
+                        <div className="p-3">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-3">Case Files</h3>
                             
                             <div className="space-y-4">
                                 {serviceRequestDetail.caseFiles.map((file) => (
