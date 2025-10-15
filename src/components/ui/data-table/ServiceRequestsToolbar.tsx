@@ -6,16 +6,19 @@ import { DataTableViewOptions } from "@/components/ui/data-table/DataTableViewOp
 import { Input } from "@/components/ui/input"
 import { buildings, companies, issueTypes, serviceRequestStatuses } from "@/data/data"
 import { Cross2Icon } from "@radix-ui/react-icons"
+import { RiDownloadLine } from "@remixicon/react"
 import { Table } from "@tanstack/react-table"
 
 interface ServiceRequestsToolbarProps<TData> {
     table: Table<TData>
     searchKey: string
+    onExport?: () => void
 }
 
 export function ServiceRequestsToolbar<TData>({
     table,
     searchKey,
+    onExport,
 }: ServiceRequestsToolbarProps<TData>) {
     const isFiltered = table.getState().columnFilters.length > 0
 
@@ -76,7 +79,20 @@ export function ServiceRequestsToolbar<TData>({
                     </Button>
                 )}
             </div>
-            <DataTableViewOptions table={table} />
+            <div className="flex items-center space-x-2">
+                {onExport && (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onExport}
+                        className="h-8"
+                    >
+                        <RiDownloadLine className="mr-2 h-4 w-4" />
+                        Export
+                    </Button>
+                )}
+                <DataTableViewOptions table={table} />
+            </div>
         </div>
     )
 }

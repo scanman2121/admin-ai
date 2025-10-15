@@ -31,6 +31,7 @@ interface ServiceRequestsDataTableProps<TData, TValue> {
   data: TData[]
   searchKey?: string
   onRowClick?: (row: TData) => void
+  onExport?: () => void
 }
 
 export function ServiceRequestsDataTable<TData, TValue>({
@@ -38,6 +39,7 @@ export function ServiceRequestsDataTable<TData, TValue>({
   data,
   searchKey = "request",
   onRowClick,
+  onExport,
 }: ServiceRequestsDataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
@@ -71,7 +73,7 @@ export function ServiceRequestsDataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-        <ServiceRequestsToolbar table={table} searchKey={searchKey} />
+        <ServiceRequestsToolbar table={table} searchKey={searchKey} onExport={onExport} />
       <div className="overflow-hidden rounded-md border bg-white dark:bg-transparent">
         <Table>
           <TableHeader>

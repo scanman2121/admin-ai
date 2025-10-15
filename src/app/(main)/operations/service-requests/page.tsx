@@ -234,6 +234,60 @@ export default function ServiceRequests() {
         setSelectedUser(null)
     }
 
+    const handleExport = () => {
+        // Prepare CSV data
+        const csvHeaders = [
+            "ID",
+            "Request",
+            "Requestor",
+            "Company",
+            "Date & Time",
+            "Description",
+            "Building",
+            "Floor",
+            "Assignee",
+            "Last Updated",
+            "Status",
+            "Issue Type"
+        ].join(",")
+
+        const csvRows = data.map(row => {
+            const requestorName = row.requestorDetails?.name || ""
+            const company = row.requestorDetails?.company || ""
+            const description = (row.description || "").replace(/"/g, '""') // Escape quotes
+            
+            return [
+                row.id,
+                `"${row.request}"`,
+                `"${requestorName}"`,
+                `"${company}"`,
+                row.dateTime,
+                `"${description}"`,
+                row.building,
+                row.floor,
+                row.assignee,
+                row.lastUpdated,
+                row.status,
+                row.issueType
+            ].join(",")
+        }).join("\n")
+
+        const csvContent = `${csvHeaders}\n${csvRows}`
+
+        // Create blob and download
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+        const link = document.createElement("a")
+        const url = URL.createObjectURL(blob)
+        
+        link.setAttribute("href", url)
+        link.setAttribute("download", `service-requests-${new Date().toISOString().split('T')[0]}.csv`)
+        link.style.visibility = "hidden"
+        
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
+
     const serviceRequestsColumns = createServiceRequestsColumns(handleRequestorClick)
 
     return (
@@ -242,7 +296,8 @@ export default function ServiceRequests() {
                 columns={serviceRequestsColumns} 
                 data={data} 
                 onRowClick={handleRowClick} 
-                searchKey="request" 
+                searchKey="request"
+                onExport={handleExport}
             />
             
             {/* User Details Modal */}
