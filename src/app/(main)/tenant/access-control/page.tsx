@@ -1,12 +1,12 @@
 "use client"
 
+import { Button } from "@/components/Button"
 import { Checkbox } from "@/components/Checkbox"
 import { DataTable } from "@/components/ui/data-table/DataTable"
-import { Row, Table } from "@tanstack/react-table"
-import { Key, Users, KeyRound, MapPin } from "lucide-react"
-import { useState } from "react"
-import { Button } from "@/components/Button"
 import { RiAddLine } from "@remixicon/react"
+import { Row, Table } from "@tanstack/react-table"
+import { Key, KeyRound, MapPin, Users } from "lucide-react"
+import { useState } from "react"
 
 // Sample access control data
 const accessControlData = [

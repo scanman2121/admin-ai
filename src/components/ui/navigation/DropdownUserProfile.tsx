@@ -1,12 +1,12 @@
 "use client"
 
+import { siteConfig } from "@/app/siteConfig"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/Dropdown"
-import { siteConfig } from "@/app/siteConfig"
 import { useView } from "@/contexts/ViewContext"
 import {
     LogOut,
