@@ -45,7 +45,7 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         },
         meta: {
             displayName: "Request",
-            className: "w-48 min-w-48",
+            className: "w-72 min-w-72",
         },
         enableSorting: true,
     },
