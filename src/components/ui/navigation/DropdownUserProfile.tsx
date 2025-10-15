@@ -6,11 +6,13 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/Dropdown"
+import { siteConfig } from "@/app/siteConfig"
 import { useView } from "@/contexts/ViewContext"
 import {
     LogOut,
     Settings,
 } from "lucide-react"
+import { useRouter } from "next/navigation"
 import * as React from "react"
 
 export type DropdownUserProfileProps = {
@@ -23,6 +25,17 @@ export function DropdownUserProfile({
   align = "start",
 }: DropdownUserProfileProps) {
   const { view, setView } = useView()
+  const router = useRouter()
+
+  const handleViewChange = (newView: "landlord" | "tenant") => {
+    setView(newView)
+    // Navigate to the appropriate default page
+    if (newView === "landlord") {
+      router.push(siteConfig.baseLinks.overview)
+    } else {
+      router.push(siteConfig.baseLinks.tenant.home)
+    }
+  }
 
   return (
     <>
@@ -64,7 +77,7 @@ export function DropdownUserProfile({
                   name="view"
                   value="landlord"
                   checked={view === "landlord"}
-                  onChange={() => setView("landlord")}
+                  onChange={() => handleViewChange("landlord")}
                   className="w-4 h-4 text-primary border-gray-300 focus:ring-primary dark:border-gray-600"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">Landlord</span>
@@ -75,7 +88,7 @@ export function DropdownUserProfile({
                   name="view"
                   value="tenant"
                   checked={view === "tenant"}
-                  onChange={() => setView("tenant")}
+                  onChange={() => handleViewChange("tenant")}
                   className="w-4 h-4 text-primary border-gray-300 focus:ring-primary dark:border-gray-600"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">Tenant</span>
