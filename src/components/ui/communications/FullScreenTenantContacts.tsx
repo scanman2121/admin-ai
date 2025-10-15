@@ -61,7 +61,9 @@ interface ServiceRequestCard {
 interface FullScreenTenantContactsProps {
     onClose: () => void
     conversations: Conversation[]
-    messages: Message[]
+    setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>
+    allMessages: Record<string, Message[]>
+    setMessages: React.Dispatch<React.SetStateAction<Record<string, Message[]>>>
     selectedConversation: string | null
     setSelectedConversation: (id: string | null) => void
 }
@@ -69,7 +71,9 @@ interface FullScreenTenantContactsProps {
 export function FullScreenTenantContacts({
     onClose,
     conversations,
-    messages,
+    setConversations,
+    allMessages,
+    setMessages,
     selectedConversation,
     setSelectedConversation
 }: FullScreenTenantContactsProps) {
@@ -95,6 +99,11 @@ export function FullScreenTenantContacts({
         return conversationNames[convId] || conversations.find(c => c.id === convId)?.name
     }
     
+    // Get messages for the selected conversation
+    const messages = selectedConversation && allMessages[selectedConversation]
+        ? allMessages[selectedConversation]
+        : []
+    
     // Get submitted service requests for this conversation
     const conversationServiceRequests = selectedConversation && submittedServiceRequests[selectedConversation]
         ? submittedServiceRequests[selectedConversation]
@@ -103,7 +112,7 @@ export function FullScreenTenantContacts({
     // Scroll to bottom when messages change
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [messages])
+    }, [allMessages, selectedConversation])
 
     // Handle escape key to close
     useEffect(() => {
@@ -119,11 +128,47 @@ export function FullScreenTenantContacts({
 
     // Handle message submission
     const handleSendMessage = () => {
-        if (!messageInput.trim()) return
+        if (!messageInput.trim() || !selectedConversation) return
 
-        // In a real app, you would send the message to the API
-        // For now, we'll just clear the input
+        const now = new Date()
+        const timestamp = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+
+        // Create new message
+        const newMessage: Message = {
+            id: `msg-${Date.now()}`,
+            text: messageInput.trim(),
+            time: timestamp,
+            sender: "You",
+            senderId: "you",
+            read: true
+        }
+
+        // Add message to the conversation
+        setMessages(prev => ({
+            ...prev,
+            [selectedConversation]: [...(prev[selectedConversation] || []), newMessage]
+        }))
+
+        // Update the conversation's last message
+        setConversations(prev => prev.map(conv => 
+            conv.id === selectedConversation
+                ? {
+                    ...conv,
+                    lastMessage: {
+                        text: messageInput.trim(),
+                        time: timestamp,
+                        senderId: "you"
+                    }
+                }
+                : conv
+        ))
+
         setMessageInput("")
+
+        // Scroll to bottom
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
     }
 
     const handleCreateServiceRequest = () => {
@@ -213,11 +258,51 @@ export function FullScreenTenantContacts({
     const handleStartConversation = () => {
         if (selectedContacts.length === 0) return
 
-        // In a real app, you would create a new conversation with the selected contacts
-        console.log('Starting new conversation with:', selectedContacts)
-        
-        // For demo purposes, just close the modal
+        // Get the selected contact objects
+        const selectedParticipants = allAvailableContacts.filter(contact => 
+            selectedContacts.includes(contact.id)
+        )
+
+        if (selectedParticipants.length === 0) return
+
+        // Generate a unique ID for the new conversation
+        const newConversationId = `new-${Date.now()}`
+
+        // Determine conversation type and name
+        const isGroup = selectedParticipants.length > 1
+        const conversationName = isGroup
+            ? selectedParticipants.length === 2
+                ? `${selectedParticipants[0].name} & ${selectedParticipants[1].name}`
+                : `${selectedParticipants[0].companyName} - Group`
+            : selectedParticipants[0].name
+
+        // Create the new conversation
+        const newConversation: Conversation = {
+            id: newConversationId,
+            type: isGroup ? "group" : "individual",
+            name: conversationName,
+            companyName: selectedParticipants[0].companyName,
+            building: selectedParticipants[0].building,
+            unread: 0,
+            participants: selectedParticipants
+        }
+
+        // Add the conversation to state
+        setConversations(prev => [newConversation, ...prev])
+
+        // Initialize empty messages for this conversation
+        setMessages(prev => ({
+            ...prev,
+            [newConversationId]: []
+        }))
+
+        // Select the new conversation
+        setSelectedConversation(newConversationId)
+
+        // Close the modal
         handleCloseNewMessage()
+        
+        console.log('New conversation created:', newConversation)
     }
 
     // Get all available contacts from all conversations

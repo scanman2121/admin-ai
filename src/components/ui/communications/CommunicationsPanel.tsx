@@ -92,6 +92,8 @@ export function CommunicationsPanel({
     const [showParticipants, setShowParticipants] = useState(false)
     const [submittedServiceRequests, setSubmittedServiceRequests] = useState<Record<string, ServiceRequestCard[]>>({})
     const [conversationNames, setConversationNames] = useState<Record<string, string>>({})
+    const [conversations, setConversations] = useState<Conversation[]>([])
+    const [messages, setMessages] = useState<Record<string, Message[]>>({})
     const actionMenuRef = useRef<HTMLDivElement>(null)
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -137,8 +139,10 @@ export function CommunicationsPanel({
         // setSelectedConversation(null)
     }
 
-    // Sample conversation data - mix of group and individual conversations
-    const conversations: Conversation[] = [
+    // Initialize with sample data
+    useEffect(() => {
+        // Sample conversation data - mix of group and individual conversations
+        const initialConversations: Conversation[] = [
         // Group conversation with Acme Inc
         {
             id: "1",
@@ -294,10 +298,10 @@ export function CommunicationsPanel({
                 senderId: "2-2"
             }
         }
-    ]
+        ]
 
-    // Sample messages for the selected conversation
-    const messages: Record<string, Message[]> = {
+        // Sample messages for the selected conversation
+        const initialMessages: Record<string, Message[]> = {
         "1": [
             {
                 id: "1-1",
@@ -460,7 +464,11 @@ export function CommunicationsPanel({
                 read: false
             }
         ]
-    }
+        }
+
+        setConversations(initialConversations)
+        setMessages(initialMessages)
+    }, []) // Run once on mount
 
     const filteredConversations = conversations.filter(conversation =>
         conversation.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -472,9 +480,48 @@ export function CommunicationsPanel({
         e.preventDefault()
         if (!messageInput.trim() || !selectedConversation) return
 
+        const now = new Date()
+        const timestamp = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+
+        // Create new message
+        const newMessage: Message = {
+            id: `msg-${Date.now()}`,
+            text: messageInput.trim(),
+            time: timestamp,
+            sender: "You",
+            senderId: "you",
+            read: true
+        }
+
+        // Add message to the conversation
+        setMessages(prev => ({
+            ...prev,
+            [selectedConversation]: [...(prev[selectedConversation] || []), newMessage]
+        }))
+
+        // Update the conversation's last message
+        setConversations(prev => prev.map(conv => 
+            conv.id === selectedConversation
+                ? {
+                    ...conv,
+                    lastMessage: {
+                        text: messageInput.trim(),
+                        time: timestamp,
+                        senderId: "you"
+                    }
+                }
+                : conv
+        ))
+
         // In a real app, you would send the message to an API
         console.log(`Sending message to conversation ${selectedConversation}: ${messageInput}`)
+        
         setMessageInput("")
+
+        // Scroll to bottom
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
     }
 
     // Get the current conversation
@@ -596,11 +643,51 @@ export function CommunicationsPanel({
     const handleStartConversation = () => {
         if (selectedContacts.length === 0) return
 
-        // In a real app, you would create a new conversation with the selected contacts
-        console.log('Starting new conversation with:', selectedContacts)
-        
-        // For demo purposes, just close the modal
+        // Get the selected contact objects
+        const selectedParticipants = allAvailableContacts.filter(contact => 
+            selectedContacts.includes(contact.id)
+        )
+
+        if (selectedParticipants.length === 0) return
+
+        // Generate a unique ID for the new conversation
+        const newConversationId = `new-${Date.now()}`
+
+        // Determine conversation type and name
+        const isGroup = selectedParticipants.length > 1
+        const conversationName = isGroup
+            ? selectedParticipants.length === 2
+                ? `${selectedParticipants[0].name} & ${selectedParticipants[1].name}`
+                : `${selectedParticipants[0].companyName} - Group`
+            : selectedParticipants[0].name
+
+        // Create the new conversation
+        const newConversation: Conversation = {
+            id: newConversationId,
+            type: isGroup ? "group" : "individual",
+            name: conversationName,
+            companyName: selectedParticipants[0].companyName,
+            building: selectedParticipants[0].building,
+            unread: 0,
+            participants: selectedParticipants
+        }
+
+        // Add the conversation to state
+        setConversations(prev => [newConversation, ...prev])
+
+        // Initialize empty messages for this conversation
+        setMessages(prev => ({
+            ...prev,
+            [newConversationId]: []
+        }))
+
+        // Select the new conversation
+        setSelectedConversation(newConversationId)
+
+        // Close the modal
         handleCloseNewMessage()
+        
+        console.log('New conversation created:', newConversation)
     }
 
     // Get all available contacts from all conversations
@@ -620,14 +707,13 @@ export function CommunicationsPanel({
 
     // Render mobile view if on mobile device and showMobileView is true
     if (isMobile && showMobileView) {
-        // Get the messages for the selected conversation
-        const conversationMessagesForMobile = selectedConversation ? messages[selectedConversation] || [] : [];
-
         return (
             <FullScreenTenantContacts
                 onClose={handleCloseMobileView}
                 conversations={conversations}
-                messages={conversationMessagesForMobile}
+                setConversations={setConversations}
+                allMessages={messages}
+                setMessages={setMessages}
                 selectedConversation={selectedConversation}
                 setSelectedConversation={setSelectedConversation}
             />
