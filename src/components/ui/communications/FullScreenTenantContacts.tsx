@@ -73,6 +73,7 @@ export function FullScreenTenantContacts({
     const [showNewMessageModal, setShowNewMessageModal] = useState(false)
     const [newMessageSearch, setNewMessageSearch] = useState("")
     const [selectedContacts, setSelectedContacts] = useState<string[]>([])
+    const [showParticipants, setShowParticipants] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
     const currentConversation = conversations.find(c => c.id === selectedConversation)
@@ -105,16 +106,31 @@ export function FullScreenTenantContacts({
 
     const handleCreateServiceRequest = () => {
         setShowServiceRequestCard(true)
+        // Scroll to bottom to show the service request card
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
     }
 
     const handleSubmitServiceRequest = () => {
+        // Generate a service request number
+        const srNumber = `SR-${Math.floor(10000 + Math.random() * 90000)}`
+        
         // In a real app, you would submit the service request to an API
         console.log('Service request submitted:', {
             conversation: selectedConversation,
+            serviceRequestNumber: srNumber,
             type: serviceRequestType,
             description: serviceRequestDescription,
             location: serviceRequestLocation
         })
+        
+        // Update the conversation name to the SR number
+        if (currentConversation) {
+            // In a real app, you would update this via API
+            // For now, we'll just log it
+            console.log(`Conversation renamed to: ${srNumber}`)
+        }
         
         // Reset the form
         setShowServiceRequestCard(false)
@@ -290,7 +306,7 @@ export function FullScreenTenantContacts({
                 <>
                     {/* Conversation header with participants */}
                     <div className="border-b border-gray-200 dark:border-gray-800 p-3 sm:p-4">
-                        <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="font-medium text-sm sm:text-base text-gray-900 dark:text-gray-50">
                                     {currentConversation.name}
@@ -300,47 +316,52 @@ export function FullScreenTenantContacts({
                                 </p>
                             </div>
                             {currentConversation.type === "group" && (
-                                <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                                <button
+                                    onClick={() => setShowParticipants(!showParticipants)}
+                                    className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                                >
                                     <RiGroup2Line className="size-4" />
                                     <span>{currentConversation.participants.length} participants</span>
-                                </div>
+                                </button>
                             )}
                         </div>
                         
-                        {/* Participants */}
-                        <div className="overflow-x-auto pb-2 -mx-2 px-2">
-                            <div className="flex space-x-2 sm:space-x-3 min-w-min">
-                                {currentConversation.participants.map(participant => (
-                                    <div
-                                        key={participant.id}
-                                        className="flex flex-col items-center flex-shrink-0"
-                                    >
-                                        <div className="relative rounded-full mb-1">
-                                            {participant.avatar ? (
-                                                <div className="relative size-10 sm:size-12 overflow-hidden rounded-full">
-                                                    <Image
-                                                        src={participant.avatar}
-                                                        alt={participant.name}
-                                                        fill
-                                                        className="object-cover"
-                                                    />
-                                                </div>
-                                            ) : (
-                                                <div className="flex size-10 sm:size-12 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-                                                    <span className="text-xs sm:text-sm font-medium">{participant.initials}</span>
-                                                </div>
-                                            )}
+                        {/* Collapsible Participants - Only for Groups */}
+                        {currentConversation.type === "group" && showParticipants && (
+                            <div className="overflow-x-auto pb-2 -mx-2 px-2 mt-3">
+                                <div className="flex space-x-2 sm:space-x-3 min-w-min">
+                                    {currentConversation.participants.map(participant => (
+                                        <div
+                                            key={participant.id}
+                                            className="flex flex-col items-center flex-shrink-0"
+                                        >
+                                            <div className="relative rounded-full mb-1">
+                                                {participant.avatar ? (
+                                                    <div className="relative size-10 sm:size-12 overflow-hidden rounded-full">
+                                                        <Image
+                                                            src={participant.avatar}
+                                                            alt={participant.name}
+                                                            fill
+                                                            className="object-cover"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex size-10 sm:size-12 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                                        <span className="text-xs sm:text-sm font-medium">{participant.initials}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <span className="text-xs font-medium text-gray-900 dark:text-gray-50 truncate max-w-[70px] sm:max-w-[80px]">
+                                                {participant.name}
+                                            </span>
+                                            <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 truncate max-w-[70px] sm:max-w-[80px]">
+                                                {participant.role}
+                                            </span>
                                         </div>
-                                        <span className="text-xs font-medium text-gray-900 dark:text-gray-50 truncate max-w-[70px] sm:max-w-[80px]">
-                                            {participant.name}
-                                        </span>
-                                        <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 truncate max-w-[70px] sm:max-w-[80px]">
-                                            {participant.role}
-                                        </span>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     {/* Messages */}

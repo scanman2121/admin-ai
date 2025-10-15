@@ -80,7 +80,9 @@ export function CommunicationsPanel({
     const [showNewMessageModal, setShowNewMessageModal] = useState(false)
     const [newMessageSearch, setNewMessageSearch] = useState("")
     const [selectedContacts, setSelectedContacts] = useState<string[]>([])
+    const [showParticipants, setShowParticipants] = useState(false)
     const actionMenuRef = useRef<HTMLDivElement>(null)
+    const messagesEndRef = useRef<HTMLDivElement>(null)
 
     // Check for mobile screen size
     useEffect(() => {
@@ -481,16 +483,31 @@ export function CommunicationsPanel({
     const handleCreateServiceRequest = () => {
         setShowActionMenu(false)
         setShowServiceRequestCard(true)
+        // Scroll to bottom to show the service request card
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
     }
 
     const handleSubmitServiceRequest = () => {
+        // Generate a service request number
+        const srNumber = `SR-${Math.floor(10000 + Math.random() * 90000)}`
+        
         // In a real app, you would submit the service request to an API
         console.log('Service request submitted:', {
             conversation: selectedConversation,
+            serviceRequestNumber: srNumber,
             type: serviceRequestType,
             description: serviceRequestDescription,
             location: serviceRequestLocation
         })
+        
+        // Update the conversation name to the SR number
+        if (currentConversation) {
+            // In a real app, you would update this via API
+            // For now, we'll just log it
+            console.log(`Conversation renamed to: ${srNumber}`)
+        }
         
         // Reset the form
         setShowServiceRequestCard(false)
@@ -751,7 +768,7 @@ export function CommunicationsPanel({
                         <>
                             {/* Conversation Header with Participants */}
                             <div className="p-3 border-b border-gray-200 dark:border-gray-800">
-                                <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         {currentConversation && (
                                             <>
@@ -773,9 +790,9 @@ export function CommunicationsPanel({
                                                 ) : (
                                                     <div className="flex size-8 items-center justify-center rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
                                                         <RiGroup2Line className="size-5" />
-                                                        </div>
-                                                    )}
-                                                    <div>
+                                                    </div>
+                                                )}
+                                                <div>
                                                     <div className="flex items-center gap-1.5">
                                                         <h3 className="font-medium text-sm text-gray-900 dark:text-gray-50">
                                                             {currentConversation.name}
@@ -784,25 +801,28 @@ export function CommunicationsPanel({
                                                             <RiGroup2Line className="size-3.5 text-gray-400" />
                                                         )}
                                                     </div>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
                                                         {currentConversation.companyName} • {currentConversation.building}
-                                                        </p>
-                                                    </div>
-                                                </>
+                                                    </p>
+                                                </div>
+                                            </>
                                         )}
                                     </div>
 
-                                    {/* Participant Count for Groups */}
+                                    {/* Participant Count for Groups - Clickable */}
                                     {currentConversation && currentConversation.type === "group" && (
-                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                        <button
+                                            onClick={() => setShowParticipants(!showParticipants)}
+                                            className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                                        >
                                             {currentConversation.participants.length} participants
-                                        </div>
+                                        </button>
                                     )}
                                 </div>
 
-                                {/* Participants */}
-                                {currentConversation && (
-                                    <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                                {/* Collapsible Participants - Only for Groups */}
+                                {currentConversation && currentConversation.type === "group" && showParticipants && (
+                                    <div className="mt-3 flex items-center gap-2 overflow-x-auto pb-1">
                                         {currentConversation.participants.map(participant => (
                                             <div
                                                 key={participant.id}
@@ -811,18 +831,18 @@ export function CommunicationsPanel({
                                             >
                                                 {participant.avatar ? (
                                                     <div className="relative size-6 overflow-hidden rounded-full">
-                                                                <Image
+                                                        <Image
                                                             src={participant.avatar}
                                                             alt={participant.name}
-                                                                    fill
-                                                                    className="object-cover"
-                                                                />
-                                                            </div>
-                                                        ) : (
+                                                            fill
+                                                            className="object-cover"
+                                                        />
+                                                    </div>
+                                                ) : (
                                                     <div className="flex size-6 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
                                                         <span className="text-[10px] font-medium">{participant.initials}</span>
-                                                            </div>
-                                                        )}
+                                                    </div>
+                                                )}
                                                 <div className="flex flex-col">
                                                     <span className="text-xs font-medium text-gray-900 dark:text-gray-50">
                                                         {participant.name}
@@ -830,8 +850,8 @@ export function CommunicationsPanel({
                                                     <span className="text-[10px] text-gray-500 dark:text-gray-400">
                                                         {participant.role}
                                                     </span>
+                                                </div>
                                             </div>
-                                        </div>
                                         ))}
                                     </div>
                                 )}
@@ -974,6 +994,7 @@ export function CommunicationsPanel({
                                         </div>
                                     </div>
                                 )}
+                                <div ref={messagesEndRef} />
                             </div>
 
                             {/* Message Input */}
