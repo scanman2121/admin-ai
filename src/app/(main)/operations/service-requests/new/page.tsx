@@ -115,6 +115,43 @@ export default function NewServiceRequestPage() {
                             </h2>
                             
                             <div className="space-y-4">
+                                {/* Building and Type */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="building" className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                            Building <span className="text-red-500">*</span>
+                                        </Label>
+                                        <select
+                                            id="building"
+                                            value={formData.building}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, building: e.target.value }))}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        >
+                                            <option value="">Select a building</option>
+                                            {buildings.map(building => (
+                                                <option key={building.value} value={building.value}>{building.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="type" className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                            Type <span className="text-red-500">*</span>
+                                        </Label>
+                                        <select
+                                            id="type"
+                                            value={formData.type}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value }))}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        >
+                                            <option value="">Select a type</option>
+                                            {serviceTypes.map(type => (
+                                                <option key={type.value} value={type.value}>{type.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
                                 {/* Requested By */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-2">
@@ -148,43 +185,6 @@ export default function NewServiceRequestPage() {
                                             <option value="">Select a user</option>
                                             {filteredUsers.map(user => (
                                                 <option key={user.value} value={user.value}>{user.label}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-
-                                {/* Building and Type */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="building" className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                                            Building <span className="text-red-500">*</span>
-                                        </Label>
-                                        <select
-                                            id="building"
-                                            value={formData.building}
-                                            onChange={(e) => setFormData(prev => ({ ...prev, building: e.target.value }))}
-                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        >
-                                            <option value="">Select a building</option>
-                                            {buildings.map(building => (
-                                                <option key={building.value} value={building.value}>{building.label}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="type" className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                                            Type <span className="text-red-500">*</span>
-                                        </Label>
-                                        <select
-                                            id="type"
-                                            value={formData.type}
-                                            onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value }))}
-                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        >
-                                            <option value="">Select a type</option>
-                                            {serviceTypes.map(type => (
-                                                <option key={type.value} value={type.value}>{type.label}</option>
                                             ))}
                                         </select>
                                     </div>
