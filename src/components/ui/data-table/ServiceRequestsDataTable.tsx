@@ -110,7 +110,7 @@ export function ServiceRequestsDataTable<TData, TValue>({
                   onClick={(e) => {
                     // Don't trigger row click if clicking on checkbox
                     const target = e.target as HTMLElement
-                    if (target.type === 'checkbox' || target.closest('input[type="checkbox"]')) {
+                    if (target.closest('input[type="checkbox"]') || (target as HTMLInputElement).type === 'checkbox') {
                       return
                     }
                     onRowClick?.(row.original)
