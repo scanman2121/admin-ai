@@ -1,17 +1,14 @@
 "use client"
 
-import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
-import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiMore2Line } from "@remixicon/react"
-import { Pencil, User } from "lucide-react"
+import { RiAddLine, RiArrowLeftLine, RiCloseLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 
 // Define tabs for the Service Requests Settings page
 const tabs = [
@@ -22,367 +19,228 @@ const tabs = [
     { name: "Tenant users", href: "/operations/service-requests/settings/users" },
 ]
 
-// Tenants data
-const tenantsData = [
+// Mock users database for type-ahead search
+const allUsers = [
+    { id: 1, name: "Sarah Johnson", email: "sarah.johnson@techcorp.com" },
+    { id: 2, name: "Michael Chen", email: "michael.chen@techcorp.com" },
+    { id: 3, name: "Emily Brown", email: "emily.brown@techcorp.com" },
+    { id: 4, name: "Dr. Emma Wilson", email: "emma.wilson@healthtech.com" },
+    { id: 5, name: "Kevin Chen", email: "kevin.chen@healthtech.com" },
+    { id: 6, name: "Rachel Thompson", email: "rachel.thompson@legalpartners.com" },
+    { id: 7, name: "James Anderson", email: "james.anderson@legalpartners.com" },
+    { id: 8, name: "Marcus Rodriguez", email: "marcus.rodriguez@globalfinance.com" },
+    { id: 9, name: "Lisa Wang", email: "lisa.wang@globalfinance.com" },
+    { id: 10, name: "David Martinez", email: "david.martinez@marketinghub.com" },
+    { id: 11, name: "Amanda Kim", email: "amanda.kim@marketinghub.com" },
+    { id: 12, name: "Chris Taylor", email: "chris.taylor@designstudio.com" },
+    { id: 13, name: "Jennifer Lee", email: "jennifer.lee@techcorp.com" },
+    { id: 14, name: "Robert Smith", email: "robert.smith@healthtech.com" },
+    { id: 15, name: "Maria Garcia", email: "maria.garcia@legalpartners.com" },
+]
+
+// Tenants data with their assigned users
+const initialTenantsData = [
     {
         id: 1,
         name: "TechCorp Solutions",
-        description: "Technology solutions and software development",
-        status: true,
-        industry: "Technology",
-        building: "Main Tower",
-        employees: 145,
+        users: [
+            { id: 1, name: "Sarah Johnson", email: "sarah.johnson@techcorp.com" },
+            { id: 2, name: "Michael Chen", email: "michael.chen@techcorp.com" },
+            { id: 3, name: "Emily Brown", email: "emily.brown@techcorp.com" },
+        ],
     },
     {
         id: 2,
         name: "HealthTech Inc",
-        description: "Healthcare technology and medical devices",
-        status: true,
-        industry: "Healthcare",
-        building: "Main Tower",
-        employees: 89,
+        users: [
+            { id: 4, name: "Dr. Emma Wilson", email: "emma.wilson@healthtech.com" },
+            { id: 5, name: "Kevin Chen", email: "kevin.chen@healthtech.com" },
+        ],
     },
     {
         id: 3,
         name: "Legal Partners",
-        description: "Legal services and consulting",
-        status: true,
-        industry: "Legal",
-        building: "East Wing",
-        employees: 67,
+        users: [
+            { id: 6, name: "Rachel Thompson", email: "rachel.thompson@legalpartners.com" },
+        ],
     },
     {
         id: 4,
         name: "Global Finance Corp",
-        description: "Financial services and investment banking",
-        status: true,
-        industry: "Finance",
-        building: "Main Tower",
-        employees: 112,
+        users: [
+            { id: 8, name: "Marcus Rodriguez", email: "marcus.rodriguez@globalfinance.com" },
+            { id: 9, name: "Lisa Wang", email: "lisa.wang@globalfinance.com" },
+        ],
     },
     {
         id: 5,
         name: "MarketingHub Agency",
-        description: "Digital marketing and advertising",
-        status: true,
-        industry: "Marketing",
-        building: "East Wing",
-        employees: 54,
+        users: [
+            { id: 10, name: "David Martinez", email: "david.martinez@marketinghub.com" },
+        ],
     },
     {
         id: 6,
         name: "Design Studio Co",
-        description: "Creative design and branding services",
-        status: false,
-        industry: "Design",
-        building: "West Building",
-        employees: 32,
-    },
-]
-
-// Service Request Users data
-const serviceRequestUsersData = [
-    // TechCorp Solutions users
-    {
-        id: 1,
-        name: "Sarah Johnson",
-        email: "sarah.johnson@techcorp.com",
-        tenant: "TechCorp Solutions",
-        role: "Admin",
-        permissions: ["Submit", "Process", "Approve"],
-        status: true,
-        phone: "(555) 123-4567",
-        department: "IT Administration",
-    },
-    {
-        id: 2,
-        name: "Michael Chen",
-        email: "michael.chen@techcorp.com",
-        tenant: "TechCorp Solutions",
-        role: "User",
-        permissions: ["Submit", "Process"],
-        status: true,
-        phone: "(555) 234-5678",
-        department: "Software Development",
-    },
-    {
-        id: 3,
-        name: "Emily Brown",
-        email: "emily.brown@techcorp.com",
-        tenant: "TechCorp Solutions",
-        role: "User",
-        permissions: ["Submit"],
-        status: true,
-        phone: "(555) 345-6789",
-        department: "Product Management",
-    },
-    // HealthTech Inc users
-    {
-        id: 4,
-        name: "Dr. Emma Wilson",
-        email: "emma.wilson@healthtech.com",
-        tenant: "HealthTech Inc",
-        role: "Admin",
-        permissions: ["Submit", "Process", "Approve"],
-        status: true,
-        phone: "(555) 456-7890",
-        department: "Medical Research",
-    },
-    {
-        id: 5,
-        name: "Kevin Chen",
-        email: "kevin.chen@healthtech.com",
-        tenant: "HealthTech Inc",
-        role: "User",
-        permissions: ["Submit", "Process"],
-        status: true,
-        phone: "(555) 567-8901",
-        department: "Clinical Operations",
-    },
-    // Legal Partners users
-    {
-        id: 6,
-        name: "Rachel Thompson",
-        email: "rachel.thompson@legalpartners.com",
-        tenant: "Legal Partners",
-        role: "Admin",
-        permissions: ["Submit", "Process", "Approve"],
-        status: true,
-        phone: "(555) 678-9012",
-        department: "Corporate Law",
-    },
-    {
-        id: 7,
-        name: "James Anderson",
-        email: "james.anderson@legalpartners.com",
-        tenant: "Legal Partners",
-        role: "User",
-        permissions: ["Submit"],
-        status: true,
-        phone: "(555) 789-0123",
-        department: "Litigation",
-    },
-    // Global Finance Corp users
-    {
-        id: 8,
-        name: "Marcus Rodriguez",
-        email: "marcus.rodriguez@globalfinance.com",
-        tenant: "Global Finance Corp",
-        role: "Admin",
-        permissions: ["Submit", "Process", "Approve"],
-        status: true,
-        phone: "(555) 890-1234",
-        department: "Investment Banking",
-    },
-    {
-        id: 9,
-        name: "Lisa Wang",
-        email: "lisa.wang@globalfinance.com",
-        tenant: "Global Finance Corp",
-        role: "User",
-        permissions: ["Submit", "Process"],
-        status: true,
-        phone: "(555) 901-2345",
-        department: "Trading Floor",
-    },
-    // MarketingHub Agency users
-    {
-        id: 10,
-        name: "David Martinez",
-        email: "david.martinez@marketinghub.com",
-        tenant: "MarketingHub Agency",
-        role: "Admin",
-        permissions: ["Submit", "Process", "Approve"],
-        status: true,
-        phone: "(555) 012-3456",
-        department: "Creative Services",
-    },
-    {
-        id: 11,
-        name: "Amanda Kim",
-        email: "amanda.kim@marketinghub.com",
-        tenant: "MarketingHub Agency",
-        role: "User",
-        permissions: ["Submit"],
-        status: false,
-        phone: "(555) 123-4568",
-        department: "Account Management",
-    },
-    // Design Studio Co users
-    {
-        id: 12,
-        name: "Chris Taylor",
-        email: "chris.taylor@designstudio.com",
-        tenant: "Design Studio Co",
-        role: "Admin",
-        permissions: ["Submit", "Process", "Approve"],
-        status: false,
-        phone: "(555) 234-5679",
-        department: "Creative Direction",
+        users: [],
     },
 ]
 
 export default function ServiceRequestsUsersSettings() {
     const pathname = usePathname()
     const [searchQuery, setSearchQuery] = useState("")
-    const [statusFilter, setStatusFilter] = useState("All")
-    const [tenantFilter, setTenantFilter] = useState("All Tenants")
+    const [tenants, setTenants] = useState(initialTenantsData)
     
-    const [tenants, setTenants] = useState(tenantsData)
-    const [users, setUsers] = useState(serviceRequestUsersData)
-    const [expandedTenants, setExpandedTenants] = useState<Set<string>>(new Set(["TechCorp Solutions"]))
+    // Popover state for adding users to a specific tenant
+    const [openPopoverId, setOpenPopoverId] = useState<number | null>(null)
+    const [popoverSearch, setPopoverSearch] = useState("")
+    const popoverRef = useRef<HTMLDivElement>(null)
     
-    const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false)
-    const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false)
-    const [editingUser, setEditingUser] = useState<typeof serviceRequestUsersData[0] | null>(null)
-    const [openUserDropdownId, setOpenUserDropdownId] = useState<number | null>(null)
-    
-    const [newUser, setNewUser] = useState({
-        name: "",
-        email: "",
-        tenant: "",
-        role: "User" as "Admin" | "User",
-        permissions: [] as string[],
-        phone: "",
-        department: "",
-    })
+    // Modal state for adding tenant users
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+    const [selectedTenant, setSelectedTenant] = useState("")
+    const [selectedUsers, setSelectedUsers] = useState<typeof allUsers>([])
+    const [tenantSearch, setTenantSearch] = useState("")
+    const [userSearch, setUserSearch] = useState("")
+    const [showTenantDropdown, setShowTenantDropdown] = useState(false)
+    const [showUserDropdown, setShowUserDropdown] = useState(false)
+    const tenantDropdownRef = useRef<HTMLDivElement>(null)
+    const userDropdownRef = useRef<HTMLDivElement>(null)
 
-    const getRoleBadgeVariant = (role: string) => {
-        switch (role) {
-            case 'Admin':
-                return 'error' as const
-            case 'User':
-                return 'default' as const
-            default:
-                return 'neutral' as const
-        }
-    }
-
-    const toggleTenantExpansion = (tenantName: string) => {
-        setExpandedTenants(prev => {
-            const newSet = new Set(Array.from(prev))
-            if (newSet.has(tenantName)) {
-                newSet.delete(tenantName)
-            } else {
-                newSet.add(tenantName)
+    // Close popover when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+                setOpenPopoverId(null)
+                setPopoverSearch("")
             }
-            return newSet
-        })
-    }
+        }
 
-    const handleTenantStatusToggle = (id: number) => {
-        setTenants(prev => 
-            prev.map(tenant => 
-                tenant.id === id ? { ...tenant, status: !tenant.status } : tenant
-            )
+        if (openPopoverId !== null) {
+            document.addEventListener("mousedown", handleClickOutside)
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [openPopoverId])
+
+    // Close dropdowns when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (tenantDropdownRef.current && !tenantDropdownRef.current.contains(event.target as Node)) {
+                setShowTenantDropdown(false)
+            }
+            if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+                setShowUserDropdown(false)
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [])
+
+    const filteredTenants = tenants.filter(tenant => 
+        tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        tenant.users.some(user => 
+            user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchQuery.toLowerCase())
         )
-    }
+    )
 
-    const handleUserStatusToggle = (id: number) => {
-        setUsers(prev => 
-            prev.map(user => 
-                user.id === id ? { ...user, status: !user.status } : user
-            )
-        )
-    }
-
-    const handleAddUser = () => {
-        if (!newUser.name.trim() || !newUser.email.trim() || !newUser.tenant) {
-            return
-        }
-
-        const newId = Math.max(...users.map(user => user.id)) + 1
-        const user = {
-            id: newId,
-            ...newUser,
-            status: true,
-        }
-
-        setUsers(prev => [...prev, user])
-        setNewUser({
-            name: "",
-            email: "",
-            tenant: "",
-            role: "User",
-            permissions: [],
-            phone: "",
-            department: "",
-        })
-        setIsAddUserModalOpen(false)
-    }
-
-    const handleEditUser = (user: typeof serviceRequestUsersData[0]) => {
-        setEditingUser(user)
-        setNewUser({
-            name: user.name,
-            email: user.email,
-            tenant: user.tenant,
-            role: user.role as "Admin" | "User",
-            permissions: [...user.permissions],
-            phone: user.phone,
-            department: user.department,
-        })
-        setIsEditUserModalOpen(true)
-    }
-
-    const handleUpdateUser = () => {
-        if (!editingUser || !newUser.name.trim() || !newUser.email.trim()) {
-            return
-        }
-
-        setUsers(prev => prev.map(user => 
-            user.id === editingUser.id 
-                ? { ...user, ...newUser }
-                : user
-        ))
+    const getFilteredUsersForPopover = (tenantId: number) => {
+        const tenant = tenants.find(t => t.id === tenantId)
+        if (!tenant) return []
         
-        setEditingUser(null)
-        setNewUser({
-            name: "",
-            email: "",
-            tenant: "",
-            role: "User",
-            permissions: [],
-            phone: "",
-            department: "",
-        })
-        setIsEditUserModalOpen(false)
+        const assignedUserIds = tenant.users.map(u => u.id)
+        return allUsers.filter(user => 
+            !assignedUserIds.includes(user.id) &&
+            (user.name.toLowerCase().includes(popoverSearch.toLowerCase()) ||
+            user.email.toLowerCase().includes(popoverSearch.toLowerCase()))
+        )
     }
 
-    const handleDeleteUser = (id: number) => {
-        setUsers(prev => prev.filter(user => user.id !== id))
-        setOpenUserDropdownId(null)
+    const getFilteredTenantsForModal = () => {
+        return tenants.filter(tenant =>
+            tenant.name.toLowerCase().includes(tenantSearch.toLowerCase())
+        )
     }
 
-    const handlePermissionToggle = (permission: string) => {
-        setNewUser(prev => ({
-            ...prev,
-            permissions: prev.permissions.includes(permission)
-                ? prev.permissions.filter(p => p !== permission)
-                : [...prev.permissions, permission]
+    const getFilteredUsersForModal = () => {
+        const selectedTenantData = tenants.find(t => t.name === selectedTenant)
+        const assignedUserIds = selectedTenantData?.users.map(u => u.id) || []
+        const selectedUserIds = selectedUsers.map(u => u.id)
+        
+        return allUsers.filter(user => 
+            !assignedUserIds.includes(user.id) &&
+            !selectedUserIds.includes(user.id) &&
+            (user.name.toLowerCase().includes(userSearch.toLowerCase()) ||
+            user.email.toLowerCase().includes(userSearch.toLowerCase()))
+        )
+    }
+
+    const handleRemoveUser = (tenantId: number, userId: number) => {
+        setTenants(prev => prev.map(tenant => {
+            if (tenant.id === tenantId) {
+                return {
+                    ...tenant,
+                    users: tenant.users.filter(user => user.id !== userId)
+                }
+            }
+            return tenant
         }))
     }
 
-    const filteredTenants = tenants.filter(tenant => {
-        const matchesSearch = tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            tenant.description.toLowerCase().includes(searchQuery.toLowerCase())
-        const matchesStatus = statusFilter === "All" || 
-                            (statusFilter === "Active" && tenant.status) ||
-                            (statusFilter === "Inactive" && !tenant.status)
-        const matchesTenantFilter = tenantFilter === "All Tenants" || tenant.name === tenantFilter
-        return matchesSearch && matchesStatus && matchesTenantFilter
-    })
+    const handleAddUserFromPopover = (tenantId: number, user: typeof allUsers[0]) => {
+        setTenants(prev => prev.map(tenant => {
+            if (tenant.id === tenantId) {
+                return {
+                    ...tenant,
+                    users: [...tenant.users, user]
+                }
+            }
+            return tenant
+        }))
+        setPopoverSearch("")
+    }
 
-    const getFilteredUsers = (tenantName: string) => {
-        const tenantUsers = users.filter(user => user.tenant === tenantName)
-        return tenantUsers.filter(user => {
-            const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                user.email.toLowerCase().includes(searchQuery.toLowerCase())
-            const matchesStatus = statusFilter === "All" || 
-                                (statusFilter === "Active" && user.status) ||
-                                (statusFilter === "Inactive" && !user.status)
-            return matchesSearch && matchesStatus
-        })
+    const handleAddUsersFromModal = () => {
+        if (!selectedTenant || selectedUsers.length === 0) return
+
+        setTenants(prev => prev.map(tenant => {
+            if (tenant.name === selectedTenant) {
+                return {
+                    ...tenant,
+                    users: [...tenant.users, ...selectedUsers]
+                }
+            }
+            return tenant
+        }))
+
+        // Reset modal state
+        setSelectedTenant("")
+        setSelectedUsers([])
+        setTenantSearch("")
+        setUserSearch("")
+        setIsAddModalOpen(false)
+    }
+
+    const handleSelectTenant = (tenantName: string) => {
+        setSelectedTenant(tenantName)
+        setTenantSearch(tenantName)
+        setShowTenantDropdown(false)
+    }
+
+    const handleSelectUser = (user: typeof allUsers[0]) => {
+        setSelectedUsers(prev => [...prev, user])
+        setUserSearch("")
+        setShowUserDropdown(false)
+    }
+
+    const handleRemoveSelectedUser = (userId: number) => {
+        setSelectedUsers(prev => prev.filter(u => u.id !== userId))
     }
 
     return (
@@ -439,7 +297,7 @@ export default function ServiceRequestsUsersSettings() {
                     <div className="flex items-center gap-3">
                         <Button 
                             variant="ghost" 
-                            onClick={() => setIsAddUserModalOpen(true)}
+                            onClick={() => setIsAddModalOpen(true)}
                         >
                             <RiAddLine className="size-4 mr-1.5" />
                             Add tenant user
@@ -447,439 +305,263 @@ export default function ServiceRequestsUsersSettings() {
                     </div>
                 </div>
 
-                {/* Search and Filters */}
-                <div className="flex items-center justify-between gap-4">
+                {/* Search */}
+                <div className="flex items-center gap-4">
                     <input
                         type="text"
                         placeholder="Search tenants and users..."
-                        className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full sm:w-80 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                    <div className="flex items-center gap-3">
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
-                            className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        >
-                            <option>All</option>
-                            <option>Active</option>
-                            <option>Inactive</option>
-                        </select>
-                        <select
-                            value={tenantFilter}
-                            onChange={(e) => setTenantFilter(e.target.value)}
-                            className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        >
-                            <option>All Tenants</option>
-                            {tenants.map(tenant => (
-                                <option key={tenant.id}>{tenant.name}</option>
-                            ))}
-                        </select>
-                    </div>
                 </div>
 
-                {/* Hierarchical Table */}
+                {/* Simple Two-Column Table */}
                 <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                     <table className="min-w-full">
                         <thead className="bg-gray-50 dark:bg-gray-800">
                             <tr>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Name / User
+                                <th scope="col" className="w-80 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Tenant
                                 </th>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Email
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Role
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Permissions
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Department
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Enable
-                                </th>
-                                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Actions
+                                    Service Request Approvers
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                            {filteredTenants.map((tenant) => {
-                                const isExpanded = expandedTenants.has(tenant.name)
-                                const tenantUsers = getFilteredUsers(tenant.name)
-                                
-                                return (
-                                    <>
-                                        {/* Tenant Row */}
-                                        <tr key={`tenant-${tenant.id}`} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <button
-                                                    onClick={() => toggleTenantExpansion(tenant.name)}
-                                                    className="flex items-center gap-2 text-left w-full"
+                            {filteredTenants.map((tenant) => (
+                                <tr key={tenant.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                                    <td className="px-6 py-4">
+                                        <div className="text-sm font-semibold text-gray-900 dark:text-gray-50">
+                                            {tenant.name}
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-2 flex-wrap">
+                                            {tenant.users.map((user) => (
+                                                <div
+                                                    key={user.id}
+                                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
                                                 >
-                                                    {isExpanded ? (
-                                                        <RiArrowDownSLine className="size-4 text-gray-500" />
-                                                    ) : (
-                                                        <RiArrowRightSLine className="size-4 text-gray-500" />
-                                                    )}
-                                                    <div>
-                                                        <div className="text-sm font-semibold text-gray-900 dark:text-gray-50">
-                                                            {tenant.name}
-                                                        </div>
-                                                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                            {tenant.description} ({tenantUsers.length} users)
-                                                        </div>
-                                                    </div>
+                                                    <span>{user.name}</span>
+                                                    <button
+                                                        onClick={() => handleRemoveUser(tenant.id, user.id)}
+                                                        className="hover:bg-blue-100 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
+                                                    >
+                                                        <RiCloseLine className="size-3.5" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            
+                                            {/* Add User Button and Popover */}
+                                            <div className="relative inline-block">
+                                                <button
+                                                    onClick={() => {
+                                                        setOpenPopoverId(openPopoverId === tenant.id ? null : tenant.id)
+                                                        setPopoverSearch("")
+                                                    }}
+                                                    className="inline-flex items-center justify-center size-8 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 transition-colors"
+                                                >
+                                                    <RiAddLine className="size-4" />
                                                 </button>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                -
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <Badge variant="neutral">
-                                                    Tenant
-                                                </Badge>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                -
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                                {tenant.building}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex justify-start">
-                                                    <Switch
-                                                        checked={tenant.status}
-                                                        onCheckedChange={() => handleTenantStatusToggle(tenant.id)}
-                                                    />
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <div className="flex items-center gap-1 justify-start">
-                                                    {/* Tenant actions can be added here if needed */}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        
-                                        {/* User Rows (shown when expanded) */}
-                                        {isExpanded && tenantUsers.map((user) => (
-                                            <tr key={`user-${user.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
-                                                <td className="px-6 py-4 pl-12">
-                                                    <div className="flex items-center gap-2">
-                                                        <User className="size-4 text-gray-400" />
-                                                        <div className="space-y-1">
-                                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                                                                {user.name}
-                                                            </div>
-                                                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                                {user.phone}
-                                                            </div>
+                                                
+                                                {/* Popover */}
+                                                {openPopoverId === tenant.id && (
+                                                    <div
+                                                        ref={popoverRef}
+                                                        className="absolute left-0 top-full mt-2 z-50 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg"
+                                                    >
+                                                        <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                                                            <Input
+                                                                placeholder="Search by name or email..."
+                                                                value={popoverSearch}
+                                                                onChange={(e) => setPopoverSearch(e.target.value)}
+                                                                autoFocus
+                                                            />
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
-                                                    {user.email}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <Badge variant={getRoleBadgeVariant(user.role)}>
-                                                        {user.role}
-                                                    </Badge>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex flex-wrap gap-1 min-h-[32px]">
-                                                        {user.permissions.map((permission) => (
-                                                            <span
-                                                                key={permission}
-                                                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                                                            >
-                                                                {permission}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
-                                                    {user.department}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="flex justify-start">
-                                                        <Switch
-                                                            checked={user.status}
-                                                            onCheckedChange={() => handleUserStatusToggle(user.id)}
-                                                        />
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    <div className="flex items-center gap-1 justify-start">
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            className="p-2 h-8 w-8"
-                                                            onClick={() => handleEditUser(user)}
-                                                        >
-                                                            <Pencil className="size-4" style={{ color: '#696E72' }} />
-                                                        </Button>
-                                                        
-                                                        <div className="relative">
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                className="p-2 h-8 w-8"
-                                                                onClick={() => setOpenUserDropdownId(openUserDropdownId === user.id ? null : user.id)}
-                                                            >
-                                                                <RiMore2Line className="size-4" />
-                                                            </Button>
-                                                            
-                                                            {openUserDropdownId === user.id && (
-                                                                <>
-                                                                    <div 
-                                                                        className="fixed inset-0 z-10" 
-                                                                        onClick={() => setOpenUserDropdownId(null)}
-                                                                    />
-                                                                    <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
-                                                                        <button
-                                                                            onClick={() => handleDeleteUser(user.id)}
-                                                                            className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
-                                                                        >
-                                                                            <RiDeleteBin6Line className="size-4" />
-                                                                            Delete
-                                                                        </button>
-                                                                    </div>
-                                                                </>
+                                                        <div className="max-h-64 overflow-y-auto">
+                                                            {getFilteredUsersForPopover(tenant.id).length === 0 ? (
+                                                                <div className="p-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+                                                                    {popoverSearch ? "No users found" : "No available users"}
+                                                                </div>
+                                                            ) : (
+                                                                getFilteredUsersForPopover(tenant.id).map((user) => (
+                                                                    <button
+                                                                        key={user.id}
+                                                                        onClick={() => {
+                                                                            handleAddUserFromPopover(tenant.id, user)
+                                                                            setOpenPopoverId(null)
+                                                                        }}
+                                                                        className="w-full px-4 py-2.5 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                                                                    >
+                                                                        <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                                            {user.name}
+                                                                        </div>
+                                                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                                            {user.email}
+                                                                        </div>
+                                                                    </button>
+                                                                ))
                                                             )}
                                                         </div>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </>
-                                )
-                            })}
+                                                )}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                     
                     {filteredTenants.length === 0 && (
                         <div className="p-8 text-center">
                             <p className="text-gray-500 dark:text-gray-400">
-                                No tenants or users found matching your criteria.
+                                No tenants found matching your search.
                             </p>
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* Add User Modal */}
-            <Dialog open={isAddUserModalOpen} onOpenChange={setIsAddUserModalOpen}>
+            {/* Add Tenant User Modal */}
+            <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
                         <DialogTitle>Add tenant user</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="userName">Name</Label>
-                                <Input
-                                    id="userName"
-                                    placeholder="Enter user name"
-                                    value={newUser.name}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="userEmail">Email</Label>
-                                <Input
-                                    id="userEmail"
-                                    type="email"
-                                    placeholder="user@example.com"
-                                    value={newUser.email}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
-                                />
-                            </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="userTenant">Tenant</Label>
-                                <select
-                                    id="userTenant"
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    value={newUser.tenant}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, tenant: e.target.value }))}
-                                >
-                                    <option value="">Select tenant</option>
-                                    {tenants.filter(t => t.status).map(tenant => (
-                                        <option key={tenant.id} value={tenant.name}>{tenant.name}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="userRole">Role</Label>
-                                <select
-                                    id="userRole"
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    value={newUser.role}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, role: e.target.value as "Admin" | "User" }))}
-                                >
-                                    <option value="User">User</option>
-                                    <option value="Admin">Admin</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="userPhone">Phone</Label>
-                                <Input
-                                    id="userPhone"
-                                    placeholder="(555) 123-4567"
-                                    value={newUser.phone}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, phone: e.target.value }))}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="userDepartment">Department</Label>
-                                <Input
-                                    id="userDepartment"
-                                    placeholder="Enter department"
-                                    value={newUser.department}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, department: e.target.value }))}
-                                />
-                            </div>
-                        </div>
-
+                        {/* Tenant Type-Ahead */}
                         <div className="space-y-2">
-                            <Label>Permissions</Label>
-                            <div className="flex gap-4">
-                                {['Submit', 'Process', 'Approve'].map(permission => (
-                                    <label key={permission} className="flex items-center gap-2">
-                                        <input
-                                            type="checkbox"
-                                            checked={newUser.permissions.includes(permission)}
-                                            onChange={() => handlePermissionToggle(permission)}
-                                            className="rounded border-gray-300"
-                                        />
-                                        <span className="text-sm text-gray-700 dark:text-gray-300">{permission}</span>
-                                    </label>
-                                ))}
+                            <Label htmlFor="tenantSelect">Tenant</Label>
+                            <div className="relative" ref={tenantDropdownRef}>
+                                <Input
+                                    id="tenantSelect"
+                                    placeholder="Search and select tenant..."
+                                    value={tenantSearch}
+                                    onChange={(e) => {
+                                        setTenantSearch(e.target.value)
+                                        setShowTenantDropdown(true)
+                                        if (!e.target.value) {
+                                            setSelectedTenant("")
+                                        }
+                                    }}
+                                    onFocus={() => setShowTenantDropdown(true)}
+                                />
+                                
+                                {showTenantDropdown && (
+                                    <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50">
+                                        {getFilteredTenantsForModal().length === 0 ? (
+                                            <div className="p-3 text-sm text-gray-500 dark:text-gray-400 text-center">
+                                                No tenants found
+                                            </div>
+                                        ) : (
+                                            getFilteredTenantsForModal().map((tenant) => (
+                                                <button
+                                                    key={tenant.id}
+                                                    onClick={() => handleSelectTenant(tenant.name)}
+                                                    className="w-full px-4 py-2.5 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                                                >
+                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                        {tenant.name}
+                                                    </div>
+                                                </button>
+                                            ))
+                                        )}
+                                    </div>
+                                )}
                             </div>
+                        </div>
+
+                        {/* User Type-Ahead with Multiple Selection */}
+                        <div className="space-y-2">
+                            <Label htmlFor="userSelect">Users</Label>
+                            
+                            {/* Selected Users */}
+                            {selectedUsers.length > 0 && (
+                                <div className="flex flex-wrap gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    {selectedUsers.map((user) => (
+                                        <div
+                                            key={user.id}
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                                        >
+                                            <span>{user.name}</span>
+                                            <button
+                                                onClick={() => handleRemoveSelectedUser(user.id)}
+                                                className="hover:bg-blue-100 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
+                                            >
+                                                <RiCloseLine className="size-3.5" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            
+                            <div className="relative" ref={userDropdownRef}>
+                                <Input
+                                    id="userSelect"
+                                    placeholder="Search by name or email..."
+                                    value={userSearch}
+                                    onChange={(e) => {
+                                        setUserSearch(e.target.value)
+                                        setShowUserDropdown(true)
+                                    }}
+                                    onFocus={() => setShowUserDropdown(true)}
+                                    disabled={!selectedTenant}
+                                />
+                                
+                                {showUserDropdown && selectedTenant && (
+                                    <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
+                                        {getFilteredUsersForModal().length === 0 ? (
+                                            <div className="p-3 text-sm text-gray-500 dark:text-gray-400 text-center">
+                                                No users found
+                                            </div>
+                                        ) : (
+                                            getFilteredUsersForModal().map((user) => (
+                                                <button
+                                                    key={user.id}
+                                                    onClick={() => handleSelectUser(user)}
+                                                    className="w-full px-4 py-2.5 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                                                >
+                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                        {user.name}
+                                                    </div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {user.email}
+                                                    </div>
+                                                </button>
+                                            ))
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                            
+                            {!selectedTenant && (
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    Please select a tenant first
+                                </p>
+                            )}
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="ghost" onClick={() => setIsAddUserModalOpen(false)}>
+                        <Button 
+                            variant="ghost" 
+                            onClick={() => {
+                                setIsAddModalOpen(false)
+                                setSelectedTenant("")
+                                setSelectedUsers([])
+                                setTenantSearch("")
+                                setUserSearch("")
+                            }}
+                        >
                             Cancel
                         </Button>
-                        <Button onClick={handleAddUser}>
-                            Add user
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* Edit User Modal */}
-            <Dialog open={isEditUserModalOpen} onOpenChange={setIsEditUserModalOpen}>
-                <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                        <DialogTitle>Edit user</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="editUserName">Name</Label>
-                                <Input
-                                    id="editUserName"
-                                    placeholder="Enter user name"
-                                    value={newUser.name}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="editUserEmail">Email</Label>
-                                <Input
-                                    id="editUserEmail"
-                                    type="email"
-                                    placeholder="user@example.com"
-                                    value={newUser.email}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
-                                />
-                            </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="editUserTenant">Tenant</Label>
-                                <select
-                                    id="editUserTenant"
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    value={newUser.tenant}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, tenant: e.target.value }))}
-                                >
-                                    <option value="">Select tenant</option>
-                                    {tenants.filter(t => t.status).map(tenant => (
-                                        <option key={tenant.id} value={tenant.name}>{tenant.name}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="editUserRole">Role</Label>
-                                <select
-                                    id="editUserRole"
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    value={newUser.role}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, role: e.target.value as "Admin" | "User" }))}
-                                >
-                                    <option value="User">User</option>
-                                    <option value="Admin">Admin</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="editUserPhone">Phone</Label>
-                                <Input
-                                    id="editUserPhone"
-                                    placeholder="(555) 123-4567"
-                                    value={newUser.phone}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, phone: e.target.value }))}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="editUserDepartment">Department</Label>
-                                <Input
-                                    id="editUserDepartment"
-                                    placeholder="Enter department"
-                                    value={newUser.department}
-                                    onChange={(e) => setNewUser(prev => ({ ...prev, department: e.target.value }))}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label>Permissions</Label>
-                            <div className="flex gap-4">
-                                {['Submit', 'Process', 'Approve'].map(permission => (
-                                    <label key={permission} className="flex items-center gap-2">
-                                        <input
-                                            type="checkbox"
-                                            checked={newUser.permissions.includes(permission)}
-                                            onChange={() => handlePermissionToggle(permission)}
-                                            className="rounded border-gray-300"
-                                        />
-                                        <span className="text-sm text-gray-700 dark:text-gray-300">{permission}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <Button variant="ghost" onClick={() => setIsEditUserModalOpen(false)}>
-                            Cancel
-                        </Button>
-                        <Button onClick={handleUpdateUser}>
-                            Update user
+                        <Button 
+                            onClick={handleAddUsersFromModal}
+                            disabled={!selectedTenant || selectedUsers.length === 0}
+                        >
+                            Add {selectedUsers.length > 0 ? `${selectedUsers.length} user${selectedUsers.length > 1 ? 's' : ''}` : 'users'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -887,4 +569,3 @@ export default function ServiceRequestsUsersSettings() {
         </div>
     )
 }
-
