@@ -32,6 +32,7 @@ interface ServiceRequestsDataTableProps<TData, TValue> {
   searchKey?: string
   onRowClick?: (row: TData) => void
   onExport?: () => void
+  renderBulkActions?: (table: any, rowSelection: any) => React.ReactNode
 }
 
 export function ServiceRequestsDataTable<TData, TValue>({
@@ -40,6 +41,7 @@ export function ServiceRequestsDataTable<TData, TValue>({
   searchKey = "request",
   onRowClick,
   onExport,
+  renderBulkActions,
 }: ServiceRequestsDataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
@@ -105,7 +107,14 @@ export function ServiceRequestsDataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className={onRowClick ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900" : undefined}
-                  onClick={() => onRowClick?.(row.original)}
+                  onClick={(e) => {
+                    // Don't trigger row click if clicking on checkbox
+                    const target = e.target as HTMLElement
+                    if (target.type === 'checkbox' || target.closest('input[type="checkbox"]')) {
+                      return
+                    }
+                    onRowClick?.(row.original)
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell 
@@ -134,6 +143,7 @@ export function ServiceRequestsDataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
+      {renderBulkActions && renderBulkActions(table, rowSelection)}
     </div>
   )
 }

@@ -1,8 +1,10 @@
 "use client"
 
 import { Badge } from "@/components/Badge"
+import { Checkbox } from "@/components/Checkbox"
 import { DataTableColumnHeader } from "@/components/ui/data-table/DataTableColumnHeader"
 import { ServiceRequestsDataTable } from "@/components/ui/data-table/ServiceRequestsDataTable"
+import { ServiceRequestsBulkActions } from "@/components/ui/service-requests/ServiceRequestsBulkActions"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { serviceRequests, serviceRequestStatuses } from "@/data/data"
 import { getRelativeTime } from "@/lib/utils"
@@ -11,6 +13,28 @@ import { useState } from "react"
 
 // Factory function to create columns with click handlers
 const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) => void) => [
+    {
+        id: "select",
+        header: ({ table }: { table: any }) => (
+            <Checkbox
+                checked={table.getIsAllPageRowsSelected()}
+                onCheckedChange={(value: any) => table.toggleAllPageRowsSelected(!!value)}
+                aria-label="Select all"
+                className="translate-y-[2px]"
+            />
+        ),
+        cell: ({ row }: { row: any }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value: any) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+                className="translate-y-[2px]"
+                onClick={(e) => e.stopPropagation()}
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
     {
         accessorKey: "request",
         header: ({ column }: { column: any }) => (
@@ -288,6 +312,16 @@ export default function ServiceRequests() {
         document.body.removeChild(link)
     }
 
+    const handleChangeStatus = (selectedRequests: any[], status: string) => {
+        console.log('Changing status to:', status, 'for requests:', selectedRequests)
+        // TODO: Implement status change logic
+    }
+
+    const handleAssignTo = (selectedRequests: any[], assignee: string) => {
+        console.log('Assigning to:', assignee, 'for requests:', selectedRequests)
+        // TODO: Implement assign logic
+    }
+
     const serviceRequestsColumns = createServiceRequestsColumns(handleRequestorClick)
 
     return (
@@ -298,6 +332,15 @@ export default function ServiceRequests() {
                 onRowClick={handleRowClick} 
                 searchKey="request"
                 onExport={handleExport}
+                renderBulkActions={(table, rowSelection) => (
+                    <ServiceRequestsBulkActions
+                        table={table}
+                        rowSelection={rowSelection}
+                        totalCount={data.length}
+                        onChangeStatus={handleChangeStatus}
+                        onAssignTo={handleAssignTo}
+                    />
+                )}
             />
             
             {/* User Details Modal */}
