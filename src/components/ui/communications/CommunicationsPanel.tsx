@@ -1189,7 +1189,7 @@ export function CommunicationsPanel({
                             </div>
 
                             {/* Message Input */}
-                            <div className="p-3 border-t border-gray-200 dark:border-gray-800">
+                            <div className="p-3 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
                                 <form onSubmit={handleSendMessage} className="flex gap-2">
                                     <div className="flex-1 relative">
                                         <input

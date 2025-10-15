@@ -697,7 +697,7 @@ export function FullScreenTenantContacts({
                     </div>
 
                     {/* Message Input */}
-                    <div className="border-t border-gray-200 dark:border-gray-800 p-2 sm:p-4">
+                    <div className="border-t border-gray-200 dark:border-gray-800 p-3 sm:p-4 bg-white dark:bg-gray-950">
                         <div className="flex items-center gap-1 sm:gap-2">
                             <button 
                                 onClick={handleCreateServiceRequest}
