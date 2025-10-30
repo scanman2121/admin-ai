@@ -712,7 +712,7 @@ export default function ServiceRequestsServiceTypesCategories() {
     }
 
     // Helper function to format price display
-    const formatPrice = (serviceType: typeof serviceTypesData[0]) => {
+    const formatPrice = (serviceType: typeof serviceTypesData[0] & { priceType?: 'none' | 'fixed' | 'range'; priceFixed?: string; priceMin?: string; priceMax?: string }) => {
         if (!serviceType.priceType || serviceType.priceType === 'none') {
             return '-'
         }
