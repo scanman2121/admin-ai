@@ -9,7 +9,7 @@ import { UserActivityTab } from "@/components/ui/user/UserActivityTab"
 import { UserOverviewTab } from "@/components/ui/user/UserOverviewTab"
 import { UserRequestsTab } from "@/components/ui/user/UserRequestsTab"
 import { UserVisitorsTab } from "@/components/ui/user/UserVisitorsTab"
-import { Activity, Calendar, FileText, Shield, User } from "lucide-react"
+import { Activity, Calendar, FileText, Shield, User, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -97,7 +97,14 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-7xl w-full h-[85vh] overflow-hidden p-0 gap-0 flex flex-col">
-                <DialogHeader className="px-6 py-4 flex-shrink-0">
+                <DialogHeader className="px-6 py-4 flex-shrink-0 relative">
+                    <button
+                        onClick={onClose}
+                        className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none z-10"
+                    >
+                        <X className="h-4 w-4" />
+                        <span className="sr-only">Close</span>
+                    </button>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
@@ -111,10 +118,9 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
                                         {user.name}
                                     </h2>
                                     <div className="flex items-center gap-2">
-                                        <Badge variant="success">• Active user</Badge>
-                                        <Badge variant={getACSStatusBadge(user.acsStatus).variant}>
-                                            {getACSStatusBadge(user.acsStatus).text}
-                                        </Badge>
+                                        <Badge variant="success">HqO user: Active</Badge>
+                                        <Badge variant="warning">Virtual card: Pending</Badge>
+                                        <Badge variant="success">Physical card: Active</Badge>
                                     </div>
                                 </div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
