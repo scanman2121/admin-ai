@@ -1896,7 +1896,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         <div className="space-y-3">
                                             <Label htmlFor="category-price-fixed-input" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
                                             <div className="relative group">
-                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                     <span className="text-base font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                 </div>
                                                 <Input
@@ -1920,7 +1920,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <div className="space-y-2.5">
                                                     <Label htmlFor="category-price-min" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Minimum</Label>
                                                     <div className="relative group">
-                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                         </div>
                                                         <Input
@@ -1938,7 +1938,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <div className="space-y-2.5">
                                                     <Label htmlFor="category-price-max" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Maximum</Label>
                                                     <div className="relative group">
-                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                         </div>
                                                         <Input
@@ -2139,7 +2139,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         <div className="space-y-3">
                                             <Label htmlFor="edit-category-price-fixed-input" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
                                             <div className="relative group">
-                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                     <span className="text-base font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                 </div>
                                                 <Input
@@ -2163,7 +2163,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <div className="space-y-2.5">
                                                     <Label htmlFor="edit-category-price-min" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Minimum</Label>
                                                     <div className="relative group">
-                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                         </div>
                                                         <Input
@@ -2181,7 +2181,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <div className="space-y-2.5">
                                                     <Label htmlFor="edit-category-price-max" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Maximum</Label>
                                                     <div className="relative group">
-                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                         </div>
                                                         <Input
@@ -2469,7 +2469,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             <div className="space-y-3">
                                                                 <Label htmlFor="service-type-price-fixed" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
                                                                 <div className="relative group">
-                                                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                                         <span className="text-base font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                                     </div>
                                                                     <Input
@@ -2491,7 +2491,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                     <div className="space-y-2.5">
                                                                         <Label htmlFor="service-type-price-min" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Minimum</Label>
                                                                         <div className="relative group">
-                                                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                                                 <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                                             </div>
                                                                             <Input
@@ -2509,7 +2509,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                     <div className="space-y-2.5">
                                                                         <Label htmlFor="service-type-price-max" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Maximum</Label>
                                                                         <div className="relative group">
-                                                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                                                 <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                                             </div>
                                                                             <Input
@@ -2574,7 +2574,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <div className="space-y-3">
                                                     <Label htmlFor="service-type-price-fixed" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
                                                     <div className="relative group">
-                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                             <span className="text-base font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                         </div>
                                                         <Input
@@ -2598,7 +2598,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                         <div className="space-y-2.5">
                                                             <Label htmlFor="service-type-price-min" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Minimum</Label>
                                                             <div className="relative group">
-                                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                                     <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                                 </div>
                                                                 <Input
@@ -2616,7 +2616,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                         <div className="space-y-2.5">
                                                             <Label htmlFor="service-type-price-max" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Maximum</Label>
                                                             <div className="relative group">
-                                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                                     <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                                 </div>
                                                                 <Input
@@ -3008,7 +3008,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         <div className="space-y-3">
                                             <Label htmlFor="edit-service-type-price-fixed" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
                                             <div className="relative group">
-                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                     <span className="text-base font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                 </div>
                                                 <Input
@@ -3032,7 +3032,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <div className="space-y-2.5">
                                                     <Label htmlFor="edit-service-type-price-min" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Minimum</Label>
                                                     <div className="relative group">
-                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                         </div>
                                                         <Input
@@ -3050,7 +3050,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <div className="space-y-2.5">
                                                     <Label htmlFor="edit-service-type-price-max" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Maximum</Label>
                                                     <div className="relative group">
-                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800">
                                                             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
                                                         </div>
                                                         <Input
