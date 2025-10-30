@@ -1851,8 +1851,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     <DollarSign className="size-5 text-blue-600 dark:text-blue-400" />
                                 </div>
                                 <div className="flex-1">
-                                    <Label className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-1.5 block">Pricing</Label>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed mt-1">
+                                    <Label className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-0.5 block">Pricing</Label>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
                                         If set, this will be the default pricing for all service types in this category
                                     </p>
                                 </div>
@@ -1877,15 +1877,13 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     </div>
                                     <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
                                         <RadioGroupItem value="fixed" id="category-price-fixed" className="mt-0.5" />
-                                        <Label htmlFor="category-price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
-                                            <CircleDollarSign className="size-4 text-gray-500 dark:text-gray-400" />
+                                        <Label htmlFor="category-price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                             Fixed price
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
                                         <RadioGroupItem value="range" id="category-price-range" className="mt-0.5" />
-                                        <Label htmlFor="category-price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
-                                            <TrendingUp className="size-4 text-gray-500 dark:text-gray-400" />
+                                        <Label htmlFor="category-price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                             Price range
                                         </Label>
                                     </div>
@@ -2094,8 +2092,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     <DollarSign className="size-5 text-blue-600 dark:text-blue-400" />
                                 </div>
                                 <div className="flex-1">
-                                    <Label className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-1.5 block">Pricing</Label>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed mt-1">
+                                    <Label className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-0.5 block">Pricing</Label>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
                                         If set, this will be the default pricing for all service types in this category
                                     </p>
                                 </div>
@@ -2120,15 +2118,13 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     </div>
                                     <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
                                         <RadioGroupItem value="fixed" id="edit-category-price-fixed" className="mt-0.5" />
-                                        <Label htmlFor="edit-category-price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
-                                            <CircleDollarSign className="size-4 text-gray-500 dark:text-gray-400" />
+                                        <Label htmlFor="edit-category-price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                             Fixed price
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
                                         <RadioGroupItem value="range" id="edit-category-price-range" className="mt-0.5" />
-                                        <Label htmlFor="edit-category-price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
-                                            <TrendingUp className="size-4 text-gray-500 dark:text-gray-400" />
+                                        <Label htmlFor="edit-category-price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                             Price range
                                         </Label>
                                     </div>
@@ -2450,15 +2446,13 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                         </div>
                                                         <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
                                                             <RadioGroupItem value="fixed" id="price-fixed" className="mt-0.5" />
-                                                            <Label htmlFor="price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
-                                                                <CircleDollarSign className="size-4 text-gray-500 dark:text-gray-400" />
+                                                            <Label htmlFor="price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                                                 Fixed price
                                                             </Label>
                                                         </div>
                                                         <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
                                                             <RadioGroupItem value="range" id="price-range" className="mt-0.5" />
-                                                            <Label htmlFor="price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
-                                                                <TrendingUp className="size-4 text-gray-500 dark:text-gray-400" />
+                                                            <Label htmlFor="price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                                                 Price range
                                                             </Label>
                                                         </div>
@@ -2555,15 +2549,13 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             </div>
                                             <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
                                                 <RadioGroupItem value="fixed" id="price-fixed" className="mt-0.5" />
-                                                <Label htmlFor="price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
-                                                    <CircleDollarSign className="size-4 text-gray-500 dark:text-gray-400" />
+                                                <Label htmlFor="price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                                     Fixed price
                                                 </Label>
                                             </div>
                                             <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
                                                 <RadioGroupItem value="range" id="price-range" className="mt-0.5" />
-                                                <Label htmlFor="price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
-                                                    <TrendingUp className="size-4 text-gray-500 dark:text-gray-400" />
+                                                <Label htmlFor="price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                                     Price range
                                                 </Label>
                                             </div>
@@ -2989,15 +2981,13 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     </div>
                                     <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
                                         <RadioGroupItem value="fixed" id="edit-price-fixed" className="mt-0.5" />
-                                        <Label htmlFor="edit-price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
-                                            <CircleDollarSign className="size-4 text-gray-500 dark:text-gray-400" />
+                                        <Label htmlFor="edit-price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                             Fixed price
                                         </Label>
                                     </div>
                                     <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
                                         <RadioGroupItem value="range" id="edit-price-range" className="mt-0.5" />
-                                        <Label htmlFor="edit-price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
-                                            <TrendingUp className="size-4 text-gray-500 dark:text-gray-400" />
+                                        <Label htmlFor="edit-price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                             Price range
                                         </Label>
                                     </div>
