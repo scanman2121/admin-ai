@@ -58,24 +58,6 @@ export function UserDetailsModal({ isOpen, onClose, user, defaultTab = "overview
         return name.split(' ').map(n => n[0]).join('').toUpperCase()
     }
 
-    const getACSStatusBadge = (status: string | null) => {
-        if (status === null) {
-            return { variant: 'neutral' as const, text: '• No Status' }
-        }
-        switch (status.toLowerCase()) {
-            case 'active':
-                return { variant: 'success' as const, text: '• Active' }
-            case 'inactive':
-                return { variant: 'error' as const, text: '• Inactive' }
-            case 'pending':
-                return { variant: 'warning' as const, text: '• Pending' }
-            case 'suspended':
-                return { variant: 'error' as const, text: '• Suspended' }
-            default:
-                return { variant: 'neutral' as const, text: '• Unknown ACS' }
-        }
-    }
-
 
     const renderTabContent = () => {
         switch (activeTab) {
