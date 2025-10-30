@@ -615,6 +615,10 @@ export default function ServiceRequestsServiceTypesCategories() {
         approval: "None",
         assignedTo: "",
         assignedToType: "user" as "user" | "team",
+        priceType: "none" as "none" | "fixed" | "range",
+        priceFixed: "",
+        priceMin: "",
+        priceMax: "",
         statuses: [] as Array<{
             name: string;
             notifyRequestor: boolean;
@@ -705,6 +709,31 @@ export default function ServiceRequestsServiceTypesCategories() {
             default:
                 return 'default' as const
         }
+    }
+
+    // Helper function to format price display
+    const formatPrice = (serviceType: typeof serviceTypesData[0]) => {
+        if (!serviceType.priceType || serviceType.priceType === 'none') {
+            return '-'
+        }
+        
+        if (serviceType.priceType === 'fixed' && serviceType.priceFixed) {
+            return `$${parseFloat(serviceType.priceFixed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+        }
+        
+        if (serviceType.priceType === 'range') {
+            const min = serviceType.priceMin ? parseFloat(serviceType.priceMin).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
+            const max = serviceType.priceMax ? parseFloat(serviceType.priceMax).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
+            if (min && max) {
+                return `$${min} - $${max}`
+            } else if (min) {
+                return `$${min}+`
+            } else if (max) {
+                return `Up to $${max}`
+            }
+        }
+        
+        return '-'
     }
 
     const toggleCategoryExpansion = (categoryName: string) => {
@@ -826,6 +855,10 @@ export default function ServiceRequestsServiceTypesCategories() {
             approval: "None",
             assignedTo: "",
             assignedToType: "user",
+            priceType: "none",
+            priceFixed: "",
+            priceMin: "",
+            priceMax: "",
             statuses: []
         })
         setAssignedToSearchQuery("")
@@ -842,6 +875,10 @@ export default function ServiceRequestsServiceTypesCategories() {
             approval: serviceType.approval,
             assignedTo: serviceType.assignedTo,
             assignedToType: "user", // Default to user, could be enhanced to detect type
+            priceType: (serviceType as any).priceType || "none",
+            priceFixed: (serviceType as any).priceFixed || "",
+            priceMin: (serviceType as any).priceMin || "",
+            priceMax: (serviceType as any).priceMax || "",
             statuses: (serviceType.statuses || []).map(statusName => ({
                 name: statusName,
                 notifyRequestor: true,
@@ -887,6 +924,10 @@ export default function ServiceRequestsServiceTypesCategories() {
             approval: "None",
             assignedTo: "",
             assignedToType: "user",
+            priceType: "none",
+            priceFixed: "",
+            priceMin: "",
+            priceMax: "",
             statuses: []
         })
         setAssignedToSearchQuery("")
@@ -1161,6 +1202,9 @@ export default function ServiceRequestsServiceTypesCategories() {
                             <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
                                 Assigned To
                             </th>
+                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                                Price
+                            </th>
                             <th scope="col" className="w-96 px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 Statuses
                             </th>
@@ -1224,6 +1268,9 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             ) : (
                                                 <span className="text-gray-400 dark:text-gray-500">-</span>
                                             )}
+                                        </td>
+                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                            -
                                         </td>
                                         <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             -
@@ -1322,6 +1369,9 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     
                                                     return serviceType.assignedTo
                                                 })()}
+                                            </td>
+                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
+                                                {formatPrice(serviceType)}
                                             </td>
                                             <td className="w-96 px-4 lg:px-6 py-4">
                                                 <div className="flex flex-wrap gap-1 min-h-[32px]">
@@ -1593,6 +1643,10 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             }
                                                             return null
                                                         })()}
+                                                        <div>
+                                                            <span className="text-gray-500 dark:text-gray-400">Price:</span>
+                                                            <span className="ml-1 text-gray-900 dark:text-gray-50">{formatPrice(serviceType)}</span>
+                                                        </div>
                                                     </div>
                                                     
                                                     {serviceType.statuses && serviceType.statuses.length > 0 && (
@@ -2033,6 +2087,73 @@ export default function ServiceRequestsServiceTypesCategories() {
                         </div>
 
                         <div>
+                            <Label htmlFor="service-type-price-type">Pricing</Label>
+                            <select
+                                id="service-type-price-type"
+                                value={newServiceType.priceType}
+                                onChange={(e) => setNewServiceType(prev => ({ 
+                                    ...prev, 
+                                    priceType: e.target.value as "none" | "fixed" | "range",
+                                    priceFixed: e.target.value !== "fixed" ? "" : prev.priceFixed,
+                                    priceMin: e.target.value !== "range" ? "" : prev.priceMin,
+                                    priceMax: e.target.value !== "range" ? "" : prev.priceMax,
+                                }))}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                            >
+                                <option value="none">No pricing</option>
+                                <option value="fixed">Fixed price</option>
+                                <option value="range">Price range</option>
+                            </select>
+                            
+                            {newServiceType.priceType === "fixed" && (
+                                <div className="mt-2">
+                                    <Label htmlFor="service-type-price-fixed">Fixed price ($)</Label>
+                                    <Input
+                                        id="service-type-price-fixed"
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        placeholder="155.00"
+                                        value={newServiceType.priceFixed}
+                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
+                                        className="mt-1"
+                                    />
+                                </div>
+                            )}
+                            
+                            {newServiceType.priceType === "range" && (
+                                <div className="mt-2 space-y-2">
+                                    <div>
+                                        <Label htmlFor="service-type-price-min">Minimum price ($)</Label>
+                                        <Input
+                                            id="service-type-price-min"
+                                            type="number"
+                                            step="0.01"
+                                            min="0"
+                                            placeholder="100.00"
+                                            value={newServiceType.priceMin}
+                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
+                                            className="mt-1"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="service-type-price-max">Maximum price ($)</Label>
+                                        <Input
+                                            id="service-type-price-max"
+                                            type="number"
+                                            step="0.01"
+                                            min="0"
+                                            placeholder="200.00"
+                                            value={newServiceType.priceMax}
+                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
+                                            className="mt-1"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div>
                             <Label>Available statuses</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
                                 Select statuses and configure notification settings for each
@@ -2344,6 +2465,73 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     </div>
                                 )
                             })()}
+                        </div>
+
+                        <div>
+                            <Label htmlFor="edit-service-type-price-type">Pricing</Label>
+                            <select
+                                id="edit-service-type-price-type"
+                                value={newServiceType.priceType}
+                                onChange={(e) => setNewServiceType(prev => ({ 
+                                    ...prev, 
+                                    priceType: e.target.value as "none" | "fixed" | "range",
+                                    priceFixed: e.target.value !== "fixed" ? "" : prev.priceFixed,
+                                    priceMin: e.target.value !== "range" ? "" : prev.priceMin,
+                                    priceMax: e.target.value !== "range" ? "" : prev.priceMax,
+                                }))}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                            >
+                                <option value="none">No pricing</option>
+                                <option value="fixed">Fixed price</option>
+                                <option value="range">Price range</option>
+                            </select>
+                            
+                            {newServiceType.priceType === "fixed" && (
+                                <div className="mt-2">
+                                    <Label htmlFor="edit-service-type-price-fixed">Fixed price ($)</Label>
+                                    <Input
+                                        id="edit-service-type-price-fixed"
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        placeholder="155.00"
+                                        value={newServiceType.priceFixed}
+                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
+                                        className="mt-1"
+                                    />
+                                </div>
+                            )}
+                            
+                            {newServiceType.priceType === "range" && (
+                                <div className="mt-2 space-y-2">
+                                    <div>
+                                        <Label htmlFor="edit-service-type-price-min">Minimum price ($)</Label>
+                                        <Input
+                                            id="edit-service-type-price-min"
+                                            type="number"
+                                            step="0.01"
+                                            min="0"
+                                            placeholder="100.00"
+                                            value={newServiceType.priceMin}
+                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
+                                            className="mt-1"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="edit-service-type-price-max">Maximum price ($)</Label>
+                                        <Input
+                                            id="edit-service-type-price-max"
+                                            type="number"
+                                            step="0.01"
+                                            min="0"
+                                            placeholder="200.00"
+                                            value={newServiceType.priceMax}
+                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
+                                            className="mt-1"
+                                        />
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         <div>
