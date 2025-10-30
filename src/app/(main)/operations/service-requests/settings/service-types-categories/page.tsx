@@ -8,6 +8,7 @@ import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiMore2Line } from "@remixicon/react"
 import { Pencil, User, Users } from "lucide-react"
@@ -2087,70 +2088,98 @@ export default function ServiceRequestsServiceTypesCategories() {
                         </div>
 
                         <div>
-                            <Label htmlFor="service-type-price-type">Pricing</Label>
-                            <select
-                                id="service-type-price-type"
-                                value={newServiceType.priceType}
-                                onChange={(e) => setNewServiceType(prev => ({ 
-                                    ...prev, 
-                                    priceType: e.target.value as "none" | "fixed" | "range",
-                                    priceFixed: e.target.value !== "fixed" ? "" : prev.priceFixed,
-                                    priceMin: e.target.value !== "range" ? "" : prev.priceMin,
-                                    priceMax: e.target.value !== "range" ? "" : prev.priceMax,
-                                }))}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                            >
-                                <option value="none">No pricing</option>
-                                <option value="fixed">Fixed price</option>
-                                <option value="range">Price range</option>
-                            </select>
-                            
-                            {newServiceType.priceType === "fixed" && (
-                                <div className="mt-2">
-                                    <Label htmlFor="service-type-price-fixed">Fixed price ($)</Label>
-                                    <Input
-                                        id="service-type-price-fixed"
-                                        type="number"
-                                        step="0.01"
-                                        min="0"
-                                        placeholder="155.00"
-                                        value={newServiceType.priceFixed}
-                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                        className="mt-1"
-                                    />
-                                </div>
-                            )}
-                            
-                            {newServiceType.priceType === "range" && (
-                                <div className="mt-2 space-y-2">
-                                    <div>
-                                        <Label htmlFor="service-type-price-min">Minimum price ($)</Label>
-                                        <Input
-                                            id="service-type-price-min"
-                                            type="number"
-                                            step="0.01"
-                                            min="0"
-                                            placeholder="100.00"
-                                            value={newServiceType.priceMin}
-                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
-                                            className="mt-1"
-                                        />
+                            <Label className="mb-3 block">Pricing</Label>
+                            <div className="flex items-start gap-6">
+                                <RadioGroup
+                                    value={newServiceType.priceType}
+                                    onValueChange={(value) => setNewServiceType(prev => ({ 
+                                        ...prev, 
+                                        priceType: value as "none" | "fixed" | "range",
+                                        priceFixed: value !== "fixed" ? "" : prev.priceFixed,
+                                        priceMin: value !== "range" ? "" : prev.priceMin,
+                                        priceMax: value !== "range" ? "" : prev.priceMax,
+                                    }))}
+                                    className="flex flex-col gap-3"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="none" id="price-none" />
+                                        <Label htmlFor="price-none" className="cursor-pointer font-normal">
+                                            No price
+                                        </Label>
                                     </div>
-                                    <div>
-                                        <Label htmlFor="service-type-price-max">Maximum price ($)</Label>
-                                        <Input
-                                            id="service-type-price-max"
-                                            type="number"
-                                            step="0.01"
-                                            min="0"
-                                            placeholder="200.00"
-                                            value={newServiceType.priceMax}
-                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
-                                            className="mt-1"
-                                        />
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="fixed" id="price-fixed" />
+                                        <Label htmlFor="price-fixed" className="cursor-pointer font-normal">
+                                            Fixed price
+                                        </Label>
                                     </div>
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="range" id="price-range" />
+                                        <Label htmlFor="price-range" className="cursor-pointer font-normal">
+                                            Price range
+                                        </Label>
+                                    </div>
+                                </RadioGroup>
+                                
+                                <div className="flex-1">
+                                    {newServiceType.priceType === "fixed" && (
+                                        <div>
+                                            <Label htmlFor="service-type-price-fixed" className="sr-only">Fixed price</Label>
+                                            <div className="relative">
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                <Input
+                                                    id="service-type-price-fixed"
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    placeholder="155.00"
+                                                    value={newServiceType.priceFixed}
+                                                    onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
+                                                    className="pl-7"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    {newServiceType.priceType === "range" && (
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex-1">
+                                                <Label htmlFor="service-type-price-min" className="sr-only">Minimum price</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                    <Input
+                                                        id="service-type-price-min"
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        placeholder="100.00"
+                                                        value={newServiceType.priceMin}
+                                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
+                                                        className="pl-7"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <span className="text-sm text-gray-500 dark:text-gray-400">to</span>
+                                            <div className="flex-1">
+                                                <Label htmlFor="service-type-price-max" className="sr-only">Maximum price</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                    <Input
+                                                        id="service-type-price-max"
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        placeholder="200.00"
+                                                        value={newServiceType.priceMax}
+                                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
+                                                        className="pl-7"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
+                            </div>
                         </div>
 
                         <div>
@@ -2468,70 +2497,98 @@ export default function ServiceRequestsServiceTypesCategories() {
                         </div>
 
                         <div>
-                            <Label htmlFor="edit-service-type-price-type">Pricing</Label>
-                            <select
-                                id="edit-service-type-price-type"
-                                value={newServiceType.priceType}
-                                onChange={(e) => setNewServiceType(prev => ({ 
-                                    ...prev, 
-                                    priceType: e.target.value as "none" | "fixed" | "range",
-                                    priceFixed: e.target.value !== "fixed" ? "" : prev.priceFixed,
-                                    priceMin: e.target.value !== "range" ? "" : prev.priceMin,
-                                    priceMax: e.target.value !== "range" ? "" : prev.priceMax,
-                                }))}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                            >
-                                <option value="none">No pricing</option>
-                                <option value="fixed">Fixed price</option>
-                                <option value="range">Price range</option>
-                            </select>
-                            
-                            {newServiceType.priceType === "fixed" && (
-                                <div className="mt-2">
-                                    <Label htmlFor="edit-service-type-price-fixed">Fixed price ($)</Label>
-                                    <Input
-                                        id="edit-service-type-price-fixed"
-                                        type="number"
-                                        step="0.01"
-                                        min="0"
-                                        placeholder="155.00"
-                                        value={newServiceType.priceFixed}
-                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                        className="mt-1"
-                                    />
-                                </div>
-                            )}
-                            
-                            {newServiceType.priceType === "range" && (
-                                <div className="mt-2 space-y-2">
-                                    <div>
-                                        <Label htmlFor="edit-service-type-price-min">Minimum price ($)</Label>
-                                        <Input
-                                            id="edit-service-type-price-min"
-                                            type="number"
-                                            step="0.01"
-                                            min="0"
-                                            placeholder="100.00"
-                                            value={newServiceType.priceMin}
-                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
-                                            className="mt-1"
-                                        />
+                            <Label className="mb-3 block">Pricing</Label>
+                            <div className="flex items-start gap-6">
+                                <RadioGroup
+                                    value={newServiceType.priceType}
+                                    onValueChange={(value) => setNewServiceType(prev => ({ 
+                                        ...prev, 
+                                        priceType: value as "none" | "fixed" | "range",
+                                        priceFixed: value !== "fixed" ? "" : prev.priceFixed,
+                                        priceMin: value !== "range" ? "" : prev.priceMin,
+                                        priceMax: value !== "range" ? "" : prev.priceMax,
+                                    }))}
+                                    className="flex flex-col gap-3"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="none" id="edit-price-none" />
+                                        <Label htmlFor="edit-price-none" className="cursor-pointer font-normal">
+                                            No price
+                                        </Label>
                                     </div>
-                                    <div>
-                                        <Label htmlFor="edit-service-type-price-max">Maximum price ($)</Label>
-                                        <Input
-                                            id="edit-service-type-price-max"
-                                            type="number"
-                                            step="0.01"
-                                            min="0"
-                                            placeholder="200.00"
-                                            value={newServiceType.priceMax}
-                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
-                                            className="mt-1"
-                                        />
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="fixed" id="edit-price-fixed" />
+                                        <Label htmlFor="edit-price-fixed" className="cursor-pointer font-normal">
+                                            Fixed price
+                                        </Label>
                                     </div>
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="range" id="edit-price-range" />
+                                        <Label htmlFor="edit-price-range" className="cursor-pointer font-normal">
+                                            Price range
+                                        </Label>
+                                    </div>
+                                </RadioGroup>
+                                
+                                <div className="flex-1">
+                                    {newServiceType.priceType === "fixed" && (
+                                        <div>
+                                            <Label htmlFor="edit-service-type-price-fixed" className="sr-only">Fixed price</Label>
+                                            <div className="relative">
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                <Input
+                                                    id="edit-service-type-price-fixed"
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    placeholder="155.00"
+                                                    value={newServiceType.priceFixed}
+                                                    onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
+                                                    className="pl-7"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    {newServiceType.priceType === "range" && (
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex-1">
+                                                <Label htmlFor="edit-service-type-price-min" className="sr-only">Minimum price</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                    <Input
+                                                        id="edit-service-type-price-min"
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        placeholder="100.00"
+                                                        value={newServiceType.priceMin}
+                                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
+                                                        className="pl-7"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <span className="text-sm text-gray-500 dark:text-gray-400">to</span>
+                                            <div className="flex-1">
+                                                <Label htmlFor="edit-service-type-price-max" className="sr-only">Maximum price</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                    <Input
+                                                        id="edit-service-type-price-max"
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        placeholder="200.00"
+                                                        value={newServiceType.priceMax}
+                                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
+                                                        className="pl-7"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
+                            </div>
                         </div>
 
                         <div>
