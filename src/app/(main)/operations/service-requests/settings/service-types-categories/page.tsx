@@ -11,7 +11,7 @@ import { FullPageModal } from "@/components/ui/FullPageModal"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiMore2Line } from "@remixicon/react"
-import { Pencil, User, Users } from "lucide-react"
+import { Pencil, User, Users, DollarSign, TrendingUp, CircleDollarSign } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -1845,12 +1845,19 @@ export default function ServiceRequestsServiceTypesCategories() {
                             </div>
                         </div>
 
-                        <div>
-                            <Label className="mb-3 block">Pricing (optional)</Label>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                                If set, this will be the default pricing for all service types in this category
-                            </p>
-                            <div className="flex items-start gap-6">
+                        <div className="rounded-xl border border-gray-200/80 dark:border-gray-700/80 bg-gradient-to-br from-gray-50/80 via-white to-gray-50/50 dark:from-gray-800/50 dark:via-gray-900/30 dark:to-gray-800/50 p-6 shadow-sm backdrop-blur-sm">
+                            <div className="mb-5 flex items-start gap-3">
+                                <div className="rounded-lg bg-gradient-to-br from-blue-500/10 to-blue-600/5 dark:from-blue-500/20 dark:to-blue-600/10 p-2.5 border border-blue-200/50 dark:border-blue-800/30">
+                                    <DollarSign className="size-5 text-blue-600 dark:text-blue-400" />
+                                </div>
+                                <div className="flex-1">
+                                    <Label className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-1.5 block">Pricing</Label>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed mt-1">
+                                        If set, this will be the default pricing for all service types in this category
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-8">
                                 <RadioGroup
                                     value={newCategory.priceType}
                                     onValueChange={(value) => setNewCategory(prev => ({ 
@@ -1860,34 +1867,38 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         priceMin: value !== "range" ? "" : prev.priceMin,
                                         priceMax: value !== "range" ? "" : prev.priceMax,
                                     }))}
-                                    className="flex flex-col gap-3"
+                                    className="flex flex-col gap-3 min-w-[160px]"
                                 >
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="none" id="category-price-none" />
-                                        <Label htmlFor="category-price-none" className="cursor-pointer font-normal">
+                                    <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                        <RadioGroupItem value="none" id="category-price-none" className="mt-0.5" />
+                                        <Label htmlFor="category-price-none" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                             No price
                                         </Label>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="fixed" id="category-price-fixed" />
-                                        <Label htmlFor="category-price-fixed" className="cursor-pointer font-normal">
+                                    <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                        <RadioGroupItem value="fixed" id="category-price-fixed" className="mt-0.5" />
+                                        <Label htmlFor="category-price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
+                                            <CircleDollarSign className="size-4 text-gray-500 dark:text-gray-400" />
                                             Fixed price
                                         </Label>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="range" id="category-price-range" />
-                                        <Label htmlFor="category-price-range" className="cursor-pointer font-normal">
+                                    <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                        <RadioGroupItem value="range" id="category-price-range" className="mt-0.5" />
+                                        <Label htmlFor="category-price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
+                                            <TrendingUp className="size-4 text-gray-500 dark:text-gray-400" />
                                             Price range
                                         </Label>
                                     </div>
                                 </RadioGroup>
                                 
-                                <div className="flex-1">
+                                <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
                                     {newCategory.priceType === "fixed" && (
-                                        <div>
-                                            <Label htmlFor="category-price-fixed-input" className="sr-only">Fixed price</Label>
-                                            <div className="relative">
-                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                        <div className="space-y-3">
+                                            <Label htmlFor="category-price-fixed-input" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
+                                            <div className="relative group">
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                    <span className="text-base font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                </div>
                                                 <Input
                                                     id="category-price-fixed-input"
                                                     type="number"
@@ -1896,47 +1907,59 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     placeholder="155.00"
                                                     value={newCategory.priceFixed}
                                                     onChange={(e) => setNewCategory(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                                    className="pl-7"
+                                                    className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                                                 />
                                             </div>
                                         </div>
                                     )}
                                     
                                     {newCategory.priceType === "range" && (
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex-1">
-                                                <Label htmlFor="category-price-min" className="sr-only">Minimum price</Label>
-                                                <div className="relative">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                    <Input
-                                                        id="category-price-min"
-                                                        type="number"
-                                                        step="0.01"
-                                                        min="0"
-                                                        placeholder="100.00"
-                                                        value={newCategory.priceMin}
-                                                        onChange={(e) => setNewCategory(prev => ({ ...prev, priceMin: e.target.value }))}
-                                                        className="pl-7"
-                                                    />
+                                        <div className="space-y-4">
+                                            <Label className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Price range</Label>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-2.5">
+                                                    <Label htmlFor="category-price-min" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Minimum</Label>
+                                                    <div className="relative group">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                        </div>
+                                                        <Input
+                                                            id="category-price-min"
+                                                            type="number"
+                                                            step="0.01"
+                                                            min="0"
+                                                            placeholder="100.00"
+                                                            value={newCategory.priceMin}
+                                                            onChange={(e) => setNewCategory(prev => ({ ...prev, priceMin: e.target.value }))}
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2.5">
+                                                    <Label htmlFor="category-price-max" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Maximum</Label>
+                                                    <div className="relative group">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                        </div>
+                                                        <Input
+                                                            id="category-price-max"
+                                                            type="number"
+                                                            step="0.01"
+                                                            min="0"
+                                                            placeholder="200.00"
+                                                            value={newCategory.priceMax}
+                                                            onChange={(e) => setNewCategory(prev => ({ ...prev, priceMax: e.target.value }))}
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">to</span>
-                                            <div className="flex-1">
-                                                <Label htmlFor="category-price-max" className="sr-only">Maximum price</Label>
-                                                <div className="relative">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                    <Input
-                                                        id="category-price-max"
-                                                        type="number"
-                                                        step="0.01"
-                                                        min="0"
-                                                        placeholder="200.00"
-                                                        value={newCategory.priceMax}
-                                                        onChange={(e) => setNewCategory(prev => ({ ...prev, priceMax: e.target.value }))}
-                                                        className="pl-7"
-                                                    />
-                                                </div>
-                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    {newCategory.priceType === "none" && (
+                                        <div className="flex items-center h-12 text-sm text-gray-500 dark:text-gray-400 italic bg-gray-50/50 dark:bg-gray-800/30 rounded-lg px-4 border border-dashed border-gray-200 dark:border-gray-700">
+                                            No pricing configured
                                         </div>
                                     )}
                                 </div>
@@ -2065,12 +2088,19 @@ export default function ServiceRequestsServiceTypesCategories() {
                             </div>
                         </div>
 
-                        <div>
-                            <Label className="mb-3 block">Pricing (optional)</Label>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                                If set, this will be the default pricing for all service types in this category
-                            </p>
-                            <div className="flex items-start gap-6">
+                        <div className="rounded-xl border border-gray-200/80 dark:border-gray-700/80 bg-gradient-to-br from-gray-50/80 via-white to-gray-50/50 dark:from-gray-800/50 dark:via-gray-900/30 dark:to-gray-800/50 p-6 shadow-sm backdrop-blur-sm">
+                            <div className="mb-5 flex items-start gap-3">
+                                <div className="rounded-lg bg-gradient-to-br from-blue-500/10 to-blue-600/5 dark:from-blue-500/20 dark:to-blue-600/10 p-2.5 border border-blue-200/50 dark:border-blue-800/30">
+                                    <DollarSign className="size-5 text-blue-600 dark:text-blue-400" />
+                                </div>
+                                <div className="flex-1">
+                                    <Label className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-1.5 block">Pricing</Label>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed mt-1">
+                                        If set, this will be the default pricing for all service types in this category
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-8">
                                 <RadioGroup
                                     value={newCategory.priceType}
                                     onValueChange={(value) => setNewCategory(prev => ({ 
@@ -2080,34 +2110,38 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         priceMin: value !== "range" ? "" : prev.priceMin,
                                         priceMax: value !== "range" ? "" : prev.priceMax,
                                     }))}
-                                    className="flex flex-col gap-3"
+                                    className="flex flex-col gap-3 min-w-[160px]"
                                 >
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="none" id="edit-category-price-none" />
-                                        <Label htmlFor="edit-category-price-none" className="cursor-pointer font-normal">
+                                    <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                        <RadioGroupItem value="none" id="edit-category-price-none" className="mt-0.5" />
+                                        <Label htmlFor="edit-category-price-none" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                             No price
                                         </Label>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="fixed" id="edit-category-price-fixed" />
-                                        <Label htmlFor="edit-category-price-fixed" className="cursor-pointer font-normal">
+                                    <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                        <RadioGroupItem value="fixed" id="edit-category-price-fixed" className="mt-0.5" />
+                                        <Label htmlFor="edit-category-price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
+                                            <CircleDollarSign className="size-4 text-gray-500 dark:text-gray-400" />
                                             Fixed price
                                         </Label>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="range" id="edit-category-price-range" />
-                                        <Label htmlFor="edit-category-price-range" className="cursor-pointer font-normal">
+                                    <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                        <RadioGroupItem value="range" id="edit-category-price-range" className="mt-0.5" />
+                                        <Label htmlFor="edit-category-price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
+                                            <TrendingUp className="size-4 text-gray-500 dark:text-gray-400" />
                                             Price range
                                         </Label>
                                     </div>
                                 </RadioGroup>
                                 
-                                <div className="flex-1">
+                                <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
                                     {newCategory.priceType === "fixed" && (
-                                        <div>
-                                            <Label htmlFor="edit-category-price-fixed-input" className="sr-only">Fixed price</Label>
-                                            <div className="relative">
-                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                        <div className="space-y-3">
+                                            <Label htmlFor="edit-category-price-fixed-input" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
+                                            <div className="relative group">
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                    <span className="text-base font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                </div>
                                                 <Input
                                                     id="edit-category-price-fixed-input"
                                                     type="number"
@@ -2116,47 +2150,59 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     placeholder="155.00"
                                                     value={newCategory.priceFixed}
                                                     onChange={(e) => setNewCategory(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                                    className="pl-7"
+                                                    className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                                                 />
                                             </div>
                                         </div>
                                     )}
                                     
                                     {newCategory.priceType === "range" && (
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex-1">
-                                                <Label htmlFor="edit-category-price-min" className="sr-only">Minimum price</Label>
-                                                <div className="relative">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                    <Input
-                                                        id="edit-category-price-min"
-                                                        type="number"
-                                                        step="0.01"
-                                                        min="0"
-                                                        placeholder="100.00"
-                                                        value={newCategory.priceMin}
-                                                        onChange={(e) => setNewCategory(prev => ({ ...prev, priceMin: e.target.value }))}
-                                                        className="pl-7"
-                                                    />
+                                        <div className="space-y-4">
+                                            <Label className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Price range</Label>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-2.5">
+                                                    <Label htmlFor="edit-category-price-min" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Minimum</Label>
+                                                    <div className="relative group">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                        </div>
+                                                        <Input
+                                                            id="edit-category-price-min"
+                                                            type="number"
+                                                            step="0.01"
+                                                            min="0"
+                                                            placeholder="100.00"
+                                                            value={newCategory.priceMin}
+                                                            onChange={(e) => setNewCategory(prev => ({ ...prev, priceMin: e.target.value }))}
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2.5">
+                                                    <Label htmlFor="edit-category-price-max" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Maximum</Label>
+                                                    <div className="relative group">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                        </div>
+                                                        <Input
+                                                            id="edit-category-price-max"
+                                                            type="number"
+                                                            step="0.01"
+                                                            min="0"
+                                                            placeholder="200.00"
+                                                            value={newCategory.priceMax}
+                                                            onChange={(e) => setNewCategory(prev => ({ ...prev, priceMax: e.target.value }))}
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">to</span>
-                                            <div className="flex-1">
-                                                <Label htmlFor="edit-category-price-max" className="sr-only">Maximum price</Label>
-                                                <div className="relative">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                    <Input
-                                                        id="edit-category-price-max"
-                                                        type="number"
-                                                        step="0.01"
-                                                        min="0"
-                                                        placeholder="200.00"
-                                                        value={newCategory.priceMax}
-                                                        onChange={(e) => setNewCategory(prev => ({ ...prev, priceMax: e.target.value }))}
-                                                        className="pl-7"
-                                                    />
-                                                </div>
-                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    {newCategory.priceType === "none" && (
+                                        <div className="flex items-center h-12 text-sm text-gray-500 dark:text-gray-400 italic bg-gray-50/50 dark:bg-gray-800/30 rounded-lg px-4 border border-dashed border-gray-200 dark:border-gray-700">
+                                            No pricing configured
                                         </div>
                                     )}
                                 </div>
@@ -2336,42 +2382,162 @@ export default function ServiceRequestsServiceTypesCategories() {
                             })()}
                         </div>
 
-                        <div>
-                            <Label className="mb-3 block">Pricing</Label>
+                        <div className="rounded-xl border border-gray-200/80 dark:border-gray-700/80 bg-gradient-to-br from-gray-50/80 via-white to-gray-50/50 dark:from-gray-800/50 dark:via-gray-900/30 dark:to-gray-800/50 p-6 shadow-sm backdrop-blur-sm">
+                            <div className="mb-5 flex items-start gap-3">
+                                <div className="rounded-lg bg-gradient-to-br from-blue-500/10 to-blue-600/5 dark:from-blue-500/20 dark:to-blue-600/10 p-2.5 border border-blue-200/50 dark:border-blue-800/30">
+                                    <DollarSign className="size-5 text-blue-600 dark:text-blue-400" />
+                                </div>
+                                <div className="flex-1">
+                                    <Label className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-1.5 block">Pricing</Label>
+                                </div>
+                            </div>
                             {(() => {
                                 const selectedCategory = categories.find(cat => cat.name === newServiceType.category)
                                 const hasCategoryPricing = selectedCategory && (selectedCategory as any).priceType && (selectedCategory as any).priceType !== 'none'
                                 
                                 if (hasCategoryPricing && (!newServiceType.priceType || newServiceType.priceType === 'none')) {
                                     return (
-                                        <div className="space-y-2">
-                                            <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-md text-sm">
-                                                <span>
-                                                    {(() => {
-                                                        const catPriceType = (selectedCategory as any).priceType
-                                                        if (catPriceType === 'fixed' && (selectedCategory as any).priceFixed) {
-                                                            return `$${parseFloat((selectedCategory as any).priceFixed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                                                        }
-                                                        if (catPriceType === 'range') {
-                                                            const min = (selectedCategory as any).priceMin ? parseFloat((selectedCategory as any).priceMin).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
-                                                            const max = (selectedCategory as any).priceMax ? parseFloat((selectedCategory as any).priceMax).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
-                                                            if (min && max) return `$${min} - $${max}`
-                                                            if (min) return `$${min}+`
-                                                            if (max) return `Up to $${max}`
-                                                        }
-                                                        return 'Category pricing'
-                                                    })()}
-                                                </span>
+                                        <div className="space-y-3">
+                                            <div className="rounded-lg border-2 border-blue-200/60 dark:border-blue-800/60 bg-gradient-to-br from-blue-50/90 via-blue-50/70 to-blue-50/90 dark:from-blue-900/40 dark:via-blue-900/30 dark:to-blue-900/40 px-5 py-4 shadow-sm">
+                                                <div className="flex items-start justify-between gap-3">
+                                                    <div className="flex-1">
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <div className="rounded-md bg-blue-500/10 dark:bg-blue-500/20 p-1.5 border border-blue-300/30 dark:border-blue-700/30">
+                                                                <CircleDollarSign className="size-3.5 text-blue-600 dark:text-blue-400" />
+                                                            </div>
+                                                            <div className="text-xs font-semibold text-blue-900 dark:text-blue-100 uppercase tracking-wider">Inherited from category</div>
+                                                        </div>
+                                                        <div className="text-2xl font-bold text-blue-700 dark:text-blue-300 tracking-tight">
+                                                            {(() => {
+                                                                const catPriceType = (selectedCategory as any).priceType
+                                                                if (catPriceType === 'fixed' && (selectedCategory as any).priceFixed) {
+                                                                    return `$${parseFloat((selectedCategory as any).priceFixed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                                                }
+                                                                if (catPriceType === 'range') {
+                                                                    const min = (selectedCategory as any).priceMin ? parseFloat((selectedCategory as any).priceMin).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
+                                                                    const max = (selectedCategory as any).priceMax ? parseFloat((selectedCategory as any).priceMax).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
+                                                                    if (min && max) return `$${min} - $${max}`
+                                                                    if (min) return `$${min}+`
+                                                                    if (max) return `Up to $${max}`
+                                                                }
+                                                                return 'Category pricing'
+                                                            })()}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                Pricing is set at the category level. Select an option below to override.
+                                            <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed px-1">
+                                                Pricing is inherited from the category. Select an option below to set custom pricing for this service type.
                                             </p>
+                                            <div className="pt-3 border-t border-gray-200/60 dark:border-gray-700/60">
+                                                <div className="flex items-start gap-8">
+                                                    <RadioGroup
+                                                        value={newServiceType.priceType}
+                                                        onValueChange={(value) => setNewServiceType(prev => ({ 
+                                                            ...prev, 
+                                                            priceType: value as "none" | "fixed" | "range",
+                                                            priceFixed: value !== "fixed" ? "" : prev.priceFixed,
+                                                            priceMin: value !== "range" ? "" : prev.priceMin,
+                                                            priceMax: value !== "range" ? "" : prev.priceMax,
+                                                        }))}
+                                                        className="flex flex-col gap-3 min-w-[160px]"
+                                                    >
+                                                        <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                                            <RadioGroupItem value="none" id="price-none" className="mt-0.5" />
+                                                            <Label htmlFor="price-none" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
+                                                                Use category pricing
+                                                            </Label>
+                                                        </div>
+                                                        <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                                            <RadioGroupItem value="fixed" id="price-fixed" className="mt-0.5" />
+                                                            <Label htmlFor="price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
+                                                                <CircleDollarSign className="size-4 text-gray-500 dark:text-gray-400" />
+                                                                Fixed price
+                                                            </Label>
+                                                        </div>
+                                                        <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                                            <RadioGroupItem value="range" id="price-range" className="mt-0.5" />
+                                                            <Label htmlFor="price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
+                                                                <TrendingUp className="size-4 text-gray-500 dark:text-gray-400" />
+                                                                Price range
+                                                            </Label>
+                                                        </div>
+                                                    </RadioGroup>
+                                                    
+                                                    <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
+                                                        {newServiceType.priceType === "fixed" && (
+                                                            <div className="space-y-3">
+                                                                <Label htmlFor="service-type-price-fixed" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
+                                                                <div className="relative group">
+                                                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                                        <span className="text-base font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                                    </div>
+                                                                    <Input
+                                                                        id="service-type-price-fixed"
+                                                                        type="number"
+                                                                        step="0.01"
+                                                                        min="0"
+                                                                        placeholder="155.00"
+                                                                        value={newServiceType.priceFixed}
+                                                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
+                                                                        className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                        
+                                                        {newServiceType.priceType === "range" && (
+                                                            <div className="space-y-4">
+                                                                <Label className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Price range</Label>
+                                                                <div className="grid grid-cols-2 gap-4">
+                                                                    <div className="space-y-2.5">
+                                                                        <Label htmlFor="service-type-price-min" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Minimum</Label>
+                                                                        <div className="relative group">
+                                                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                                                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                                            </div>
+                                                                            <Input
+                                                                                id="service-type-price-min"
+                                                                                type="number"
+                                                                                step="0.01"
+                                                                                min="0"
+                                                                                placeholder="100.00"
+                                                                                value={newServiceType.priceMin}
+                                                                                onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
+                                                                                className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="space-y-2.5">
+                                                                        <Label htmlFor="service-type-price-max" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Maximum</Label>
+                                                                        <div className="relative group">
+                                                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                                                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                                            </div>
+                                                                            <Input
+                                                                                id="service-type-price-max"
+                                                                                type="number"
+                                                                                step="0.01"
+                                                                                min="0"
+                                                                                placeholder="200.00"
+                                                                                value={newServiceType.priceMax}
+                                                                                onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
+                                                                                className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     )
                                 }
                                 
                                 return (
-                                    <div className="flex items-start gap-6">
+                                    <div className="flex items-start gap-8">
                                         <RadioGroup
                                             value={newServiceType.priceType}
                                             onValueChange={(value) => setNewServiceType(prev => ({ 
@@ -2381,34 +2547,38 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 priceMin: value !== "range" ? "" : prev.priceMin,
                                                 priceMax: value !== "range" ? "" : prev.priceMax,
                                             }))}
-                                            className="flex flex-col gap-3"
+                                            className="flex flex-col gap-3 min-w-[160px]"
                                         >
-                                            <div className="flex items-center gap-2">
-                                                <RadioGroupItem value="none" id="price-none" />
-                                                <Label htmlFor="price-none" className="cursor-pointer font-normal">
+                                            <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                                <RadioGroupItem value="none" id="price-none" className="mt-0.5" />
+                                                <Label htmlFor="price-none" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                                     No price
                                                 </Label>
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                <RadioGroupItem value="fixed" id="price-fixed" />
-                                                <Label htmlFor="price-fixed" className="cursor-pointer font-normal">
+                                            <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                                <RadioGroupItem value="fixed" id="price-fixed" className="mt-0.5" />
+                                                <Label htmlFor="price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
+                                                    <CircleDollarSign className="size-4 text-gray-500 dark:text-gray-400" />
                                                     Fixed price
                                                 </Label>
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                <RadioGroupItem value="range" id="price-range" />
-                                                <Label htmlFor="price-range" className="cursor-pointer font-normal">
+                                            <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                                <RadioGroupItem value="range" id="price-range" className="mt-0.5" />
+                                                <Label htmlFor="price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
+                                                    <TrendingUp className="size-4 text-gray-500 dark:text-gray-400" />
                                                     Price range
                                                 </Label>
                                             </div>
                                         </RadioGroup>
                                         
-                                        <div className="flex-1">
+                                        <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
                                             {newServiceType.priceType === "fixed" && (
-                                                <div>
-                                                    <Label htmlFor="service-type-price-fixed" className="sr-only">Fixed price</Label>
-                                                    <div className="relative">
-                                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                <div className="space-y-3">
+                                                    <Label htmlFor="service-type-price-fixed" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
+                                                    <div className="relative group">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                            <span className="text-base font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                        </div>
                                                         <Input
                                                             id="service-type-price-fixed"
                                                             type="number"
@@ -2417,47 +2587,59 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             placeholder="155.00"
                                                             value={newServiceType.priceFixed}
                                                             onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                                            className="pl-7"
+                                                            className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                                                         />
                                                     </div>
                                                 </div>
                                             )}
                                             
                                             {newServiceType.priceType === "range" && (
-                                                <div className="flex items-center gap-3">
-                                                    <div className="flex-1">
-                                                        <Label htmlFor="service-type-price-min" className="sr-only">Minimum price</Label>
-                                                        <div className="relative">
-                                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                            <Input
-                                                                id="service-type-price-min"
-                                                                type="number"
-                                                                step="0.01"
-                                                                min="0"
-                                                                placeholder="100.00"
-                                                                value={newServiceType.priceMin}
-                                                                onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
-                                                                className="pl-7"
-                                                            />
+                                                <div className="space-y-4">
+                                                    <Label className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Price range</Label>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div className="space-y-2.5">
+                                                            <Label htmlFor="service-type-price-min" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Minimum</Label>
+                                                            <div className="relative group">
+                                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                                </div>
+                                                                <Input
+                                                                    id="service-type-price-min"
+                                                                    type="number"
+                                                                    step="0.01"
+                                                                    min="0"
+                                                                    placeholder="100.00"
+                                                                    value={newServiceType.priceMin}
+                                                                    onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
+                                                                    className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="space-y-2.5">
+                                                            <Label htmlFor="service-type-price-max" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Maximum</Label>
+                                                            <div className="relative group">
+                                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                                </div>
+                                                                <Input
+                                                                    id="service-type-price-max"
+                                                                    type="number"
+                                                                    step="0.01"
+                                                                    min="0"
+                                                                    placeholder="200.00"
+                                                                    value={newServiceType.priceMax}
+                                                                    onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
+                                                                    className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                                />
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <span className="text-sm text-gray-500 dark:text-gray-400">to</span>
-                                                    <div className="flex-1">
-                                                        <Label htmlFor="service-type-price-max" className="sr-only">Maximum price</Label>
-                                                        <div className="relative">
-                                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                            <Input
-                                                                id="service-type-price-max"
-                                                                type="number"
-                                                                step="0.01"
-                                                                min="0"
-                                                                placeholder="200.00"
-                                                                value={newServiceType.priceMax}
-                                                                onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
-                                                                className="pl-7"
-                                                            />
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                            )}
+                                            
+                                            {newServiceType.priceType === "none" && (
+                                                <div className="flex items-center h-12 text-sm text-gray-500 dark:text-gray-400 italic bg-gray-50/50 dark:bg-gray-800/30 rounded-lg px-4 border border-dashed border-gray-200 dark:border-gray-700">
+                                                    No pricing configured
                                                 </div>
                                             )}
                                         </div>
@@ -2780,9 +2962,16 @@ export default function ServiceRequestsServiceTypesCategories() {
                             })()}
                         </div>
 
-                        <div>
-                            <Label className="mb-3 block">Pricing</Label>
-                            <div className="flex items-start gap-6">
+                        <div className="rounded-xl border border-gray-200/80 dark:border-gray-700/80 bg-gradient-to-br from-gray-50/80 via-white to-gray-50/50 dark:from-gray-800/50 dark:via-gray-900/30 dark:to-gray-800/50 p-6 shadow-sm backdrop-blur-sm">
+                            <div className="mb-5 flex items-start gap-3">
+                                <div className="rounded-lg bg-gradient-to-br from-blue-500/10 to-blue-600/5 dark:from-blue-500/20 dark:to-blue-600/10 p-2.5 border border-blue-200/50 dark:border-blue-800/30">
+                                    <DollarSign className="size-5 text-blue-600 dark:text-blue-400" />
+                                </div>
+                                <div className="flex-1">
+                                    <Label className="text-base font-semibold text-gray-900 dark:text-gray-50 mb-1.5 block">Pricing</Label>
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-8">
                                 <RadioGroup
                                     value={newServiceType.priceType}
                                     onValueChange={(value) => setNewServiceType(prev => ({ 
@@ -2792,34 +2981,38 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         priceMin: value !== "range" ? "" : prev.priceMin,
                                         priceMax: value !== "range" ? "" : prev.priceMax,
                                     }))}
-                                    className="flex flex-col gap-3"
+                                    className="flex flex-col gap-3 min-w-[160px]"
                                 >
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="none" id="edit-price-none" />
-                                        <Label htmlFor="edit-price-none" className="cursor-pointer font-normal">
+                                    <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                        <RadioGroupItem value="none" id="edit-price-none" className="mt-0.5" />
+                                        <Label htmlFor="edit-price-none" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
                                             No price
                                         </Label>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="fixed" id="edit-price-fixed" />
-                                        <Label htmlFor="edit-price-fixed" className="cursor-pointer font-normal">
+                                    <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                        <RadioGroupItem value="fixed" id="edit-price-fixed" className="mt-0.5" />
+                                        <Label htmlFor="edit-price-fixed" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
+                                            <CircleDollarSign className="size-4 text-gray-500 dark:text-gray-400" />
                                             Fixed price
                                         </Label>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="range" id="edit-price-range" />
-                                        <Label htmlFor="edit-price-range" className="cursor-pointer font-normal">
+                                    <div className="flex items-center gap-3 group cursor-pointer p-2.5 rounded-lg hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-all duration-200">
+                                        <RadioGroupItem value="range" id="edit-price-range" className="mt-0.5" />
+                                        <Label htmlFor="edit-price-range" className="cursor-pointer font-medium text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors flex items-center gap-2">
+                                            <TrendingUp className="size-4 text-gray-500 dark:text-gray-400" />
                                             Price range
                                         </Label>
                                     </div>
                                 </RadioGroup>
                                 
-                                <div className="flex-1">
+                                <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
                                     {newServiceType.priceType === "fixed" && (
-                                        <div>
-                                            <Label htmlFor="edit-service-type-price-fixed" className="sr-only">Fixed price</Label>
-                                            <div className="relative">
-                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                        <div className="space-y-3">
+                                            <Label htmlFor="edit-service-type-price-fixed" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
+                                            <div className="relative group">
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                    <span className="text-base font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                </div>
                                                 <Input
                                                     id="edit-service-type-price-fixed"
                                                     type="number"
@@ -2828,47 +3021,59 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     placeholder="155.00"
                                                     value={newServiceType.priceFixed}
                                                     onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                                    className="pl-7"
+                                                    className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
                                                 />
                                             </div>
                                         </div>
                                     )}
                                     
                                     {newServiceType.priceType === "range" && (
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex-1">
-                                                <Label htmlFor="edit-service-type-price-min" className="sr-only">Minimum price</Label>
-                                                <div className="relative">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                    <Input
-                                                        id="edit-service-type-price-min"
-                                                        type="number"
-                                                        step="0.01"
-                                                        min="0"
-                                                        placeholder="100.00"
-                                                        value={newServiceType.priceMin}
-                                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
-                                                        className="pl-7"
-                                                    />
+                                        <div className="space-y-4">
+                                            <Label className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Price range</Label>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-2.5">
+                                                    <Label htmlFor="edit-service-type-price-min" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Minimum</Label>
+                                                    <div className="relative group">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                        </div>
+                                                        <Input
+                                                            id="edit-service-type-price-min"
+                                                            type="number"
+                                                            step="0.01"
+                                                            min="0"
+                                                            placeholder="100.00"
+                                                            value={newServiceType.priceMin}
+                                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2.5">
+                                                    <Label htmlFor="edit-service-type-price-max" className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Maximum</Label>
+                                                    <div className="relative group">
+                                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                                                            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">$</span>
+                                                        </div>
+                                                        <Input
+                                                            id="edit-service-type-price-max"
+                                                            type="number"
+                                                            step="0.01"
+                                                            min="0"
+                                                            placeholder="200.00"
+                                                            value={newServiceType.priceMax}
+                                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">to</span>
-                                            <div className="flex-1">
-                                                <Label htmlFor="edit-service-type-price-max" className="sr-only">Maximum price</Label>
-                                                <div className="relative">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                    <Input
-                                                        id="edit-service-type-price-max"
-                                                        type="number"
-                                                        step="0.01"
-                                                        min="0"
-                                                        placeholder="200.00"
-                                                        value={newServiceType.priceMax}
-                                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
-                                                        className="pl-7"
-                                                    />
-                                                </div>
-                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    {newServiceType.priceType === "none" && (
+                                        <div className="flex items-center h-12 text-sm text-gray-500 dark:text-gray-400 italic bg-gray-50/50 dark:bg-gray-800/30 rounded-lg px-4 border border-dashed border-gray-200 dark:border-gray-700">
+                                            No pricing configured
                                         </div>
                                     )}
                                 </div>
