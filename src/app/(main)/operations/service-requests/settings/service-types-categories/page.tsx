@@ -1044,20 +1044,21 @@ export default function ServiceRequestsServiceTypesCategories() {
             </div>
 
             {/* Page Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
                         Service request settings
                     </h1>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                     <Button 
                         variant="ghost" 
                         onClick={() => setIsSetupModalOpen(true)}
+                        className="flex-shrink-0"
                     >
                         Setup wizard
                     </Button>
-                    <Button variant="primary">
+                    <Button variant="primary" className="flex-shrink-0">
                         Save
                     </Button>
                 </div>
@@ -1087,10 +1088,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                             Organize service requests by category and define specific service types with approval workflows
                         </p>
                     </div>
-                <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
                         <Button 
                             variant="ghost" 
                             onClick={() => setIsAddCategoryModalOpen(true)}
+                            className="flex-shrink-0"
                         >
                         <RiAddLine className="size-4 mr-1.5" />
                         Add category
@@ -1098,6 +1100,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                         <Button 
                             variant="ghost" 
                             onClick={() => setIsAddServiceTypeModalOpen(true)}
+                            className="flex-shrink-0"
                         >
                         <RiAddLine className="size-4 mr-1.5" />
                         Add service type
@@ -1114,11 +1117,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <div className="flex items-center gap-3 flex-shrink-0">
+                <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap"
+                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap flex-shrink-0"
                     >
                         <option>All</option>
                         <option>Active</option>
@@ -1127,7 +1130,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                     <select
                         value={categoryFilter}
                         onChange={(e) => setCategoryFilter(e.target.value)}
-                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap"
+                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap flex-shrink-0"
                     >
                         <option>All Categories</option>
                         <option>Cleaning & Waste</option>
@@ -1141,30 +1144,30 @@ export default function ServiceRequestsServiceTypesCategories() {
                 </div>
             </div>
 
-            {/* Hierarchical Table */}
-            <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden overflow-x-auto">
+            {/* Desktop Table View */}
+            <div className="hidden lg:block border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden overflow-x-auto">
                 <table className="min-w-full">
                     <thead className="bg-gray-50 dark:bg-gray-800">
                         <tr>
-                            <th scope="col" className="w-40 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            <th scope="col" className="w-40 px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 Name / Request Type
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
                                 Category
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
                                 Approval
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
                                 Assigned To
                             </th>
-                            <th scope="col" className="w-96 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                            <th scope="col" className="w-96 px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 Statuses
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
                                 Enable
                             </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
                                 Actions
                             </th>
                         </tr>
@@ -1178,7 +1181,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 <>
                                     {/* Category Row */}
                                     <tr key={`category-${category.id}`} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td className="w-40 px-6 py-4 whitespace-nowrap">
+                                        <td className="w-40 px-4 lg:px-6 py-4">
                                             <button
                                                 onClick={() => toggleCategoryExpansion(category.name)}
                                                 className="flex items-center gap-2 text-left w-full"
@@ -1198,15 +1201,15 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 </div>
                                             </button>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                                             <Badge variant={getCategoryBadgeVariant(category.name)}>
                                                 Category
                                             </Badge>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             -
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                                             {category.assignedTo ? (
                                                 <div className="flex items-center gap-2">
                                                     <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
@@ -1222,10 +1225,10 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <span className="text-gray-400 dark:text-gray-500">-</span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             -
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                                             <div className="flex justify-start">
                                                 <Switch
                                                     checked={category.status}
@@ -1233,7 +1236,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 />
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <div className="flex items-center gap-1 justify-start">
                                                 <Button
                                                     variant="ghost"
@@ -1279,7 +1282,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     {/* Service Type Rows (shown when expanded) */}
                                     {isExpanded && categoryServiceTypes.map((serviceType) => (
                                         <tr key={`service-${serviceType.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
-                                            <td className="w-40 px-6 py-4 pl-12">
+                                            <td className="w-40 px-4 lg:px-6 py-4 pl-8 lg:pl-12">
                                                 <div className="space-y-1">
                                                     <div className="text-sm font-medium text-gray-900 dark:text-gray-50 truncate">
                                                         {serviceType.requestType}
@@ -1289,15 +1292,15 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
+                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                                                 <Badge variant={getCategoryBadgeVariant(serviceType.category)}>
                                                     {serviceType.category}
                                                 </Badge>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
+                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
                                                 {serviceType.approval}
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-50">
+                                            <td className="px-4 lg:px-6 py-4 text-sm text-gray-900 dark:text-gray-50">
                                                 {(() => {
                                                     const categoryAssignedTo = category.assignedTo
                                                     const isUsingCategoryAssignedTo = categoryAssignedTo && serviceType.assignedTo === categoryAssignedTo
@@ -1320,7 +1323,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     return serviceType.assignedTo
                                                 })()}
                                             </td>
-                                            <td className="w-96 px-6 py-4">
+                                            <td className="w-96 px-4 lg:px-6 py-4">
                                                 <div className="flex flex-wrap gap-1 min-h-[32px]">
                                                     {serviceType.statuses?.slice(0, 4).map((status) => (
                                                         <span
@@ -1337,7 +1340,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
+                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                                                 <div className="flex justify-start">
                                                     <Switch
                                                         checked={serviceType.status}
@@ -1345,7 +1348,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     />
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div className="flex items-center gap-1 justify-start">
                                                     <Button
                                                         variant="ghost"
@@ -1402,16 +1405,236 @@ export default function ServiceRequestsServiceTypesCategories() {
                     </div>
                 )}
             </div>
+
+            {/* Mobile Card View */}
+            <div className="lg:hidden space-y-4">
+                {filteredCategories.length === 0 ? (
+                    <div className="p-8 text-center border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <p className="text-gray-500 dark:text-gray-400">
+                            No categories or service types found matching your criteria.
+                        </p>
+                    </div>
+                ) : (
+                    filteredCategories.map((category) => {
+                        const isExpanded = expandedCategories.has(category.name)
+                        const categoryServiceTypes = getFilteredServiceTypes(category.name)
+                        
+                        return (
+                            <div key={`category-mobile-${category.id}`} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                                {/* Category Card */}
+                                <div className="bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700">
+                                    <div className="flex items-start justify-between gap-4">
+                                        <button
+                                            onClick={() => toggleCategoryExpansion(category.name)}
+                                            className="flex-1 flex items-start gap-3 text-left"
+                                        >
+                                            {isExpanded ? (
+                                                <RiArrowDownSLine className="size-5 text-gray-500 flex-shrink-0 mt-0.5" />
+                                            ) : (
+                                                <RiArrowRightSLine className="size-5 text-gray-500 flex-shrink-0 mt-0.5" />
+                                            )}
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-50">
+                                                        {category.name}
+                                                    </h3>
+                                                    <Badge variant={getCategoryBadgeVariant(category.name)}>
+                                                        Category
+                                                    </Badge>
+                                                </div>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                                    {category.description}
+                                                </p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                    {categoryServiceTypes.length} service types
+                                                </p>
+                                            </div>
+                                        </button>
+                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                            <Switch
+                                                checked={category.status}
+                                                onCheckedChange={() => handleCategoryStatusToggle(category.id)}
+                                            />
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="p-2 h-8 w-8"
+                                                onClick={() => handleEditCategory(category)}
+                                            >
+                                                <Pencil className="size-4" style={{ color: '#696E72' }} />
+                                            </Button>
+                                            <div className="relative">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="p-2 h-8 w-8"
+                                                    onClick={() => setOpenCategoryDropdownId(openCategoryDropdownId === category.id ? null : category.id)}
+                                                >
+                                                    <RiMore2Line className="size-4" />
+                                                </Button>
+                                                {openCategoryDropdownId === category.id && (
+                                                    <>
+                                                        <div 
+                                                            className="fixed inset-0 z-10" 
+                                                            onClick={() => setOpenCategoryDropdownId(null)}
+                                                        />
+                                                        <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                                                            <button
+                                                                onClick={() => handleDeleteCategory(category.id)}
+                                                                className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
+                                                            >
+                                                                <RiDeleteBin6Line className="size-4" />
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Category Assigned To */}
+                                    {category.assignedTo && (
+                                        <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                                            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Assigned to</div>
+                                            <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm w-fit">
+                                                {category.assignedToType === 'user' ? (
+                                                    <User className="size-3 text-gray-500" />
+                                                ) : (
+                                                    <Users className="size-3 text-gray-500" />
+                                                )}
+                                                <span>{category.assignedTo}</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                {/* Service Types (shown when expanded) */}
+                                {isExpanded && categoryServiceTypes.length > 0 && (
+                                    <div className="bg-gray-50 dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                        {categoryServiceTypes.map((serviceType) => (
+                                            <div key={`service-mobile-${serviceType.id}`} className="p-4">
+                                                <div className="flex items-start justify-between gap-4 mb-3">
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                                {serviceType.requestType}
+                                                            </h4>
+                                                            <Badge variant={getCategoryBadgeVariant(serviceType.category)}>
+                                                                {serviceType.category}
+                                                            </Badge>
+                                                        </div>
+                                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                                            {serviceType.description}
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                                        <Switch
+                                                            checked={serviceType.status}
+                                                            onCheckedChange={() => handleServiceTypeStatusToggle(serviceType.id)}
+                                                        />
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="p-2 h-8 w-8"
+                                                            onClick={() => handleEditServiceType(serviceType)}
+                                                        >
+                                                            <Pencil className="size-4" style={{ color: '#696E72' }} />
+                                                        </Button>
+                                                        <div className="relative">
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="p-2 h-8 w-8"
+                                                                onClick={() => setOpenServiceTypeDropdownId(openServiceTypeDropdownId === serviceType.id ? null : serviceType.id)}
+                                                            >
+                                                                <RiMore2Line className="size-4" />
+                                                            </Button>
+                                                            {openServiceTypeDropdownId === serviceType.id && (
+                                                                <>
+                                                                    <div 
+                                                                        className="fixed inset-0 z-10" 
+                                                                        onClick={() => setOpenServiceTypeDropdownId(null)}
+                                                                    />
+                                                                    <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                                                                        <button
+                                                                            onClick={() => handleDeleteServiceType(serviceType.id)}
+                                                                            className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
+                                                                        >
+                                                                            <RiDeleteBin6Line className="size-4" />
+                                                                            Delete
+                                                                        </button>
+                                                                    </div>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div className="space-y-2">
+                                                    <div className="flex items-center gap-4 text-xs">
+                                                        <div>
+                                                            <span className="text-gray-500 dark:text-gray-400">Approval:</span>
+                                                            <span className="ml-1 text-gray-900 dark:text-gray-50">{serviceType.approval}</span>
+                                                        </div>
+                                                        {(() => {
+                                                            const categoryAssignedTo = category.assignedTo
+                                                            const isUsingCategoryAssignedTo = categoryAssignedTo && serviceType.assignedTo === categoryAssignedTo
+                                                            
+                                                            if (isUsingCategoryAssignedTo || serviceType.assignedTo) {
+                                                                return (
+                                                                    <div>
+                                                                        <span className="text-gray-500 dark:text-gray-400">Assigned to:</span>
+                                                                        <span className="ml-1 text-gray-900 dark:text-gray-50">
+                                                                            {serviceType.assignedTo || '-'}
+                                                                        </span>
+                                                                    </div>
+                                                                )
+                                                            }
+                                                            return null
+                                                        })()}
+                                                    </div>
+                                                    
+                                                    {serviceType.statuses && serviceType.statuses.length > 0 && (
+                                                        <div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Statuses</div>
+                                                            <div className="flex flex-wrap gap-1">
+                                                                {serviceType.statuses.slice(0, 6).map((status) => (
+                                                                    <span
+                                                                        key={status}
+                                                                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                                                                    >
+                                                                        {status}
+                                                                    </span>
+                                                                ))}
+                                                                {(serviceType.statuses.length || 0) > 6 && (
+                                                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                                                                        +{(serviceType.statuses.length || 0) - 6} more
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )
+                    })
+                )}
+            </div>
             </div>
 
             {/* Add Category Modal */}
             <Dialog open={isAddCategoryModalOpen} onOpenChange={setIsAddCategoryModalOpen}>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="max-w-2xl w-[calc(100vw-2rem)] sm:w-full">
                     <DialogHeader>
                         <DialogTitle>Add new category</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4 px-6 py-4 overflow-y-auto flex-1">
+                    <div className="space-y-4 px-4 sm:px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="category-name">Category name *</Label>
                             <input
@@ -1528,12 +1751,12 @@ export default function ServiceRequestsServiceTypesCategories() {
 
             {/* Edit Category Modal */}
             <Dialog open={isEditCategoryModalOpen} onOpenChange={setIsEditCategoryModalOpen}>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="max-w-2xl w-[calc(100vw-2rem)] sm:w-full">
                     <DialogHeader>
                         <DialogTitle>Edit category</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4 px-6 py-4 overflow-y-auto flex-1">
+                    <div className="space-y-4 px-4 sm:px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="edit-category-name">Category name *</Label>
                             <input
@@ -1650,12 +1873,12 @@ export default function ServiceRequestsServiceTypesCategories() {
 
             {/* Add Service Type Modal */}
             <Dialog open={isAddServiceTypeModalOpen} onOpenChange={setIsAddServiceTypeModalOpen}>
-                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogContent className="max-w-4xl w-[calc(100vw-2rem)] sm:w-full max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>Add service type</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4 px-6 py-4 overflow-y-auto flex-1">
+                    <div className="space-y-4 px-4 sm:px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="service-type-name">Request type *</Label>
                             <Input
@@ -1964,12 +2187,12 @@ export default function ServiceRequestsServiceTypesCategories() {
 
             {/* Edit Service Type Modal */}
             <Dialog open={isEditServiceTypeModalOpen} onOpenChange={setIsEditServiceTypeModalOpen}>
-                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogContent className="max-w-4xl w-[calc(100vw-2rem)] sm:w-full max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>Edit service type</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4 px-6 py-4 overflow-y-auto flex-1">
+                    <div className="space-y-4 px-4 sm:px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="edit-service-type-name">Request type *</Label>
                             <Input
