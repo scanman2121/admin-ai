@@ -634,7 +634,11 @@ export default function ServiceRequestsServiceTypesCategories() {
         name: "",
         description: "",
         assignedTo: "",
-        assignedToType: "user" as "user" | "team"
+        assignedToType: "user" as "user" | "team",
+        priceType: "none" as "none" | "fixed" | "range",
+        priceFixed: "",
+        priceMin: "",
+        priceMax: "",
     })
 
     // New status creation states
@@ -713,24 +717,45 @@ export default function ServiceRequestsServiceTypesCategories() {
     }
 
     // Helper function to format price display
-    const formatPrice = (serviceType: typeof serviceTypesData[0] & { priceType?: 'none' | 'fixed' | 'range'; priceFixed?: string; priceMin?: string; priceMax?: string }) => {
-        if (!serviceType.priceType || serviceType.priceType === 'none') {
-            return '-'
+    const formatPrice = (
+        serviceType: typeof serviceTypesData[0] & { priceType?: 'none' | 'fixed' | 'range'; priceFixed?: string; priceMin?: string; priceMax?: string },
+        category?: typeof categoriesData[0] & { priceType?: 'none' | 'fixed' | 'range'; priceFixed?: string; priceMin?: string; priceMax?: string }
+    ) => {
+        // Check if service type has its own pricing
+        if (serviceType.priceType && serviceType.priceType !== 'none') {
+            if (serviceType.priceType === 'fixed' && serviceType.priceFixed) {
+                return `$${parseFloat(serviceType.priceFixed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            }
+            
+            if (serviceType.priceType === 'range') {
+                const min = serviceType.priceMin ? parseFloat(serviceType.priceMin).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
+                const max = serviceType.priceMax ? parseFloat(serviceType.priceMax).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
+                if (min && max) {
+                    return `$${min} - $${max}`
+                } else if (min) {
+                    return `$${min}+`
+                } else if (max) {
+                    return `Up to $${max}`
+                }
+            }
         }
         
-        if (serviceType.priceType === 'fixed' && serviceType.priceFixed) {
-            return `$${parseFloat(serviceType.priceFixed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-        }
-        
-        if (serviceType.priceType === 'range') {
-            const min = serviceType.priceMin ? parseFloat(serviceType.priceMin).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
-            const max = serviceType.priceMax ? parseFloat(serviceType.priceMax).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
-            if (min && max) {
-                return `$${min} - $${max}`
-            } else if (min) {
-                return `$${min}+`
-            } else if (max) {
-                return `Up to $${max}`
+        // Fall back to category pricing if service type doesn't have pricing
+        if (category && category.priceType && category.priceType !== 'none') {
+            if (category.priceType === 'fixed' && category.priceFixed) {
+                return `$${parseFloat(category.priceFixed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+            }
+            
+            if (category.priceType === 'range') {
+                const min = category.priceMin ? parseFloat(category.priceMin).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
+                const max = category.priceMax ? parseFloat(category.priceMax).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
+                if (min && max) {
+                    return `$${min} - $${max}`
+                } else if (min) {
+                    return `$${min}+`
+                } else if (max) {
+                    return `Up to $${max}`
+                }
             }
         }
         
@@ -782,7 +807,11 @@ export default function ServiceRequestsServiceTypesCategories() {
             name: "",
             description: "",
             assignedTo: "",
-            assignedToType: "user"
+            assignedToType: "user",
+            priceType: "none",
+            priceFixed: "",
+            priceMin: "",
+            priceMax: "",
         })
         setIsAddCategoryModalOpen(false)
     }
@@ -793,7 +822,11 @@ export default function ServiceRequestsServiceTypesCategories() {
             name: category.name,
             description: category.description,
             assignedTo: category.assignedTo || "",
-            assignedToType: category.assignedToType || "user"
+            assignedToType: category.assignedToType || "user",
+            priceType: (category as any).priceType || "none",
+            priceFixed: (category as any).priceFixed || "",
+            priceMin: (category as any).priceMin || "",
+            priceMax: (category as any).priceMax || "",
         })
         setIsEditCategoryModalOpen(true)
     }
@@ -814,7 +847,11 @@ export default function ServiceRequestsServiceTypesCategories() {
             name: "",
             description: "",
             assignedTo: "",
-            assignedToType: "user"
+            assignedToType: "user",
+            priceType: "none",
+            priceFixed: "",
+            priceMin: "",
+            priceMax: "",
         })
         setIsEditCategoryModalOpen(false)
     }
@@ -1271,7 +1308,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             )}
                                         </td>
                                         <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                            -
+                                            {formatPrice({ priceType: (category as any).priceType || 'none' } as any, category)}
                                         </td>
                                         <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             -
@@ -1372,7 +1409,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 })()}
                                             </td>
                                             <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
-                                                {formatPrice(serviceType)}
+                                                {formatPrice(serviceType, category)}
                                             </td>
                                             <td className="w-96 px-4 lg:px-6 py-4">
                                                 <div className="flex flex-wrap gap-1 min-h-[32px]">
@@ -1558,6 +1595,22 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             </div>
                                         </div>
                                     )}
+
+                                    {/* Category Pricing */}
+                                    {(() => {
+                                        const categoryPrice = formatPrice({ priceType: (category as any).priceType || 'none' } as any, category)
+                                        if (categoryPrice !== '-') {
+                                            return (
+                                                <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Default pricing</div>
+                                                    <div className="text-sm text-gray-900 dark:text-gray-50 font-medium">
+                                                        {categoryPrice}
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
+                                        return null
+                                    })()}
                                 </div>
                                 
                                 {/* Service Types (shown when expanded) */}
@@ -1646,7 +1699,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                         })()}
                                                         <div>
                                                             <span className="text-gray-500 dark:text-gray-400">Price:</span>
-                                                            <span className="ml-1 text-gray-900 dark:text-gray-50">{formatPrice(serviceType)}</span>
+                                                            <span className="ml-1 text-gray-900 dark:text-gray-50">{formatPrice(serviceType, category)}</span>
                                                         </div>
                                                     </div>
                                                     
@@ -1791,6 +1844,104 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 )}
                             </div>
                         </div>
+
+                        <div>
+                            <Label className="mb-3 block">Pricing (optional)</Label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                If set, this will be the default pricing for all service types in this category
+                            </p>
+                            <div className="flex items-start gap-6">
+                                <RadioGroup
+                                    value={newCategory.priceType}
+                                    onValueChange={(value) => setNewCategory(prev => ({ 
+                                        ...prev, 
+                                        priceType: value as "none" | "fixed" | "range",
+                                        priceFixed: value !== "fixed" ? "" : prev.priceFixed,
+                                        priceMin: value !== "range" ? "" : prev.priceMin,
+                                        priceMax: value !== "range" ? "" : prev.priceMax,
+                                    }))}
+                                    className="flex flex-col gap-3"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="none" id="category-price-none" />
+                                        <Label htmlFor="category-price-none" className="cursor-pointer font-normal">
+                                            No price
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="fixed" id="category-price-fixed" />
+                                        <Label htmlFor="category-price-fixed" className="cursor-pointer font-normal">
+                                            Fixed price
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="range" id="category-price-range" />
+                                        <Label htmlFor="category-price-range" className="cursor-pointer font-normal">
+                                            Price range
+                                        </Label>
+                                    </div>
+                                </RadioGroup>
+                                
+                                <div className="flex-1">
+                                    {newCategory.priceType === "fixed" && (
+                                        <div>
+                                            <Label htmlFor="category-price-fixed-input" className="sr-only">Fixed price</Label>
+                                            <div className="relative">
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                <Input
+                                                    id="category-price-fixed-input"
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    placeholder="155.00"
+                                                    value={newCategory.priceFixed}
+                                                    onChange={(e) => setNewCategory(prev => ({ ...prev, priceFixed: e.target.value }))}
+                                                    className="pl-7"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    {newCategory.priceType === "range" && (
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex-1">
+                                                <Label htmlFor="category-price-min" className="sr-only">Minimum price</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                    <Input
+                                                        id="category-price-min"
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        placeholder="100.00"
+                                                        value={newCategory.priceMin}
+                                                        onChange={(e) => setNewCategory(prev => ({ ...prev, priceMin: e.target.value }))}
+                                                        className="pl-7"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <span className="text-sm text-gray-500 dark:text-gray-400">to</span>
+                                            <div className="flex-1">
+                                                <Label htmlFor="category-price-max" className="sr-only">Maximum price</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                    <Input
+                                                        id="category-price-max"
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        placeholder="200.00"
+                                                        value={newCategory.priceMax}
+                                                        onChange={(e) => setNewCategory(prev => ({ ...prev, priceMax: e.target.value }))}
+                                                        className="pl-7"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                         
                         <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsAddCategoryModalOpen(false)}>
@@ -1911,6 +2062,104 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </div>
                                     </div>
                                 )}
+                            </div>
+                        </div>
+
+                        <div>
+                            <Label className="mb-3 block">Pricing (optional)</Label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                                If set, this will be the default pricing for all service types in this category
+                            </p>
+                            <div className="flex items-start gap-6">
+                                <RadioGroup
+                                    value={newCategory.priceType}
+                                    onValueChange={(value) => setNewCategory(prev => ({ 
+                                        ...prev, 
+                                        priceType: value as "none" | "fixed" | "range",
+                                        priceFixed: value !== "fixed" ? "" : prev.priceFixed,
+                                        priceMin: value !== "range" ? "" : prev.priceMin,
+                                        priceMax: value !== "range" ? "" : prev.priceMax,
+                                    }))}
+                                    className="flex flex-col gap-3"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="none" id="edit-category-price-none" />
+                                        <Label htmlFor="edit-category-price-none" className="cursor-pointer font-normal">
+                                            No price
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="fixed" id="edit-category-price-fixed" />
+                                        <Label htmlFor="edit-category-price-fixed" className="cursor-pointer font-normal">
+                                            Fixed price
+                                        </Label>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <RadioGroupItem value="range" id="edit-category-price-range" />
+                                        <Label htmlFor="edit-category-price-range" className="cursor-pointer font-normal">
+                                            Price range
+                                        </Label>
+                                    </div>
+                                </RadioGroup>
+                                
+                                <div className="flex-1">
+                                    {newCategory.priceType === "fixed" && (
+                                        <div>
+                                            <Label htmlFor="edit-category-price-fixed-input" className="sr-only">Fixed price</Label>
+                                            <div className="relative">
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                <Input
+                                                    id="edit-category-price-fixed-input"
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    placeholder="155.00"
+                                                    value={newCategory.priceFixed}
+                                                    onChange={(e) => setNewCategory(prev => ({ ...prev, priceFixed: e.target.value }))}
+                                                    className="pl-7"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    {newCategory.priceType === "range" && (
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex-1">
+                                                <Label htmlFor="edit-category-price-min" className="sr-only">Minimum price</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                    <Input
+                                                        id="edit-category-price-min"
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        placeholder="100.00"
+                                                        value={newCategory.priceMin}
+                                                        onChange={(e) => setNewCategory(prev => ({ ...prev, priceMin: e.target.value }))}
+                                                        className="pl-7"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <span className="text-sm text-gray-500 dark:text-gray-400">to</span>
+                                            <div className="flex-1">
+                                                <Label htmlFor="edit-category-price-max" className="sr-only">Maximum price</Label>
+                                                <div className="relative">
+                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                    <Input
+                                                        id="edit-category-price-max"
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        placeholder="200.00"
+                                                        value={newCategory.priceMax}
+                                                        onChange={(e) => setNewCategory(prev => ({ ...prev, priceMax: e.target.value }))}
+                                                        className="pl-7"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                         
@@ -2089,97 +2338,132 @@ export default function ServiceRequestsServiceTypesCategories() {
 
                         <div>
                             <Label className="mb-3 block">Pricing</Label>
-                            <div className="flex items-start gap-6">
-                                <RadioGroup
-                                    value={newServiceType.priceType}
-                                    onValueChange={(value) => setNewServiceType(prev => ({ 
-                                        ...prev, 
-                                        priceType: value as "none" | "fixed" | "range",
-                                        priceFixed: value !== "fixed" ? "" : prev.priceFixed,
-                                        priceMin: value !== "range" ? "" : prev.priceMin,
-                                        priceMax: value !== "range" ? "" : prev.priceMax,
-                                    }))}
-                                    className="flex flex-col gap-3"
-                                >
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="none" id="price-none" />
-                                        <Label htmlFor="price-none" className="cursor-pointer font-normal">
-                                            No price
-                                        </Label>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="fixed" id="price-fixed" />
-                                        <Label htmlFor="price-fixed" className="cursor-pointer font-normal">
-                                            Fixed price
-                                        </Label>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <RadioGroupItem value="range" id="price-range" />
-                                        <Label htmlFor="price-range" className="cursor-pointer font-normal">
-                                            Price range
-                                        </Label>
-                                    </div>
-                                </RadioGroup>
+                            {(() => {
+                                const selectedCategory = categories.find(cat => cat.name === newServiceType.category)
+                                const hasCategoryPricing = selectedCategory && (selectedCategory as any).priceType && (selectedCategory as any).priceType !== 'none'
                                 
-                                <div className="flex-1">
-                                    {newServiceType.priceType === "fixed" && (
-                                        <div>
-                                            <Label htmlFor="service-type-price-fixed" className="sr-only">Fixed price</Label>
-                                            <div className="relative">
-                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                <Input
-                                                    id="service-type-price-fixed"
-                                                    type="number"
-                                                    step="0.01"
-                                                    min="0"
-                                                    placeholder="155.00"
-                                                    value={newServiceType.priceFixed}
-                                                    onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                                    className="pl-7"
-                                                />
+                                if (hasCategoryPricing && (!newServiceType.priceType || newServiceType.priceType === 'none')) {
+                                    return (
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-md text-sm">
+                                                <span>
+                                                    {(() => {
+                                                        const catPriceType = (selectedCategory as any).priceType
+                                                        if (catPriceType === 'fixed' && (selectedCategory as any).priceFixed) {
+                                                            return `$${parseFloat((selectedCategory as any).priceFixed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                                        }
+                                                        if (catPriceType === 'range') {
+                                                            const min = (selectedCategory as any).priceMin ? parseFloat((selectedCategory as any).priceMin).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
+                                                            const max = (selectedCategory as any).priceMax ? parseFloat((selectedCategory as any).priceMax).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
+                                                            if (min && max) return `$${min} - $${max}`
+                                                            if (min) return `$${min}+`
+                                                            if (max) return `Up to $${max}`
+                                                        }
+                                                        return 'Category pricing'
+                                                    })()}
+                                                </span>
                                             </div>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Pricing is set at the category level. Select an option below to override.
+                                            </p>
                                         </div>
-                                    )}
-                                    
-                                    {newServiceType.priceType === "range" && (
-                                        <div className="flex items-center gap-3">
-                                            <div className="flex-1">
-                                                <Label htmlFor="service-type-price-min" className="sr-only">Minimum price</Label>
-                                                <div className="relative">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                    <Input
-                                                        id="service-type-price-min"
-                                                        type="number"
-                                                        step="0.01"
-                                                        min="0"
-                                                        placeholder="100.00"
-                                                        value={newServiceType.priceMin}
-                                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
-                                                        className="pl-7"
-                                                    />
-                                                </div>
+                                    )
+                                }
+                                
+                                return (
+                                    <div className="flex items-start gap-6">
+                                        <RadioGroup
+                                            value={newServiceType.priceType}
+                                            onValueChange={(value) => setNewServiceType(prev => ({ 
+                                                ...prev, 
+                                                priceType: value as "none" | "fixed" | "range",
+                                                priceFixed: value !== "fixed" ? "" : prev.priceFixed,
+                                                priceMin: value !== "range" ? "" : prev.priceMin,
+                                                priceMax: value !== "range" ? "" : prev.priceMax,
+                                            }))}
+                                            className="flex flex-col gap-3"
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <RadioGroupItem value="none" id="price-none" />
+                                                <Label htmlFor="price-none" className="cursor-pointer font-normal">
+                                                    No price
+                                                </Label>
                                             </div>
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">to</span>
-                                            <div className="flex-1">
-                                                <Label htmlFor="service-type-price-max" className="sr-only">Maximum price</Label>
-                                                <div className="relative">
-                                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
-                                                    <Input
-                                                        id="service-type-price-max"
-                                                        type="number"
-                                                        step="0.01"
-                                                        min="0"
-                                                        placeholder="200.00"
-                                                        value={newServiceType.priceMax}
-                                                        onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
-                                                        className="pl-7"
-                                                    />
-                                                </div>
+                                            <div className="flex items-center gap-2">
+                                                <RadioGroupItem value="fixed" id="price-fixed" />
+                                                <Label htmlFor="price-fixed" className="cursor-pointer font-normal">
+                                                    Fixed price
+                                                </Label>
                                             </div>
+                                            <div className="flex items-center gap-2">
+                                                <RadioGroupItem value="range" id="price-range" />
+                                                <Label htmlFor="price-range" className="cursor-pointer font-normal">
+                                                    Price range
+                                                </Label>
+                                            </div>
+                                        </RadioGroup>
+                                        
+                                        <div className="flex-1">
+                                            {newServiceType.priceType === "fixed" && (
+                                                <div>
+                                                    <Label htmlFor="service-type-price-fixed" className="sr-only">Fixed price</Label>
+                                                    <div className="relative">
+                                                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                        <Input
+                                                            id="service-type-price-fixed"
+                                                            type="number"
+                                                            step="0.01"
+                                                            min="0"
+                                                            placeholder="155.00"
+                                                            value={newServiceType.priceFixed}
+                                                            onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
+                                                            className="pl-7"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+                                            
+                                            {newServiceType.priceType === "range" && (
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex-1">
+                                                        <Label htmlFor="service-type-price-min" className="sr-only">Minimum price</Label>
+                                                        <div className="relative">
+                                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                            <Input
+                                                                id="service-type-price-min"
+                                                                type="number"
+                                                                step="0.01"
+                                                                min="0"
+                                                                placeholder="100.00"
+                                                                value={newServiceType.priceMin}
+                                                                onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
+                                                                className="pl-7"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <span className="text-sm text-gray-500 dark:text-gray-400">to</span>
+                                                    <div className="flex-1">
+                                                        <Label htmlFor="service-type-price-max" className="sr-only">Maximum price</Label>
+                                                        <div className="relative">
+                                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 dark:text-gray-400">$</span>
+                                                            <Input
+                                                                id="service-type-price-max"
+                                                                type="number"
+                                                                step="0.01"
+                                                                min="0"
+                                                                placeholder="200.00"
+                                                                value={newServiceType.priceMax}
+                                                                onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
+                                                                className="pl-7"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
-                                </div>
-                            </div>
+                                    </div>
+                                )
+                            })()}
                         </div>
 
                         <div>
