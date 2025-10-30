@@ -1907,7 +1907,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     placeholder="155.00"
                                                     value={newCategory.priceFixed}
                                                     onChange={(e) => setNewCategory(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                                    className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                    className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                 />
                                             </div>
                                         </div>
@@ -1931,7 +1931,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             placeholder="100.00"
                                                             value={newCategory.priceMin}
                                                             onChange={(e) => setNewCategory(prev => ({ ...prev, priceMin: e.target.value }))}
-                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                         />
                                                     </div>
                                                 </div>
@@ -1949,7 +1949,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             placeholder="200.00"
                                                             value={newCategory.priceMax}
                                                             onChange={(e) => setNewCategory(prev => ({ ...prev, priceMax: e.target.value }))}
-                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                         />
                                                     </div>
                                                 </div>
@@ -2150,7 +2150,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     placeholder="155.00"
                                                     value={newCategory.priceFixed}
                                                     onChange={(e) => setNewCategory(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                                    className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                    className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                 />
                                             </div>
                                         </div>
@@ -2174,7 +2174,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             placeholder="100.00"
                                                             value={newCategory.priceMin}
                                                             onChange={(e) => setNewCategory(prev => ({ ...prev, priceMin: e.target.value }))}
-                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                         />
                                                     </div>
                                                 </div>
@@ -2192,7 +2192,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             placeholder="200.00"
                                                             value={newCategory.priceMax}
                                                             onChange={(e) => setNewCategory(prev => ({ ...prev, priceMax: e.target.value }))}
-                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                         />
                                                     </div>
                                                 </div>
@@ -2480,7 +2480,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                         placeholder="155.00"
                                                                         value={newServiceType.priceFixed}
                                                                         onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                                                        className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                                        className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                                     />
                                                                 </div>
                                                             </div>
@@ -2502,7 +2502,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                                 placeholder="100.00"
                                                                                 value={newServiceType.priceMin}
                                                                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
-                                                                                className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                                                className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -2520,7 +2520,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                                 placeholder="200.00"
                                                                                 value={newServiceType.priceMax}
                                                                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
-                                                                                className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                                                className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -2585,7 +2585,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             placeholder="155.00"
                                                             value={newServiceType.priceFixed}
                                                             onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                                            className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                            className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                         />
                                                     </div>
                                                 </div>
@@ -2609,7 +2609,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                     placeholder="100.00"
                                                                     value={newServiceType.priceMin}
                                                                     onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
-                                                                    className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                                    className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                                 />
                                                             </div>
                                                         </div>
@@ -2627,7 +2627,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                     placeholder="200.00"
                                                                     value={newServiceType.priceMax}
                                                                     onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
-                                                                    className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                                    className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                                 />
                                                             </div>
                                                         </div>
@@ -3019,7 +3019,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     placeholder="155.00"
                                                     value={newServiceType.priceFixed}
                                                     onChange={(e) => setNewServiceType(prev => ({ ...prev, priceFixed: e.target.value }))}
-                                                    className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                    className="pl-12 h-12 text-lg font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                 />
                                             </div>
                                         </div>
@@ -3043,7 +3043,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             placeholder="100.00"
                                                             value={newServiceType.priceMin}
                                                             onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMin: e.target.value }))}
-                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                         />
                                                     </div>
                                                 </div>
@@ -3061,7 +3061,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             placeholder="200.00"
                                                             value={newServiceType.priceMax}
                                                             onChange={(e) => setNewServiceType(prev => ({ ...prev, priceMax: e.target.value }))}
-                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 dark:focus:border-blue-500 transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-600"
+                                                            className="pl-12 h-11 text-base font-semibold bg-white dark:bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500/50 transition-all shadow-sm"
                                                         />
                                                     </div>
                                                 </div>
