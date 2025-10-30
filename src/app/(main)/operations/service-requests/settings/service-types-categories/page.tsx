@@ -2465,7 +2465,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     </RadioGroup>
                                                     
                                                     <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
-                                                        {newServiceType.priceType === "fixed" && (
+                                                        {(newServiceType.priceType as string) === "fixed" ? (
                                                             <div className="space-y-3">
                                                                 <Label htmlFor="service-type-price-fixed" className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Amount</Label>
                                                                 <div className="relative group">
@@ -2484,9 +2484,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                     />
                                                                 </div>
                                                             </div>
-                                                        )}
-                                                        
-                                                        {newServiceType.priceType === "range" && (
+                                                        ) : (newServiceType.priceType as string) === "range" ? (
                                                             <div className="space-y-4">
                                                                 <Label className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Price range</Label>
                                                                 <div className="grid grid-cols-2 gap-4">
@@ -2528,7 +2526,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        )}
+                                                        ) : null}
                                                     </div>
                                                 </div>
                                             </div>
