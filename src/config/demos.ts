@@ -58,6 +58,7 @@ export type DemoConfig = {
   mapLocation: {
     city: string
     state: string
+    address?: string
     coordinates?: {
       lat: number
       lng: number
@@ -166,11 +167,12 @@ export const demoConfigs: Record<DemoType, DemoConfig> = {
       },
     ],
     mapLocation: {
-      city: "Boston",
-      state: "MA",
+      city: "Oakbrook Terrace",
+      state: "IL",
+      address: "1 Tower Ln, Oakbrook Terrace, IL 60181",
       coordinates: {
-        lat: 42.3601,
-        lng: -71.0589,
+        lat: 41.8486,
+        lng: -87.9828,
       },
     },
   },
@@ -262,11 +264,12 @@ export const demoConfigs: Record<DemoType, DemoConfig> = {
       },
     ],
     mapLocation: {
-      city: "Chicago",
+      city: "Oakbrook Terrace",
       state: "IL",
+      address: "1 Tower Ln, Oakbrook Terrace, IL 60181",
       coordinates: {
-        lat: 41.8781,
-        lng: -87.6298,
+        lat: 41.8486,
+        lng: -87.9828,
       },
     },
   },
