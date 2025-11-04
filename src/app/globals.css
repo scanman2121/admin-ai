@@ -41,6 +41,20 @@
     body {
         color: #2D3338;
     }
+
+    /* Demo-specific theme overrides */
+    html[data-demo="hiffman"] {
+        --primary: 154 47% 24%;
+        --primary-foreground: 0 0% 98%;
+        --ring: 154 47% 24%;
+    }
+
+    html[data-demo="hiffman"].dark {
+        --primary: 154 47% 18%;
+        --primary-foreground: 0 0% 98%;
+        --ring: 154 47% 18%;
+    }
+
   .dark {
         --background: 0 0% 3.9%;
         --foreground: 0 0% 98%;

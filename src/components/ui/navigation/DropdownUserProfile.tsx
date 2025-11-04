@@ -8,6 +8,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/Dropdown"
 import { useView } from "@/contexts/ViewContext"
+import { useDemo } from "@/contexts/DemoContext"
+import { demoConfigs } from "@/config/demos"
 import {
     LogOut,
     Settings,
@@ -25,6 +27,7 @@ export function DropdownUserProfile({
   align = "start",
 }: DropdownUserProfileProps) {
   const { view, setView } = useView()
+  const { demo, setDemo } = useDemo()
   const router = useRouter()
 
   const handleViewChange = (newView: "landlord" | "tenant") => {
@@ -63,6 +66,28 @@ export function DropdownUserProfile({
               <Settings className="size-4 text-gray-500" />
               <span className="text-sm">Manage my account</span>
             </DropdownMenuItem>
+          </div>
+
+          {/* Demo Selection Section */}
+          <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+            <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">
+              Demo
+            </div>
+            <div className="space-y-2">
+              {Object.values(demoConfigs).map((demoConfig) => (
+                <label key={demoConfig.id} className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="demo"
+                    value={demoConfig.id}
+                    checked={demo === demoConfig.id}
+                    onChange={() => setDemo(demoConfig.id)}
+                    className="w-4 h-4 text-primary border-gray-300 focus:ring-primary dark:border-gray-600"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">{demoConfig.name}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
           {/* Change View Section */}

@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/ui/navigation/Sidebar"
 import { TenantSidebar } from "@/components/ui/navigation/TenantSidebar"
 import { SidebarToggle } from "@/components/ui/navigation/SidebarToggle"
 import { ViewProvider, useView } from "@/contexts/ViewContext"
+import { DemoProvider } from "@/contexts/DemoContext"
 import { cn } from "@/lib/utils"
 import { createContext, useContext, useEffect, useState } from "react"
 
@@ -85,8 +86,10 @@ export default function MainLayout({
   children: React.ReactNode
 }) {
   return (
-    <ViewProvider>
-      <MainLayoutContent>{children}</MainLayoutContent>
-    </ViewProvider>
+    <DemoProvider>
+      <ViewProvider>
+        <MainLayoutContent>{children}</MainLayoutContent>
+      </ViewProvider>
+    </DemoProvider>
   )
 }

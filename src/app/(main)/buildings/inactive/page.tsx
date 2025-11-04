@@ -6,9 +6,9 @@ import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation
 import { RiAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 import { buildingsColumns } from "../columns"
-import { data as allBuildingsData } from "../data"
+import { useBuildingsData } from "../data"
 
 // Define tabs for the Buildings page
 const tabs = [
@@ -19,13 +19,12 @@ const tabs = [
 
 export default function BuildingsInactive() {
     const pathname = usePathname()
-    const [data, setData] = useState<typeof allBuildingsData>([])
+    const allBuildingsData = useBuildingsData()
 
     // Filter for inactive buildings only
-    useEffect(() => {
-        const inactiveBuildings = allBuildingsData.filter(building => building.status === "Inactive")
-        setData(inactiveBuildings)
-    }, [])
+    const data = useMemo(() => {
+        return allBuildingsData.filter(building => building.status === "Inactive")
+    }, [allBuildingsData])
 
     return (
         <div className="flex flex-col gap-4 w-full">

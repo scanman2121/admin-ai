@@ -1,6 +1,28 @@
+"use client"
+
 import { cn } from "@/lib/utils"
+import { useDemo } from "@/contexts/DemoContext"
+import { getDemoConfig } from "@/config/demos"
+import Image from "next/image"
 
 export function HqOLogo({ className }: { className?: string }) {
+    const { demo } = useDemo()
+    const demoConfig = getDemoConfig(demo)
+    
+    // If logo is an image, render it
+    if (demoConfig.logo.type === "image" && demoConfig.logo.imageUrl) {
+        return (
+            <Image
+                src={demoConfig.logo.imageUrl}
+                alt={demoConfig.logo.alt}
+                width={84}
+                height={40}
+                className={cn("h-6 w-auto", className)}
+            />
+        )
+    }
+    
+    // Default HqO SVG logo for generic demo
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"

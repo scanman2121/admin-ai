@@ -1,3 +1,15 @@
+"use client"
+
+import { useDemo } from "@/contexts/DemoContext"
+import { getDemoConfig } from "@/config/demos"
+
+export function useBuildingsData() {
+  const { demo } = useDemo()
+  const demoConfig = getDemoConfig(demo)
+  return demoConfig.buildings
+}
+
+// Export default data for backwards compatibility (generic demo)
 export const data = [
   {
     id: "1",

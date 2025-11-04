@@ -9,7 +9,7 @@ import { RiAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { buildingsColumns } from "./columns"
-import { data } from "./data"
+import { useBuildingsData } from "./data"
 
 // Define tabs for the Buildings page
 const tabs = [
@@ -22,6 +22,7 @@ export default function Buildings() {
     const pathname = usePathname()
     const router = useRouter()
     const insights = getPageInsights("buildings")
+    const data = useBuildingsData()
 
     return (
         <div className="flex h-full w-full flex-col space-y-8">

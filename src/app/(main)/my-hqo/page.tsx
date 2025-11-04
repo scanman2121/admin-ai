@@ -2,14 +2,19 @@
 
 import { RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMegaphoneLine, RiShoppingBag3Line } from "@remixicon/react";
 import { Badge, Button, Card, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@tremor/react";
+import { useDemo } from "@/contexts/DemoContext";
+import { getDemoConfig } from "@/config/demos";
 
 
 export default function MyHqO() {
+  const { demo } = useDemo();
+  const demoConfig = getDemoConfig(demo);
+  const { homepage } = demoConfig;
 
   return (
     <div className="space-y-6">
       <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-        Welcome back, Ellie
+        {homepage.welcomeMessage}, {homepage.userName}
       </h1>
 
 
@@ -170,38 +175,48 @@ export default function MyHqO() {
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-start gap-4 p-4 rounded-lg border border-gray-100 dark:border-gray-800">
-              <div className="flex flex-col items-center">
-                <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">JUN</div>
-                <div className="text-xl font-semibold text-gray-900 dark:text-gray-50">12</div>
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-medium text-gray-900 dark:text-gray-50">Tenant Appreciation Party</h3>
-                  <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
-                    Scheduled
-                  </Badge>
-                </div>
-                <p className="text-sm text-gray-500">4–7 PM</p>
-                <div className="mt-2 flex items-center gap-4 text-sm text-gray-600">
-                  <span className="font-medium">687 registered</span>
-                  <span>Unlimited capacity</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center py-8 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
-              <div className="text-center">
-                <div className="size-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <RiCalendarEventLine className="size-4 text-gray-400" />
-                </div>
-                <Button variant="light" className="text-gray-600 hover:text-gray-900">
-                  Add event
-                </Button>
-                          </div>
-                        </div>
+            {homepage.content.events && homepage.content.events.length > 0 ? (
+              homepage.content.events.map((event, index) => {
+                const [month, day] = event.date.split(" ");
+                return (
+                  <div key={index} className="flex items-start gap-4 p-4 rounded-lg border border-gray-100 dark:border-gray-800">
+                    <div className="flex flex-col items-center">
+                      <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">{month}</div>
+                      <div className="text-xl font-semibold text-gray-900 dark:text-gray-50">{day}</div>
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-medium text-gray-900 dark:text-gray-50">{event.title}</h3>
+                        <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                          {event.status}
+                        </Badge>
                       </div>
+                      <p className="text-sm text-gray-500">{event.time}</p>
+                      {event.registered !== undefined && (
+                        <div className="mt-2 flex items-center gap-4 text-sm text-gray-600">
+                          <span className="font-medium">{event.registered} registered</span>
+                          {event.capacity && <span>{event.capacity}</span>}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="flex items-center justify-center py-8 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
+                <div className="text-center">
+                  <div className="size-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <RiCalendarEventLine className="size-4 text-gray-400" />
+                  </div>
+                  <Button variant="light" className="text-gray-600 hover:text-gray-900">
+                    Add event
+                  </Button>
+                </div>
+              </div>
+            )}
+
+          </div>
         </Card>
 
         {/* Outreach Card */}
@@ -231,42 +246,47 @@ export default function MyHqO() {
             <TabPanels>
               <TabPanel>
                 <div className="space-y-4">
-                  <div className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 dark:border-gray-800">
-                    <div className="size-8 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
-                      <RiInformationLine className="size-4 text-primary dark:text-primary" />
-                    </div>
-                      <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <h4 className="font-medium text-gray-900 dark:text-gray-50">
-                          Drag Me Downtown ICA San Francisco
-                        </h4>
-                        <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
-                          Scheduled
+                  {homepage.content.communications && homepage.content.communications.length > 0 ? (
+                    homepage.content.communications.map((comm, index) => (
+                      <div key={index} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 dark:border-gray-800">
+                        <div className="size-8 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                          <RiInformationLine className="size-4 text-primary dark:text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <h4 className="font-medium text-gray-900 dark:text-gray-50">
+                              {comm.title}
+                            </h4>
+                            <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                              {comm.status}
                             </Badge>
                           </div>
-                      <div className="flex items-center gap-1 text-xs text-gray-500">
-                        <span>Scheduled for 06/16/2025, 12:00 PM</span>
-                        <span>•</span>
-                        <span>Push, In app</span>
-                        <span className="flex items-center gap-1 ml-2">
-                          <RiCalendarEventLine className="size-3" />
-                          4 days
-                              </span>
-                      </div>
-                    </div>
-            </div>
-
-                  <div className="flex items-center justify-center py-8 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
-                    <div className="text-center">
-                      <div className="size-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <RiMegaphoneLine className="size-4 text-gray-400" />
-                      </div>
-                      <Button variant="light" className="text-gray-600 hover:text-gray-900">
-                        Add communications
-                </Button>
-                    </div>
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <span>Scheduled for {comm.scheduledDate}, {comm.scheduledTime}</span>
+                            <span>•</span>
+                            <span>{comm.channels.join(", ")}</span>
+                            <span className="flex items-center gap-1 ml-2">
+                              <RiCalendarEventLine className="size-3" />
+                              {comm.daysUntil} {comm.daysUntil === 1 ? "day" : "days"}
+                            </span>
                           </div>
                         </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="flex items-center justify-center py-8 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
+                      <div className="text-center">
+                        <div className="size-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-2">
+                          <RiMegaphoneLine className="size-4 text-gray-400" />
+                        </div>
+                        <Button variant="light" className="text-gray-600 hover:text-gray-900">
+                          Add communications
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                </div>
               </TabPanel>
               <TabPanel>
                 <div className="text-center py-8">
@@ -280,15 +300,30 @@ export default function MyHqO() {
                       </div>
               </TabPanel>
               <TabPanel>
-                <div className="text-center py-8">
-                  <div className="size-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <RiShoppingBag3Line className="size-4 text-gray-400" />
+                {homepage.content.discover && homepage.content.discover.items && homepage.content.discover.items.length > 0 ? (
+                  <div className="space-y-4">
+                    {homepage.content.discover.items.map((item, index) => (
+                      <div key={index} className="p-4 rounded-lg border border-gray-100 dark:border-gray-800">
+                        <h4 className="font-medium text-gray-900 dark:text-gray-50 mb-1">
+                          {item.title}
+                        </h4>
+                        <p className="text-sm text-gray-500">{item.description}</p>
+                      </div>
+                    ))}
                   </div>
-                  <p className="text-sm text-gray-500 mb-4">Trending content will appear here</p>
-                  <Button variant="light" className="text-gray-600 hover:text-gray-900">
-                    View content
-              </Button>
-            </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="size-8 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <RiShoppingBag3Line className="size-4 text-gray-400" />
+                    </div>
+                    <p className="text-sm text-gray-500 mb-4">
+                      {homepage.content.discover?.description || "Trending content will appear here"}
+                    </p>
+                    <Button variant="light" className="text-gray-600 hover:text-gray-900">
+                      View content
+                    </Button>
+                  </div>
+                )}
               </TabPanel>
             </TabPanels>
           </TabGroup>
