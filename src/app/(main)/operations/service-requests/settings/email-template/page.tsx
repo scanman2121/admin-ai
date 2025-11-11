@@ -18,7 +18,7 @@ const tabs = [
     { name: "Service types", href: "/operations/service-requests/settings/service-types-categories" },
     { name: "Teams", href: "/operations/service-requests/settings/teams" },
     { name: "Tenant users", href: "/operations/service-requests/settings/users" },
-    { name: "Email template", href: "/operations/service-requests/settings/email-template" },
+    { name: "Email templates", href: "/operations/service-requests/settings/email-template" },
 ]
 
 export default function ServiceRequestsEmailTemplate() {
