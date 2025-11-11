@@ -310,7 +310,7 @@ export default function ServiceRequestsEmailTemplate() {
 
                             {/* Email Body */}
                             <p className="text-sm text-gray-700 dark:text-gray-300">
-                                This section will display a customized message, including resource name and details, based on the type of email being sent.
+                                This section will display service request information appropriate with a status update, cancellation, completion, or new messages
                             </p>
 
                             {/* Link Text */}
