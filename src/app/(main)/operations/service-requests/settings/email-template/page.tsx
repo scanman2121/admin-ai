@@ -334,18 +334,15 @@ export default function ServiceRequestsEmailTemplate() {
                             </div>
 
                             {/* Footer */}
-                            <div className="pt-6 mt-6 border-t border-gray-200 dark:border-gray-800 space-y-2">
+                            <div className="pt-6 mt-6 bg-gray-100 dark:bg-gray-800 -mx-6 -mb-6 px-6 py-4 space-y-2 text-center">
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    © 2025 HqO Park All rights reserved.
+                                    © 2025 Landlord name here. All rights reserved.
                                 </p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
                                     If you have any questions please contact us
                                 </p>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">
                                     {emailSettings.sendFrom}
-                                </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                    Boston, MA 02111, USA
                                 </p>
                             </div>
                         </div>
