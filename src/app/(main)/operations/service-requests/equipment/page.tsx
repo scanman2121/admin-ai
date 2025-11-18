@@ -9,7 +9,7 @@ import { equipment, type Equipment } from "@/data/equipment"
 import { getRelativeTime } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { QrCode, Clock, Calendar } from "lucide-react"
+import { QrCode, Clock, Calendar, AlertTriangle } from "lucide-react"
 import { ColumnDef } from "@tanstack/react-table"
 
 const getHealthStatusBadge = (status: Equipment["healthStatus"]) => {
