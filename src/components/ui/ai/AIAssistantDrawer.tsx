@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/Button"
 import { cn } from "@/lib/utils"
+import { findMatchingAnswer } from "@/data/buildingQALibrary"
 import {
     RiArrowDownSLine,
     RiBarChartBoxLine,
@@ -186,19 +187,22 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
         e.preventDefault()
         if (!input.trim()) return
 
+        const userQuestion = input.trim()
+        
         // Add user message
-        const userMessage = { role: 'user' as const, content: input.trim() }
+        const userMessage = { role: 'user' as const, content: userQuestion }
         setMessages(prev => [...prev, userMessage])
         setInput('')
 
-        // Simulate AI response after a short delay
+        // Find matching answer from Q&A library
         setTimeout(() => {
+            const answer = findMatchingAnswer(userQuestion)
             const aiResponse = {
                 role: 'assistant' as const,
-                content: `I received your message: "${input.trim()}". This is a simulated response as this is just a UI demo.`
+                content: answer || "I'm here to help with building-related questions! Try asking about building hours, amenities, parking, events, work orders, or wayfinding."
             }
             setMessages(prev => [...prev, aiResponse])
-        }, 1000)
+        }, 800)
     }
 
     const handleSuggestionClick = (suggestion: SuggestionCard) => {
