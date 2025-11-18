@@ -1,10 +1,18 @@
 "use client"
 
 import { Button } from "@/components/Button"
+import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { getPageInsights } from "@/lib/insights"
 import { RiSettings3Line } from "@remixicon/react"
+import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+
+const tabs = [
+    { name: "Requests", href: "/operations/service-requests" },
+    { name: "Equipment", href: "/operations/service-requests/equipment" },
+    { name: "Calendar", href: "/operations/service-requests/calendar" },
+] as const
 
 export default function ServiceRequestsLayout({
     children,
@@ -18,12 +26,14 @@ export default function ServiceRequestsLayout({
     // Check if we're on a service request detail page (e.g., /operations/service-requests/[id])
     const isServiceRequestDetailPage = pathname.match(/^\/operations\/service-requests\/[^\/]+$/) && pathname !== "/operations/service-requests"
     
-    // Check if we're on a service request settings page or new page
+    // Check if we're on a service request settings page, new page, equipment detail, or schedule page
     const isServiceRequestSettingsPage = pathname.startsWith("/operations/service-requests/settings")
     const isNewServiceRequestPage = pathname === "/operations/service-requests/new"
+    const isEquipmentDetailPage = pathname.match(/^\/operations\/service-requests\/equipment\/[^\/]+$/) && !pathname.includes("/schedule")
+    const isSchedulePage = pathname === "/operations/service-requests/equipment/schedule"
 
-    // If on service request detail page, settings page, or new page, render without header and tabs
-    if (isServiceRequestDetailPage || isServiceRequestSettingsPage || isNewServiceRequestPage) {
+    // If on service request detail page, settings page, new page, equipment detail, or schedule page, render without header and tabs
+    if (isServiceRequestDetailPage || isServiceRequestSettingsPage || isNewServiceRequestPage || isEquipmentDetailPage || isSchedulePage) {
         return <div className="flex h-full w-full flex-col">{children}</div>
     }
 
@@ -49,6 +59,18 @@ export default function ServiceRequestsLayout({
             </div>
 
             <AIInsights insights={insights} className="mt-6" />
+
+            <TabNavigation>
+                {tabs.map((tab) => (
+                    <TabNavigationLink
+                        key={tab.name}
+                        asChild
+                        active={pathname === tab.href || (tab.href === "/operations/service-requests" && pathname === "/operations/service-requests")}
+                    >
+                        <Link href={tab.href}>{tab.name}</Link>
+                    </TabNavigationLink>
+                ))}
+            </TabNavigation>
 
             <div className="flex flex-col gap-4 w-full">
                 <div className="pt-6">{children}</div>
