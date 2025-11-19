@@ -195,9 +195,9 @@ export function AssignedPersonnelCard({
 
   return (
     <Card>
-      <div>
+      <div className="p-3">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
-          Assigned personnel
+          Assigned Personnel
         </h3>
         
         {/* Search Input */}
@@ -275,21 +275,17 @@ export function AssignedPersonnelCard({
               {assignedPersonnel.map((assignment) => (
                 <div
                   key={assignment.id}
-                  className={`p-3 rounded-lg ${
-                    assignment.type === 'team' 
-                      ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' 
-                      : 'bg-gray-50 dark:bg-gray-800'
-                  }`}
+                  className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20"
                 >
                   {assignment.type === 'team' ? (
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <div>
-                          <div className="flex items-center gap-2">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
                             <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
                               {assignment.name}
                             </p>
-                            <div className="text-xs text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-800/50 px-2 py-0.5 rounded">
+                            <div className="text-xs text-blue-600 dark:text-blue-400 bg-blue-600/10 dark:bg-blue-600/20 px-2 py-0.5 rounded font-medium">
                               Team
                             </div>
                           </div>
@@ -308,15 +304,15 @@ export function AssignedPersonnelCard({
                       {/* Team Members */}
                       <div className="space-y-2">
                         {assignment.members.map((member) => (
-                          <div key={member.id} className="flex items-center justify-between gap-3 p-2 bg-white/50 dark:bg-gray-800/50 rounded-lg">
+                          <div key={member.id} className="flex items-center justify-between gap-3 p-2.5 bg-white/60 dark:bg-blue-900/30 rounded-lg">
                             <div className="flex items-center gap-3 flex-1">
                               <Avatar className="size-8">
-                                <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                                <AvatarFallback className="bg-blue-600 text-white text-xs font-medium">
                                   {member.initials}
                                 </AvatarFallback>
                               </Avatar>
                               <div className="flex-1">
-                                <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
                                   {member.name}
                                 </p>
                                 <p className="text-xs text-blue-700 dark:text-blue-300">
@@ -328,7 +324,7 @@ export function AssignedPersonnelCard({
                               variant={ownerId === member.id ? "outline" : "outline"}
                               size="sm"
                               onClick={() => handleToggleOwner(member.id)}
-                              className={`h-7 text-xs whitespace-nowrap ${
+                              className={`h-7 text-xs whitespace-nowrap shadow-none ${
                                 ownerId === member.id
                                   ? 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100'
                                   : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
@@ -352,15 +348,15 @@ export function AssignedPersonnelCard({
                       <div className="flex items-center gap-3">
                         <Avatar className="size-10">
                           <AvatarImage src={assignment.avatar} alt={assignment.name} />
-                          <AvatarFallback className="bg-blue-100 text-blue-600 text-sm">
+                          <AvatarFallback className="bg-blue-600 text-white text-sm font-medium">
                             {assignment.initials}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                          <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
                             {assignment.name}
                           </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                          <p className="text-xs text-blue-600 dark:text-blue-400">
                             {assignment.email}
                           </p>
                         </div>
@@ -371,7 +367,7 @@ export function AssignedPersonnelCard({
                             variant={ownerId === assignment.id ? "outline" : "outline"}
                             size="sm"
                             onClick={() => handleToggleOwner(assignment.id)}
-                            className={`h-7 text-xs ${
+                            className={`h-7 text-xs shadow-none ${
                               ownerId === assignment.id
                                 ? 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100'
                                 : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
@@ -389,9 +385,9 @@ export function AssignedPersonnelCard({
                         )}
                         <button
                           onClick={() => handleRemoveAssignment(assignment.id)}
-                          className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                          className="p-1 hover:bg-blue-100 dark:hover:bg-blue-800/50 rounded transition-colors"
                         >
-                          <X className="h-4 w-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
+                          <X className="h-4 w-4 text-blue-400 hover:text-blue-600 dark:hover:text-blue-300" />
                         </button>
                       </div>
                     </div>
