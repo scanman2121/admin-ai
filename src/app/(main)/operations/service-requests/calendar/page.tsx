@@ -1,7 +1,6 @@
 "use client"
 
 import { Badge } from "@/components/Badge"
-import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Calendar } from "@/components/Calendar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
