@@ -44,7 +44,7 @@ const getStatusBadge = (status: Equipment["status"]) => {
     }
 }
 
-const createEquipmentColumns = (onRowClick: (equipment: Equipment) => void): ColumnDef<Equipment>[] => [
+const createEquipmentColumns = (): ColumnDef<Equipment>[] => [
     {
         id: "select",
         header: ({ table }) => (
@@ -284,7 +284,7 @@ export default function EquipmentPage() {
         router.push(`/operations/service-requests/equipment/${equipment.id}`)
     }
 
-    const equipmentColumns = createEquipmentColumns(handleRowClick)
+    const equipmentColumns = createEquipmentColumns()
 
     return (
         <div>
