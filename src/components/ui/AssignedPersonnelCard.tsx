@@ -3,7 +3,8 @@
 import { Card } from "@/components/Card"
 import { Input } from "@/components/Input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Search, Users, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Check, Search, Users, X } from "lucide-react"
 import { useState } from "react"
 
 interface Personnel {
@@ -39,6 +40,9 @@ interface AssignedPersonnelCardProps {
   assignedPersonnel?: Assignment[]
   onAssignPersonnel?: (assignment: Assignment) => void
   onRemovePersonnel?: (assignmentId: string) => void
+  ownerId?: string | null
+  onSetOwner?: (ownerId: string) => void
+  onUnsetOwner?: () => void
 }
 
 // Mock search results - in a real app, this would come from an API
@@ -137,7 +141,10 @@ const mockTeamResults: Team[] = [
 export function AssignedPersonnelCard({ 
   assignedPersonnel = [], 
   onAssignPersonnel,
-  onRemovePersonnel 
+  onRemovePersonnel,
+  ownerId,
+  onSetOwner,
+  onUnsetOwner
 }: AssignedPersonnelCardProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [showSearchResults, setShowSearchResults] = useState(false)
@@ -176,6 +183,14 @@ export function AssignedPersonnelCard({
 
   const handleRemoveAssignment = (assignmentId: string) => {
     onRemovePersonnel?.(assignmentId)
+  }
+
+  const handleToggleOwner = (userId: string) => {
+    if (ownerId === userId) {
+      onUnsetOwner?.()
+    } else {
+      onSetOwner?.(userId)
+    }
   }
 
   return (
@@ -293,20 +308,41 @@ export function AssignedPersonnelCard({
                       {/* Team Members */}
                       <div className="space-y-2">
                         {assignment.members.map((member) => (
-                          <div key={member.id} className="flex items-center gap-3 p-2 bg-white/50 dark:bg-gray-800/50 rounded-lg">
-                            <Avatar className="size-8">
-                              <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
-                                {member.initials}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1">
-                              <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                                {member.name}
-                              </p>
-                              <p className="text-xs text-blue-700 dark:text-blue-300">
-                                {member.role}
-                              </p>
+                          <div key={member.id} className="flex items-center justify-between gap-3 p-2 bg-white/50 dark:bg-gray-800/50 rounded-lg">
+                            <div className="flex items-center gap-3 flex-1">
+                              <Avatar className="size-8">
+                                <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                                  {member.initials}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                                  {member.name}
+                                </p>
+                                <p className="text-xs text-blue-700 dark:text-blue-300">
+                                  {member.role}
+                                </p>
+                              </div>
                             </div>
+                            <Button
+                              variant={ownerId === member.id ? "outline" : "outline"}
+                              size="sm"
+                              onClick={() => handleToggleOwner(member.id)}
+                              className={`h-7 text-xs whitespace-nowrap ${
+                                ownerId === member.id
+                                  ? 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100'
+                                  : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+                              }`}
+                            >
+                              {ownerId === member.id ? (
+                                <>
+                                  <Check className="h-3 w-3 mr-1" />
+                                  Owner
+                                </>
+                              ) : (
+                                'Assign owner'
+                              )}
+                            </Button>
                           </div>
                         ))}
                       </div>
@@ -329,12 +365,35 @@ export function AssignedPersonnelCard({
                           </p>
                         </div>
                       </div>
-                      <button
-                        onClick={() => handleRemoveAssignment(assignment.id)}
-                        className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
-                      >
-                        <X className="h-4 w-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
-                      </button>
+                      <div className="flex items-center gap-2">
+                        {assignedPersonnel.length > 1 && (
+                          <Button
+                            variant={ownerId === assignment.id ? "outline" : "outline"}
+                            size="sm"
+                            onClick={() => handleToggleOwner(assignment.id)}
+                            className={`h-7 text-xs ${
+                              ownerId === assignment.id
+                                ? 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100'
+                                : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+                            }`}
+                          >
+                            {ownerId === assignment.id ? (
+                              <>
+                                <Check className="h-3 w-3 mr-1" />
+                                Owner
+                              </>
+                            ) : (
+                              'Assign owner'
+                            )}
+                          </Button>
+                        )}
+                        <button
+                          onClick={() => handleRemoveAssignment(assignment.id)}
+                          className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                        >
+                          <X className="h-4 w-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>

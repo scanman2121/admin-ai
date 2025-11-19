@@ -154,6 +154,8 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
     
     const [approver, setApprover] = useState(serviceRequestDetail?.approver || null)
     
+    const [ownerId, setOwnerId] = useState<string | null>(null)
+    
     // Status management
     const [currentStatus, setCurrentStatus] = useState(serviceRequestDetail?.status || 'New')
     
@@ -209,6 +211,16 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
         setCurrentStatus(newStatus)
         // Here you would typically make an API call to update the status
         console.log(`Status updated to: ${newStatus}`)
+    }
+
+    const handleSetOwner = (userId: string) => {
+        setOwnerId(userId)
+        console.log(`Owner set to: ${userId}`)
+    }
+
+    const handleUnsetOwner = () => {
+        setOwnerId(null)
+        console.log('Owner unset')
     }
 
     return (
@@ -478,6 +490,9 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                         assignedPersonnel={assignedPersonnel}
                         onAssignPersonnel={handleAssignPersonnel}
                         onRemovePersonnel={handleRemovePersonnel}
+                        ownerId={ownerId}
+                        onSetOwner={handleSetOwner}
+                        onUnsetOwner={handleUnsetOwner}
                     />
 
                     {/* Case Files */}
