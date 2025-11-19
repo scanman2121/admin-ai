@@ -24,12 +24,19 @@ export default function ServiceRequestsLayout({
     const insights = getPageInsights("operations")
 
     // Check if we're on a service request detail page (e.g., /operations/service-requests/[id])
-    const isServiceRequestDetailPage = pathname.match(/^\/operations\/service-requests\/[^\/]+$/) && pathname !== "/operations/service-requests"
+    // But exclude the base paths that should show tabs
+    const isServiceRequestDetailPage = pathname.match(/^\/operations\/service-requests\/[^\/]+$/) && 
+        pathname !== "/operations/service-requests" &&
+        pathname !== "/operations/service-requests/equipment" &&
+        pathname !== "/operations/service-requests/calendar"
     
     // Check if we're on a service request settings page, new page, equipment detail, or schedule page
     const isServiceRequestSettingsPage = pathname.startsWith("/operations/service-requests/settings")
     const isNewServiceRequestPage = pathname === "/operations/service-requests/new"
-    const isEquipmentDetailPage = pathname.match(/^\/operations\/service-requests\/equipment\/[^\/]+$/) && !pathname.includes("/schedule")
+    // Equipment detail page: /equipment/[id] but not the base /equipment or /equipment/schedule
+    const isEquipmentDetailPage = pathname.match(/^\/operations\/service-requests\/equipment\/[^\/]+$/) && 
+        pathname !== "/operations/service-requests/equipment" &&
+        !pathname.includes("/schedule")
     const isSchedulePage = pathname === "/operations/service-requests/equipment/schedule"
 
     // If on service request detail page, settings page, new page, equipment detail, or schedule page, render without header and tabs
