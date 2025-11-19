@@ -2,13 +2,13 @@
 
 import { Badge } from "@/components/Badge"
 import { Card } from "@/components/Card"
-import { Calendar } from "@/components/Calendar"
+import { BigCalendar } from "@/components/ui/big-calendar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
 import { serviceRequests } from "@/data/data"
 import { equipment } from "@/data/equipment"
 import { useState, useMemo } from "react"
-import { format, isSameDay, parseISO } from "date-fns"
-import { Wrench, Calendar as CalendarIcon } from "lucide-react"
+import { parseISO, addHours } from "date-fns"
+import { useRouter } from "next/navigation"
 
 interface CalendarEvent {
     id: string
@@ -23,9 +23,8 @@ interface CalendarEvent {
 }
 
 export default function CalendarPage() {
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
+    const router = useRouter()
     const [filterType, setFilterType] = useState<"all" | "service-request" | "maintenance">("all")
-    const [filterBuilding, setFilterBuilding] = useState<string>("all")
     const [filterStatus, setFilterStatus] = useState<string>("all")
 
     // Generate maintenance events from equipment
@@ -98,23 +97,21 @@ export default function CalendarPage() {
     const filteredEvents = useMemo(() => {
         return allEvents.filter(event => {
             if (filterType !== "all" && event.type !== filterType) return false
-            if (filterBuilding !== "all" && event.building !== filterBuilding) return false
             if (filterStatus !== "all" && event.status !== filterStatus) return false
             return true
         })
-    }, [allEvents, filterType, filterBuilding, filterStatus])
+    }, [allEvents, filterType, filterStatus])
 
-    // Get events for selected date
-    const selectedDateEvents = useMemo(() => {
-        if (!selectedDate) return []
-        return filteredEvents.filter(event => isSameDay(event.date, selectedDate))
-    }, [filteredEvents, selectedDate])
-
-    // Get unique buildings for filter
-    const buildings = useMemo(() => {
-        const buildingSet = new Set(allEvents.map(e => e.building))
-        return Array.from(buildingSet).sort()
-    }, [allEvents])
+    // Convert to react-big-calendar format
+    const calendarEvents = useMemo(() => {
+        return filteredEvents.map(event => ({
+            id: event.id,
+            title: event.title,
+            start: event.date,
+            end: addHours(event.date, 1), // Default 1 hour duration
+            resource: event
+        }))
+    }, [filteredEvents])
 
     // Get unique statuses for filter
     const statuses = useMemo(() => {
@@ -122,49 +119,14 @@ export default function CalendarPage() {
         return Array.from(statusSet).sort()
     }, [allEvents])
 
-    // Mark dates with events
-    const modifiers = useMemo(() => {
-        const eventDates = filteredEvents.map(e => e.date)
-        return {
-            hasEvents: (date: Date) => eventDates.some(d => isSameDay(d, date))
-        }
-    }, [filteredEvents])
 
-    const modifiersClassNames = {
-        hasEvents: "bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100 font-semibold"
-    }
-
-    const getEventIcon = (event: CalendarEvent) => {
-        if (event.type === "maintenance") {
-            return <Wrench className="h-4 w-4" />
+    const handleSelectEvent = (event: any) => {
+        const calendarEvent = event.resource as CalendarEvent
+        if (calendarEvent.type === "maintenance" && calendarEvent.equipmentId) {
+            router.push(`/operations/service-requests/equipment/${calendarEvent.equipmentId}`)
+        } else if (calendarEvent.type === "service-request") {
+            router.push(`/operations/service-requests/${calendarEvent.id.replace("sr-", "")}`)
         }
-        return <CalendarIcon className="h-4 w-4" />
-    }
-
-    const getPriorityBadge = (priority?: "low" | "medium" | "high") => {
-        if (!priority) return null
-        switch (priority) {
-            case "high":
-                return <Badge variant="error">High</Badge>
-            case "medium":
-                return <Badge variant="warning">Medium</Badge>
-            case "low":
-                return <Badge variant="default">Low</Badge>
-        }
-    }
-
-    const getStatusBadge = (status: string) => {
-        const statusLower = status.toLowerCase()
-        if (statusLower === "completed") {
-            return <Badge variant="success">• Completed</Badge>
-        } else if (statusLower === "in progress") {
-            return <Badge variant="warning">• In Progress</Badge>
-        } else if (statusLower === "new") {
-            return <Badge variant="default">• New</Badge>
-        } else if (statusLower === "scheduled") {
-            return <Badge variant="default">• Scheduled</Badge>
-        }
-        return <Badge variant="default">• {status}</Badge>
     }
 
     return (
@@ -183,7 +145,7 @@ export default function CalendarPage() {
             {/* Filters */}
             <Card>
                 <div className="p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                                 Type
@@ -199,25 +161,6 @@ export default function CalendarPage() {
                                     <SelectItem value="all">All types</SelectItem>
                                     <SelectItem value="service-request">Service requests</SelectItem>
                                     <SelectItem value="maintenance">Maintenance</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div>
-                            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                                Building
-                            </label>
-                            <Select
-                                value={filterBuilding}
-                                onValueChange={setFilterBuilding}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select building" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">All buildings</SelectItem>
-                                    {buildings.map(building => (
-                                        <SelectItem key={building} value={building}>{building}</SelectItem>
-                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
@@ -249,64 +192,18 @@ export default function CalendarPage() {
                 <div className="lg:col-span-2">
                     <Card>
                         <div className="p-4">
-                            <Calendar
-                                mode="single"
-                                selected={selectedDate}
-                                onSelect={setSelectedDate}
-                                modifiers={modifiers}
-                                modifiersClassNames={modifiersClassNames}
-                                className="w-full"
+                            <BigCalendar
+                                events={calendarEvents}
+                                onSelectEvent={handleSelectEvent}
+                                defaultView="week"
                             />
                         </div>
                     </Card>
                 </div>
 
-                {/* Events for selected date */}
-                <div className="lg:col-span-1">
+                {/* Summary Stats */}
+                <div className="lg:col-span-1 space-y-4">
                     <Card>
-                        <div className="p-4">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
-                                {selectedDate ? format(selectedDate, "MMMM d, yyyy") : "Select a date"}
-                            </h3>
-                            
-                            {selectedDateEvents.length === 0 ? (
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    No events scheduled for this date
-                                </p>
-                            ) : (
-                                <div className="space-y-3">
-                                    {selectedDateEvents.map(event => (
-                                        <div
-                                            key={event.id}
-                                            className="p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                        >
-                                            <div className="flex items-start justify-between mb-2">
-                                                <div className="flex items-center gap-2">
-                                                    {getEventIcon(event)}
-                                                    <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                                                        {event.type === "maintenance" ? "Maintenance" : "Service Request"}
-                                                    </span>
-                                                </div>
-                                                {getPriorityBadge(event.priority)}
-                                            </div>
-                                            <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                                                {event.title}
-                                            </p>
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                    {event.building}
-                                                </span>
-                                                {getStatusBadge(event.status)}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </Card>
-
-                    {/* Summary Stats */}
-                    <Card className="mt-4">
                         <div className="p-4">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
                                 Summary
@@ -344,4 +241,3 @@ export default function CalendarPage() {
         </div>
     )
 }
-
