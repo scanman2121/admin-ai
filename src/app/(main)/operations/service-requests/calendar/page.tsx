@@ -1,6 +1,5 @@
 "use client"
 
-import { Badge } from "@/components/Badge"
 import { Card } from "@/components/Card"
 import { BigCalendar } from "@/components/ui/big-calendar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
