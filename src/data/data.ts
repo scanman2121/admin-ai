@@ -911,7 +911,7 @@ export const buildings: { value: string; label: string }[] = [
 ]
 
 // Generate realistic work orders using centralized user database
-const createWorkOrderFromUser = (user: any, request: string, issueType: string, status: string, description: string = "", assignee: string = "Unassigned", priority: string = "Medium") => {
+const createWorkOrderFromUser = (user: any, request: string, issueType: string, status: string, description: string = "", assignee: string = "Unassigned", priority: string = "Medium", owner: string = "-") => {
   const randomDaysAgo = Math.random() * 7;
   const createdDate = new Date(Date.now() - randomDaysAgo * 24 * 60 * 60 * 1000);
   
@@ -929,6 +929,7 @@ const createWorkOrderFromUser = (user: any, request: string, issueType: string, 
     building: user.buildings[0] || "Main Tower",
     floor: user.floorSuite.split(',')[0] || "Floor 1",
     assignee,
+    owner,
     status,
     requestor: `${user.name} - ${user.company}`,
     requestorDetails: {
@@ -985,7 +986,8 @@ export const serviceRequests = [
     "In Progress",
     "Research scientist Kevin Chen reported lost smartphone with mobile access credentials. Requires device deactivation and new device setup for HealthTech facilities.",
     "Security Team",
-    "High"
+    "High",
+    "David Wilson"
   ),
   createWorkOrderFromUser(
     rachelThompsonUser!,
@@ -1003,7 +1005,8 @@ export const serviceRequests = [
     "In Progress", 
     "Investment Analyst Marcus Rodriguez promoted to Senior Analyst. Requires elevated access to Global Finance Corp trading floor and executive areas.",
     "Security Team",
-    "Medium"
+    "Medium",
+    "Alex Chen"
   ),
   createWorkOrderFromUser(
     amandaKimUser!,
@@ -1056,7 +1059,8 @@ export const serviceRequests = [
     "In Progress",
     "Air conditioning not maintaining consistent temperature in server room",
     "Building Maintenance Team",
-    "High"
+    "High",
+    "John Smith"
   ),
   createWorkOrderFromUser(
     sarahUser!,

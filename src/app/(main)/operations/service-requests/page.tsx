@@ -146,6 +146,20 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         enableSorting: true,
     },
     {
+        accessorKey: "owner",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Owner" />
+        ),
+        cell: ({ row }: { row: any }) => {
+            const owner = row.getValue("owner") as string;
+            return <span className="text-gray-600 dark:text-gray-400">{owner}</span>;
+        },
+        meta: {
+            displayName: "Owner",
+        },
+        enableSorting: true,
+    },
+    {
         accessorKey: "lastUpdated",
         header: ({ column }: { column: any }) => (
             <DataTableColumnHeader column={column} title="Last updated" />
@@ -270,6 +284,7 @@ export default function ServiceRequests() {
             "Building",
             "Floor",
             "Assignee",
+            "Owner",
             "Last Updated",
             "Status",
             "Issue Type"
@@ -290,6 +305,7 @@ export default function ServiceRequests() {
                 row.building,
                 row.floor,
                 row.assignee,
+                row.owner || "-",
                 row.lastUpdated,
                 row.status,
                 row.issueType
