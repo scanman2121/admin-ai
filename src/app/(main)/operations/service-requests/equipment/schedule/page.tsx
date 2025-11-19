@@ -12,7 +12,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ChevronLeft, Calendar, Clock, Users, AlertCircle } from "lucide-react"
 import Link from "next/link"
-import { format, parseISO, addDays, addWeeks, addMonths, addQuarters, addYears } from "date-fns"
+import { format, parseISO } from "date-fns"
 
 interface MaintenanceSchedule {
     id: string
@@ -92,27 +92,6 @@ export default function MaintenanceSchedulePage() {
         estimatedDuration: 60,
         description: ""
     })
-
-    const calculateNextDueDate = (startDate: string, frequency: MaintenanceSchedule["frequency"], lastCompleted?: string): string => {
-        const baseDate = lastCompleted ? parseISO(lastCompleted) : parseISO(startDate)
-        
-        switch (frequency) {
-            case "daily":
-                return format(addDays(baseDate, 1), "yyyy-MM-dd")
-            case "weekly":
-                return format(addWeeks(baseDate, 1), "yyyy-MM-dd")
-            case "monthly":
-                return format(addMonths(baseDate, 1), "yyyy-MM-dd")
-            case "quarterly":
-                return format(addQuarters(baseDate, 1), "yyyy-MM-dd")
-            case "semi-annually":
-                return format(addMonths(baseDate, 6), "yyyy-MM-dd")
-            case "annually":
-                return format(addYears(baseDate, 1), "yyyy-MM-dd")
-            default:
-                return format(addMonths(baseDate, 1), "yyyy-MM-dd")
-        }
-    }
 
     const getFrequencyBadge = (frequency: MaintenanceSchedule["frequency"]) => {
         const colors: Record<MaintenanceSchedule["frequency"], "default" | "success" | "warning" | "error"> = {
