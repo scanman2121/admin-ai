@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { equipment } from "@/data/equipment"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ChevronLeft, Calendar, Clock, Repeat, Users, AlertCircle } from "lucide-react"
+import { ChevronLeft, Calendar, Clock, Users, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { format, parseISO, addDays, addWeeks, addMonths, addQuarters, addYears } from "date-fns"
 
