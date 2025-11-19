@@ -300,7 +300,6 @@ export default function MaintenanceSchedulePage() {
             <div className="space-y-4">
                 {schedules.map((schedule) => {
                     const daysUntil = getDaysUntilDue(schedule.nextDueDate)
-                    const equipmentItem = equipment.find(eq => eq.id === schedule.equipmentId)
                     
                     return (
                         <Card key={schedule.id}>

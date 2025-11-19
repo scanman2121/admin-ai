@@ -19,7 +19,7 @@ export interface Equipment {
     healthScore: number // 0-100
     lastMaintenanceDate?: string
     nextMaintenanceDate?: string
-    maintenanceFrequency?: "daily" | "weekly" | "monthly" | "quarterly" | "annually" | "as-needed"
+    maintenanceFrequency?: "daily" | "weekly" | "monthly" | "quarterly" | "semi-annually" | "annually" | "as-needed"
     status: "active" | "inactive" | "maintenance" | "retired"
     assignedTeam?: string
     serviceHistoryCount: number
