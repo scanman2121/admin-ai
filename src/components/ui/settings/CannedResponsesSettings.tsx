@@ -7,7 +7,7 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { RichTextEditor } from "@/components/ui/rich-text-editor/RichTextEditor"
-import { RiArrowDownSLine } from "@remixicon/react"
+import { RiArrowDownSLine, RiSearchLine } from "@remixicon/react"
 import { 
   CannedResponse, 
   getCannedResponses, 
@@ -17,12 +17,21 @@ import {
   RESOURCE_TYPES
 } from "@/data/cannedResponses"
 import { RiAddLine, RiDeleteBin6Line, RiPencilLine } from "@remixicon/react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
+
+// Feature color mapping
+const FEATURE_COLORS: Record<string, { border: string; bg: string }> = {
+  "Service Request": { border: "border-orange-300", bg: "bg-orange-50 dark:bg-orange-950/20" },
+  "Resource Booking": { border: "border-purple-300", bg: "bg-purple-50 dark:bg-purple-950/20" },
+  "Visitor": { border: "border-blue-300", bg: "bg-blue-50 dark:bg-blue-950/20" },
+  "General": { border: "border-green-300", bg: "bg-green-50 dark:bg-green-950/20" }
+}
 
 export function CannedResponsesSettings() {
   const [responses, setResponses] = useState<CannedResponse[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingResponse, setEditingResponse] = useState<CannedResponse | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -34,6 +43,17 @@ export function CannedResponsesSettings() {
   useEffect(() => {
     setResponses(getCannedResponses())
   }, [])
+
+  // Filter responses based on search query
+  const filteredResponses = useMemo(() => {
+    if (!searchQuery.trim()) return responses
+    const query = searchQuery.toLowerCase()
+    return responses.filter(response => 
+      response.title.toLowerCase().includes(query) ||
+      response.content.toLowerCase().replace(/<[^>]*>/g, '').includes(query) ||
+      response.features.some(f => f.toLowerCase().includes(query))
+    )
+  }, [responses, searchQuery])
 
   const handleOpenModal = (response?: CannedResponse) => {
     if (response) {
@@ -127,9 +147,9 @@ export function CannedResponsesSettings() {
         title: formData.title,
         content: formData.content,
         features: formData.features,
-        serviceRequestCategories: formData.serviceRequestCategories.length > 0 ? formData.serviceRequestCategories : undefined,
         serviceRequestTypes: formData.serviceRequestTypes.length > 0 ? formData.serviceRequestTypes : undefined,
-        resourceTypes: formData.resourceTypes.length > 0 ? formData.resourceTypes : undefined
+        resourceTypes: formData.resourceTypes.length > 0 ? formData.resourceTypes : undefined,
+        usage: 0
       }
       updatedResponses = [...responses, newResponse]
     }
@@ -145,6 +165,11 @@ export function CannedResponsesSettings() {
     saveCannedResponses(updatedResponses)
   }
 
+  // Strip HTML tags for description display
+  const stripHtml = (html: string) => {
+    return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -156,61 +181,114 @@ export function CannedResponsesSettings() {
         </div>
         <Button onClick={() => handleOpenModal()}>
           <RiAddLine className="size-4 mr-1.5" />
-          Add response
+          Create response
         </Button>
       </div>
 
-      <div className="space-y-4">
-        {responses.length === 0 ? (
-          <div className="text-center py-12 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No canned responses yet</p>
+      {/* Search */}
+      <div className="mb-4">
+        <div className="relative w-full sm:w-80">
+          <RiSearchLine className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search responses..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+      </div>
+
+      {/* Table */}
+      {filteredResponses.length === 0 ? (
+        <div className="text-center py-12 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            {searchQuery ? "No responses found" : "No canned responses yet"}
+          </p>
+          {!searchQuery && (
             <Button variant="secondary" onClick={() => handleOpenModal()}>
               <RiAddLine className="size-4 mr-1.5" />
               Create your first response
             </Button>
-          </div>
-        ) : (
-          responses.map((response) => (
-            <div
-              key={response.id}
-              className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2 flex-wrap">
-                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">
+          )}
+        </div>
+      ) : (
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <table className="w-full">
+            <thead className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Description
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Features
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Usage
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+              {filteredResponses.map((response) => (
+                <tr key={response.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900 dark:text-gray-50">
                       {response.title}
-                    </h3>
-                    {response.features.map((feature) => (
-                      <span key={feature} className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded">
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-                  <div 
-                    className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 [&_strong]:font-semibold [&_em]:italic [&_u]:underline"
-                    dangerouslySetInnerHTML={{ __html: response.content }}
-                  />
-                </div>
-                <div className="flex items-center gap-2 ml-4">
-                  <button
-                    onClick={() => handleOpenModal(response)}
-                    className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <RiPencilLine className="size-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(response.id)}
-                    className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    <RiDeleteBin6Line className="size-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-600 dark:text-gray-400 max-w-md line-clamp-2">
+                      {stripHtml(response.content)}
+                    </div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="flex flex-wrap gap-2">
+                      {response.features.map((feature) => {
+                        const colors = FEATURE_COLORS[feature] || { border: "border-gray-300", bg: "bg-gray-50 dark:bg-gray-800" }
+                        return (
+                          <span
+                            key={feature}
+                            className={`text-xs px-2 py-0.5 rounded border ${colors.border} ${colors.bg} text-gray-700 dark:text-gray-300`}
+                          >
+                            {feature}
+                          </span>
+                        )
+                      })}
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900 dark:text-gray-50">
+                      {response.usage || 0}
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => handleOpenModal(response)}
+                        className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        <RiPencilLine className="size-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(response.id)}
+                        className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        <RiDeleteBin6Line className="size-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Add/Edit Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
