@@ -9,6 +9,7 @@ import {
     DrawerTitle,
     DrawerTrigger
 } from "@/components/ui/drawer"
+import { CannedResponsesSettings } from "@/components/ui/settings/CannedResponsesSettings"
 import { cn, focusRing } from "@/lib/utils"
 import {
     Building,
@@ -91,7 +92,7 @@ export function Sidebar() {
   const { collapsed } = useContext(SidebarContext)
   const sidebarRef = useRef<HTMLElement>(null)
   const [announcement, setAnnouncement] = useState<string>("")
-  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email'>('general')
+  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email' | 'canned-responses'>('general')
 
   // Check if current path is in each section
   const isInPortfolio = portfolioItems.some(item =>
@@ -993,6 +994,17 @@ export function Sidebar() {
                           >
                             Email
                           </button>
+                          <button 
+                            onClick={() => setSettingsTab('canned-responses')}
+                            className={cn(
+                              "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                              settingsTab === 'canned-responses'
+                                ? "text-primary bg-primary/10"
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                            )}
+                          >
+                            Canned responses
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -1205,6 +1217,11 @@ export function Sidebar() {
                               </div>
                             </div>
                           </div>
+                        )}
+
+                        {/* Canned Responses Tab Content */}
+                        {settingsTab === 'canned-responses' && (
+                          <CannedResponsesSettings />
                         )}
                       </div>
                     </div>

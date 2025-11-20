@@ -8,8 +8,10 @@ import { ApproverCard } from "@/components/ui/ApproverCard"
 import { AssignedPersonnelCard } from "@/components/ui/AssignedPersonnelCard"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { MessageInputActions } from "@/components/ui/messages/MessageInputActions"
 import { Textarea } from "@/components/ui/textarea"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
+import { CannedResponse } from "@/data/cannedResponses"
 import { serviceRequests } from "@/data/data"
 import { ChevronDown, ChevronLeft, Download, ExternalLink, FileText, MapPin, Paperclip, Send, Upload } from "lucide-react"
 import Link from "next/link"
@@ -244,6 +246,41 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
         setPendingStatus(null)
     }
 
+    const handleSelectCannedResponse = (response: CannedResponse, isTenantMessage: boolean = false) => {
+        if (isTenantMessage) {
+            setTenantMessage(response.content)
+        } else {
+            setNewMessage(response.content)
+        }
+    }
+
+    const handleMakeProfessional = (isTenantMessage: boolean = false) => {
+        // Simulate AI rewrite - in production this would call an API
+        const currentMessage = isTenantMessage ? tenantMessage : newMessage
+        if (!currentMessage.trim()) return
+
+        // Simple professional rewrite simulation
+        const professionalMessage = currentMessage
+            .replace(/\bi\b/gi, 'I')
+            .replace(/\bu\b/gi, 'you')
+            .replace(/\bur\b/gi, 'your')
+            .replace(/\bthx\b/gi, 'thank you')
+            .replace(/\bthnx\b/gi, 'thank you')
+            .replace(/\bpls\b/gi, 'please')
+            .replace(/\bplz\b/gi, 'please')
+            .replace(/\bim\b/gi, "I'm")
+            .replace(/\bwont\b/gi, "won't")
+            .replace(/\bcant\b/gi, "can't")
+            .replace(/\bdont\b/gi, "don't")
+            + (currentMessage.endsWith('.') ? '' : '.')
+
+        if (isTenantMessage) {
+            setTenantMessage(professionalMessage)
+        } else {
+            setNewMessage(professionalMessage)
+        }
+    }
+
     const handleSetOwner = (userId: string) => {
         setOwnerId(userId)
         console.log(`Owner set to: ${userId}`)
@@ -432,6 +469,11 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                                     onChange={(e) => setNewMessage(e.target.value)}
                                     className="min-h-[80px]"
                                 />
+                                <MessageInputActions
+                                    onSelectResponse={(response) => handleSelectCannedResponse(response, false)}
+                                    onMakeProfessional={() => handleMakeProfessional(false)}
+                                    message={newMessage}
+                                />
                                 <div className="flex items-center justify-between">
                                     <Button variant="ghost" size="sm" className="flex items-center gap-2">
                                         <Paperclip className="h-4 w-4" />
@@ -591,6 +633,13 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                                 onChange={(e) => setTenantMessage(e.target.value)}
                                 className="min-h-[120px]"
                             />
+                            <div className="mt-2">
+                                <MessageInputActions
+                                    onSelectResponse={(response) => handleSelectCannedResponse(response, true)}
+                                    onMakeProfessional={() => handleMakeProfessional(true)}
+                                    message={tenantMessage}
+                                />
+                            </div>
                         </div>
                     </div>
                     
