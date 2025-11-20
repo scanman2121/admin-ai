@@ -583,7 +583,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                         </p>
                         <div>
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                                Message to tenant
+                                Message to tenant <span className="text-gray-500 font-normal">(Optional)</span>
                             </label>
                             <Textarea
                                 placeholder="Enter your message to the tenant..."
