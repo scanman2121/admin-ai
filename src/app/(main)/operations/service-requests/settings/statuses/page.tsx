@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line } from "@remixicon/react"
-import { Pencil } from "lucide-react"
+import { Pencil, Lock } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -638,11 +638,19 @@ export default function ServiceRequestsStatuses() {
                                                                         <RiArrowRightSLine className="w-4 h-4" />
                                                                     )}
                                                                 </button>
-                                                                <Checkbox
-                                                                    id={`category-${category}`}
-                                                                    checked={isFullySelected ? true : isPartiallySelected ? "indeterminate" : false}
-                                                                    onCheckedChange={() => handleCategoryToggle(category)}
-                                                                />
+                                                                {editingStatus?.name === "New" ? (
+                                                                    <Tooltip content="New status is required and can't be disabled">
+                                                                        <div className="flex items-center">
+                                                                            <Lock className="size-4 text-gray-400" />
+                                                                        </div>
+                                                                    </Tooltip>
+                                                                ) : (
+                                                                    <Checkbox
+                                                                        id={`category-${category}`}
+                                                                        checked={isFullySelected ? true : isPartiallySelected ? "indeterminate" : false}
+                                                                        onCheckedChange={() => handleCategoryToggle(category)}
+                                                                    />
+                                                                )}
                                                                 <label 
                                                                     htmlFor={`category-${category}`} 
                                                                     className="font-medium text-sm text-gray-900 dark:text-gray-100 cursor-pointer"
@@ -650,9 +658,11 @@ export default function ServiceRequestsStatuses() {
                                                                 >
                                                                     {category}
                                                                 </label>
-                                                                <span className="text-xs text-gray-500 dark:text-gray-400">
-                                                                    ({requestTypes.filter(type => newStatus.requestTypes.includes(type)).length}/{requestTypes.length})
-                                                                </span>
+                                                                {editingStatus?.name !== "New" && (
+                                                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                                                        ({requestTypes.filter(type => newStatus.requestTypes.includes(type)).length}/{requestTypes.length})
+                                                                    </span>
+                                                                )}
                                                             </div>
                                                         </td>
                                                         <td className="px-3 py-2 text-center">
@@ -671,11 +681,19 @@ export default function ServiceRequestsStatuses() {
                                                             <tr key={`request-${requestType}`} className="bg-white dark:bg-gray-900">
                                                                 <td className="px-3 py-2 pl-8">
                                                                     <div className="flex items-center space-x-2">
-                                                                        <Checkbox
-                                                                            id={`request-${requestType}`}
-                                                                            checked={isSelected}
-                                                                            onCheckedChange={() => handleRequestTypeToggle(requestType)}
-                                                                        />
+                                                                        {editingStatus?.name === "New" ? (
+                                                                            <Tooltip content="New status is required and can't be disabled">
+                                                                                <div className="flex items-center">
+                                                                                    <Lock className="size-4 text-gray-400" />
+                                                                                </div>
+                                                                            </Tooltip>
+                                                                        ) : (
+                                                                            <Checkbox
+                                                                                id={`request-${requestType}`}
+                                                                                checked={isSelected}
+                                                                                onCheckedChange={() => handleRequestTypeToggle(requestType)}
+                                                                            />
+                                                                        )}
                                                                         <label htmlFor={`request-${requestType}`} className="text-sm text-gray-700 dark:text-gray-300">
                                                                             {requestType}
                                                                         </label>
