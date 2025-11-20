@@ -1,11 +1,20 @@
 "use client"
 
 import { Button } from "@/components/Button"
+import { Checkbox } from "@/components/Checkbox"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Textarea } from "@/components/ui/textarea"
-import { CannedResponse, getCannedResponses, saveCannedResponses } from "@/data/cannedResponses"
+import { 
+  CannedResponse, 
+  getCannedResponses, 
+  saveCannedResponses,
+  FEATURES,
+  SERVICE_REQUEST_CATEGORIES,
+  SERVICE_REQUEST_TYPES,
+  RESOURCE_TYPES
+} from "@/data/cannedResponses"
 import { RiAddLine, RiDeleteBin6Line, RiPencilLine } from "@remixicon/react"
 import { useState, useEffect } from "react"
 
@@ -16,7 +25,10 @@ export function CannedResponsesSettings() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    category: ""
+    features: [] as string[],
+    serviceRequestCategories: [] as string[],
+    serviceRequestTypes: [] as string[],
+    resourceTypes: [] as string[]
   })
 
   useEffect(() => {
@@ -29,14 +41,20 @@ export function CannedResponsesSettings() {
       setFormData({
         title: response.title,
         content: response.content,
-        category: response.category || ""
+        features: response.features || [],
+        serviceRequestCategories: response.serviceRequestCategories || [],
+        serviceRequestTypes: response.serviceRequestTypes || [],
+        resourceTypes: response.resourceTypes || []
       })
     } else {
       setEditingResponse(null)
       setFormData({
         title: "",
         content: "",
-        category: ""
+        features: [],
+        serviceRequestCategories: [],
+        serviceRequestTypes: [],
+        resourceTypes: []
       })
     }
     setIsModalOpen(true)
@@ -48,18 +66,75 @@ export function CannedResponsesSettings() {
     setFormData({
       title: "",
       content: "",
-      category: ""
+      features: [],
+      serviceRequestCategories: [],
+      serviceRequestTypes: [],
+      resourceTypes: []
     })
   }
 
+  const toggleFeature = (feature: string) => {
+    setFormData(prev => ({
+      ...prev,
+      features: prev.features.includes(feature)
+        ? prev.features.filter(f => f !== feature)
+        : [...prev.features, feature],
+      // Clear dependent fields when feature is removed
+      serviceRequestCategories: prev.features.includes(feature) && feature === "Service Request"
+        ? []
+        : prev.serviceRequestCategories,
+      serviceRequestTypes: prev.features.includes(feature) && feature === "Service Request"
+        ? []
+        : prev.serviceRequestTypes,
+      resourceTypes: prev.features.includes(feature) && feature === "Resource Booking"
+        ? []
+        : prev.resourceTypes
+    }))
+  }
+
+  const toggleServiceRequestCategory = (category: string) => {
+    setFormData(prev => ({
+      ...prev,
+      serviceRequestCategories: prev.serviceRequestCategories.includes(category)
+        ? prev.serviceRequestCategories.filter(c => c !== category)
+        : [...prev.serviceRequestCategories, category]
+    }))
+  }
+
+  const toggleServiceRequestType = (type: string) => {
+    setFormData(prev => ({
+      ...prev,
+      serviceRequestTypes: prev.serviceRequestTypes.includes(type)
+        ? prev.serviceRequestTypes.filter(t => t !== type)
+        : [...prev.serviceRequestTypes, type]
+    }))
+  }
+
+  const toggleResourceType = (type: string) => {
+    setFormData(prev => ({
+      ...prev,
+      resourceTypes: prev.resourceTypes.includes(type)
+        ? prev.resourceTypes.filter(t => t !== type)
+        : [...prev.resourceTypes, type]
+    }))
+  }
+
   const handleSave = () => {
-    if (!formData.title.trim() || !formData.content.trim()) return
+    if (!formData.title.trim() || !formData.content.trim() || formData.features.length === 0) return
 
     let updatedResponses: CannedResponse[]
     if (editingResponse) {
       updatedResponses = responses.map(r =>
         r.id === editingResponse.id
-          ? { ...r, ...formData }
+          ? {
+              ...r,
+              title: formData.title,
+              content: formData.content,
+              features: formData.features,
+              serviceRequestCategories: formData.serviceRequestCategories.length > 0 ? formData.serviceRequestCategories : undefined,
+              serviceRequestTypes: formData.serviceRequestTypes.length > 0 ? formData.serviceRequestTypes : undefined,
+              resourceTypes: formData.resourceTypes.length > 0 ? formData.resourceTypes : undefined
+            }
           : r
       )
     } else {
@@ -67,7 +142,10 @@ export function CannedResponsesSettings() {
         id: Date.now().toString(),
         title: formData.title,
         content: formData.content,
-        category: formData.category || undefined
+        features: formData.features,
+        serviceRequestCategories: formData.serviceRequestCategories.length > 0 ? formData.serviceRequestCategories : undefined,
+        serviceRequestTypes: formData.serviceRequestTypes.length > 0 ? formData.serviceRequestTypes : undefined,
+        resourceTypes: formData.resourceTypes.length > 0 ? formData.resourceTypes : undefined
       }
       updatedResponses = [...responses, newResponse]
     }
@@ -115,15 +193,15 @@ export function CannedResponsesSettings() {
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">
                       {response.title}
                     </h3>
-                    {response.category && (
-                      <span className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded">
-                        {response.category}
+                    {response.features.map((feature) => (
+                      <span key={feature} className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded">
+                        {feature}
                       </span>
-                    )}
+                    ))}
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
                     {response.content}
@@ -169,15 +247,85 @@ export function CannedResponsesSettings() {
             </div>
             
             <div>
-              <Label htmlFor="category">Category</Label>
-              <Input
-                id="category"
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                placeholder="e.g., Completion, Status Update"
-                className="mt-1"
-              />
+              <Label>Features *</Label>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 mt-1">
+                Select one or more features where this response can be used
+              </p>
+              <div className="space-y-2 mt-2">
+                {FEATURES.map((feature) => (
+                  <label key={feature} className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      checked={formData.features.includes(feature)}
+                      onCheckedChange={() => toggleFeature(feature)}
+                    />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{feature}</span>
+                  </label>
+                ))}
+              </div>
             </div>
+
+            {/* Service Request Categories */}
+            {formData.features.includes("Service Request") && (
+              <div>
+                <Label>Service request categories</Label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 mt-1">
+                  Select categories (optional)
+                </p>
+                <div className="space-y-2 mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
+                  {SERVICE_REQUEST_CATEGORIES.map((category) => (
+                    <label key={category} className="flex items-center gap-2 cursor-pointer">
+                      <Checkbox
+                        checked={formData.serviceRequestCategories.includes(category)}
+                        onCheckedChange={() => toggleServiceRequestCategory(category)}
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">{category}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Service Request Types */}
+            {formData.features.includes("Service Request") && (
+              <div>
+                <Label>Service request types</Label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 mt-1">
+                  Select types (optional)
+                </p>
+                <div className="space-y-2 mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
+                  {SERVICE_REQUEST_TYPES.map((type) => (
+                    <label key={type} className="flex items-center gap-2 cursor-pointer">
+                      <Checkbox
+                        checked={formData.serviceRequestTypes.includes(type)}
+                        onCheckedChange={() => toggleServiceRequestType(type)}
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">{type}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Resource Types */}
+            {formData.features.includes("Resource Booking") && (
+              <div>
+                <Label>Resource types</Label>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 mt-1">
+                  Select resource types (optional)
+                </p>
+                <div className="space-y-2 mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
+                  {RESOURCE_TYPES.map((type) => (
+                    <label key={type} className="flex items-center gap-2 cursor-pointer">
+                      <Checkbox
+                        checked={formData.resourceTypes.includes(type)}
+                        onCheckedChange={() => toggleResourceType(type)}
+                      />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">{type}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
             
             <div>
               <Label htmlFor="content">Message content *</Label>

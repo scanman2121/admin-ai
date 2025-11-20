@@ -49,15 +49,15 @@ export function MessageInputActions({ onSelectResponse, onMakeProfessional, mess
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
                           <p className="text-sm font-medium text-gray-900 dark:text-gray-50 truncate">
                             {response.title}
                           </p>
-                          {response.category && (
-                            <span className="text-xs px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded shrink-0">
-                              {response.category}
+                          {response.features.map((feature) => (
+                            <span key={feature} className="text-xs px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded shrink-0">
+                              {feature}
                             </span>
-                          )}
+                          ))}
                         </div>
                         <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
                           {response.content}
