@@ -10,6 +10,7 @@ import {
     DrawerTrigger
 } from "@/components/ui/drawer"
 import { CannedResponsesSettings } from "@/components/ui/settings/CannedResponsesSettings"
+import { TagsSettings } from "@/components/ui/settings/TagsSettings"
 import { cn, focusRing } from "@/lib/utils"
 import {
     Building,
@@ -92,7 +93,7 @@ export function Sidebar() {
   const { collapsed } = useContext(SidebarContext)
   const sidebarRef = useRef<HTMLElement>(null)
   const [announcement, setAnnouncement] = useState<string>("")
-  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email' | 'canned-responses'>('general')
+  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email' | 'tags' | 'canned-responses'>('general')
 
   // Check if current path is in each section
   const isInPortfolio = portfolioItems.some(item =>
@@ -995,6 +996,17 @@ export function Sidebar() {
                             Email
                           </button>
                           <button 
+                            onClick={() => setSettingsTab('tags')}
+                            className={cn(
+                              "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                              settingsTab === 'tags'
+                                ? "text-primary bg-primary/10"
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                            )}
+                          >
+                            Tags
+                          </button>
+                          <button 
                             onClick={() => setSettingsTab('canned-responses')}
                             className={cn(
                               "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
@@ -1217,6 +1229,11 @@ export function Sidebar() {
                               </div>
                             </div>
                           </div>
+                        )}
+
+                        {/* Tags Tab Content */}
+                        {settingsTab === 'tags' && (
+                          <TagsSettings />
                         )}
 
                         {/* Canned Responses Tab Content */}
