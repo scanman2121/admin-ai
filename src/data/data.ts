@@ -966,6 +966,13 @@ const marcusRodriguezUser = getUserById("marcus-rodriguez-new");
 const amandaKimUser = getUserById("amanda-kim-contractor");
 const brianWilsonUser = getUserById("brian-wilson-suspended");
 
+// Acme Inc users
+const aliceCooperUser = getUserById("alice-cooper-acme");
+const robertMartinezUser = getUserById("robert-martinez-acme");
+const lisaAndersonUser = getUserById("lisa-anderson-acme");
+const tomWilsonUser = getUserById("tom-wilson-acme");
+const mariaGonzalezUser = getUserById("maria-gonzalez-acme");
+
 export const serviceRequests = [
   // ACCESS REQUEST WORK ORDERS (These show up in work orders AND create the service requests in access control)
   
@@ -1114,5 +1121,119 @@ export const serviceRequests = [
     "Minor water leak in break room sink",
     "Plumbing Team",
     "Medium"
+  ),
+
+  // ACME INC TENANT REQUESTS
+  
+  // Alice Cooper's requests (Operations Manager)
+  createWorkOrderFromUser(
+    aliceCooperUser!,
+    "Conference Room AC Not Working",
+    "HVAC",
+    "New",
+    "Main conference room air conditioning unit stopped working. Important client meeting scheduled for tomorrow afternoon.",
+    "Building Maintenance Team",
+    "High"
+  ),
+  createWorkOrderFromUser(
+    aliceCooperUser!,
+    "Office Door Lock Malfunction",
+    "Security",
+    "In Progress",
+    "Suite 520 main door lock intermittently fails to unlock with badge. Employees having trouble entering the office.",
+    "Security Team",
+    "High",
+    "Sarah Martinez"
+  ),
+
+  // Robert Martinez's requests (Marketing)
+  createWorkOrderFromUser(
+    robertMartinezUser!,
+    "Printer Network Connection Issue",
+    "Electrical",
+    "New",
+    "Marketing department printer losing network connection multiple times per day. Affecting deadline-sensitive materials.",
+    "Unassigned",
+    "Medium"
+  ),
+  createWorkOrderFromUser(
+    robertMartinezUser!,
+    "Conference Room Display Not Working",
+    "Electrical",
+    "New",
+    "HDMI display in conference room B not showing laptop connection. Need for presentation tomorrow.",
+    "Unassigned",
+    "High"
+  ),
+
+  // Lisa Anderson's requests (HR)
+  createWorkOrderFromUser(
+    lisaAndersonUser!,
+    "Office Deep Cleaning Request",
+    "Cleaning",
+    "New",
+    "Request deep cleaning of HR office suite before new employee orientations next week.",
+    "Cleaning Team",
+    "Low"
+  ),
+  createWorkOrderFromUser(
+    lisaAndersonUser!,
+    "New Employee Desk Setup",
+    "Maintenance",
+    "In Progress",
+    "Need desk assembly and setup for 3 new employees starting Monday. Desks delivered to Suite 515.",
+    "Maintenance Team",
+    "Medium",
+    "John Ramirez"
+  ),
+
+  // Tom Wilson's requests (Sales)
+  createWorkOrderFromUser(
+    tomWilsonUser!,
+    "Window Blinds Repair",
+    "Maintenance",
+    "New",
+    "Window blinds in Suite 522 stuck in closed position. Office is very dark and affecting productivity.",
+    "Unassigned",
+    "Medium"
+  ),
+  createWorkOrderFromUser(
+    tomWilsonUser!,
+    "Noise from HVAC Vent",
+    "HVAC",
+    "New",
+    "Loud rattling noise coming from ceiling HVAC vent. Makes it difficult to take sales calls.",
+    "Building Maintenance Team",
+    "Low"
+  ),
+
+  // Maria Gonzalez's requests (Finance)
+  createWorkOrderFromUser(
+    mariaGonzalezUser!,
+    "Electrical Outlet Not Working",
+    "Electrical",
+    "New",
+    "Wall outlet at desk stopped working. Need power for computer and monitor.",
+    "Electrical Team",
+    "High"
+  ),
+  createWorkOrderFromUser(
+    mariaGonzalezUser!,
+    "Coffee Machine Repair",
+    "Maintenance",
+    "Completed",
+    "Break room coffee machine not brewing properly. Fixed and cleaned.",
+    "Maintenance Team",
+    "Low"
+  ),
+  createWorkOrderFromUser(
+    mariaGonzalezUser!,
+    "Temperature Too Cold in Office",
+    "HVAC",
+    "In Progress",
+    "Suite 525 is consistently 5-10 degrees colder than other suites. Employees wearing coats at desks.",
+    "Building Maintenance Team",
+    "Medium",
+    "Alex Thompson"
   ),
 ]
