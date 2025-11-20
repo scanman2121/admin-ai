@@ -62,6 +62,8 @@ const Tooltip = React.forwardRef<
               className={cn(
                 // base
                 "max-w-60 select-none rounded-md px-2.5 py-1.5 text-sm leading-5 shadow-md",
+                // z-index to appear above modals
+                "z-[9999]",
                 // text color
                 "text-gray-50 dark:text-gray-900",
                 // background color
