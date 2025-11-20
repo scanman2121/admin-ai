@@ -457,7 +457,7 @@ export default function ServiceRequestsStatuses() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         {status.name === "New" ? (
-                                            <Tooltip content="New status is required and cannot be disabled">
+                                            <Tooltip content="New status is required and can't be disabled">
                                                 <div>
                                                     <Switch
                                                         checked={status.status}
@@ -482,7 +482,7 @@ export default function ServiceRequestsStatuses() {
                                                 <Pencil className="size-4" style={{ color: '#696E72' }} />
                                             </button>
                                             {status.name === "New" ? (
-                                                <Tooltip content="New status is required and cannot be deleted">
+                                                <Tooltip content="New status is required and can't be deleted">
                                                     <div>
                                                         <button
                                                             disabled
@@ -582,7 +582,7 @@ export default function ServiceRequestsStatuses() {
                             <div>
                                 <Label>Color</Label>
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                                    This is a default status with a preset color that cannot be changed
+                                    This is a default status with a preset color that can't be changed
                                 </p>
                                 <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                                     <div className={`w-4 h-4 rounded-full ${getColorClasses(editingStatus.color).bgClass}`}></div>

@@ -2666,7 +2666,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         <tr className="bg-blue-50 dark:bg-blue-900/20">
                                             <td className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
-                                                    <Tooltip content="New status is required and cannot be disabled">
+                                                    <Tooltip content="New status is required and can't be disabled">
                                                         <div className="flex items-center">
                                                             <Lock className="size-4 text-gray-400" />
                                                         </div>
@@ -3119,7 +3119,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         <tr className="bg-blue-50 dark:bg-blue-900/20">
                                             <td className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
-                                                    <Tooltip content="New status is required and cannot be disabled">
+                                                    <Tooltip content="New status is required and can't be disabled">
                                                         <div className="flex items-center">
                                                             <Lock className="size-4 text-gray-400" />
                                                         </div>
