@@ -577,7 +577,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                         <DialogTitle>Close service request</DialogTitle>
                     </DialogHeader>
                     
-                    <div className="space-y-4 py-4">
+                    <div className="space-y-4 py-4 px-6">
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             Add a message to the tenant about the completion of this service request.
                         </p>
