@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/Checkbox"
 import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
+import { Tooltip } from "@/components/Tooltip"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { serviceRequestStatuses } from "@/data/statuses"
@@ -437,10 +438,22 @@ export default function ServiceRequestsStatuses() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <Switch
-                                            checked={status.status}
-                                            onCheckedChange={() => handleStatusToggle(status.id)}
-                                        />
+                                        {status.name === "New" ? (
+                                            <Tooltip content="New status is required and cannot be disabled">
+                                                <div>
+                                                    <Switch
+                                                        checked={status.status}
+                                                        disabled={true}
+                                                        onCheckedChange={() => {}}
+                                                    />
+                                                </div>
+                                            </Tooltip>
+                                        ) : (
+                                            <Switch
+                                                checked={status.status}
+                                                onCheckedChange={() => handleStatusToggle(status.id)}
+                                            />
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div className="flex items-center gap-2">
