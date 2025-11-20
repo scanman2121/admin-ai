@@ -3,7 +3,6 @@ export interface CannedResponse {
   title: string
   content: string
   features: string[] // Service Request, Resource Booking, Visitor, General
-  serviceRequestCategories?: string[]
   serviceRequestTypes?: string[]
   resourceTypes?: string[]
 }
@@ -13,8 +12,7 @@ export const FEATURES = [
   "Service Request",
   "Resource Booking",
   "Visitor",
-  "General",
-  "Directions"
+  "General"
 ] as const
 
 // Service Request Categories
@@ -88,9 +86,9 @@ export const defaultCannedResponses: CannedResponse[] = [
   },
   {
     id: "6",
-    title: "Directions to conference room",
+    title: "Directions",
     content: "To get to the conference room, take the elevator to Floor 5. Exit the elevator and turn right. Walk down the hallway past the reception desk, and the conference room will be on your left, Room 520.",
-    features: ["Directions"]
+    features: ["Service Request", "Resource Booking", "Visitor", "General"]
   }
 ]
 

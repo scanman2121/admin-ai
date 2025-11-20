@@ -5,13 +5,14 @@ import { Checkbox } from "@/components/Checkbox"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Textarea } from "@/components/ui/textarea"
+import { RiArrowDownSLine } from "@remixicon/react"
 import { 
   CannedResponse, 
   getCannedResponses, 
   saveCannedResponses,
   FEATURES,
-  SERVICE_REQUEST_CATEGORIES,
   SERVICE_REQUEST_TYPES,
   RESOURCE_TYPES
 } from "@/data/cannedResponses"
@@ -26,7 +27,6 @@ export function CannedResponsesSettings() {
     title: "",
     content: "",
     features: [] as string[],
-    serviceRequestCategories: [] as string[],
     serviceRequestTypes: [] as string[],
     resourceTypes: [] as string[]
   })
@@ -42,7 +42,6 @@ export function CannedResponsesSettings() {
         title: response.title,
         content: response.content,
         features: response.features || [],
-        serviceRequestCategories: response.serviceRequestCategories || [],
         serviceRequestTypes: response.serviceRequestTypes || [],
         resourceTypes: response.resourceTypes || []
       })
@@ -52,7 +51,6 @@ export function CannedResponsesSettings() {
         title: "",
         content: "",
         features: [],
-        serviceRequestCategories: [],
         serviceRequestTypes: [],
         resourceTypes: []
       })
@@ -67,7 +65,6 @@ export function CannedResponsesSettings() {
       title: "",
       content: "",
       features: [],
-      serviceRequestCategories: [],
       serviceRequestTypes: [],
       resourceTypes: []
     })
@@ -80,24 +77,12 @@ export function CannedResponsesSettings() {
         ? prev.features.filter(f => f !== feature)
         : [...prev.features, feature],
       // Clear dependent fields when feature is removed
-      serviceRequestCategories: prev.features.includes(feature) && feature === "Service Request"
-        ? []
-        : prev.serviceRequestCategories,
       serviceRequestTypes: prev.features.includes(feature) && feature === "Service Request"
         ? []
         : prev.serviceRequestTypes,
       resourceTypes: prev.features.includes(feature) && feature === "Resource Booking"
         ? []
         : prev.resourceTypes
-    }))
-  }
-
-  const toggleServiceRequestCategory = (category: string) => {
-    setFormData(prev => ({
-      ...prev,
-      serviceRequestCategories: prev.serviceRequestCategories.includes(category)
-        ? prev.serviceRequestCategories.filter(c => c !== category)
-        : [...prev.serviceRequestCategories, category]
     }))
   }
 
@@ -131,7 +116,6 @@ export function CannedResponsesSettings() {
               title: formData.title,
               content: formData.content,
               features: formData.features,
-              serviceRequestCategories: formData.serviceRequestCategories.length > 0 ? formData.serviceRequestCategories : undefined,
               serviceRequestTypes: formData.serviceRequestTypes.length > 0 ? formData.serviceRequestTypes : undefined,
               resourceTypes: formData.resourceTypes.length > 0 ? formData.resourceTypes : undefined
             }
@@ -264,27 +248,6 @@ export function CannedResponsesSettings() {
               </div>
             </div>
 
-            {/* Service Request Categories */}
-            {formData.features.includes("Service Request") && (
-              <div>
-                <Label>Service request categories</Label>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 mt-1">
-                  Select categories (optional)
-                </p>
-                <div className="space-y-2 mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
-                  {SERVICE_REQUEST_CATEGORIES.map((category) => (
-                    <label key={category} className="flex items-center gap-2 cursor-pointer">
-                      <Checkbox
-                        checked={formData.serviceRequestCategories.includes(category)}
-                        onCheckedChange={() => toggleServiceRequestCategory(category)}
-                      />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">{category}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Service Request Types */}
             {formData.features.includes("Service Request") && (
               <div>
@@ -292,17 +255,56 @@ export function CannedResponsesSettings() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 mt-1">
                   Select types (optional)
                 </p>
-                <div className="space-y-2 mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
-                  {SERVICE_REQUEST_TYPES.map((type) => (
-                    <label key={type} className="flex items-center gap-2 cursor-pointer">
-                      <Checkbox
-                        checked={formData.serviceRequestTypes.includes(type)}
-                        onCheckedChange={() => toggleServiceRequestType(type)}
-                      />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">{type}</span>
-                    </label>
-                  ))}
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      className="w-full mt-1 flex items-center justify-between px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <span className={formData.serviceRequestTypes.length === 0 ? "text-gray-500 dark:text-gray-400" : ""}>
+                        {formData.serviceRequestTypes.length === 0
+                          ? "Select service request types"
+                          : `${formData.serviceRequestTypes.length} selected`}
+                      </span>
+                      <RiArrowDownSLine className="h-4 w-4 text-gray-400" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-2" align="start">
+                    <div className="max-h-60 overflow-y-auto space-y-1">
+                      {SERVICE_REQUEST_TYPES.map((type) => (
+                        <label
+                          key={type}
+                          className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+                        >
+                          <Checkbox
+                            checked={formData.serviceRequestTypes.includes(type)}
+                            onCheckedChange={() => toggleServiceRequestType(type)}
+                          />
+                          <span className="text-sm text-gray-700 dark:text-gray-300">{type}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                {formData.serviceRequestTypes.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {formData.serviceRequestTypes.map((type) => (
+                      <span
+                        key={type}
+                        className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded flex items-center gap-1"
+                      >
+                        {type}
+                        <button
+                          type="button"
+                          onClick={() => toggleServiceRequestType(type)}
+                          className="ml-1 hover:text-red-600"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -313,17 +315,56 @@ export function CannedResponsesSettings() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 mt-1">
                   Select resource types (optional)
                 </p>
-                <div className="space-y-2 mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md p-3">
-                  {RESOURCE_TYPES.map((type) => (
-                    <label key={type} className="flex items-center gap-2 cursor-pointer">
-                      <Checkbox
-                        checked={formData.resourceTypes.includes(type)}
-                        onCheckedChange={() => toggleResourceType(type)}
-                      />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">{type}</span>
-                    </label>
-                  ))}
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      className="w-full mt-1 flex items-center justify-between px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <span className={formData.resourceTypes.length === 0 ? "text-gray-500 dark:text-gray-400" : ""}>
+                        {formData.resourceTypes.length === 0
+                          ? "Select resource types"
+                          : `${formData.resourceTypes.length} selected`}
+                      </span>
+                      <RiArrowDownSLine className="h-4 w-4 text-gray-400" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-2" align="start">
+                    <div className="max-h-60 overflow-y-auto space-y-1">
+                      {RESOURCE_TYPES.map((type) => (
+                        <label
+                          key={type}
+                          className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+                        >
+                          <Checkbox
+                            checked={formData.resourceTypes.includes(type)}
+                            onCheckedChange={() => toggleResourceType(type)}
+                          />
+                          <span className="text-sm text-gray-700 dark:text-gray-300">{type}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                {formData.resourceTypes.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {formData.resourceTypes.map((type) => (
+                      <span
+                        key={type}
+                        className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded flex items-center gap-1"
+                      >
+                        {type}
+                        <button
+                          type="button"
+                          onClick={() => toggleResourceType(type)}
+                          className="ml-1 hover:text-red-600"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
             
