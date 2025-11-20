@@ -13,7 +13,8 @@ export const FEATURES = [
   "Service Request",
   "Resource Booking",
   "Visitor",
-  "General"
+  "General",
+  "Directions"
 ] as const
 
 // Service Request Categories
@@ -84,6 +85,12 @@ export const defaultCannedResponses: CannedResponse[] = [
     title: "Request received",
     content: "Thank you for submitting your service request. We've received it and will begin processing it shortly.",
     features: ["Service Request"]
+  },
+  {
+    id: "6",
+    title: "Directions to conference room",
+    content: "To get to the conference room, take the elevator to Floor 5. Exit the elevator and turn right. Walk down the hallway past the reception desk, and the conference room will be on your left, Room 520.",
+    features: ["Directions"]
   }
 ]
 
