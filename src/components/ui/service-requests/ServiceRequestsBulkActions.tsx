@@ -9,6 +9,8 @@ type ServiceRequestsBulkActionsProps<TData> = {
     totalCount: number
     onChangeStatus: (selectedRequests: TData[], status: string) => void
     onAssignTo: (selectedRequests: TData[], assignee: string) => void
+    onApprove?: (selectedRequests: TData[]) => void
+    showApprove?: boolean
 }
 
 export function ServiceRequestsBulkActions<TData>({
@@ -17,6 +19,8 @@ export function ServiceRequestsBulkActions<TData>({
     totalCount,
     onChangeStatus,
     onAssignTo,
+    onApprove,
+    showApprove = false,
 }: ServiceRequestsBulkActionsProps<TData>) {
     const selectedRowsCount = Object.keys(rowSelection).length
     const hasSelectedRows = selectedRowsCount > 0
@@ -62,6 +66,13 @@ export function ServiceRequestsBulkActions<TData>({
         onAssignTo(getSelectedRequests(), assignee)
         setShowAssignDropdown(false)
         table.resetRowSelection()
+    }
+
+    const handleApprove = () => {
+        if (onApprove) {
+            onApprove(getSelectedRequests())
+            table.resetRowSelection()
+        }
     }
 
     if (!hasSelectedRows) return null
@@ -161,6 +172,21 @@ export function ServiceRequestsBulkActions<TData>({
                     </div>
 
                     <div className="h-4 w-px bg-gray-700" />
+
+                    {/* Approve button (conditional) */}
+                    {showApprove && onApprove && (
+                        <>
+                            <span className="flex items-center gap-x-2 rounded-lg bg-gray-900 p-1 text-sm font-medium text-gray-50">
+                                <button
+                                    onClick={handleApprove}
+                                    className="flex items-center gap-x-2 rounded-md px-3 py-1 bg-blue-600 hover:bg-blue-700 focus-visible:bg-blue-700"
+                                >
+                                    Approve
+                                </button>
+                            </span>
+                            <div className="h-4 w-px bg-gray-700" />
+                        </>
+                    )}
 
                     {/* Clear selection */}
                     <span className="flex items-center gap-x-2 rounded-lg bg-gray-900 p-1 text-sm font-medium text-gray-50">

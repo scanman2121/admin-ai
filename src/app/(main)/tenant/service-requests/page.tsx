@@ -5,13 +5,15 @@ import { Button } from "@/components/Button"
 import { Checkbox } from "@/components/Checkbox"
 import { DataTableColumnHeader } from "@/components/ui/data-table/DataTableColumnHeader"
 import { ServiceRequestsDataTable } from "@/components/ui/data-table/ServiceRequestsDataTable"
+import { ServiceRequestsBulkActions } from "@/components/ui/service-requests/ServiceRequestsBulkActions"
+import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { serviceRequests, serviceRequestStatuses } from "@/data/data"
 import { getRelativeTime } from "@/lib/utils"
 import { RiAddLine } from "@remixicon/react"
 import { useState } from "react"
 
-// Factory function to create columns
-const createServiceRequestsColumns = () => [
+// Factory function to create columns with click handlers
+const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) => void) => [
     {
         id: "select",
         header: ({ table }: { table: any }) => (
@@ -41,9 +43,28 @@ const createServiceRequestsColumns = () => [
         ),
         cell: ({ row }: { row: any }) => {
             const request = row.getValue("request") as string;
+            const requestorDetails = row.original.requestorDetails;
+            const name = requestorDetails?.name || "";
+            const company = requestorDetails?.company || "";
+
             return (
-                <div className="font-medium text-gray-900 dark:text-gray-50 line-clamp-2">
-                    {request}
+                <div className="min-w-0 flex-1">
+                    <div className="font-medium text-gray-900 dark:text-gray-50 mb-1 line-clamp-2">
+                        {request}
+                    </div>
+                    <div className="text-sm">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onRequestorClick(requestorDetails);
+                            }}
+                            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer underline hover:no-underline"
+                        >
+                            {name}
+                        </button>
+                        <span className="text-gray-500 mx-1">·</span>
+                        <span className="text-gray-600 dark:text-gray-400">{company}</span>
+                    </div>
                 </div>
             );
         },
@@ -126,6 +147,20 @@ const createServiceRequestsColumns = () => [
         enableSorting: true,
     },
     {
+        accessorKey: "owner",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Owner" />
+        ),
+        cell: ({ row }: { row: any }) => {
+            const owner = row.getValue("owner") as string;
+            return <span className="text-gray-600 dark:text-gray-400">{owner}</span>;
+        },
+        meta: {
+            displayName: "Owner",
+        },
+        enableSorting: true,
+    },
+    {
         accessorKey: "lastUpdated",
         header: ({ column }: { column: any }) => (
             <DataTableColumnHeader column={column} title="Last updated" />
@@ -180,6 +215,18 @@ const createServiceRequestsColumns = () => [
     },
     // Hidden columns for filtering
     {
+        accessorKey: "company",
+        header: "Company",
+        cell: ({ row: _row }: { row: any }) => {
+            return null; // Hidden column
+        },
+        meta: {
+            displayName: "Company",
+        },
+        filterFn: "equals" as const,
+        enableColumnFilter: true,
+    },
+    {
         accessorKey: "issueType",
         header: "Issue Type",
         cell: ({ row: _row }: { row: any }) => {
@@ -201,6 +248,20 @@ export default function TenantServiceRequestsPage() {
             (request) => request.company === tenantCompany
         )
     )
+    const [selectedUser, setSelectedUser] = useState<{
+        id: string
+        name: string
+        email: string
+        company: string
+        floorSuite: string
+        serviceRequest: string
+        serviceRequestType: string | null
+        serviceRequestStatus: string | null
+        acsStatus: string
+        hasNotes: boolean
+        badgeId?: string
+    } | null>(null)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const handleRowClick = (serviceRequest: any) => {
         // For now, just log the click since we don't have detail pages set up for tenant
@@ -208,32 +269,50 @@ export default function TenantServiceRequestsPage() {
         // router.push(`/tenant/service-requests/${serviceRequest.id}`)
     }
 
+    const handleRequestorClick = (requestorDetails: any) => {
+        setSelectedUser(requestorDetails)
+        setIsModalOpen(true)
+    }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false)
+        setSelectedUser(null)
+    }
+
     const handleExport = () => {
         // Prepare CSV data
         const csvHeaders = [
             "ID",
             "Request",
+            "Requestor",
+            "Company",
             "Date & Time",
             "Description",
             "Building",
             "Floor",
             "Assignee",
+            "Owner",
             "Last Updated",
             "Status",
             "Issue Type"
         ].join(",")
 
         const csvRows = data.map(row => {
+            const requestorName = row.requestorDetails?.name || ""
+            const company = row.requestorDetails?.company || ""
             const description = (row.description || "").replace(/"/g, '""') // Escape quotes
             
             return [
                 row.id,
                 `"${row.request}"`,
+                `"${requestorName}"`,
+                `"${company}"`,
                 row.dateTime,
                 `"${description}"`,
                 row.building,
                 row.floor,
                 row.assignee,
+                row.owner || "-",
                 row.lastUpdated,
                 row.status,
                 row.issueType
@@ -248,7 +327,7 @@ export default function TenantServiceRequestsPage() {
         const url = URL.createObjectURL(blob)
         
         link.setAttribute("href", url)
-        link.setAttribute("download", `service-requests-${new Date().toISOString().split('T')[0]}.csv`)
+        link.setAttribute("download", `tenant-service-requests-${new Date().toISOString().split('T')[0]}.csv`)
         link.style.visibility = "hidden"
         
         document.body.appendChild(link)
@@ -256,7 +335,22 @@ export default function TenantServiceRequestsPage() {
         document.body.removeChild(link)
     }
 
-    const serviceRequestsColumns = createServiceRequestsColumns()
+    const handleChangeStatus = (selectedRequests: any[], status: string) => {
+        console.log('Changing status to:', status, 'for requests:', selectedRequests)
+        // TODO: Implement status change logic
+    }
+
+    const handleAssignTo = (selectedRequests: any[], assignee: string) => {
+        console.log('Assigning to:', assignee, 'for requests:', selectedRequests)
+        // TODO: Implement assign logic
+    }
+
+    const handleApprove = (selectedRequests: any[]) => {
+        console.log('Approving requests:', selectedRequests)
+        // TODO: Implement approve logic
+    }
+
+    const serviceRequestsColumns = createServiceRequestsColumns(handleRequestorClick)
 
     return (
         <div className="flex h-full w-full flex-col space-y-6">
@@ -279,8 +373,27 @@ export default function TenantServiceRequestsPage() {
                     onRowClick={handleRowClick} 
                     searchKey="request"
                     onExport={handleExport}
+                    renderBulkActions={(table, rowSelection) => (
+                        <ServiceRequestsBulkActions
+                            table={table}
+                            rowSelection={rowSelection}
+                            totalCount={data.length}
+                            onChangeStatus={handleChangeStatus}
+                            onAssignTo={handleAssignTo}
+                            onApprove={handleApprove}
+                            showApprove={true}
+                        />
+                    )}
                 />
             </div>
+            
+            {/* User Details Modal */}
+            <UserDetailsModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                user={selectedUser}
+                defaultTab="requests"
+            />
         </div>
     )
 }
