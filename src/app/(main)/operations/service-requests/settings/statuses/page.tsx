@@ -68,7 +68,19 @@ export default function ServiceRequestsStatuses() {
     const [statuses, setStatuses] = useState<typeof defaultStatuses>(() => {
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem('serviceRequestStatuses')
-            return saved ? JSON.parse(saved) : defaultStatuses
+            if (saved) {
+                const parsedStatuses = JSON.parse(saved)
+                // Ensure "New" status always exists
+                const hasNewStatus = parsedStatuses.some((s: typeof defaultStatuses[0]) => s.name === "New")
+                if (!hasNewStatus) {
+                    const newStatus = defaultStatuses.find(s => s.name === "New")
+                    if (newStatus) {
+                        return [newStatus, ...parsedStatuses]
+                    }
+                }
+                return parsedStatuses
+            }
+            return defaultStatuses
         }
         return defaultStatuses
     })
@@ -290,6 +302,12 @@ export default function ServiceRequestsStatuses() {
     }
 
     const handleDeleteStatus = (id: number) => {
+        // Prevent deletion of "New" status
+        const statusToDelete = statuses.find(status => status.id === id)
+        if (statusToDelete?.name === "New") {
+            return
+        }
+        
         const updatedStatuses = statuses.filter(status => status.id !== id)
         setStatuses(updatedStatuses)
         
@@ -463,12 +481,25 @@ export default function ServiceRequestsStatuses() {
                                             >
                                                 <Pencil className="size-4" style={{ color: '#696E72' }} />
                                             </button>
-                                            <button
-                                                onClick={() => handleDeleteStatus(status.id)}
-                                                className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
-                                            >
-                                                <RiDeleteBin6Line className="size-4" />
-                                            </button>
+                                            {status.name === "New" ? (
+                                                <Tooltip content="New status is required and cannot be deleted">
+                                                    <div>
+                                                        <button
+                                                            disabled
+                                                            className="text-gray-300 dark:text-gray-600 cursor-not-allowed"
+                                                        >
+                                                            <RiDeleteBin6Line className="size-4" />
+                                                        </button>
+                                                    </div>
+                                                </Tooltip>
+                                            ) : (
+                                                <button
+                                                    onClick={() => handleDeleteStatus(status.id)}
+                                                    className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                                >
+                                                    <RiDeleteBin6Line className="size-4" />
+                                                </button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>
