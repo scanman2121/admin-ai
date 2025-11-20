@@ -7,12 +7,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ApproverCard } from "@/components/ui/ApproverCard"
 import { AssignedPersonnelCard } from "@/components/ui/AssignedPersonnelCard"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { serviceRequests } from "@/data/data"
 import { ChevronDown, ChevronLeft, Download, ExternalLink, FileText, MapPin, Paperclip, Send, Upload } from "lucide-react"
 import Link from "next/link"
-import { notFound } from "next/navigation"
+import { notFound, useRouter } from "next/navigation"
 import { useState } from "react"
 
 // Mock additional service request data for detail page
@@ -129,6 +130,7 @@ const getServiceRequestDetailData = (serviceRequestId: string) => {
 }
 
 export default function ServiceRequestDetailPage({ params }: { params: { id: string } }) {
+    const router = useRouter()
     const [newMessage, setNewMessage] = useState("")
     const [newNote, setNewNote] = useState("")
     const [selectedUser, setSelectedUser] = useState<{
@@ -145,6 +147,9 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
         badgeId?: string
     } | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isCloseModalOpen, setIsCloseModalOpen] = useState(false)
+    const [tenantMessage, setTenantMessage] = useState("")
+    const [pendingStatus, setPendingStatus] = useState<string | null>(null)
     
     const serviceRequestDetail = getServiceRequestDetailData(params.id)
     
@@ -208,9 +213,35 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
     }
 
     const handleStatusChange = (newStatus: string) => {
-        setCurrentStatus(newStatus)
-        // Here you would typically make an API call to update the status
-        console.log(`Status updated to: ${newStatus}`)
+        // If changing to Completed, show modal to add message to tenant
+        if (newStatus === 'Completed') {
+            setPendingStatus(newStatus)
+            setIsCloseModalOpen(true)
+        } else {
+            setCurrentStatus(newStatus)
+            // Here you would typically make an API call to update the status
+            console.log(`Status updated to: ${newStatus}`)
+        }
+    }
+
+    const handleConfirmClose = () => {
+        if (pendingStatus) {
+            setCurrentStatus(pendingStatus)
+            console.log(`Status updated to: ${pendingStatus}`)
+            console.log(`Message to tenant: ${tenantMessage}`)
+            // Here you would typically make an API call to update the status and send the message
+        }
+        setIsCloseModalOpen(false)
+        setTenantMessage("")
+        setPendingStatus(null)
+        // Navigate back to service requests list
+        router.push('/operations/service-requests')
+    }
+
+    const handleCancelClose = () => {
+        setIsCloseModalOpen(false)
+        setTenantMessage("")
+        setPendingStatus(null)
     }
 
     const handleSetOwner = (userId: string) => {
@@ -538,6 +569,41 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                     </Card>
                 </div>
             </div>
+
+            {/* Close Service Request Modal */}
+            <Dialog open={isCloseModalOpen} onOpenChange={setIsCloseModalOpen}>
+                <DialogContent className="max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>Close service request</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4 py-4">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Add a message to the tenant about the completion of this service request.
+                        </p>
+                        <div>
+                            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                                Message to tenant
+                            </label>
+                            <Textarea
+                                placeholder="Enter your message to the tenant..."
+                                value={tenantMessage}
+                                onChange={(e) => setTenantMessage(e.target.value)}
+                                className="min-h-[120px]"
+                            />
+                        </div>
+                    </div>
+                    
+                    <DialogFooter>
+                        <Button variant="ghost" onClick={handleCancelClose}>
+                            Cancel
+                        </Button>
+                        <Button variant="primary" onClick={handleConfirmClose}>
+                            Close request
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
             {/* User Details Modal */}
             <UserDetailsModal
