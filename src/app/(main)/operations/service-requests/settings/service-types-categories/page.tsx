@@ -2664,7 +2664,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                         <div>
                             <Label>Available statuses</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                                Select statuses and configure notification settings for each
+                                Configure statuses for this service type
                             </p>
                             
                             <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -3117,7 +3117,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                         <div>
                             <Label>Available statuses</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-                                Select statuses and configure notification settings for each
+                                Configure statuses for this service type
                             </p>
                             
                             <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
