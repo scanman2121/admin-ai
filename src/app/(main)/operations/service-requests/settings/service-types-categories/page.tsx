@@ -6,12 +6,13 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
+import { Tooltip } from "@/components/Tooltip"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiMore2Line } from "@remixicon/react"
-import { Pencil, User, Users, DollarSign, CircleDollarSign } from "lucide-react"
+import { Pencil, User, Users, DollarSign, CircleDollarSign, Lock } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -2661,7 +2662,30 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                                        {availableStatuses.map((status) => {
+                                        {/* New Status - Always locked and selected */}
+                                        <tr className="bg-blue-50 dark:bg-blue-900/20">
+                                            <td className="px-3 py-2">
+                                                <div className="flex items-center space-x-2">
+                                                    <Tooltip content="New status is required and cannot be disabled">
+                                                        <div className="flex items-center">
+                                                            <Lock className="size-4 text-gray-400" />
+                                                        </div>
+                                                    </Tooltip>
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-3 h-3 rounded-full bg-purple-400"></div>
+                                                        <span className="text-sm text-gray-700 dark:text-gray-300">New</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-3 py-2 text-center">
+                                                <span className="text-gray-400 dark:text-gray-500">-</span>
+                                            </td>
+                                            <td className="px-3 py-2 text-center">
+                                                <span className="text-gray-400 dark:text-gray-500">-</span>
+                                            </td>
+                                        </tr>
+                                        
+                                        {availableStatuses.filter(status => status.name !== "New").map((status) => {
                                             const isSelected = newServiceType.statuses.some(s => s.name === status.name)
                                             const selectedStatus = newServiceType.statuses.find(s => s.name === status.name)
                                             
@@ -3091,7 +3115,30 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                                        {availableStatuses.map((status) => {
+                                        {/* New Status - Always locked and selected */}
+                                        <tr className="bg-blue-50 dark:bg-blue-900/20">
+                                            <td className="px-3 py-2">
+                                                <div className="flex items-center space-x-2">
+                                                    <Tooltip content="New status is required and cannot be disabled">
+                                                        <div className="flex items-center">
+                                                            <Lock className="size-4 text-gray-400" />
+                                                        </div>
+                                                    </Tooltip>
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-3 h-3 rounded-full bg-purple-400"></div>
+                                                        <span className="text-sm text-gray-700 dark:text-gray-300">New</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-3 py-2 text-center">
+                                                <span className="text-gray-400 dark:text-gray-500">-</span>
+                                            </td>
+                                            <td className="px-3 py-2 text-center">
+                                                <span className="text-gray-400 dark:text-gray-500">-</span>
+                                            </td>
+                                        </tr>
+                                        
+                                        {availableStatuses.filter(status => status.name !== "New").map((status) => {
                                             const isSelected = newServiceType.statuses.some(s => s.name === status.name)
                                             const selectedStatus = newServiceType.statuses.find(s => s.name === status.name)
                                             
