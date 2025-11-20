@@ -247,10 +247,12 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
     }
 
     const handleSelectCannedResponse = (response: CannedResponse, isTenantMessage: boolean = false) => {
+        // Strip HTML tags for plain text textareas
+        const textContent = response.content.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()
         if (isTenantMessage) {
-            setTenantMessage(response.content)
+            setTenantMessage(textContent)
         } else {
-            setNewMessage(response.content)
+            setNewMessage(textContent)
         }
     }
 

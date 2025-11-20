@@ -59,9 +59,10 @@ export function MessageInputActions({ onSelectResponse, onMakeProfessional, mess
                             </span>
                           ))}
                         </div>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
-                          {response.content}
-                        </p>
+                        <div 
+                          className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 [&_strong]:font-semibold [&_em]:italic [&_u]:underline"
+                          dangerouslySetInnerHTML={{ __html: response.content }}
+                        />
                       </div>
                     </div>
                   </button>

@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Textarea } from "@/components/ui/textarea"
+import { RichTextEditor } from "@/components/ui/rich-text-editor/RichTextEditor"
 import { RiArrowDownSLine } from "@remixicon/react"
 import { 
   CannedResponse, 
@@ -187,9 +187,10 @@ export function CannedResponsesSettings() {
                       </span>
                     ))}
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                    {response.content}
-                  </p>
+                  <div 
+                    className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 [&_strong]:font-semibold [&_em]:italic [&_u]:underline"
+                    dangerouslySetInnerHTML={{ __html: response.content }}
+                  />
                 </div>
                 <div className="flex items-center gap-2 ml-4">
                   <button
@@ -370,12 +371,11 @@ export function CannedResponsesSettings() {
             
             <div>
               <Label htmlFor="content">Message content *</Label>
-              <Textarea
-                id="content"
+              <RichTextEditor
                 value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                onChange={(value) => setFormData({ ...formData, content: value })}
                 placeholder="Enter the message content..."
-                className="mt-1 min-h-[120px]"
+                className="mt-1"
               />
             </div>
           </div>
