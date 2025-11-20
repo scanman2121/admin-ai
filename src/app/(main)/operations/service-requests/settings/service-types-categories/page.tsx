@@ -1180,7 +1180,28 @@ export default function ServiceRequestsServiceTypesCategories() {
                     </Button>
                         <Button 
                             variant="ghost" 
-                            onClick={() => setIsAddServiceTypeModalOpen(true)}
+                            onClick={() => {
+                                // Initialize with all statuses selected
+                                const allStatuses = availableStatuses.map(status => ({
+                                    name: status.name,
+                                    notifyRequestor: true,
+                                    notifyAssignee: true
+                                }))
+                                setNewServiceType({
+                                    requestType: "",
+                                    description: "",
+                                    category: "Cleaning & Waste",
+                                    approval: "None",
+                                    assignedTo: "",
+                                    assignedToType: "user" as "user" | "team",
+                                    priceType: "none" as "none" | "fixed" | "range",
+                                    priceFixed: "",
+                                    priceMin: "",
+                                    priceMax: "",
+                                    statuses: allStatuses
+                                })
+                                setIsAddServiceTypeModalOpen(true)
+                            }}
                             className="flex-shrink-0"
                         >
                         <RiAddLine className="size-4 mr-1.5" />
