@@ -68,7 +68,7 @@ export default function FeatureGatePage() {
                     <h3 className="text-[18px] font-medium text-[#2D3338] dark:text-[#2D3338] mb-2">
                       {featureItem.title}
                     </h3>
-                    <p className="text-base text-[#2D3338] dark:text-[#2D3338] leading-relaxed">
+                    <p className="text-base text-[#696E72] dark:text-[#696E72] leading-relaxed">
                       {featureItem.description}
                     </p>
                   </div>
