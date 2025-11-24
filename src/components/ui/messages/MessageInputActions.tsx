@@ -2,25 +2,25 @@
 
 import { Button } from "@/components/Button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CannedResponse, getCannedResponses } from "@/data/cannedResponses"
+import { QuickReply, getQuickReplies } from "@/data/cannedResponses"
 import { Sparkles } from "lucide-react"
 import { useState, useEffect } from "react"
 
 interface MessageInputActionsProps {
-  onSelectResponse: (response: CannedResponse) => void
+  onSelectResponse: (response: QuickReply) => void
   onMakeProfessional: () => void
   message: string
 }
 
 export function MessageInputActions({ onSelectResponse, onMakeProfessional, message }: MessageInputActionsProps) {
-  const [responses, setResponses] = useState<CannedResponse[]>([])
+  const [responses, setResponses] = useState<QuickReply[]>([])
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   useEffect(() => {
-    setResponses(getCannedResponses())
+    setResponses(getQuickReplies())
   }, [])
 
-  const handleSelectResponse = (response: CannedResponse) => {
+  const handleSelectResponse = (response: QuickReply) => {
     onSelectResponse(response)
     setIsPopoverOpen(false)
   }
@@ -30,14 +30,14 @@ export function MessageInputActions({ onSelectResponse, onMakeProfessional, mess
       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <PopoverTrigger asChild>
           <Button variant="secondary" size="sm" type="button">
-            Select response
+            Quick reply
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80 p-0" align="start">
           <div className="max-h-96 overflow-y-auto">
             {responses.length === 0 ? (
               <div className="p-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                No canned responses available. Create some in Settings.
+                No quick reply templates available. Create some in Settings.
               </div>
             ) : (
               <div className="py-2">

@@ -1,4 +1,4 @@
-export interface CannedResponse {
+export interface QuickReply {
   id: string
   title: string
   content: string
@@ -53,8 +53,8 @@ export const RESOURCE_TYPES = [
   "Lounges"
 ] as const
 
-// Default canned responses
-export const defaultCannedResponses: CannedResponse[] = [
+// Default quick replies
+export const defaultQuickReplies: QuickReply[] = [
   {
     id: "1",
     title: "Request completed",
@@ -99,19 +99,19 @@ export const defaultCannedResponses: CannedResponse[] = [
   }
 ]
 
-// Load canned responses from localStorage or use defaults
-export const getCannedResponses = (): CannedResponse[] => {
+// Load quick replies from localStorage or use defaults
+export const getQuickReplies = (): QuickReply[] => {
   if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('cannedResponses')
-    return saved ? JSON.parse(saved) : defaultCannedResponses
+    const saved = localStorage.getItem('quickReplies')
+    return saved ? JSON.parse(saved) : defaultQuickReplies
   }
-  return defaultCannedResponses
+  return defaultQuickReplies
 }
 
-// Save canned responses to localStorage
-export const saveCannedResponses = (responses: CannedResponse[]) => {
+// Save quick replies to localStorage
+export const saveQuickReplies = (responses: QuickReply[]) => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('cannedResponses', JSON.stringify(responses))
+    localStorage.setItem('quickReplies', JSON.stringify(responses))
   }
 }
 

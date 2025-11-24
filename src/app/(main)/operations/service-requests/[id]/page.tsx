@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { MessageInputActions } from "@/components/ui/messages/MessageInputActions"
 import { Textarea } from "@/components/ui/textarea"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
-import { CannedResponse } from "@/data/cannedResponses"
+import { QuickReply } from "@/data/cannedResponses"
 import { serviceRequests } from "@/data/data"
 import { ChevronDown, ChevronLeft, Download, ExternalLink, FileText, MapPin, Paperclip, Send, Upload } from "lucide-react"
 import Link from "next/link"
@@ -64,14 +64,6 @@ const getServiceRequestDetailData = (serviceRequestId: string) => {
         messages: [
             {
                 id: "1",
-                type: "file",
-                filename: "temperature_reading.pdf",
-                size: "2.4 MB",
-                timestamp: "06:30 PM",
-                downloadable: true
-            },
-            {
-                id: "2",
                 type: "message",
                 author: "John Smith",
                 content: "Perfect! The photos help a lot. I can see the issue clearly now. Here's the diagnostic report.",
@@ -80,12 +72,14 @@ const getServiceRequestDetailData = (serviceRequestId: string) => {
                 initials: "JS"
             },
             {
-                id: "3",
+                id: "2",
                 type: "file", 
                 filename: "hvac_diagnostic_report.pdf",
                 size: "1.2 MB",
                 timestamp: "06:30 PM",
-                downloadable: true
+                downloadable: true,
+                author: "John Smith",
+                initials: "JS"
             }
         ],
         internalNotes: [
@@ -246,7 +240,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
         setPendingStatus(null)
     }
 
-    const handleSelectCannedResponse = (response: CannedResponse, isTenantMessage: boolean = false) => {
+    const handleSelectQuickReply = (response: QuickReply, isTenantMessage: boolean = false) => {
         // Strip HTML tags for plain text textareas
         const textContent = response.content.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()
         if (isTenantMessage) {
@@ -412,7 +406,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                     {/* Messages */}
                     <Card>
                         <div className="p-3">
-                            <div className="mb-3">
+                            <div className="mb-4">
                                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">Messages</h2>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                     Communication between you and the tenant
@@ -420,70 +414,95 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                             </div>
                             
                             {/* Message thread */}
-                            <div className="space-y-3 mb-3">
-                                {/* Image attachment */}
-                                <div className="flex items-start gap-3">
-                                    <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-                                        <FileText className="h-8 w-8 text-gray-400" />
-                                    </div>
-                                </div>
-
-                                {/* File attachments */}
-                                {serviceRequestDetail.messages.filter(m => m.type === 'file').map((file) => (
-                                    <div key={file.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                        <div className="flex items-center gap-3">
-                                            <Paperclip className="h-4 w-4 text-gray-400" />
-                                            <div>
-                                                <p className="text-sm font-medium text-gray-900">{file.filename}</p>
-                                                <p className="text-xs text-gray-500">{file.size}</p>
+                            <div className="space-y-4 mb-4">
+                                {serviceRequestDetail.messages.map((item) => {
+                                    if (item.type === 'message') {
+                                        return (
+                                            <div key={item.id} className="flex items-start gap-3">
+                                                <Avatar className="size-8 shrink-0">
+                                                    <AvatarFallback className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs">
+                                                        {item.initials}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-50">{item.author}</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">{item.timestamp}</p>
+                                                    </div>
+                                                    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">
+                                                        <p className="text-sm text-gray-900 dark:text-gray-100">{item.content}</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <Button variant="ghost" size="sm">
-                                            Download
-                                        </Button>
-                                    </div>
-                                ))}
-
-                                {/* Message from user */}
-                                {serviceRequestDetail.messages.filter(m => m.type === 'message').map((message) => (
-                                    <div key={message.id} className="flex items-start gap-3">
-                                        <Avatar className="size-8">
-                                            <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
-                                                {message.initials}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <p className="text-sm font-medium text-gray-900">{message.author}</p>
-                                                <p className="text-xs text-gray-500">{message.timestamp}</p>
+                                        )
+                                    } else if (item.type === 'file') {
+                                        const fileExtension = item.filename?.split('.').pop()?.toUpperCase() || 'FILE'
+                                        const getFileTypeColor = (ext: string) => {
+                                            const extLower = ext.toLowerCase()
+                                            if (['pdf'].includes(extLower)) return 'bg-red-500'
+                                            if (['png', 'jpg', 'jpeg', 'gif', 'webp'].includes(extLower)) return 'bg-blue-500'
+                                            if (['doc', 'docx'].includes(extLower)) return 'bg-blue-600'
+                                            if (['xls', 'xlsx'].includes(extLower)) return 'bg-green-600'
+                                            return 'bg-gray-500'
+                                        }
+                                        
+                                        return (
+                                            <div key={item.id} className="flex items-start gap-3">
+                                                <Avatar className="size-8 shrink-0">
+                                                    <AvatarFallback className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs">
+                                                        {(item as any).initials || 'JS'}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-50">{(item as any).author || 'John Smith'}</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">{item.timestamp}</p>
+                                                    </div>
+                                                    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className={`${getFileTypeColor(fileExtension)} text-white text-xs font-medium px-2 py-1 rounded shrink-0`}>
+                                                                {fileExtension}
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{item.filename}</p>
+                                                                <p className="text-xs text-gray-500 dark:text-gray-400">{item.size}</p>
+                                                            </div>
+                                                            <button className="shrink-0 p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors">
+                                                                <Download className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <p className="text-sm text-gray-700">{message.content}</p>
-                                        </div>
-                                    </div>
-                                ))}
+                                        )
+                                    }
+                                    return null
+                                })}
                             </div>
 
                             {/* Message input */}
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <Textarea
-                                    placeholder="Type your message..."
+                                    placeholder="Add a message"
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
-                                    className="min-h-[80px]"
-                                />
-                                <MessageInputActions
-                                    onSelectResponse={(response) => handleSelectCannedResponse(response, false)}
-                                    onMakeProfessional={() => handleMakeProfessional(false)}
-                                    message={newMessage}
+                                    className="min-h-[100px] resize-none"
                                 />
                                 <div className="flex items-center justify-between">
-                                    <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                                    <Button variant="ghost" size="sm" className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
                                         <Paperclip className="h-4 w-4" />
-                                        Attach File
+                                        Attach file
                                     </Button>
-                                    <Button variant="primary" size="sm">
-                                        Send Message
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                        <MessageInputActions
+                                            onSelectResponse={(response) => handleSelectQuickReply(response, false)}
+                                            onMakeProfessional={() => handleMakeProfessional(false)}
+                                            message={newMessage}
+                                        />
+                                        <Button variant="primary" size="sm">
+                                            Send
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -637,7 +656,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                             />
                             <div className="mt-2">
                                 <MessageInputActions
-                                    onSelectResponse={(response) => handleSelectCannedResponse(response, true)}
+                                    onSelectResponse={(response) => handleSelectQuickReply(response, true)}
                                     onMakeProfessional={() => handleMakeProfessional(true)}
                                     message={tenantMessage}
                                 />

@@ -9,7 +9,7 @@ import {
     DrawerTitle,
     DrawerTrigger
 } from "@/components/ui/drawer"
-import { CannedResponsesSettings } from "@/components/ui/settings/CannedResponsesSettings"
+import { QuickReplyTemplatesSettings } from "@/components/ui/settings/CannedResponsesSettings"
 import { TagsSettings } from "@/components/ui/settings/TagsSettings"
 import { cn, focusRing } from "@/lib/utils"
 import {
@@ -93,7 +93,7 @@ export function Sidebar() {
   const { collapsed } = useContext(SidebarContext)
   const sidebarRef = useRef<HTMLElement>(null)
   const [announcement, setAnnouncement] = useState<string>("")
-  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email' | 'tags' | 'canned-responses'>('general')
+  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email' | 'tags' | 'quick-reply-templates'>('general')
 
   // Check if current path is in each section
   const isInPortfolio = portfolioItems.some(item =>
@@ -1007,15 +1007,15 @@ export function Sidebar() {
                             Tags
                           </button>
                           <button 
-                            onClick={() => setSettingsTab('canned-responses')}
+                            onClick={() => setSettingsTab('quick-reply-templates')}
                             className={cn(
                               "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                              settingsTab === 'canned-responses'
+                              settingsTab === 'quick-reply-templates'
                                 ? "text-primary bg-primary/10"
                                 : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                             )}
                           >
-                            Canned responses
+                            Quick reply templates
                           </button>
                         </div>
                       </div>
@@ -1236,9 +1236,9 @@ export function Sidebar() {
                           <TagsSettings />
                         )}
 
-                        {/* Canned Responses Tab Content */}
-                        {settingsTab === 'canned-responses' && (
-                          <CannedResponsesSettings />
+                        {/* Quick Reply Templates Tab Content */}
+                        {settingsTab === 'quick-reply-templates' && (
+                          <QuickReplyTemplatesSettings />
                         )}
                       </div>
                     </div>

@@ -9,9 +9,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { RichTextEditor } from "@/components/ui/rich-text-editor/RichTextEditor"
 import { RiArrowDownSLine, RiSearchLine } from "@remixicon/react"
 import { 
-  CannedResponse, 
-  getCannedResponses, 
-  saveCannedResponses,
+  QuickReply, 
+  getQuickReplies, 
+  saveQuickReplies,
   FEATURES,
   SERVICE_REQUEST_TYPES,
   RESOURCE_TYPES
@@ -27,10 +27,10 @@ const FEATURE_COLORS: Record<string, { border: string; bg: string }> = {
   "General": { border: "border-green-300", bg: "bg-green-50 dark:bg-green-950/20" }
 }
 
-export function CannedResponsesSettings() {
-  const [responses, setResponses] = useState<CannedResponse[]>([])
+export function QuickReplyTemplatesSettings() {
+  const [responses, setResponses] = useState<QuickReply[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [editingResponse, setEditingResponse] = useState<CannedResponse | null>(null)
+  const [editingResponse, setEditingResponse] = useState<QuickReply | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
   const [formData, setFormData] = useState({
     title: "",
@@ -41,7 +41,7 @@ export function CannedResponsesSettings() {
   })
 
   useEffect(() => {
-    setResponses(getCannedResponses())
+    setResponses(getQuickReplies())
   }, [])
 
   // Filter responses based on search query
@@ -55,7 +55,7 @@ export function CannedResponsesSettings() {
     )
   }, [responses, searchQuery])
 
-  const handleOpenModal = (response?: CannedResponse) => {
+  const handleOpenModal = (response?: QuickReply) => {
     if (response) {
       setEditingResponse(response)
       setFormData({
@@ -127,7 +127,7 @@ export function CannedResponsesSettings() {
   const handleSave = () => {
     if (!formData.title.trim() || !formData.content.trim() || formData.features.length === 0) return
 
-    let updatedResponses: CannedResponse[]
+    let updatedResponses: QuickReply[]
     if (editingResponse) {
       updatedResponses = responses.map(r =>
         r.id === editingResponse.id
@@ -142,7 +142,7 @@ export function CannedResponsesSettings() {
           : r
       )
     } else {
-      const newResponse: CannedResponse = {
+      const newResponse: QuickReply = {
         id: Date.now().toString(),
         title: formData.title,
         content: formData.content,
@@ -155,14 +155,14 @@ export function CannedResponsesSettings() {
     }
 
     setResponses(updatedResponses)
-    saveCannedResponses(updatedResponses)
+    saveQuickReplies(updatedResponses)
     handleCloseModal()
   }
 
   const handleDelete = (id: string) => {
     const updatedResponses = responses.filter(r => r.id !== id)
     setResponses(updatedResponses)
-    saveCannedResponses(updatedResponses)
+    saveQuickReplies(updatedResponses)
   }
 
   // Strip HTML tags for description display
@@ -174,7 +174,7 @@ export function CannedResponsesSettings() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Canned responses</h2>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Quick reply templates</h2>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Create and manage preset messages for quick communication with tenants
           </p>
@@ -203,7 +203,7 @@ export function CannedResponsesSettings() {
       {filteredResponses.length === 0 ? (
         <div className="text-center py-12 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            {searchQuery ? "No responses found" : "No canned responses yet"}
+            {searchQuery ? "No responses found" : "No quick reply templates yet"}
           </p>
           {!searchQuery && (
             <Button variant="secondary" onClick={() => handleOpenModal()}>
