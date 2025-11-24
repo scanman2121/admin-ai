@@ -150,6 +150,9 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
     
     const serviceRequestDetail = getServiceRequestDetailData(params.id)
     
+    // Messages state - initialize with existing messages from service request detail
+    const [messages, setMessages] = useState(serviceRequestDetail?.messages || [])
+    
     const [assignedPersonnel, setAssignedPersonnel] = useState(
         serviceRequestDetail?.assignedPersonnel || []
     )
@@ -295,6 +298,47 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
         console.log('Owner unset')
     }
 
+    const handleSendMessage = () => {
+        // Strip HTML tags to check if message has content
+        const textContent = newMessage.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()
+        if (!textContent) return
+
+        // Get current time
+        const now = new Date()
+        const hours = now.getHours()
+        const minutes = now.getMinutes()
+        const ampm = hours >= 12 ? 'PM' : 'AM'
+        const displayHours = hours % 12 || 12
+        const displayMinutes = minutes < 10 ? `0${minutes}` : minutes
+        const timestamp = `${displayHours}:${displayMinutes} ${ampm}`
+
+        // Create new message object
+        // Using current admin user - in production this would come from auth context
+        const currentUser = {
+            name: "You",
+            initials: "AD" // Admin initials
+        }
+
+        const newMessageObj = {
+            id: Date.now().toString(),
+            type: "message" as const,
+            author: currentUser.name,
+            content: newMessage, // Keep HTML content for rich text
+            timestamp: timestamp,
+            avatar: null,
+            initials: currentUser.initials
+        }
+
+        // Add message to the list
+        setMessages(prev => [...prev, newMessageObj])
+        
+        // Clear the input
+        setNewMessage("")
+        
+        // In production, you would also send this to the API here
+        console.log('Message sent:', newMessageObj)
+    }
+
     return (
         <div className="space-y-6">
             {/* Header with back navigation and actions */}
@@ -423,7 +467,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                             
                             {/* Message thread */}
                             <div className="space-y-4 mb-4">
-                                {serviceRequestDetail.messages.map((item) => {
+                                {messages.map((item) => {
                                     if (item.type === 'message') {
                                         return (
                                             <div key={item.id} className="flex items-start gap-3">
@@ -438,7 +482,10 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                                                         <p className="text-xs text-gray-500 dark:text-gray-400">{item.timestamp}</p>
                                                     </div>
                                                     <div className="bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2">
-                                                        <p className="text-sm text-gray-900 dark:text-gray-100">{item.content}</p>
+                                                        <div 
+                                                            className="text-sm text-gray-900 dark:text-gray-100 [&_strong]:font-semibold [&_em]:italic [&_u]:underline [&_ul]:ml-4 [&_ol]:ml-4 [&_li]:mb-1 [&_p]:mb-2 [&_p:last-child]:mb-0"
+                                                            dangerouslySetInnerHTML={{ __html: item.content || '' }}
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
@@ -508,7 +555,12 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                                             onMakeProfessional={() => handleMakeProfessional(false)}
                                             message={newMessage.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()}
                                         />
-                                        <Button variant="primary" size="sm">
+                                        <Button 
+                                            variant="primary" 
+                                            size="sm"
+                                            onClick={handleSendMessage}
+                                            disabled={!newMessage.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()}
+                                        >
                                             Send
                                         </Button>
                                     </div>
