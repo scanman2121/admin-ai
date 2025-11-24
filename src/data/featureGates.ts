@@ -22,7 +22,7 @@ export interface FeatureGateConfig {
 export const featureGates: Record<string, FeatureGateConfig> = {
   "service-requests": {
     id: "service-requests",
-    suite: "Operations Suite",
+    suite: "Operations",
     title: "Service Requests",
     subtitle: "Create configurable, AI-powered workflows that simplify operations across your property.",
     features: [
@@ -63,7 +63,7 @@ export const featureGates: Record<string, FeatureGateConfig> = {
   },
   "resource-booking": {
     id: "resource-booking",
-    suite: "Operations Suite",
+    suite: "Operations",
     title: "Resource Booking",
     subtitle: "Streamline space and resource reservations with intelligent scheduling and capacity management.",
     features: [
@@ -104,7 +104,7 @@ export const featureGates: Record<string, FeatureGateConfig> = {
   },
   "visitor-management": {
     id: "visitor-management",
-    suite: "Operations Suite",
+    suite: "Access Control",
     title: "Visitor Management",
     subtitle: "Simplify guest registration, check-in, and building access with automated visitor workflows.",
     features: [
@@ -145,7 +145,7 @@ export const featureGates: Record<string, FeatureGateConfig> = {
   },
   "access-control-included": {
     id: "access-control-included",
-    suite: "Operations Suite",
+    suite: "Access Control",
     title: "Access Control Command Center",
     subtitle: "Centralize and manage access control across your entire portfolio from a single, unified dashboard.",
     features: [
@@ -186,7 +186,7 @@ export const featureGates: Record<string, FeatureGateConfig> = {
   },
   "access-control-upgrade": {
     id: "access-control-upgrade",
-    suite: "Operations Suite",
+    suite: "Access Control",
     title: "Access Control Command Center",
     subtitle: "Centralize and manage access control across your entire portfolio from a single, unified dashboard.",
     features: [

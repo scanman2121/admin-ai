@@ -37,7 +37,7 @@ export default function FeatureGatePage() {
         </Select>
       </div>
 
-      <Card className="p-6 pb-10">
+      <Card className="p-8 pb-12">
         {/* Header Section */}
         <div className="mb-12">
           <Badge variant="default" className="mb-2">
