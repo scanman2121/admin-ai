@@ -14,6 +14,7 @@ export interface FeatureGateConfig {
     price: string
     ctaText: string
     buttonText: string
+    status?: "included" | "contact-team" | "upgrade-required"
   }
   includedFeatures: string[]
 }
@@ -49,7 +50,8 @@ export const featureGates: Record<string, FeatureGateConfig> = {
     pricing: {
       price: "$0",
       ctaText: "Get started today",
-      buttonText: "Configure Service Requests"
+      buttonText: "Configure Service Requests",
+      status: "included"
     },
     includedFeatures: [
       "Custom request types, statuses, forms, and logic",
@@ -89,7 +91,8 @@ export const featureGates: Record<string, FeatureGateConfig> = {
     pricing: {
       price: "$0",
       ctaText: "Get started today",
-      buttonText: "Configure Resource Booking"
+      buttonText: "Configure Resource Booking",
+      status: "included"
     },
     includedFeatures: [
       "Custom resource types and categories",
@@ -129,7 +132,8 @@ export const featureGates: Record<string, FeatureGateConfig> = {
     pricing: {
       price: "$0",
       ctaText: "Get started today",
-      buttonText: "Configure Visitor Management"
+      buttonText: "Configure Visitor Management",
+      status: "included"
     },
     includedFeatures: [
       "Pre-registration and walk-in support",
@@ -137,6 +141,88 @@ export const featureGates: Record<string, FeatureGateConfig> = {
       "Automated host notifications",
       "Visitor history and reporting",
       "Integration with access control systems"
+    ]
+  },
+  "access-control-included": {
+    id: "access-control-included",
+    suite: "Operations Suite",
+    title: "Access Control Command Center",
+    subtitle: "Centralize and manage access control across your entire portfolio from a single, unified dashboard.",
+    features: [
+      {
+        icon: Shield,
+        title: "Unified access management",
+        description: "Manage card access, mobile credentials, and visitor permissions across all buildings and tenants from one centralized platform."
+      },
+      {
+        icon: Zap,
+        title: "Real-time access monitoring",
+        description: "Monitor access events in real-time, track entry and exit patterns, and receive instant alerts for security incidents or anomalies."
+      },
+      {
+        icon: Users,
+        title: "Automated provisioning and deprovisioning",
+        description: "Automatically grant or revoke access based on employee status, lease dates, or custom rules. Reduce manual work and security risks."
+      },
+      {
+        icon: MessageSquare,
+        title: "Comprehensive audit trails",
+        description: "Maintain detailed logs of all access events for compliance, security investigations, and operational insights across your portfolio."
+      }
+    ],
+    pricing: {
+      price: "$0",
+      ctaText: "Contact your account team to configure",
+      buttonText: "Contact Account Team",
+      status: "contact-team"
+    },
+    includedFeatures: [
+      "Multi-building access control management",
+      "Card and mobile credential support",
+      "Real-time access monitoring and alerts",
+      "Automated provisioning workflows",
+      "Comprehensive audit logs and reporting"
+    ]
+  },
+  "access-control-upgrade": {
+    id: "access-control-upgrade",
+    suite: "Operations Suite",
+    title: "Access Control Command Center",
+    subtitle: "Centralize and manage access control across your entire portfolio from a single, unified dashboard.",
+    features: [
+      {
+        icon: Shield,
+        title: "Unified access management",
+        description: "Manage card access, mobile credentials, and visitor permissions across all buildings and tenants from one centralized platform."
+      },
+      {
+        icon: Zap,
+        title: "Real-time access monitoring",
+        description: "Monitor access events in real-time, track entry and exit patterns, and receive instant alerts for security incidents or anomalies."
+      },
+      {
+        icon: Users,
+        title: "Automated provisioning and deprovisioning",
+        description: "Automatically grant or revoke access based on employee status, lease dates, or custom rules. Reduce manual work and security risks."
+      },
+      {
+        icon: MessageSquare,
+        title: "Comprehensive audit trails",
+        description: "Maintain detailed logs of all access events for compliance, security investigations, and operational insights across your portfolio."
+      }
+    ],
+    pricing: {
+      price: "Upgrade required",
+      ctaText: "Upgrade your plan to access this feature",
+      buttonText: "Talk to Sales",
+      status: "upgrade-required"
+    },
+    includedFeatures: [
+      "Multi-building access control management",
+      "Card and mobile credential support",
+      "Real-time access monitoring and alerts",
+      "Automated provisioning workflows",
+      "Comprehensive audit logs and reporting"
     ]
   }
 }

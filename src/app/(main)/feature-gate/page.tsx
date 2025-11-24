@@ -37,16 +37,16 @@ export default function FeatureGatePage() {
         </Select>
       </div>
 
-      <Card className="p-6">
+      <Card className="p-6 pb-10">
         {/* Header Section */}
-        <div className="mb-8">
+        <div className="mb-12">
           <Badge variant="default" className="mb-2">
             {feature.suite}
           </Badge>
           <h1 className="text-[28px] font-medium text-[#2D3338] dark:text-[#2D3338] mb-2">
             {feature.title}
           </h1>
-          <p className="text-lg text-[#2D3338] dark:text-[#2D3338] max-w-3xl">
+          <p className="text-lg text-[#2D3338] dark:text-[#2D3338] max-w-3xl mb-8">
             {feature.subtitle}
           </p>
         </div>
@@ -85,9 +85,11 @@ export default function FeatureGatePage() {
                   {/* Header */}
                   <div>
                     <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">
-                      Included in your plan!
+                      {feature.pricing.status === "upgrade-required" 
+                        ? "Upgrade your plan" 
+                        : "Included in your plan!"}
                     </p>
-                    <p className="text-5xl font-bold text-gray-900 dark:text-gray-50 mb-2">
+                    <p className={`${feature.pricing.status === "upgrade-required" ? "text-2xl" : "text-5xl"} font-bold text-gray-900 dark:text-gray-50 mb-2`}>
                       {feature.pricing.price}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
