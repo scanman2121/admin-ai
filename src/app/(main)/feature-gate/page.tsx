@@ -80,7 +80,7 @@ export default function FeatureGatePage() {
           {/* Right Column - Pricing Card (Sticky) */}
           <div className="lg:col-span-1">
             <div className="sticky top-6">
-              <Card className="p-6 bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+              <div className="rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow p-6">
                 <div className="space-y-6">
                   {/* Header */}
                   <div>
@@ -116,7 +116,7 @@ export default function FeatureGatePage() {
                     {feature.pricing.buttonText}
                   </Button>
                 </div>
-              </Card>
+              </div>
             </div>
           </div>
         </div>
