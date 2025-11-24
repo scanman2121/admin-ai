@@ -246,9 +246,8 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
             // For tenant message modal, use HTML content directly for rich text editor
             setTenantMessage(response.content)
         } else {
-            // For regular message input, strip HTML tags for plain text textarea
-            const textContent = response.content.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()
-            setNewMessage(textContent)
+            // For regular message input, use HTML content directly for rich text editor
+            setNewMessage(response.content)
         }
     }
 
@@ -257,45 +256,31 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
         const currentMessage = isTenantMessage ? tenantMessage : newMessage
         if (!currentMessage.trim()) return
 
-        // For tenant message (rich text editor), preserve HTML structure
+        // Extract text content, make professional, then wrap back in HTML if needed
+        const textContent = currentMessage.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim()
+        if (!textContent) return
+        
+        // Simple professional rewrite simulation
+        let professionalText = textContent
+            .replace(/\bi\b/gi, 'I')
+            .replace(/\bu\b/gi, 'you')
+            .replace(/\bur\b/gi, 'your')
+            .replace(/\bthx\b/gi, 'thank you')
+            .replace(/\bthnx\b/gi, 'thank you')
+            .replace(/\bpls\b/gi, 'please')
+            .replace(/\bplz\b/gi, 'please')
+            .replace(/\bim\b/gi, "I'm")
+            .replace(/\bwont\b/gi, "won't")
+            .replace(/\bcant\b/gi, "can't")
+            .replace(/\bdont\b/gi, "don't")
+            + (textContent.endsWith('.') ? '' : '.')
+        
+        // Wrap in paragraph tag to maintain HTML structure
+        const professionalMessage = `<p>${professionalText}</p>`
+        
         if (isTenantMessage) {
-            // Extract text content, make professional, then wrap back in HTML if needed
-            const textContent = currentMessage.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim()
-            if (!textContent) return
-            
-            // Simple professional rewrite simulation
-            let professionalText = textContent
-                .replace(/\bi\b/gi, 'I')
-                .replace(/\bu\b/gi, 'you')
-                .replace(/\bur\b/gi, 'your')
-                .replace(/\bthx\b/gi, 'thank you')
-                .replace(/\bthnx\b/gi, 'thank you')
-                .replace(/\bpls\b/gi, 'please')
-                .replace(/\bplz\b/gi, 'please')
-                .replace(/\bim\b/gi, "I'm")
-                .replace(/\bwont\b/gi, "won't")
-                .replace(/\bcant\b/gi, "can't")
-                .replace(/\bdont\b/gi, "don't")
-                + (textContent.endsWith('.') ? '' : '.')
-            
-            // Wrap in paragraph tag to maintain HTML structure
-            setTenantMessage(`<p>${professionalText}</p>`)
+            setTenantMessage(professionalMessage)
         } else {
-            // For regular message (plain text), use simple replacements
-            const professionalMessage = currentMessage
-                .replace(/\bi\b/gi, 'I')
-                .replace(/\bu\b/gi, 'you')
-                .replace(/\bur\b/gi, 'your')
-                .replace(/\bthx\b/gi, 'thank you')
-                .replace(/\bthnx\b/gi, 'thank you')
-                .replace(/\bpls\b/gi, 'please')
-                .replace(/\bplz\b/gi, 'please')
-                .replace(/\bim\b/gi, "I'm")
-                .replace(/\bwont\b/gi, "won't")
-                .replace(/\bcant\b/gi, "can't")
-                .replace(/\bdont\b/gi, "don't")
-                + (currentMessage.endsWith('.') ? '' : '.')
-            
             setNewMessage(professionalMessage)
         }
     }
@@ -505,11 +490,12 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
 
                             {/* Message input */}
                             <div className="space-y-2">
-                                <Textarea
-                                    placeholder="Add a message"
+                                <RichTextEditor
                                     value={newMessage}
-                                    onChange={(e) => setNewMessage(e.target.value)}
-                                    className="min-h-[100px] resize-none"
+                                    onChange={(value) => setNewMessage(value)}
+                                    placeholder="Add a message"
+                                    className="mt-1"
+                                    minHeight="150px"
                                 />
                                 <div className="flex items-center justify-between">
                                     <Button variant="ghost" size="sm" className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
@@ -520,7 +506,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                                         <MessageInputActions
                                             onSelectResponse={(response) => handleSelectQuickReply(response, false)}
                                             onMakeProfessional={() => handleMakeProfessional(false)}
-                                            message={newMessage}
+                                            message={newMessage.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()}
                                         />
                                         <Button variant="primary" size="sm">
                                             Send
