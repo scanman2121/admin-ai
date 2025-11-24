@@ -42,10 +42,10 @@ export default function FeatureGatePage() {
           <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">
             {feature.suite}
           </p>
-          <h1 className="text-[28px] font-medium text-gray-900 dark:text-gray-50 mb-3">
+          <h1 className="text-[28px] font-medium text-[#2D3338] dark:text-[#2D3338] mb-2">
             {feature.title}
           </h1>
-          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl">
+          <p className="text-lg text-[#2D3338] dark:text-[#2D3338] max-w-3xl">
             {feature.subtitle}
           </p>
         </div>
@@ -64,10 +64,10 @@ export default function FeatureGatePage() {
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-50 mb-2">
+                    <h3 className="text-[18px] font-medium text-[#2D3338] dark:text-[#2D3338] mb-2">
                       {featureItem.title}
                     </h3>
-                    <p className="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+                    <p className="text-base text-[#2D3338] dark:text-[#2D3338] leading-relaxed">
                       {featureItem.description}
                     </p>
                   </div>
