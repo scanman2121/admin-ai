@@ -9,6 +9,7 @@ import { AssignedPersonnelCard } from "@/components/ui/AssignedPersonnelCard"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { MessageInputActions } from "@/components/ui/messages/MessageInputActions"
+import { RichTextEditor } from "@/components/ui/rich-text-editor/RichTextEditor"
 import { Textarea } from "@/components/ui/textarea"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { QuickReply } from "@/data/cannedResponses"
@@ -241,11 +242,12 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
     }
 
     const handleSelectQuickReply = (response: QuickReply, isTenantMessage: boolean = false) => {
-        // Strip HTML tags for plain text textareas
-        const textContent = response.content.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()
         if (isTenantMessage) {
-            setTenantMessage(textContent)
+            // For tenant message modal, use HTML content directly for rich text editor
+            setTenantMessage(response.content)
         } else {
+            // For regular message input, strip HTML tags for plain text textarea
+            const textContent = response.content.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()
             setNewMessage(textContent)
         }
     }
@@ -255,24 +257,45 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
         const currentMessage = isTenantMessage ? tenantMessage : newMessage
         if (!currentMessage.trim()) return
 
-        // Simple professional rewrite simulation
-        const professionalMessage = currentMessage
-            .replace(/\bi\b/gi, 'I')
-            .replace(/\bu\b/gi, 'you')
-            .replace(/\bur\b/gi, 'your')
-            .replace(/\bthx\b/gi, 'thank you')
-            .replace(/\bthnx\b/gi, 'thank you')
-            .replace(/\bpls\b/gi, 'please')
-            .replace(/\bplz\b/gi, 'please')
-            .replace(/\bim\b/gi, "I'm")
-            .replace(/\bwont\b/gi, "won't")
-            .replace(/\bcant\b/gi, "can't")
-            .replace(/\bdont\b/gi, "don't")
-            + (currentMessage.endsWith('.') ? '' : '.')
-
+        // For tenant message (rich text editor), preserve HTML structure
         if (isTenantMessage) {
-            setTenantMessage(professionalMessage)
+            // Extract text content, make professional, then wrap back in HTML if needed
+            const textContent = currentMessage.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim()
+            if (!textContent) return
+            
+            // Simple professional rewrite simulation
+            let professionalText = textContent
+                .replace(/\bi\b/gi, 'I')
+                .replace(/\bu\b/gi, 'you')
+                .replace(/\bur\b/gi, 'your')
+                .replace(/\bthx\b/gi, 'thank you')
+                .replace(/\bthnx\b/gi, 'thank you')
+                .replace(/\bpls\b/gi, 'please')
+                .replace(/\bplz\b/gi, 'please')
+                .replace(/\bim\b/gi, "I'm")
+                .replace(/\bwont\b/gi, "won't")
+                .replace(/\bcant\b/gi, "can't")
+                .replace(/\bdont\b/gi, "don't")
+                + (textContent.endsWith('.') ? '' : '.')
+            
+            // Wrap in paragraph tag to maintain HTML structure
+            setTenantMessage(`<p>${professionalText}</p>`)
         } else {
+            // For regular message (plain text), use simple replacements
+            const professionalMessage = currentMessage
+                .replace(/\bi\b/gi, 'I')
+                .replace(/\bu\b/gi, 'you')
+                .replace(/\bur\b/gi, 'your')
+                .replace(/\bthx\b/gi, 'thank you')
+                .replace(/\bthnx\b/gi, 'thank you')
+                .replace(/\bpls\b/gi, 'please')
+                .replace(/\bplz\b/gi, 'please')
+                .replace(/\bim\b/gi, "I'm")
+                .replace(/\bwont\b/gi, "won't")
+                .replace(/\bcant\b/gi, "can't")
+                .replace(/\bdont\b/gi, "don't")
+                + (currentMessage.endsWith('.') ? '' : '.')
+            
             setNewMessage(professionalMessage)
         }
     }
@@ -635,7 +658,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
 
             {/* Close Service Request Modal */}
             <Dialog open={isCloseModalOpen} onOpenChange={setIsCloseModalOpen}>
-                <DialogContent className="max-w-lg">
+                <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
                         <DialogTitle>Close service request</DialogTitle>
                     </DialogHeader>
@@ -648,17 +671,18 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                             <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                                 Message to tenant <span className="text-gray-500 font-normal">(Optional)</span>
                             </label>
-                            <Textarea
-                                placeholder="Enter your message to the tenant..."
+                            <RichTextEditor
                                 value={tenantMessage}
-                                onChange={(e) => setTenantMessage(e.target.value)}
-                                className="min-h-[120px]"
+                                onChange={(value) => setTenantMessage(value)}
+                                placeholder="Enter your message to the tenant..."
+                                className="mt-1"
+                                minHeight="300px"
                             />
                             <div className="mt-2">
                                 <MessageInputActions
                                     onSelectResponse={(response) => handleSelectQuickReply(response, true)}
                                     onMakeProfessional={() => handleMakeProfessional(true)}
-                                    message={tenantMessage}
+                                    message={tenantMessage.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim()}
                                 />
                             </div>
                         </div>
