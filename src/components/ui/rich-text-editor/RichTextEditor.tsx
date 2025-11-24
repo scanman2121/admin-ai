@@ -8,9 +8,10 @@ interface RichTextEditorProps {
   onChange: (value: string) => void
   placeholder?: string
   className?: string
+  minHeight?: string
 }
 
-export function RichTextEditor({ value, onChange, placeholder, className }: RichTextEditorProps) {
+export function RichTextEditor({ value, onChange, placeholder, className, minHeight = "120px" }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -103,10 +104,11 @@ export function RichTextEditor({ value, onChange, placeholder, className }: Rich
           document.execCommand("insertText", false, text)
           handleInput()
         }}
-        className="min-h-[120px] p-3 text-sm text-gray-900 dark:text-gray-100 focus:outline-none overflow-y-auto [&:empty]:before:content-[attr(data-placeholder)] [&:empty]:before:text-gray-400 [&:empty]:before:pointer-events-none [&_ul]:ml-6 [&_ol]:ml-6 [&_ul]:my-2 [&_ol]:my-2 [&_li]:mb-1"
+        className={`p-3 text-sm text-gray-900 dark:text-gray-100 focus:outline-none overflow-y-auto [&:empty]:before:content-[attr(data-placeholder)] [&:empty]:before:text-gray-400 [&:empty]:before:pointer-events-none [&_ul]:ml-6 [&_ol]:ml-6 [&_ul]:my-2 [&_ol]:my-2 [&_li]:mb-1`}
         style={{
           whiteSpace: "pre-wrap",
-          wordBreak: "break-word"
+          wordBreak: "break-word",
+          minHeight: minHeight
         }}
         data-placeholder={placeholder}
         suppressContentEditableWarning

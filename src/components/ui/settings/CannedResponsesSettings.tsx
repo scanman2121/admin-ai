@@ -292,7 +292,7 @@ export function QuickReplyTemplatesSettings() {
 
       {/* Add/Edit Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingResponse ? 'Edit response' : 'Add response'}</DialogTitle>
           </DialogHeader>
@@ -454,6 +454,7 @@ export function QuickReplyTemplatesSettings() {
                 onChange={(value) => setFormData({ ...formData, content: value })}
                 placeholder="Enter the message content..."
                 className="mt-1"
+                minHeight="400px"
               />
             </div>
           </div>

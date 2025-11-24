@@ -57,43 +57,22 @@ export const RESOURCE_TYPES = [
 export const defaultQuickReplies: QuickReply[] = [
   {
     id: "1",
-    title: "Request completed",
-    content: "Your service request has been completed. Please let us know if you need any additional assistance.",
-    features: ["Service Request"],
-    usage: 28
-  },
-  {
-    id: "2",
-    title: "Request in progress",
-    content: "We're currently working on your service request and will update you as soon as we have more information.",
-    features: ["Service Request"],
-    usage: 15
-  },
-  {
-    id: "3",
-    title: "Scheduling follow-up",
-    content: "We'll be following up with you shortly to schedule a convenient time to address your request.",
-    features: ["Service Request", "Resource Booking"],
-    usage: 12
-  },
-  {
-    id: "4",
     title: "Additional information needed",
     content: "To better assist you, we need some additional information about your request. Could you please provide more details?",
     features: ["General"],
     usage: 8
   },
   {
-    id: "5",
+    id: "2",
     title: "Request received",
     content: "Thank you for submitting your service request. We've received it and will begin processing it shortly.",
     features: ["Service Request"],
     usage: 22
   },
   {
-    id: "6",
+    id: "3",
     title: "Directions",
-    content: "To get to the conference room, take the elevator to Floor 5. Exit the elevator and turn right. Walk down the hallway past the reception desk, and the conference room will be on your left, Room 520.",
+    content: "<p><strong>Directions to Conference Room 520</strong></p><p>To get to the conference room, please follow these steps:</p><ul><li><strong>Take the elevator</strong> to <u>Floor 5</u></li><li>Exit the elevator and <em>turn right</em></li><li>Walk down the hallway past the reception desk</li><li>The conference room will be on your <strong>left</strong>, Room 520</li></ul><p><strong>Important notes:</strong></p><ul><li>The elevator is located in the main lobby</li><li>If you need assistance, please check in at the reception desk on Floor 5</li><li>Room 520 is equipped with a projector, whiteboard, and video conferencing capabilities</li><li>Restrooms are located down the hall, past Room 520 on the right</li></ul><p>If you have any questions or need further assistance, please don't hesitate to reach out!</p>",
     features: ["Service Request", "Resource Booking", "Visitor", "General"],
     usage: 5
   }
