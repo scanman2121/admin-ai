@@ -2,6 +2,7 @@
 
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/Badge"
 import {
   Select,
   SelectContent,
@@ -39,9 +40,9 @@ export default function FeatureGatePage() {
       <Card className="p-6">
         {/* Header Section */}
         <div className="mb-8">
-          <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">
+          <Badge variant="default" className="mb-2">
             {feature.suite}
-          </p>
+          </Badge>
           <h1 className="text-[28px] font-medium text-[#2D3338] dark:text-[#2D3338] mb-2">
             {feature.title}
           </h1>
@@ -59,8 +60,8 @@ export default function FeatureGatePage() {
               return (
                 <div key={index} className="flex gap-4">
                   <div className="flex-shrink-0 mt-1">
-                    <div className="size-12 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                      <Icon className="size-6 text-gray-600 dark:text-gray-400" />
+                    <div className="size-12 rounded-lg bg-white dark:bg-white border border-gray-200 dark:border-gray-200 shadow-sm flex items-center justify-center">
+                      <Icon className="size-6 text-[#2D3338] dark:text-[#2D3338] stroke-[1.5]" />
                     </div>
                   </div>
                   <div className="flex-1">
