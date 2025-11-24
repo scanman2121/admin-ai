@@ -80,8 +80,8 @@ export default function FeatureGatePage() {
           {/* Right Column - Pricing Card (Sticky) */}
           <div className="lg:col-span-1">
             <div className="sticky top-6">
-              <div className="rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow p-6">
-                <div className="space-y-6">
+              <div className="rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow overflow-hidden">
+                <div className="p-6 space-y-6">
                   {/* Header */}
                   <div>
                     <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">
@@ -110,8 +110,10 @@ export default function FeatureGatePage() {
                       </div>
                     ))}
                   </div>
+                </div>
 
-                  {/* CTA Button */}
+                {/* CTA Button Section */}
+                <div className="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-6">
                   <Button className="w-full" size="lg">
                     {feature.pricing.buttonText}
                   </Button>
