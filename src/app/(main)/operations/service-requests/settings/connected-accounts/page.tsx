@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
+import { Checkbox } from "@/components/Checkbox"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
@@ -59,6 +60,17 @@ const defaultFieldMappings: Record<string, string> = {
     "Origin": "Community"
 }
 
+// Service type categories
+const serviceTypeCategories = [
+    { id: "cleaning-waste", name: "Cleaning & Waste", description: "Cleaning services and waste removal" },
+    { id: "temperature-air", name: "Temperature & Air", description: "HVAC and climate control issues" },
+    { id: "repairs-maintenance", name: "Repairs & Maintenance", description: "General repairs and maintenance" },
+    { id: "access-security", name: "Access & Security", description: "Access control and security requests" },
+    { id: "hospitality-concierge", name: "Hospitality & Concierge", description: "Concierge and hospitality services" },
+    { id: "signage-facilities", name: "Signage & Facilities", description: "Signage and facilities management" },
+    { id: "other", name: "Other", description: "Miscellaneous service requests" }
+]
+
 export default function ServiceRequestsConnectedAccounts() {
     const pathname = usePathname()
     
@@ -73,12 +85,14 @@ export default function ServiceRequestsConnectedAccounts() {
         consumerSecret: ""
     })
     const [fieldMappings, setFieldMappings] = useState<Record<string, string>>(defaultFieldMappings)
+    const [selectedServiceTypes, setSelectedServiceTypes] = useState<string[]>([])
 
     const handleSalesforceToggle = (checked: boolean) => {
         setSalesforceEnabled(checked)
         if (!checked) {
             setIsConnected(false)
             setFieldMappings({})
+            setSelectedServiceTypes([])
         }
     }
 
@@ -105,6 +119,16 @@ export default function ServiceRequestsConnectedAccounts() {
             ...prev,
             [salesforceFieldId]: templateValue
         }))
+    }
+
+    const handleServiceTypeToggle = (serviceTypeId: string) => {
+        setSelectedServiceTypes(prev => {
+            if (prev.includes(serviceTypeId)) {
+                return prev.filter(id => id !== serviceTypeId)
+            } else {
+                return [...prev, serviceTypeId]
+            }
+        })
     }
 
     return (
@@ -372,6 +396,56 @@ export default function ServiceRequestsConnectedAccounts() {
                                     })}
                                 </TableBody>
                             </Table>
+                        </div>
+                    </Card>
+                )}
+
+                {/* Service Types Selection Card - Shown after connection */}
+                {isConnected && (
+                    <Card>
+                        <div className="space-y-4">
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
+                                    Service types
+                                </h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    Select which service types this Salesforce connection should apply to
+                                </p>
+                            </div>
+
+                            <div className="space-y-3">
+                                {serviceTypeCategories.map((category) => (
+                                    <div
+                                        key={category.id}
+                                        className="flex items-start justify-between gap-3 py-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+                                    >
+                                        <div className="flex-1">
+                                            <Label
+                                                htmlFor={`service-type-${category.id}`}
+                                                className="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer"
+                                            >
+                                                {category.name}
+                                            </Label>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                                {category.description}
+                                            </p>
+                                        </div>
+                                        <Checkbox
+                                            id={`service-type-${category.id}`}
+                                            checked={selectedServiceTypes.includes(category.id)}
+                                            onCheckedChange={() => handleServiceTypeToggle(category.id)}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+
+                            {selectedServiceTypes.length > 0 && (
+                                <div className="pt-2">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        {selectedServiceTypes.length} service type{selectedServiceTypes.length !== 1 ? 's' : ''} selected
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     </Card>
                 )}
