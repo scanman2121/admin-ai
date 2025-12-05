@@ -38,7 +38,6 @@ const salesforceMappingFields = [
 
 // Service request field templates that can be used in mappings
 const serviceRequestFieldTemplates = [
-    { value: "", label: "None" },
     { value: "{issueTypeName}", label: "Issue Type Name" },
     { value: "{description}", label: "Description" },
     { value: "{description}. sent by {adminEmail}", label: "Description + Admin Email" },
@@ -104,14 +103,9 @@ export default function ServiceRequestsConnectedAccounts() {
     }
 
     const handleConnect = () => {
-        // In a real app, this would validate credentials and connect to Salesforce
-        // For now, we'll just set connected to true and initialize default mappings
-        try {
-            setIsConnected(true)
-            setFieldMappings({ ...defaultFieldMappings })
-        } catch (error) {
-            console.error("Error connecting to Salesforce:", error)
-        }
+        // Demo prototype - fake connection, no actual Salesforce API call
+        setIsConnected(true)
+        setFieldMappings({ ...defaultFieldMappings })
     }
 
     const handleFieldMappingChange = (salesforceFieldId: string, templateValue: string) => {
@@ -371,7 +365,7 @@ export default function ServiceRequestsConnectedAccounts() {
                                                 </TableCell>
                                                 <TableCell>
                                                     <Select
-                                                        value={currentValue}
+                                                        value={currentValue || undefined}
                                                         onValueChange={(value) => handleFieldMappingChange(field.id, value)}
                                                     >
                                                         <SelectTrigger className="w-full max-w-md">
@@ -385,7 +379,7 @@ export default function ServiceRequestsConnectedAccounts() {
                                                             ))}
                                                         </SelectContent>
                                                     </Select>
-                                                    {currentValue && currentValue !== "" && (
+                                                    {currentValue && (
                                                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                                             Template: {currentValue}
                                                         </p>
