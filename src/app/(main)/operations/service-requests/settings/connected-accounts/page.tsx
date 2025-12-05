@@ -25,34 +25,39 @@ const tabs = [
     { name: "Connected accounts", href: "/operations/service-requests/settings/connected-accounts" },
 ]
 
-// Service request fields that can be mapped to Salesforce
-const serviceRequestFields = [
-    { id: "requestId", name: "Request ID", type: "text" },
-    { id: "title", name: "Title", type: "text" },
-    { id: "description", name: "Description", type: "textarea" },
-    { id: "status", name: "Status", type: "select" },
-    { id: "priority", name: "Priority", type: "select" },
-    { id: "location", name: "Location", type: "text" },
-    { id: "assignedTo", name: "Assigned To", type: "text" },
-    { id: "createdDate", name: "Created Date", type: "date" },
-    { id: "dueDate", name: "Due Date", type: "date" },
-    { id: "attachments", name: "Attachments", type: "file" }
+// Salesforce fields that need to be mapped
+const salesforceMappingFields = [
+    { id: "Subject", name: "Subject", required: true },
+    { id: "Description", name: "Description", required: true },
+    { id: "Building_Name__c", name: "Building Name", required: false },
+    { id: "Your_Location__c", name: "Your Location", required: false },
+    { id: "OwnerId", name: "Owner", required: false },
+    { id: "Origin", name: "Origin", required: false }
 ]
 
-// Sample Salesforce fields (in a real app, these would be fetched from Salesforce)
-const salesforceFields = [
+// Service request field templates that can be used in mappings
+const serviceRequestFieldTemplates = [
     { value: "", label: "None" },
-    { value: "CaseNumber", label: "Case Number" },
-    { value: "Subject", label: "Subject" },
-    { value: "Description", label: "Description" },
-    { value: "Status", label: "Status" },
-    { value: "Priority", label: "Priority" },
-    { value: "Location__c", label: "Location" },
-    { value: "OwnerId", label: "Owner" },
-    { value: "CreatedDate", label: "Created Date" },
-    { value: "Due_Date__c", label: "Due Date" },
-    { value: "Attachment", label: "Attachment" }
+    { value: "{issueTypeName}", label: "Issue Type Name" },
+    { value: "{description}", label: "Description" },
+    { value: "{description}. sent by {adminEmail}", label: "Description + Admin Email" },
+    { value: "{building}", label: "Building" },
+    { value: "{location_name}", label: "Location Name" },
+    { value: "{location_name}....{building}", label: "Location Name + Building" },
+    { value: "{userId}", label: "User ID" },
+    { value: "{adminEmail}", label: "Admin Email" },
+    { value: "Community", label: "Community (Static)" }
 ]
+
+// Default field mappings
+const defaultFieldMappings: Record<string, string> = {
+    "Subject": "{issueTypeName}",
+    "Description": "{description}. sent by {adminEmail}",
+    "Building_Name__c": "{building}",
+    "Your_Location__c": "{location_name}....{building}",
+    "OwnerId": "{userId}",
+    "Origin": "Community"
+}
 
 export default function ServiceRequestsConnectedAccounts() {
     const pathname = usePathname()
@@ -67,7 +72,7 @@ export default function ServiceRequestsConnectedAccounts() {
         consumerKey: "",
         consumerSecret: ""
     })
-    const [fieldMappings, setFieldMappings] = useState<Record<string, string>>({})
+    const [fieldMappings, setFieldMappings] = useState<Record<string, string>>(defaultFieldMappings)
 
     const handleSalesforceToggle = (checked: boolean) => {
         setSalesforceEnabled(checked)
@@ -86,14 +91,19 @@ export default function ServiceRequestsConnectedAccounts() {
 
     const handleConnect = () => {
         // In a real app, this would validate credentials and connect to Salesforce
-        // For now, we'll just set connected to true
-        setIsConnected(true)
+        // For now, we'll just set connected to true and initialize default mappings
+        try {
+            setIsConnected(true)
+            setFieldMappings({ ...defaultFieldMappings })
+        } catch (error) {
+            console.error("Error connecting to Salesforce:", error)
+        }
     }
 
-    const handleFieldMappingChange = (serviceRequestFieldId: string, salesforceField: string) => {
+    const handleFieldMappingChange = (salesforceFieldId: string, templateValue: string) => {
         setFieldMappings(prev => ({
             ...prev,
-            [serviceRequestFieldId]: salesforceField
+            [salesforceFieldId]: templateValue
         }))
     }
 
@@ -301,7 +311,7 @@ export default function ServiceRequestsConnectedAccounts() {
                 </Card>
 
                 {/* Field Mapping Table - Shown after connection */}
-                {isConnected && (
+                {isConnected && salesforceMappingFields && (
                     <Card>
                         <div className="space-y-4">
                             <div>
@@ -316,42 +326,50 @@ export default function ServiceRequestsConnectedAccounts() {
                             <Table>
                                 <TableHead>
                                     <TableRow>
-                                        <TableHeaderCell>Service request field</TableHeaderCell>
                                         <TableHeaderCell>Salesforce field</TableHeaderCell>
+                                        <TableHeaderCell>Service request field mapping</TableHeaderCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {serviceRequestFields.map((field) => (
-                                        <TableRow key={field.id}>
-                                            <TableCell>
-                                                <div>
-                                                    <div className="font-medium text-gray-900 dark:text-gray-100">
-                                                        {field.name}
+                                    {salesforceMappingFields.map((field) => {
+                                        const currentValue = fieldMappings[field.id] ?? ""
+                                        return (
+                                            <TableRow key={field.id}>
+                                                <TableCell>
+                                                    <div>
+                                                        <div className="font-medium text-gray-900 dark:text-gray-100">
+                                                            {field.name}
+                                                        </div>
+                                                        {field.required && (
+                                                            <span className="text-xs text-red-500">Required</span>
+                                                        )}
                                                     </div>
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
-                                                        {field.type}
-                                                    </div>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <Select
-                                                    value={fieldMappings[field.id] || ""}
-                                                    onValueChange={(value) => handleFieldMappingChange(field.id, value)}
-                                                >
-                                                    <SelectTrigger className="w-full max-w-xs">
-                                                        <SelectValue placeholder="Select Salesforce field" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {salesforceFields.map((sfField) => (
-                                                            <SelectItem key={sfField.value} value={sfField.value}>
-                                                                {sfField.label}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Select
+                                                        value={currentValue}
+                                                        onValueChange={(value) => handleFieldMappingChange(field.id, value)}
+                                                    >
+                                                        <SelectTrigger className="w-full max-w-md">
+                                                            <SelectValue placeholder="Select mapping" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {serviceRequestFieldTemplates.map((template) => (
+                                                                <SelectItem key={template.value} value={template.value}>
+                                                                    {template.label}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    {currentValue && currentValue !== "" && (
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                            Template: {currentValue}
+                                                        </p>
+                                                    )}
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    })}
                                 </TableBody>
                             </Table>
                         </div>
