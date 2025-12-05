@@ -4,7 +4,9 @@ import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
 import { Switch } from "@/components/Switch"
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { RiArrowLeftLine } from "@remixicon/react"
 import Image from "next/image"
@@ -23,10 +25,40 @@ const tabs = [
     { name: "Connected accounts", href: "/operations/service-requests/settings/connected-accounts" },
 ]
 
+// Service request fields that can be mapped to Salesforce
+const serviceRequestFields = [
+    { id: "requestId", name: "Request ID", type: "text" },
+    { id: "title", name: "Title", type: "text" },
+    { id: "description", name: "Description", type: "textarea" },
+    { id: "status", name: "Status", type: "select" },
+    { id: "priority", name: "Priority", type: "select" },
+    { id: "location", name: "Location", type: "text" },
+    { id: "assignedTo", name: "Assigned To", type: "text" },
+    { id: "createdDate", name: "Created Date", type: "date" },
+    { id: "dueDate", name: "Due Date", type: "date" },
+    { id: "attachments", name: "Attachments", type: "file" }
+]
+
+// Sample Salesforce fields (in a real app, these would be fetched from Salesforce)
+const salesforceFields = [
+    { value: "", label: "None" },
+    { value: "CaseNumber", label: "Case Number" },
+    { value: "Subject", label: "Subject" },
+    { value: "Description", label: "Description" },
+    { value: "Status", label: "Status" },
+    { value: "Priority", label: "Priority" },
+    { value: "Location__c", label: "Location" },
+    { value: "OwnerId", label: "Owner" },
+    { value: "CreatedDate", label: "Created Date" },
+    { value: "Due_Date__c", label: "Due Date" },
+    { value: "Attachment", label: "Attachment" }
+]
+
 export default function ServiceRequestsConnectedAccounts() {
     const pathname = usePathname()
     
     const [salesforceEnabled, setSalesforceEnabled] = useState(false)
+    const [isConnected, setIsConnected] = useState(false)
     const [salesforceConfig, setSalesforceConfig] = useState({
         instanceUrl: "",
         username: "",
@@ -35,15 +67,33 @@ export default function ServiceRequestsConnectedAccounts() {
         consumerKey: "",
         consumerSecret: ""
     })
+    const [fieldMappings, setFieldMappings] = useState<Record<string, string>>({})
 
     const handleSalesforceToggle = (checked: boolean) => {
         setSalesforceEnabled(checked)
+        if (!checked) {
+            setIsConnected(false)
+            setFieldMappings({})
+        }
     }
 
     const handleConfigChange = (field: string, value: string) => {
         setSalesforceConfig(prev => ({
             ...prev,
             [field]: value
+        }))
+    }
+
+    const handleConnect = () => {
+        // In a real app, this would validate credentials and connect to Salesforce
+        // For now, we'll just set connected to true
+        setIsConnected(true)
+    }
+
+    const handleFieldMappingChange = (serviceRequestFieldId: string, salesforceField: string) => {
+        setFieldMappings(prev => ({
+            ...prev,
+            [serviceRequestFieldId]: salesforceField
         }))
     }
 
@@ -227,10 +277,86 @@ export default function ServiceRequestsConnectedAccounts() {
                                         Consumer secret from your Salesforce Connected App
                                     </p>
                                 </div>
+
+                                {/* Connect Button */}
+                                <div className="pt-2">
+                                    <Button
+                                        variant="primary"
+                                        onClick={handleConnect}
+                                        disabled={
+                                            !salesforceConfig.instanceUrl ||
+                                            !salesforceConfig.username ||
+                                            !salesforceConfig.password ||
+                                            !salesforceConfig.securityToken ||
+                                            !salesforceConfig.consumerKey ||
+                                            !salesforceConfig.consumerSecret
+                                        }
+                                    >
+                                        Connect
+                                    </Button>
+                                </div>
                             </div>
                         )}
                     </div>
                 </Card>
+
+                {/* Field Mapping Table - Shown after connection */}
+                {isConnected && (
+                    <Card>
+                        <div className="space-y-4">
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
+                                    Field mapping
+                                </h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    Map your service request fields to Salesforce fields
+                                </p>
+                            </div>
+
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableHeaderCell>Service request field</TableHeaderCell>
+                                        <TableHeaderCell>Salesforce field</TableHeaderCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {serviceRequestFields.map((field) => (
+                                        <TableRow key={field.id}>
+                                            <TableCell>
+                                                <div>
+                                                    <div className="font-medium text-gray-900 dark:text-gray-100">
+                                                        {field.name}
+                                                    </div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {field.type}
+                                                    </div>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Select
+                                                    value={fieldMappings[field.id] || ""}
+                                                    onValueChange={(value) => handleFieldMappingChange(field.id, value)}
+                                                >
+                                                    <SelectTrigger className="w-full max-w-xs">
+                                                        <SelectValue placeholder="Select Salesforce field" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {salesforceFields.map((sfField) => (
+                                                            <SelectItem key={sfField.value} value={sfField.value}>
+                                                                {sfField.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </Card>
+                )}
             </div>
         </div>
     )
