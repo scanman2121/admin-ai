@@ -24,6 +24,7 @@ const tabs = [
     { name: "Teams", href: "/operations/service-requests/settings/teams" },
     { name: "Tenant users", href: "/operations/service-requests/settings/users" },
     { name: "Email templates", href: "/operations/service-requests/settings/email-template" },
+    { name: "Connected accounts", href: "/operations/service-requests/settings/connected-accounts" },
 ]
 
 // Field types for custom fields
