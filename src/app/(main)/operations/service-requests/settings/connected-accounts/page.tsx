@@ -1,15 +1,16 @@
 "use client"
 
+import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Checkbox } from "@/components/Checkbox"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/Dialog"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
-import { Switch } from "@/components/Switch"
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { RiArrowLeftLine } from "@remixicon/react"
+import { RiArrowLeftLine, RiMore2Line } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -73,8 +74,9 @@ const serviceTypeCategories = [
 export default function ServiceRequestsConnectedAccounts() {
     const pathname = usePathname()
     
-    const [salesforceEnabled, setSalesforceEnabled] = useState(false)
     const [isConnected, setIsConnected] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isKebabOpen, setIsKebabOpen] = useState(false)
     const [salesforceConfig, setSalesforceConfig] = useState({
         instanceUrl: "",
         username: "",
@@ -87,15 +89,6 @@ export default function ServiceRequestsConnectedAccounts() {
     const [selectedServiceTypes, setSelectedServiceTypes] = useState<string[]>([])
     const [imageError, setImageError] = useState(false)
 
-    const handleSalesforceToggle = (checked: boolean) => {
-        setSalesforceEnabled(checked)
-        if (!checked) {
-            setIsConnected(false)
-            setFieldMappings({})
-            setSelectedServiceTypes([])
-        }
-    }
-
     const handleConfigChange = (field: string, value: string) => {
         setSalesforceConfig(prev => ({
             ...prev,
@@ -107,6 +100,14 @@ export default function ServiceRequestsConnectedAccounts() {
         // Demo prototype - fake connection, no actual Salesforce API call
         setIsConnected(true)
         setFieldMappings({ ...defaultFieldMappings })
+        setIsModalOpen(false)
+    }
+
+    const handleDisable = () => {
+        setIsConnected(false)
+        setFieldMappings({})
+        setSelectedServiceTypes([])
+        setIsKebabOpen(false)
     }
 
     const handleFieldMappingChange = (salesforceFieldId: string, templateValue: string) => {
@@ -180,21 +181,21 @@ export default function ServiceRequestsConnectedAccounts() {
                 {/* Salesforce Connection Card */}
                 <Card>
                     <div className="space-y-6">
-                        {/* Salesforce Header with Logo and Toggle */}
+                        {/* Salesforce Header with Logo and Enable/Enabled Badge */}
                         <div className="flex items-start justify-between gap-3 py-2">
-                            <div className="flex items-start gap-4 flex-1">
-                                {/* Logo in white box with gray outline */}
-                                <div className="flex-shrink-0 bg-white border border-gray-300 dark:border-gray-600 rounded p-3 flex items-center justify-center min-w-[120px] min-h-[40px]">
+                            <div className="flex items-start gap-3 flex-1">
+                                {/* Smaller Logo in white box with gray outline */}
+                                <div className="flex-shrink-0 bg-white border border-gray-300 dark:border-gray-600 rounded p-2 flex items-center justify-center w-16 h-12">
                                     {imageError ? (
-                                        <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                                            Salesforce
+                                        <div className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                            SF
                                         </div>
                                     ) : (
                                         <Image
                                             src="/images/sf.png"
                                             alt="Salesforce"
-                                            width={120}
-                                            height={40}
+                                            width={60}
+                                            height={20}
                                             className="object-contain"
                                             onError={() => setImageError(true)}
                                         />
@@ -209,250 +210,291 @@ export default function ServiceRequestsConnectedAccounts() {
                                     </p>
                                 </div>
                             </div>
-                            <Switch
-                                checked={salesforceEnabled}
-                                onCheckedChange={handleSalesforceToggle}
-                            />
-                        </div>
-
-                        {/* Configuration Inputs - Shown when enabled */}
-                        {salesforceEnabled && (
-                            <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
-                                <div>
-                                    <Label htmlFor="instance-url">
-                                        Instance URL <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Input
-                                        id="instance-url"
-                                        type="url"
-                                        placeholder="https://yourinstance.salesforce.com"
-                                        value={salesforceConfig.instanceUrl}
-                                        onChange={(e) => handleConfigChange("instanceUrl", e.target.value)}
-                                        className="mt-1"
-                                    />
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Your Salesforce instance URL (e.g., https://yourinstance.salesforce.com)
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="username">
-                                        Username <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Input
-                                        id="username"
-                                        type="text"
-                                        placeholder="user@example.com"
-                                        value={salesforceConfig.username}
-                                        onChange={(e) => handleConfigChange("username", e.target.value)}
-                                        className="mt-1"
-                                    />
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="password">
-                                        Password <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Input
-                                        id="password"
-                                        type="password"
-                                        placeholder="Enter your password"
-                                        value={salesforceConfig.password}
-                                        onChange={(e) => handleConfigChange("password", e.target.value)}
-                                        className="mt-1"
-                                    />
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="security-token">
-                                        Security token <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Input
-                                        id="security-token"
-                                        type="password"
-                                        placeholder="Enter your security token"
-                                        value={salesforceConfig.securityToken}
-                                        onChange={(e) => handleConfigChange("securityToken", e.target.value)}
-                                        className="mt-1"
-                                    />
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Your Salesforce security token. Reset it in your Salesforce account settings if needed.
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="consumer-key">
-                                        Consumer key <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Input
-                                        id="consumer-key"
-                                        type="text"
-                                        placeholder="Enter consumer key"
-                                        value={salesforceConfig.consumerKey}
-                                        onChange={(e) => handleConfigChange("consumerKey", e.target.value)}
-                                        className="mt-1"
-                                    />
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Consumer key from your Salesforce Connected App
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <Label htmlFor="consumer-secret">
-                                        Consumer secret <span className="text-red-500">*</span>
-                                    </Label>
-                                    <Input
-                                        id="consumer-secret"
-                                        type="password"
-                                        placeholder="Enter consumer secret"
-                                        value={salesforceConfig.consumerSecret}
-                                        onChange={(e) => handleConfigChange("consumerSecret", e.target.value)}
-                                        className="mt-1"
-                                    />
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Consumer secret from your Salesforce Connected App
-                                    </p>
-                                </div>
-
-                                {/* Connect Button */}
-                                <div className="pt-2">
+                            <div className="flex items-center gap-2">
+                                {isConnected ? (
+                                    <>
+                                        <Badge variant="success">Enabled</Badge>
+                                        <div className="relative">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="p-2 h-8 w-8"
+                                                onClick={() => setIsKebabOpen(!isKebabOpen)}
+                                            >
+                                                <RiMore2Line className="size-4" />
+                                            </Button>
+                                            
+                                            {isKebabOpen && (
+                                                <>
+                                                    <div className="fixed inset-0 z-10" onClick={() => setIsKebabOpen(false)} />
+                                                    <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                                                        <button
+                                                            onClick={handleDisable}
+                                                            className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
+                                                        >
+                                                            Disable
+                                                        </button>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </>
+                                ) : (
                                     <Button
                                         variant="primary"
-                                        onClick={handleConnect}
-                                        disabled={
-                                            !salesforceConfig.instanceUrl ||
-                                            !salesforceConfig.username ||
-                                            !salesforceConfig.password ||
-                                            !salesforceConfig.securityToken ||
-                                            !salesforceConfig.consumerKey ||
-                                            !salesforceConfig.consumerSecret
-                                        }
+                                        onClick={() => setIsModalOpen(true)}
                                     >
-                                        Connect
+                                        Enable
                                     </Button>
-                                </div>
+                                )}
                             </div>
+                        </div>
+
+                        {/* Field Mapping and Service Types - Shown when connected */}
+                        {isConnected && (
+                            <>
+                                {/* Field Mapping Table */}
+                                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
+                                            Field mapping
+                                        </h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            Map your service request fields to Salesforce fields
+                                        </p>
+                                    </div>
+
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableHeaderCell>Salesforce field</TableHeaderCell>
+                                                <TableHeaderCell>Service request field mapping</TableHeaderCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {salesforceMappingFields.map((field) => {
+                                                const currentValue = fieldMappings[field.id] ?? ""
+                                                return (
+                                                    <TableRow key={field.id}>
+                                                        <TableCell>
+                                                            <div>
+                                                                <div className="font-medium text-gray-900 dark:text-gray-100">
+                                                                    {field.name}
+                                                                </div>
+                                                                {field.required && (
+                                                                    <span className="text-xs text-red-500">Required</span>
+                                                                )}
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Select
+                                                                value={currentValue || undefined}
+                                                                onValueChange={(value) => handleFieldMappingChange(field.id, value)}
+                                                            >
+                                                                <SelectTrigger className="w-full max-w-md">
+                                                                    <SelectValue placeholder="Select mapping" />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    {serviceRequestFieldTemplates.map((template) => (
+                                                                        <SelectItem key={template.value} value={template.value}>
+                                                                            {template.label}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </SelectContent>
+                                                            </Select>
+                                                            {currentValue && (
+                                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                                    Template: {currentValue}
+                                                                </p>
+                                                            )}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )
+                                            })}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+
+                                {/* Service Types Selection */}
+                                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
+                                            Service types
+                                        </h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            Select which service types this Salesforce connection should apply to
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        {serviceTypeCategories.map((category) => (
+                                            <div
+                                                key={category.id}
+                                                className="flex items-start justify-between gap-3 py-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+                                            >
+                                                <div className="flex-1">
+                                                    <Label
+                                                        htmlFor={`service-type-${category.id}`}
+                                                        className="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer"
+                                                    >
+                                                        {category.name}
+                                                    </Label>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                                        {category.description}
+                                                    </p>
+                                                </div>
+                                                <Checkbox
+                                                    id={`service-type-${category.id}`}
+                                                    checked={selectedServiceTypes.includes(category.id)}
+                                                    onCheckedChange={() => handleServiceTypeToggle(category.id)}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {selectedServiceTypes.length > 0 && (
+                                        <div className="pt-2">
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                {selectedServiceTypes.length} service type{selectedServiceTypes.length !== 1 ? 's' : ''} selected
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </>
                         )}
                     </div>
                 </Card>
-
-                {/* Field Mapping Table - Shown after connection */}
-                {isConnected && salesforceMappingFields && (
-                    <Card>
-                        <div className="space-y-4">
-                            <div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-                                    Field mapping
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Map your service request fields to Salesforce fields
-                                </p>
-                            </div>
-
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableHeaderCell>Salesforce field</TableHeaderCell>
-                                        <TableHeaderCell>Service request field mapping</TableHeaderCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {salesforceMappingFields.map((field) => {
-                                        const currentValue = fieldMappings[field.id] ?? ""
-                                        return (
-                                            <TableRow key={field.id}>
-                                                <TableCell>
-                                                    <div>
-                                                        <div className="font-medium text-gray-900 dark:text-gray-100">
-                                                            {field.name}
-                                                        </div>
-                                                        {field.required && (
-                                                            <span className="text-xs text-red-500">Required</span>
-                                                        )}
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Select
-                                                        value={currentValue || undefined}
-                                                        onValueChange={(value) => handleFieldMappingChange(field.id, value)}
-                                                    >
-                                                        <SelectTrigger className="w-full max-w-md">
-                                                            <SelectValue placeholder="Select mapping" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {serviceRequestFieldTemplates.map((template) => (
-                                                                <SelectItem key={template.value} value={template.value}>
-                                                                    {template.label}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                    {currentValue && (
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                            Template: {currentValue}
-                                                        </p>
-                                                    )}
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
-                        </div>
-                    </Card>
-                )}
-
-                {/* Service Types Selection Card - Shown after connection */}
-                {isConnected && (
-                    <Card>
-                        <div className="space-y-4">
-                            <div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-                                    Service types
-                                </h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Select which service types this Salesforce connection should apply to
-                                </p>
-                            </div>
-
-                            <div className="space-y-3">
-                                {serviceTypeCategories.map((category) => (
-                                    <div
-                                        key={category.id}
-                                        className="flex items-start justify-between gap-3 py-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
-                                    >
-                                        <div className="flex-1">
-                                            <Label
-                                                htmlFor={`service-type-${category.id}`}
-                                                className="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer"
-                                            >
-                                                {category.name}
-                                            </Label>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                                {category.description}
-                                            </p>
-                                        </div>
-                                        <Checkbox
-                                            id={`service-type-${category.id}`}
-                                            checked={selectedServiceTypes.includes(category.id)}
-                                            onCheckedChange={() => handleServiceTypeToggle(category.id)}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-
-                            {selectedServiceTypes.length > 0 && (
-                                <div className="pt-2">
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        {selectedServiceTypes.length} service type{selectedServiceTypes.length !== 1 ? 's' : ''} selected
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    </Card>
-                )}
             </div>
+
+            {/* Enable Modal */}
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Connect Salesforce</DialogTitle>
+                    </DialogHeader>
+                    
+                    <div className="space-y-4 px-6 py-4">
+                        <div>
+                            <Label htmlFor="modal-instance-url">
+                                Instance URL <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                                id="modal-instance-url"
+                                type="url"
+                                placeholder="https://yourinstance.salesforce.com"
+                                value={salesforceConfig.instanceUrl}
+                                onChange={(e) => handleConfigChange("instanceUrl", e.target.value)}
+                                className="mt-1"
+                            />
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                Your Salesforce instance URL (e.g., https://yourinstance.salesforce.com)
+                            </p>
+                        </div>
+
+                        <div>
+                            <Label htmlFor="modal-username">
+                                Username <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                                id="modal-username"
+                                type="text"
+                                placeholder="user@example.com"
+                                value={salesforceConfig.username}
+                                onChange={(e) => handleConfigChange("username", e.target.value)}
+                                className="mt-1"
+                            />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="modal-password">
+                                Password <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                                id="modal-password"
+                                type="password"
+                                placeholder="Enter your password"
+                                value={salesforceConfig.password}
+                                onChange={(e) => handleConfigChange("password", e.target.value)}
+                                className="mt-1"
+                            />
+                        </div>
+
+                        <div>
+                            <Label htmlFor="modal-security-token">
+                                Security token <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                                id="modal-security-token"
+                                type="password"
+                                placeholder="Enter your security token"
+                                value={salesforceConfig.securityToken}
+                                onChange={(e) => handleConfigChange("securityToken", e.target.value)}
+                                className="mt-1"
+                            />
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                Your Salesforce security token. Reset it in your Salesforce account settings if needed.
+                            </p>
+                        </div>
+
+                        <div>
+                            <Label htmlFor="modal-consumer-key">
+                                Consumer key <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                                id="modal-consumer-key"
+                                type="text"
+                                placeholder="Enter consumer key"
+                                value={salesforceConfig.consumerKey}
+                                onChange={(e) => handleConfigChange("consumerKey", e.target.value)}
+                                className="mt-1"
+                            />
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                Consumer key from your Salesforce Connected App
+                            </p>
+                        </div>
+
+                        <div>
+                            <Label htmlFor="modal-consumer-secret">
+                                Consumer secret <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                                id="modal-consumer-secret"
+                                type="password"
+                                placeholder="Enter consumer secret"
+                                value={salesforceConfig.consumerSecret}
+                                onChange={(e) => handleConfigChange("consumerSecret", e.target.value)}
+                                className="mt-1"
+                            />
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                Consumer secret from your Salesforce Connected App
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <DialogFooter>
+                        <Button
+                            variant="ghost"
+                            onClick={() => setIsModalOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={handleConnect}
+                            disabled={
+                                !salesforceConfig.instanceUrl ||
+                                !salesforceConfig.username ||
+                                !salesforceConfig.password ||
+                                !salesforceConfig.securityToken ||
+                                !salesforceConfig.consumerKey ||
+                                !salesforceConfig.consumerSecret
+                            }
+                        >
+                            Connect
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
-
