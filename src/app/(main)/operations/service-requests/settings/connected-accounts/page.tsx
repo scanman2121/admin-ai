@@ -57,8 +57,8 @@ const mentionFields = [
 
 // Default field mappings - array structure to allow adding/removing rows
 const defaultFieldMappings: Array<{ id: string; requestInfo: string; required: boolean; salesforceField: string; information: string }> = [
-    { id: "subject", requestInfo: "Subject", required: true, salesforceField: "Subject", information: "@issueTypeName" },
-    { id: "description", requestInfo: "Description", required: true, salesforceField: "Description", information: "@description. sent by @adminEmail" },
+    { id: "subject", requestInfo: "Subject", required: false, salesforceField: "Subject", information: "@issueTypeName" },
+    { id: "description", requestInfo: "Description", required: false, salesforceField: "Description", information: "@description. sent by @adminEmail" },
     { id: "location", requestInfo: "Location", required: false, salesforceField: "Your_Location__c", information: "@location_name....@building" },
     { id: "owner", requestInfo: "Owner", required: false, salesforceField: "OwnerId", information: "@userId" },
     { id: "creator", requestInfo: "Creator", required: false, salesforceField: "CreatedById", information: "@requestor" }
