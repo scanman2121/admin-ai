@@ -184,8 +184,8 @@ export default function ServiceRequestsConnectedAccounts() {
                         {/* Salesforce Header with Logo and Enable/Enabled Badge */}
                         <div className="flex items-start justify-between gap-3 py-2">
                             <div className="flex items-start gap-3 flex-1">
-                                {/* Smaller Logo in white box with gray outline */}
-                                <div className="flex-shrink-0 bg-white border border-gray-300 dark:border-gray-600 rounded p-2 flex items-center justify-center w-16 h-12">
+                                {/* Square Logo container */}
+                                <div className="flex-shrink-0 bg-white border border-gray-300 dark:border-gray-600 rounded p-2 flex items-center justify-center w-16 h-16">
                                     {imageError ? (
                                         <div className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                                             SF
@@ -227,7 +227,16 @@ export default function ServiceRequestsConnectedAccounts() {
                                             {isKebabOpen && (
                                                 <>
                                                     <div className="fixed inset-0 z-10" onClick={() => setIsKebabOpen(false)} />
-                                                    <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                                                    <div className="absolute right-0 top-full mt-1 z-20 min-w-[140px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                                                        <button
+                                                            onClick={() => {
+                                                                setIsModalOpen(true)
+                                                                setIsKebabOpen(false)
+                                                            }}
+                                                            className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
+                                                        >
+                                                            View settings
+                                                        </button>
                                                         <button
                                                             onClick={handleDisable}
                                                             className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
@@ -256,10 +265,10 @@ export default function ServiceRequestsConnectedAccounts() {
                                 {/* Field Mapping Table */}
                                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
                                     <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
                                             Field mapping
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
                                             Map your service request fields to Salesforce fields
                                         </p>
                                     </div>
@@ -318,19 +327,19 @@ export default function ServiceRequestsConnectedAccounts() {
                                 {/* Service Types Selection */}
                                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
                                     <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
                                             Service types
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
                                             Select which service types this Salesforce connection should apply to
                                         </p>
                                     </div>
 
-                                    <div className="space-y-3">
+                                    <div className="space-y-2">
                                         {serviceTypeCategories.map((category) => (
                                             <div
                                                 key={category.id}
-                                                className="flex items-start justify-between gap-3 py-2 border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+                                                className="flex items-start justify-between gap-3 py-2"
                                             >
                                                 <div className="flex-1">
                                                     <Label
