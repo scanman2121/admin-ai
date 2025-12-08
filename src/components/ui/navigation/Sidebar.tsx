@@ -1531,7 +1531,7 @@ function ConnectedAccountsSettings() {
 
               {/* Service Request Configuration Tab */}
               {activeTab === 'service-request' && (
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                <div className="pt-4 space-y-4">
                   <div>
                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">Information sent to Salesforce</h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400">

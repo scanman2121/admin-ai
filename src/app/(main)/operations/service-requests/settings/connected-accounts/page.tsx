@@ -635,7 +635,7 @@ export default function ServiceRequestsConnectedAccounts() {
                                 </div>
 
                                 {/* Information Sent to Salesforce */}
-                                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                                <div className="pt-4 space-y-4">
                                     <div>
                                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
                                             Information sent to Salesforce
