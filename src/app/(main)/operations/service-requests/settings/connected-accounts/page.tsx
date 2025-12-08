@@ -404,21 +404,24 @@ export default function ServiceRequestsConnectedAccounts() {
                                                                     fontSize: 14,
                                                                     fontWeight: 'normal',
                                                                 },
-                                                                '&multiLine': {
+                                                                '&singleLine': {
                                                                     control: {
                                                                         fontFamily: 'inherit',
-                                                                        minHeight: 40,
+                                                                        display: 'inline-block',
                                                                     },
                                                                     highlighter: {
-                                                                        padding: 8,
+                                                                        padding: '8px 10px',
                                                                         border: '1px solid transparent',
+                                                                        minHeight: '38px',
                                                                     },
                                                                     input: {
-                                                                        padding: 8,
+                                                                        padding: '8px 10px',
                                                                         border: '1px solid rgb(209, 213, 219)',
                                                                         borderRadius: '0.375rem',
                                                                         backgroundColor: 'white',
                                                                         color: 'rgb(17, 24, 39)',
+                                                                        fontSize: '14px',
+                                                                        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
                                                                     },
                                                                 },
                                                                 suggestions: {
@@ -441,7 +444,7 @@ export default function ServiceRequestsConnectedAccounts() {
                                                             <Mention
                                                                 trigger="@"
                                                                 data={mentionFields}
-                                                                displayTransform={(id) => `@${id}`}
+                                                                displayTransform={(id) => id}
                                                                 style={{
                                                                     backgroundColor: '#dbeafe',
                                                                     color: '#1e40af',

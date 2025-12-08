@@ -163,24 +163,36 @@ html.ai-drawer-open .fixed.bottom-0.right-6 {
 }
 
 .mentions-input__highlighter {
-  padding: 8px;
+  padding: 8px 10px;
   border: 1px solid transparent;
+  min-height: 38px;
 }
 
 .mentions-input__input {
-  padding: 8px;
+  padding: 8px 10px;
   border: 1px solid rgb(209, 213, 219);
   border-radius: 0.375rem;
   background-color: white;
   color: rgb(17, 24, 39);
   width: 100%;
   font-size: 14px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.mentions-input__input:focus {
+  outline: none;
+  border-color: rgb(59, 130, 246);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .dark .mentions-input__input {
   border-color: rgb(55, 65, 81);
-  background-color: rgb(17, 24, 39);
+  background-color: rgb(3, 7, 18);
   color: rgb(243, 244, 246);
+}
+
+.dark .mentions-input__input:focus {
+  border-color: rgb(59, 130, 246);
 }
 
 .mentions-input__suggestions {
