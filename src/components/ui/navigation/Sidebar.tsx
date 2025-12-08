@@ -30,6 +30,16 @@ import { usePathname } from "next/navigation"
 import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { HqOLogo } from "./HqOLogo"
 import { SidebarPopover } from "./SidebarPopover"
+import { Badge } from "@/components/Badge"
+import { Button as ButtonComponent } from "@/components/Button"
+import { Card } from "@/components/Card"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/Dialog"
+import { Input } from "@/components/Input"
+import { Label } from "@/components/Label"
+import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
+import { RiCloseLine, RiMore2Line, RiSearchLine } from "@remixicon/react"
+import Image from "next/image"
+import { MentionsInput, Mention } from "react-mentions"
 
 // Portfolio sub-navigation items
 const portfolioItems = [
@@ -93,7 +103,7 @@ export function Sidebar() {
   const { collapsed } = useContext(SidebarContext)
   const sidebarRef = useRef<HTMLElement>(null)
   const [announcement, setAnnouncement] = useState<string>("")
-  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email' | 'tags' | 'quick-reply-templates'>('general')
+  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email' | 'tags' | 'quick-reply-templates' | 'connected-accounts'>('general')
 
   // Check if current path is in each section
   const isInPortfolio = portfolioItems.some(item =>
@@ -1017,6 +1027,17 @@ export function Sidebar() {
                           >
                             Quick reply templates
                           </button>
+                          <button 
+                            onClick={() => setSettingsTab('connected-accounts')}
+                            className={cn(
+                              "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                              settingsTab === 'connected-accounts'
+                                ? "text-primary bg-primary/10"
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                            )}
+                          >
+                            Connected accounts
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -1240,6 +1261,11 @@ export function Sidebar() {
                         {settingsTab === 'quick-reply-templates' && (
                           <QuickReplyTemplatesSettings />
                         )}
+
+                        {/* Connected Accounts Tab Content */}
+                        {settingsTab === 'connected-accounts' && (
+                          <ConnectedAccountsSettings />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -1250,5 +1276,452 @@ export function Sidebar() {
         </nav>
       </div>
     </nav>
+  )
+}
+
+// Connected Accounts Settings Component
+function ConnectedAccountsSettings() {
+  const [isConnected, setIsConnected] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isKebabOpen, setIsKebabOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<'service-request' | 'crm'>('service-request')
+  const [salesforceConfig, setSalesforceConfig] = useState({
+    instanceUrl: "",
+    username: "",
+    password: "",
+    securityToken: "",
+    consumerKey: "",
+    consumerSecret: ""
+  })
+  const [fieldMappings, setFieldMappings] = useState<Record<string, string>>({})
+  const [crmMappings, setCrmMappings] = useState<Record<string, string>>({})
+  const [imageError, setImageError] = useState(false)
+
+  // Salesforce fields for service requests
+  const salesforceMappingFields = [
+    { id: "Subject", name: "Subject", required: true },
+    { id: "Description", name: "Description", required: true },
+    { id: "Building_Name__c", name: "Building Name", required: false },
+    { id: "Your_Location__c", name: "Your Location", required: false },
+    { id: "OwnerId", name: "Owner", required: false },
+    { id: "Origin", name: "Origin", required: false }
+  ]
+
+  // CRM mapping fields
+  const crmMappingFields = [
+    { id: "Accounts", name: "Accounts", required: false },
+    { id: "Contacts", name: "Contacts", required: false },
+    { id: "Opportunities", name: "Opportunities", required: false },
+    { id: "Buildings_Properties", name: "Buildings / Properties", required: false },
+    { id: "Leases", name: "Leases", required: false },
+    { id: "Spaces", name: "Spaces", required: false }
+  ]
+
+  // Available fields for mentions
+  const mentionFields = [
+    { id: "issueTypeName", display: "Issue Type Name" },
+    { id: "description", display: "Description" },
+    { id: "building", display: "Building" },
+    { id: "location_name", display: "Location Name" },
+    { id: "userId", display: "User ID" },
+    { id: "adminEmail", display: "Admin Email" },
+    { id: "created_date", display: "Created Date" },
+    { id: "status", display: "Status" },
+    { id: "priority", display: "Priority" },
+    { id: "assignedTo", display: "Assigned To" },
+    { id: "accountName", display: "Account Name" },
+    { id: "contactName", display: "Contact Name" },
+    { id: "opportunityName", display: "Opportunity Name" },
+    { id: "propertyName", display: "Property Name" },
+    { id: "leaseName", display: "Lease Name" },
+    { id: "spaceName", display: "Space Name" }
+  ]
+
+  const handleConfigChange = (field: string, value: string) => {
+    setSalesforceConfig(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  const handleConnect = () => {
+    setIsConnected(true)
+    setFieldMappings({
+      "Subject": "@issueTypeName",
+      "Description": "@description. sent by @adminEmail",
+      "Building_Name__c": "@building",
+      "Your_Location__c": "@location_name....@building",
+      "OwnerId": "@userId",
+      "Origin": "Community"
+    })
+    setIsModalOpen(false)
+  }
+
+  const handleDisable = () => {
+    setIsConnected(false)
+    setFieldMappings({})
+    setCrmMappings({})
+    setIsKebabOpen(false)
+  }
+
+  const handleFieldMappingChange = (fieldId: string, value: string) => {
+    setFieldMappings(prev => ({
+      ...prev,
+      [fieldId]: value
+    }))
+  }
+
+  const handleCrmMappingChange = (fieldId: string, value: string) => {
+    setCrmMappings(prev => ({
+      ...prev,
+      [fieldId]: value
+    }))
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Connected accounts</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+          Manage external account integrations across all buildings
+        </p>
+      </div>
+
+      {/* Salesforce Connection Card */}
+      <Card>
+        <div className="space-y-6">
+          {/* Salesforce Header */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 flex-1">
+              <div className="flex-shrink-0 bg-white border border-gray-300 dark:border-gray-600 rounded p-2 flex items-center justify-center w-16 h-16">
+                {imageError ? (
+                  <div className="text-xs font-semibold text-gray-700 dark:text-gray-300">SF</div>
+                ) : (
+                  <Image
+                    src="/images/sf.png"
+                    alt="Salesforce"
+                    width={60}
+                    height={20}
+                    className="object-contain"
+                    onError={() => setImageError(true)}
+                  />
+                )}
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">Salesforce</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  Connect your Salesforce account to sync service requests and manage cases
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {isConnected ? (
+                <>
+                  <Badge variant="success">Connected</Badge>
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsKebabOpen(!isKebabOpen)}
+                      className="p-2 h-8 w-8 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <RiMore2Line className="size-4" />
+                    </button>
+                    {isKebabOpen && (
+                      <>
+                        <div className="fixed inset-0 z-10" onClick={() => setIsKebabOpen(false)} />
+                        <div className="absolute right-0 top-full mt-1 z-20 min-w-[140px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                          <button
+                            onClick={() => {
+                              setIsModalOpen(true)
+                              setIsKebabOpen(false)
+                            }}
+                            className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                          >
+                            View settings
+                          </button>
+                          <button
+                            onClick={handleDisable}
+                            className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                          >
+                            Disconnect
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <ButtonComponent variant="primary" onClick={() => setIsModalOpen(true)}>
+                  Connect
+                </ButtonComponent>
+              )}
+            </div>
+          </div>
+
+          {/* Tabs and Content - Shown when connected */}
+          {isConnected && (
+            <>
+              <TabNavigation>
+                <TabNavigationLink
+                  active={activeTab === 'service-request'}
+                  onClick={() => setActiveTab('service-request')}
+                >
+                  Service request configuration
+                </TabNavigationLink>
+                <TabNavigationLink
+                  active={activeTab === 'crm'}
+                  onClick={() => setActiveTab('crm')}
+                >
+                  CRM
+                </TabNavigationLink>
+              </TabNavigation>
+
+              {/* Service Request Configuration Tab */}
+              {activeTab === 'service-request' && (
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">Field mapping</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Map your service request fields to Salesforce fields. Use @ to mention fields.
+                    </p>
+                  </div>
+                  <div className="space-y-3">
+                    {salesforceMappingFields.map((field) => {
+                      const currentValue = fieldMappings[field.id] ?? ""
+                      return (
+                        <div key={field.id} className="flex items-start gap-4">
+                          <div className="w-48 flex-shrink-0">
+                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                              {field.name}
+                              {field.required && <span className="text-red-500 ml-1">*</span>}
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <MentionsInput
+                              value={currentValue}
+                              onChange={(e) => handleFieldMappingChange(field.id, e.target.value)}
+                              placeholder="Type @ to mention a field..."
+                              singleLine
+                              style={{
+                                control: { backgroundColor: 'transparent', fontSize: 14, fontWeight: 'normal' },
+                                '&singleLine': {
+                                  control: { fontFamily: 'inherit', display: 'inline-block' },
+                                  highlighter: { padding: '8px 10px', border: '1px solid transparent', minHeight: '38px' },
+                                  input: {
+                                    padding: '8px 10px',
+                                    border: '1px solid rgb(209, 213, 219)',
+                                    borderRadius: '0.375rem',
+                                    backgroundColor: 'white',
+                                    color: 'rgb(17, 24, 39)',
+                                    fontSize: '14px',
+                                    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                                  },
+                                },
+                                suggestions: {
+                                  list: {
+                                    backgroundColor: 'white',
+                                    border: '1px solid rgba(0,0,0,0.15)',
+                                    fontSize: 14,
+                                    borderRadius: '0.375rem',
+                                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                  },
+                                  item: { padding: '8px 12px', '&focused': { backgroundColor: '#f3f4f6' } },
+                                },
+                              }}
+                            >
+                              <Mention
+                                trigger="@"
+                                data={mentionFields}
+                                displayTransform={(id) => `@${id}`}
+                                markup="@__id__"
+                                style={{ backgroundColor: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '4px' }}
+                              />
+                            </MentionsInput>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* CRM Tab */}
+              {activeTab === 'crm' && (
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">CRM mapping</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Map your CRM entities to Salesforce objects. Use @ to mention fields.
+                    </p>
+                  </div>
+                  <div className="space-y-3">
+                    {crmMappingFields.map((field) => {
+                      const currentValue = crmMappings[field.id] ?? ""
+                      return (
+                        <div key={field.id} className="flex items-start gap-4">
+                          <div className="w-48 flex-shrink-0">
+                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                              {field.name}
+                              {field.required && <span className="text-red-500 ml-1">*</span>}
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <MentionsInput
+                              value={currentValue}
+                              onChange={(e) => handleCrmMappingChange(field.id, e.target.value)}
+                              placeholder="Type @ to mention a field..."
+                              singleLine
+                              style={{
+                                control: { backgroundColor: 'transparent', fontSize: 14, fontWeight: 'normal' },
+                                '&singleLine': {
+                                  control: { fontFamily: 'inherit', display: 'inline-block' },
+                                  highlighter: { padding: '8px 10px', border: '1px solid transparent', minHeight: '38px' },
+                                  input: {
+                                    padding: '8px 10px',
+                                    border: '1px solid rgb(209, 213, 219)',
+                                    borderRadius: '0.375rem',
+                                    backgroundColor: 'white',
+                                    color: 'rgb(17, 24, 39)',
+                                    fontSize: '14px',
+                                    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                                  },
+                                },
+                                suggestions: {
+                                  list: {
+                                    backgroundColor: 'white',
+                                    border: '1px solid rgba(0,0,0,0.15)',
+                                    fontSize: 14,
+                                    borderRadius: '0.375rem',
+                                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                  },
+                                  item: { padding: '8px 12px', '&focused': { backgroundColor: '#f3f4f6' } },
+                                },
+                              }}
+                            >
+                              <Mention
+                                trigger="@"
+                                data={mentionFields}
+                                displayTransform={(id) => `@${id}`}
+                                markup="@__id__"
+                                style={{ backgroundColor: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '4px' }}
+                              />
+                            </MentionsInput>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </Card>
+
+      {/* Connect Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Connect Salesforce</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 px-6 py-4">
+            <div>
+              <Label htmlFor="modal-instance-url">Instance URL <span className="text-red-500">*</span></Label>
+              <Input
+                id="modal-instance-url"
+                type="url"
+                placeholder="https://yourinstance.salesforce.com"
+                value={salesforceConfig.instanceUrl}
+                onChange={(e) => handleConfigChange("instanceUrl", e.target.value)}
+                className="mt-1"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Your Salesforce instance URL (e.g., https://yourinstance.salesforce.com)
+              </p>
+            </div>
+            <div>
+              <Label htmlFor="modal-username">Username <span className="text-red-500">*</span></Label>
+              <Input
+                id="modal-username"
+                type="text"
+                placeholder="user@example.com"
+                value={salesforceConfig.username}
+                onChange={(e) => handleConfigChange("username", e.target.value)}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="modal-password">Password <span className="text-red-500">*</span></Label>
+              <Input
+                id="modal-password"
+                type="password"
+                placeholder="Enter your password"
+                value={salesforceConfig.password}
+                onChange={(e) => handleConfigChange("password", e.target.value)}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="modal-security-token">Security token <span className="text-red-500">*</span></Label>
+              <Input
+                id="modal-security-token"
+                type="password"
+                placeholder="Enter your security token"
+                value={salesforceConfig.securityToken}
+                onChange={(e) => handleConfigChange("securityToken", e.target.value)}
+                className="mt-1"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Your Salesforce security token. Reset it in your Salesforce account settings if needed.
+              </p>
+            </div>
+            <div>
+              <Label htmlFor="modal-consumer-key">Consumer key <span className="text-red-500">*</span></Label>
+              <Input
+                id="modal-consumer-key"
+                type="text"
+                placeholder="Enter consumer key"
+                value={salesforceConfig.consumerKey}
+                onChange={(e) => handleConfigChange("consumerKey", e.target.value)}
+                className="mt-1"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Consumer key from your Salesforce Connected App
+              </p>
+            </div>
+            <div>
+              <Label htmlFor="modal-consumer-secret">Consumer secret <span className="text-red-500">*</span></Label>
+              <Input
+                id="modal-consumer-secret"
+                type="password"
+                placeholder="Enter consumer secret"
+                value={salesforceConfig.consumerSecret}
+                onChange={(e) => handleConfigChange("consumerSecret", e.target.value)}
+                className="mt-1"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Consumer secret from your Salesforce Connected App
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <ButtonComponent variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</ButtonComponent>
+            <ButtonComponent
+              variant="primary"
+              onClick={handleConnect}
+              disabled={
+                !salesforceConfig.instanceUrl ||
+                !salesforceConfig.username ||
+                !salesforceConfig.password ||
+                !salesforceConfig.securityToken ||
+                !salesforceConfig.consumerKey ||
+                !salesforceConfig.consumerSecret
+              }
+            >
+              Connect
+            </ButtonComponent>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   )
 }
