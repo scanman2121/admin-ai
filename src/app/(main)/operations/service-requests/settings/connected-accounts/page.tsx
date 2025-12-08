@@ -70,6 +70,22 @@ const serviceTypeCategories = [
     { id: "other", name: "Other", description: "Miscellaneous service requests" }
 ]
 
+// Sample service types (request types) - in real app, this would come from the service types data
+const serviceTypes = [
+    { id: "more-cleaning", name: "More Cleaning", category: "Cleaning & Waste", categoryId: "cleaning-waste" },
+    { id: "bin-service", name: "Bin Service", category: "Cleaning & Waste", categoryId: "cleaning-waste" },
+    { id: "garbage-bin", name: "Garbage Bin", category: "Cleaning & Waste", categoryId: "cleaning-waste" },
+    { id: "hvac-maintenance", name: "HVAC Maintenance", category: "Temperature & Air", categoryId: "temperature-air" },
+    { id: "too-hot", name: "Too Hot", category: "Temperature & Air", categoryId: "temperature-air" },
+    { id: "too-cold", name: "Too Cold", category: "Temperature & Air", categoryId: "temperature-air" },
+    { id: "electrical", name: "Electrical", category: "Repairs & Maintenance", categoryId: "repairs-maintenance" },
+    { id: "plumbing", name: "Plumbing", category: "Repairs & Maintenance", categoryId: "repairs-maintenance" },
+    { id: "access-request", name: "Access Request", category: "Access & Security", categoryId: "access-security" },
+    { id: "key-lock", name: "Key & Lock", category: "Access & Security", categoryId: "access-security" },
+    { id: "porter-service", name: "Porter Service", category: "Hospitality & Concierge", categoryId: "hospitality-concierge" },
+    { id: "signage", name: "Signage", category: "Signage & Facilities", categoryId: "signage-facilities" },
+]
+
 export default function ServiceRequestsConnectedAccounts() {
     const pathname = usePathname()
     
@@ -85,7 +101,8 @@ export default function ServiceRequestsConnectedAccounts() {
         consumerSecret: ""
     })
     const [fieldMappings, setFieldMappings] = useState<Record<string, string>>(defaultFieldMappings)
-    const [selectedServiceTypes, setSelectedServiceTypes] = useState<string[]>([])
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([])
     const [serviceTypeSearch, setServiceTypeSearch] = useState("")
     const [showServiceTypeResults, setShowServiceTypeResults] = useState(false)
     const [imageError, setImageError] = useState(false)
@@ -125,7 +142,8 @@ export default function ServiceRequestsConnectedAccounts() {
     const handleDisable = () => {
         setIsConnected(false)
         setFieldMappings({})
-        setSelectedServiceTypes([])
+        setSelectedCategories([])
+        setSelectedTypes([])
         setIsKebabOpen(false)
     }
 
@@ -136,26 +154,59 @@ export default function ServiceRequestsConnectedAccounts() {
         }))
     }
 
-    const handleServiceTypeToggle = (serviceTypeId: string) => {
-        if (selectedServiceTypes.includes(serviceTypeId)) {
-            setSelectedServiceTypes(prev => prev.filter(id => id !== serviceTypeId))
+    const handleCategoryToggle = (categoryId: string) => {
+        if (selectedCategories.includes(categoryId)) {
+            setSelectedCategories(prev => prev.filter(id => id !== categoryId))
+            // Also remove all types from this category
+            const categoryTypes = serviceTypes.filter(t => t.categoryId === categoryId).map(t => t.id)
+            setSelectedTypes(prev => prev.filter(id => !categoryTypes.includes(id)))
         } else {
-            setSelectedServiceTypes(prev => [...prev, serviceTypeId])
+            setSelectedCategories(prev => [...prev, categoryId])
             setServiceTypeSearch("")
             setShowServiceTypeResults(false)
         }
     }
 
-    const handleRemoveServiceType = (serviceTypeId: string) => {
-        setSelectedServiceTypes(prev => prev.filter(id => id !== serviceTypeId))
+    const handleTypeToggle = (typeId: string) => {
+        if (selectedTypes.includes(typeId)) {
+            setSelectedTypes(prev => prev.filter(id => id !== typeId))
+        } else {
+            setSelectedTypes(prev => [...prev, typeId])
+            setServiceTypeSearch("")
+            setShowServiceTypeResults(false)
+        }
     }
 
-    const filteredServiceTypes = serviceTypeCategories.filter(category => {
-        const matchesSearch = category.name.toLowerCase().includes(serviceTypeSearch.toLowerCase()) ||
-            category.description.toLowerCase().includes(serviceTypeSearch.toLowerCase())
-        const notAlreadySelected = !selectedServiceTypes.includes(category.id)
-        return matchesSearch && notAlreadySelected
+    const handleRemoveCategory = (categoryId: string) => {
+        setSelectedCategories(prev => prev.filter(id => id !== categoryId))
+        const categoryTypes = serviceTypes.filter(t => t.categoryId === categoryId).map(t => t.id)
+        setSelectedTypes(prev => prev.filter(id => !categoryTypes.includes(id)))
+    }
+
+    const handleRemoveType = (typeId: string) => {
+        setSelectedTypes(prev => prev.filter(id => id !== typeId))
+    }
+
+    // Combine categories and types for search
+    const allSearchableItems = [
+        ...serviceTypeCategories.map(cat => ({ ...cat, type: 'category' as const })),
+        ...serviceTypes.map(type => ({ ...type, type: 'type' as const }))
+    ]
+
+    const filteredItems = allSearchableItems.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(serviceTypeSearch.toLowerCase()) ||
+            ('description' in item && item.description?.toLowerCase().includes(serviceTypeSearch.toLowerCase()))
+        
+        if (item.type === 'category') {
+            return matchesSearch && !selectedCategories.includes(item.id)
+        } else {
+            return matchesSearch && !selectedTypes.includes(item.id)
+        }
     })
+
+    // Calculate counts
+    const categoryCount = selectedCategories.length
+    const typeCount = selectedTypes.length
 
     return (
         <div className="space-y-6">
@@ -294,29 +345,66 @@ export default function ServiceRequestsConnectedAccounts() {
                             <>
                                 {/* Service Types Selection */}
                                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
-                                    <div>
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
-                                            Service types
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                                            Select which service types this Salesforce connection should apply to
-                                        </p>
+                                    <div className="flex items-start justify-between">
+                                        <div>
+                                            <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
+                                                Service types
+                                            </h3>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Select which service types this Salesforce connection should apply to
+                                            </p>
+                                        </div>
+                                        {/* Summary Box */}
+                                        {(categoryCount > 0 || typeCount > 0) && (
+                                            <div className="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md text-xs text-gray-600 dark:text-gray-400">
+                                                {categoryCount > 0 && (
+                                                    <span>{categoryCount} {categoryCount === 1 ? 'Category' : 'Categories'}</span>
+                                                )}
+                                                {categoryCount > 0 && typeCount > 0 && <span className="mx-1">•</span>}
+                                                {typeCount > 0 && (
+                                                    <span>{typeCount} {typeCount === 1 ? 'Type' : 'Types'}</span>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
 
-                                    {/* Selected Service Types Chips */}
-                                    {selectedServiceTypes.length > 0 && (
+                                    {/* Selected Chips */}
+                                    {(selectedCategories.length > 0 || selectedTypes.length > 0) && (
                                         <div className="flex flex-wrap gap-2">
-                                            {selectedServiceTypes.map((serviceTypeId) => {
-                                                const category = serviceTypeCategories.find(c => c.id === serviceTypeId)
+                                            {/* Category Chips */}
+                                            {selectedCategories.map((categoryId) => {
+                                                const category = serviceTypeCategories.find(c => c.id === categoryId)
                                                 if (!category) return null
                                                 return (
                                                     <div
-                                                        key={serviceTypeId}
-                                                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                                                        key={`category-${categoryId}`}
+                                                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
                                                     >
+                                                        <span className="text-xs font-medium">Category:</span>
                                                         <span>{category.name}</span>
                                                         <button
-                                                            onClick={() => handleRemoveServiceType(serviceTypeId)}
+                                                            onClick={() => handleRemoveCategory(categoryId)}
+                                                            className="hover:bg-purple-200 dark:hover:bg-purple-800 rounded p-0.5 transition-colors"
+                                                            type="button"
+                                                        >
+                                                            <RiCloseLine className="size-3.5" />
+                                                        </button>
+                                                    </div>
+                                                )
+                                            })}
+                                            {/* Type Chips */}
+                                            {selectedTypes.map((typeId) => {
+                                                const type = serviceTypes.find(t => t.id === typeId)
+                                                if (!type) return null
+                                                return (
+                                                    <div
+                                                        key={`type-${typeId}`}
+                                                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                                                    >
+                                                        <span className="text-xs font-medium">Type:</span>
+                                                        <span>{type.name}</span>
+                                                        <button
+                                                            onClick={() => handleRemoveType(typeId)}
                                                             className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded p-0.5 transition-colors"
                                                             type="button"
                                                         >
@@ -345,21 +433,45 @@ export default function ServiceRequestsConnectedAccounts() {
                                         />
                                         
                                         {/* Search Results Dropdown */}
-                                        {showServiceTypeResults && serviceTypeSearch && filteredServiceTypes.length > 0 && (
+                                        {showServiceTypeResults && serviceTypeSearch && filteredItems.length > 0 && (
                                             <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                                                {filteredServiceTypes.map((category) => (
+                                                {filteredItems.map((item) => (
                                                     <button
-                                                        key={category.id}
-                                                        onClick={() => handleServiceTypeToggle(category.id)}
+                                                        key={`${item.type}-${item.id}`}
+                                                        onClick={() => {
+                                                            if (item.type === 'category') {
+                                                                handleCategoryToggle(item.id)
+                                                            } else {
+                                                                handleTypeToggle(item.id)
+                                                            }
+                                                        }}
                                                         className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-start gap-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
                                                     >
                                                         <div className="flex-1 min-w-0">
-                                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                                {category.name}
+                                                            <div className="flex items-center gap-2">
+                                                                {item.type === 'category' ? (
+                                                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+                                                                        Category
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                                                                        Type
+                                                                    </span>
+                                                                )}
+                                                                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                    {item.name}
+                                                                </span>
                                                             </div>
-                                                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                                                {category.description}
-                                                            </div>
+                                                            {'description' in item && item.description && (
+                                                                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                                                    {item.description}
+                                                                </div>
+                                                            )}
+                                                            {item.type === 'type' && 'category' in item && (
+                                                                <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                                                                    {item.category}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </button>
                                                 ))}
