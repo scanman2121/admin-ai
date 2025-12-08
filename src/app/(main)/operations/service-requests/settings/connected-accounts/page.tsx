@@ -14,7 +14,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { MentionsInput, Mention } from "react-mentions"
-import "react-mentions/lib/style.css"
 
 // Define tabs for the Service Requests Settings page
 const tabs = [
