@@ -1370,7 +1370,7 @@ function ConnectedAccountsSettings() {
   const handleDisable = () => {
     setIsConnected(false)
     setFieldMappings(defaultFieldMappings)
-    setCrmMappings({})
+    setCrmMappings([])
     setIsKebabOpen(false)
   }
 
