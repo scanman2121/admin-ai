@@ -1369,14 +1369,7 @@ function ConnectedAccountsSettings() {
 
   const handleConnect = () => {
     setIsConnected(true)
-    setFieldMappings({
-      "Subject": "@issueTypeName",
-      "Description": "@description. sent by @adminEmail",
-      "Building_Name__c": "@building",
-      "Your_Location__c": "@location_name....@building",
-      "OwnerId": "@userId",
-      "Origin": "Community"
-    })
+    setFieldMappings(defaultFieldMappings)
     setIsModalOpen(false)
   }
 
