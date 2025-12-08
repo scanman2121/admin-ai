@@ -85,6 +85,7 @@ export default function ServiceRequestsConnectedAccounts() {
     })
     const [fieldMappings, setFieldMappings] = useState<Record<string, string>>(defaultFieldMappings)
     const [selectedServiceTypes, setSelectedServiceTypes] = useState<string[]>([])
+    const [imageError, setImageError] = useState(false)
 
     const handleSalesforceToggle = (checked: boolean) => {
         setSalesforceEnabled(checked)
@@ -183,14 +184,21 @@ export default function ServiceRequestsConnectedAccounts() {
                         <div className="flex items-start justify-between gap-3 py-2">
                             <div className="flex items-start gap-4 flex-1">
                                 {/* Logo in white box with gray outline */}
-                                <div className="flex-shrink-0 bg-white border border-gray-300 dark:border-gray-600 rounded p-3">
-                                    <Image
-                                        src="/images/sf.png"
-                                        alt="Salesforce"
-                                        width={120}
-                                        height={40}
-                                        className="object-contain"
-                                    />
+                                <div className="flex-shrink-0 bg-white border border-gray-300 dark:border-gray-600 rounded p-3 flex items-center justify-center min-w-[120px] min-h-[40px]">
+                                    {imageError ? (
+                                        <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                            Salesforce
+                                        </div>
+                                    ) : (
+                                        <Image
+                                            src="/images/sf.png"
+                                            alt="Salesforce"
+                                            width={120}
+                                            height={40}
+                                            className="object-contain"
+                                            onError={() => setImageError(true)}
+                                        />
+                                    )}
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
