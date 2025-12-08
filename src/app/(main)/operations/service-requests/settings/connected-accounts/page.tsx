@@ -162,6 +162,17 @@ export default function ServiceRequestsConnectedAccounts() {
             setSelectedTypes(prev => prev.filter(id => !categoryTypes.includes(id)))
         } else {
             setSelectedCategories(prev => [...prev, categoryId])
+            // Automatically add all types from this category
+            const categoryTypes = serviceTypes.filter(t => t.categoryId === categoryId).map(t => t.id)
+            setSelectedTypes(prev => {
+                const newTypes = [...prev]
+                categoryTypes.forEach(typeId => {
+                    if (!newTypes.includes(typeId)) {
+                        newTypes.push(typeId)
+                    }
+                })
+                return newTypes
+            })
             setServiceTypeSearch("")
             setShowServiceTypeResults(false)
         }
@@ -204,9 +215,16 @@ export default function ServiceRequestsConnectedAccounts() {
         }
     })
 
-    // Calculate counts
+    // Calculate counts - include types from selected categories
     const categoryCount = selectedCategories.length
-    const typeCount = selectedTypes.length
+    const typesFromCategories = selectedCategories.flatMap(catId => 
+        serviceTypes.filter(t => t.categoryId === catId).map(t => t.id)
+    )
+    const individualTypes = selectedTypes.filter(typeId => {
+        const type = serviceTypes.find(t => t.id === typeId)
+        return type && !selectedCategories.includes(type.categoryId)
+    })
+    const typeCount = typesFromCategories.length + individualTypes.length
 
     return (
         <div className="space-y-6">
@@ -392,10 +410,12 @@ export default function ServiceRequestsConnectedAccounts() {
                                                     </div>
                                                 )
                                             })}
-                                            {/* Type Chips */}
+                                            {/* Type Chips - Only show types not included via categories */}
                                             {selectedTypes.map((typeId) => {
                                                 const type = serviceTypes.find(t => t.id === typeId)
                                                 if (!type) return null
+                                                // Don't show type if its category is already selected
+                                                if (selectedCategories.includes(type.categoryId)) return null
                                                 return (
                                                     <div
                                                         key={`type-${typeId}`}
@@ -497,12 +517,12 @@ export default function ServiceRequestsConnectedAccounts() {
                                             return (
                                                 <div key={field.id} className="flex items-start gap-4">
                                                     <div className="w-48 flex-shrink-0">
-                                                        <div className="font-medium text-gray-900 dark:text-gray-100">
+                                                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                                             {field.name}
+                                                            {field.required && (
+                                                                <span className="text-red-500 ml-1">*</span>
+                                                            )}
                                                         </div>
-                                                        {field.required && (
-                                                            <span className="text-xs text-red-500">Required</span>
-                                                        )}
                                                     </div>
                                                     <div className="flex-1">
                                                         <MentionsInput
