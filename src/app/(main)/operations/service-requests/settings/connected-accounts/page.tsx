@@ -7,12 +7,12 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { RiArrowLeftLine, RiCloseLine, RiMore2Line, RiSearchLine, RiLink } from "@remixicon/react"
+import { RiArrowLeftLine, RiCloseLine, RiMore2Line, RiSearchLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
-import { MentionsInput, Mention } from "react-mentions"
+import { Mention, MentionsInput } from "react-mentions"
 
 // Define tabs for the Service Requests Settings page
 const tabs = [
