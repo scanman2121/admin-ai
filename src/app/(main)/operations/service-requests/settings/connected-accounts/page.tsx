@@ -213,7 +213,7 @@ export default function ServiceRequestsConnectedAccounts() {
                             <div className="flex items-center gap-2">
                                 {isConnected ? (
                                     <>
-                                        <Badge variant="success">Enabled</Badge>
+                                        <Badge variant="success">Connected</Badge>
                                         <div className="relative">
                                             <Button
                                                 variant="ghost"
@@ -241,7 +241,7 @@ export default function ServiceRequestsConnectedAccounts() {
                                                             onClick={handleDisable}
                                                             className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
                                                         >
-                                                            Disable
+                                                            Disconnect
                                                         </button>
                                                     </div>
                                                 </>
@@ -253,7 +253,7 @@ export default function ServiceRequestsConnectedAccounts() {
                                         variant="primary"
                                         onClick={() => setIsModalOpen(true)}
                                     >
-                                        Enable
+                                        Connect
                                     </Button>
                                 )}
                             </div>
