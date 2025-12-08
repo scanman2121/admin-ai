@@ -1294,17 +1294,17 @@ function ConnectedAccountsSettings() {
     consumerKey: "",
     consumerSecret: ""
   })
-  // Default field mappings - maps request info field ID to { salesforceField, information }
-  const defaultFieldMappings: Record<string, { salesforceField: string; information: string }> = {
-    "subject": { salesforceField: "Subject", information: "@issueTypeName" },
-    "description": { salesforceField: "Description", information: "@description. sent by @adminEmail" },
-    "location": { salesforceField: "Your_Location__c", information: "@location_name....@building" },
-    "owner": { salesforceField: "OwnerId", information: "@userId" },
-    "creator": { salesforceField: "CreatedById", information: "@requestor" }
-  }
+  // Default field mappings - array structure to allow adding/removing rows
+  const defaultFieldMappings: Array<{ id: string; requestInfo: string; required: boolean; salesforceField: string; information: string }> = [
+    { id: "subject", requestInfo: "Subject", required: true, salesforceField: "Subject", information: "@issueTypeName" },
+    { id: "description", requestInfo: "Description", required: true, salesforceField: "Description", information: "@description. sent by @adminEmail" },
+    { id: "location", requestInfo: "Location", required: false, salesforceField: "Your_Location__c", information: "@location_name....@building" },
+    { id: "owner", requestInfo: "Owner", required: false, salesforceField: "OwnerId", information: "@userId" },
+    { id: "creator", requestInfo: "Creator", required: false, salesforceField: "CreatedById", information: "@requestor" }
+  ]
 
-  const [fieldMappings, setFieldMappings] = useState<Record<string, { salesforceField: string; information: string }>>(defaultFieldMappings)
-  const [crmMappings, setCrmMappings] = useState<Record<string, string>>({})
+  const [fieldMappings, setFieldMappings] = useState<Array<{ id: string; requestInfo: string; required: boolean; salesforceField: string; information: string }>>(defaultFieldMappings)
+  const [crmMappings, setCrmMappings] = useState<Array<{ id: string; salesforceField: string; hqoField: string }>>([])
   const [imageError, setImageError] = useState(false)
 
   // Request information fields that will be mapped to Salesforce
@@ -1329,14 +1329,17 @@ function ConnectedAccountsSettings() {
     { id: "Priority", name: "Priority" }
   ]
 
-  // CRM mapping fields
-  const crmMappingFields = [
-    { id: "Accounts", name: "Accounts", required: false },
-    { id: "Contacts", name: "Contacts", required: false },
-    { id: "Opportunities", name: "Opportunities", required: false },
-    { id: "Buildings_Properties", name: "Buildings / Properties", required: false },
-    { id: "Leases", name: "Leases", required: false },
-    { id: "Spaces", name: "Spaces", required: false }
+  // HQO fields for CRM mapping
+  const hqoFields = [
+    { id: "accounts", name: "Accounts" },
+    { id: "contacts", name: "Contacts" },
+    { id: "opportunities", name: "Opportunities" },
+    { id: "buildings", name: "Buildings" },
+    { id: "properties", name: "Properties" },
+    { id: "leases", name: "Leases" },
+    { id: "spaces", name: "Spaces" },
+    { id: "tenants", name: "Tenants" },
+    { id: "users", name: "Users" }
   ]
 
   // Available fields for mentions
@@ -1380,31 +1383,62 @@ function ConnectedAccountsSettings() {
     setIsKebabOpen(false)
   }
 
-  const handleSalesforceFieldChange = (requestInfoId: string, salesforceField: string) => {
-    setFieldMappings(prev => ({
-      ...prev,
-      [requestInfoId]: {
-        ...prev[requestInfoId],
-        salesforceField
-      }
-    }))
+  const handleSalesforceFieldChange = (mappingId: string, salesforceField: string) => {
+    setFieldMappings(prev => prev.map(mapping => 
+      mapping.id === mappingId 
+        ? { ...mapping, salesforceField }
+        : mapping
+    ))
   }
 
-  const handleInformationChange = (requestInfoId: string, information: string) => {
-    setFieldMappings(prev => ({
-      ...prev,
-      [requestInfoId]: {
-        ...prev[requestInfoId],
-        information
-      }
-    }))
+  const handleInformationChange = (mappingId: string, information: string) => {
+    setFieldMappings(prev => prev.map(mapping => 
+      mapping.id === mappingId 
+        ? { ...mapping, information }
+        : mapping
+    ))
   }
 
-  const handleCrmMappingChange = (fieldId: string, value: string) => {
-    setCrmMappings(prev => ({
-      ...prev,
-      [fieldId]: value
-    }))
+  const handleAddServiceRequestRow = () => {
+    setFieldMappings(prev => [...prev, { 
+      id: `sr-${Date.now()}`, 
+      requestInfo: "", 
+      required: false,
+      salesforceField: "", 
+      information: "" 
+    }])
+  }
+
+  const handleRemoveServiceRequestRow = (mappingId: string) => {
+    setFieldMappings(prev => prev.filter(mapping => mapping.id !== mappingId))
+  }
+
+  const handleCrmSalesforceFieldChange = (mappingId: string, salesforceField: string) => {
+    setCrmMappings(prev => prev.map(mapping => 
+      mapping.id === mappingId 
+        ? { ...mapping, salesforceField }
+        : mapping
+    ))
+  }
+
+  const handleCrmHqoFieldChange = (mappingId: string, hqoField: string) => {
+    setCrmMappings(prev => prev.map(mapping => 
+      mapping.id === mappingId 
+        ? { ...mapping, hqoField }
+        : mapping
+    ))
+  }
+
+  const handleAddCrmRow = () => {
+    setCrmMappings(prev => [...prev, { 
+      id: `crm-${Date.now()}`, 
+      salesforceField: "", 
+      hqoField: "" 
+    }])
+  }
+
+  const handleRemoveCrmRow = (mappingId: string) => {
+    setCrmMappings(prev => prev.filter(mapping => mapping.id !== mappingId))
   }
 
   return (
@@ -1518,50 +1552,38 @@ function ConnectedAccountsSettings() {
                       <thead>
                         <tr className="border-b border-gray-200 dark:border-gray-700">
                           <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
-                            Request information
-                          </th>
-                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
                             Salesforce field
                           </th>
                           <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
-                            Information that will be sent to Salesforce field
+                            Information that will be sent to Salesforce. Type @ to select values.
                           </th>
                         </tr>
                       </thead>
                       <tbody>
-                        {requestInformationFields.map((field) => {
-                          const mapping = fieldMappings[field.id] || { salesforceField: "", information: "" }
-                          return (
-                            <tr key={field.id} className="border-b border-gray-200 dark:border-gray-700">
-                              <td className="py-3 px-4">
-                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                  {field.name}
-                                  {field.required && (
-                                    <span className="text-red-500 ml-1">*</span>
-                                  )}
-                                </div>
-                              </td>
-                              <td className="py-3 px-4">
-                                <Select
-                                  value={mapping.salesforceField}
-                                  onValueChange={(value) => handleSalesforceFieldChange(field.id, value)}
-                                >
-                                  <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select field" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {salesforceFields.map((sfField) => (
-                                      <SelectItem key={sfField.id} value={sfField.id}>
-                                        {sfField.name}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </td>
-                              <td className="py-3 px-4">
+                        {fieldMappings.map((mapping) => (
+                          <tr key={mapping.id} className="border-b border-gray-200 dark:border-gray-700">
+                            <td className="py-3 px-4">
+                              <Select
+                                value={mapping.salesforceField}
+                                onValueChange={(value) => handleSalesforceFieldChange(mapping.id, value)}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select field" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {salesforceFields.map((sfField) => (
+                                    <SelectItem key={sfField.id} value={sfField.id}>
+                                      {sfField.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="flex items-center gap-2">
                                 <MentionsInput
                                   value={mapping.information}
-                                  onChange={(e) => handleInformationChange(field.id, e.target.value)}
+                                  onChange={(e) => handleInformationChange(mapping.id, e.target.value)}
                                   placeholder="Type @ to mention a field..."
                                   singleLine
                                   style={{
@@ -1600,12 +1622,30 @@ function ConnectedAccountsSettings() {
                                     style={{ backgroundColor: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '4px' }}
                                   />
                                 </MentionsInput>
-                              </td>
-                            </tr>
-                          )
-                        })}
+                                {!mapping.required && (
+                                  <ButtonComponent
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleRemoveServiceRequestRow(mapping.id)}
+                                    className="text-red-600 hover:text-red-700"
+                                  >
+                                    Remove
+                                  </ButtonComponent>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
+                  </div>
+                  <div className="flex justify-end">
+                    <ButtonComponent
+                      variant="ghost"
+                      onClick={handleAddServiceRequestRow}
+                    >
+                      Add row
+                    </ButtonComponent>
                   </div>
                 </div>
               )}
@@ -1616,65 +1656,80 @@ function ConnectedAccountsSettings() {
                   <div>
                     <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">CRM mapping</h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Map your CRM entities to Salesforce objects. Use @ to mention fields.
+                      Map Salesforce fields to HQO fields.
                     </p>
                   </div>
-                  <div className="space-y-3">
-                    {crmMappingFields.map((field) => {
-                      const currentValue = crmMappings[field.id] ?? ""
-                      return (
-                        <div key={field.id} className="flex items-start gap-4">
-                          <div className="w-48 flex-shrink-0">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                              {field.name}
-                              {field.required && <span className="text-red-500 ml-1">*</span>}
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <MentionsInput
-                              value={currentValue}
-                              onChange={(e) => handleCrmMappingChange(field.id, e.target.value)}
-                              placeholder="Type @ to mention a field..."
-                              singleLine
-                              style={{
-                                control: { backgroundColor: 'transparent', fontSize: 14, fontWeight: 'normal' },
-                                '&singleLine': {
-                                  control: { fontFamily: 'inherit', display: 'inline-block' },
-                                  highlighter: { padding: '8px 10px', border: '1px solid transparent', minHeight: '38px' },
-                                  input: {
-                                    padding: '8px 10px',
-                                    border: '1px solid rgb(209, 213, 219)',
-                                    borderRadius: '0.375rem',
-                                    backgroundColor: 'white',
-                                    color: 'rgb(17, 24, 39)',
-                                    fontSize: '14px',
-                                    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                                  },
-                                },
-                                suggestions: {
-                                  list: {
-                                    backgroundColor: 'white',
-                                    border: '1px solid rgba(0,0,0,0.15)',
-                                    fontSize: 14,
-                                    borderRadius: '0.375rem',
-                                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                  },
-                                  item: { padding: '8px 12px', '&focused': { backgroundColor: '#f3f4f6' } },
-                                },
-                              }}
-                            >
-                              <Mention
-                                trigger="@"
-                                data={mentionFields}
-                                displayTransform={(id) => `@${id}`}
-                                markup="@__id__"
-                                style={{ backgroundColor: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '4px' }}
-                              />
-                            </MentionsInput>
-                          </div>
-                        </div>
-                      )
-                    })}
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="border-b border-gray-200 dark:border-gray-700">
+                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
+                            Salesforce field
+                          </th>
+                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
+                            Map to HQO field
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {crmMappings.map((mapping) => (
+                          <tr key={mapping.id} className="border-b border-gray-200 dark:border-gray-700">
+                            <td className="py-3 px-4">
+                              <Select
+                                value={mapping.salesforceField}
+                                onValueChange={(value) => handleCrmSalesforceFieldChange(mapping.id, value)}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select Salesforce field" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {salesforceFields.map((sfField) => (
+                                    <SelectItem key={sfField.id} value={sfField.id}>
+                                      {sfField.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="flex items-center gap-2">
+                                <Select
+                                  value={mapping.hqoField}
+                                  onValueChange={(value) => handleCrmHqoFieldChange(mapping.id, value)}
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select HQO field" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {hqoFields.map((hqoField) => (
+                                      <SelectItem key={hqoField.id} value={hqoField.id}>
+                                        {hqoField.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <ButtonComponent
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleRemoveCrmRow(mapping.id)}
+                                  className="text-red-600 hover:text-red-700"
+                                >
+                                  Remove
+                                </ButtonComponent>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="flex justify-end">
+                    <ButtonComponent
+                      variant="ghost"
+                      onClick={handleAddCrmRow}
+                    >
+                      Add row
+                    </ButtonComponent>
                   </div>
                 </div>
               )}

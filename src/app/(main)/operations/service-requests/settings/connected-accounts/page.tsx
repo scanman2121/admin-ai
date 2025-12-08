@@ -26,15 +26,6 @@ const tabs = [
     { name: "Connected accounts", href: "/operations/service-requests/settings/connected-accounts" },
 ]
 
-// Request information fields that will be mapped to Salesforce
-const requestInformationFields = [
-    { id: "subject", name: "Subject", required: true },
-    { id: "description", name: "Description", required: true },
-    { id: "location", name: "Location", required: false },
-    { id: "owner", name: "Owner", required: false },
-    { id: "creator", name: "Creator", required: false }
-]
-
 // Available Salesforce fields for dropdown selection
 const salesforceFields = [
     { id: "Subject", name: "Subject" },
@@ -47,6 +38,7 @@ const salesforceFields = [
     { id: "Status", name: "Status" },
     { id: "Priority", name: "Priority" }
 ]
+
 
 // Available fields for mentions
 const mentionFields = [
@@ -63,14 +55,14 @@ const mentionFields = [
     { id: "assignedTo", display: "Assigned To" }
 ]
 
-// Default field mappings - maps request info field ID to { salesforceField, information }
-const defaultFieldMappings: Record<string, { salesforceField: string; information: string }> = {
-    "subject": { salesforceField: "Subject", information: "@issueTypeName" },
-    "description": { salesforceField: "Description", information: "@description. sent by @adminEmail" },
-    "location": { salesforceField: "Your_Location__c", information: "@location_name....@building" },
-    "owner": { salesforceField: "OwnerId", information: "@userId" },
-    "creator": { salesforceField: "CreatedById", information: "@requestor" }
-}
+// Default field mappings - array structure to allow adding/removing rows
+const defaultFieldMappings: Array<{ id: string; requestInfo: string; required: boolean; salesforceField: string; information: string }> = [
+    { id: "subject", requestInfo: "Subject", required: true, salesforceField: "Subject", information: "@issueTypeName" },
+    { id: "description", requestInfo: "Description", required: true, salesforceField: "Description", information: "@description. sent by @adminEmail" },
+    { id: "location", requestInfo: "Location", required: false, salesforceField: "Your_Location__c", information: "@location_name....@building" },
+    { id: "owner", requestInfo: "Owner", required: false, salesforceField: "OwnerId", information: "@userId" },
+    { id: "creator", requestInfo: "Creator", required: false, salesforceField: "CreatedById", information: "@requestor" }
+]
 
 // Service type categories
 const serviceTypeCategories = [
@@ -104,7 +96,7 @@ interface SalesforceConnection {
     name: string
     isInherited: boolean
     isConnected: boolean
-    fieldMappings: Record<string, { salesforceField: string; information: string }>
+    fieldMappings: Array<{ id: string; requestInfo: string; required: boolean; salesforceField: string; information: string }>
     selectedCategories: string[]
     selectedTypes: string[]
     salesforceConfig?: {
@@ -143,7 +135,7 @@ export default function ServiceRequestsConnectedAccounts() {
         consumerKey: "",
         consumerSecret: ""
     })
-    const [fieldMappings, setFieldMappings] = useState<Record<string, { salesforceField: string; information: string }>>(defaultFieldMappings)
+    const [fieldMappings, setFieldMappings] = useState<Array<{ id: string; requestInfo: string; required: boolean; salesforceField: string; information: string }>>(defaultFieldMappings)
     const [selectedCategories, setSelectedCategories] = useState<string[]>([])
     const [selectedTypes, setSelectedTypes] = useState<string[]>([])
     const [serviceTypeSearch, setServiceTypeSearch] = useState("")
@@ -257,25 +249,36 @@ export default function ServiceRequestsConnectedAccounts() {
         setIsModalOpen(true)
     }
 
-    const handleSalesforceFieldChange = (requestInfoId: string, salesforceField: string) => {
-        setFieldMappings(prev => ({
-            ...prev,
-            [requestInfoId]: {
-                ...prev[requestInfoId],
-                salesforceField
-            }
-        }))
+    const handleSalesforceFieldChange = (mappingId: string, salesforceField: string) => {
+        setFieldMappings(prev => prev.map(mapping => 
+            mapping.id === mappingId 
+                ? { ...mapping, salesforceField }
+                : mapping
+        ))
     }
 
-    const handleInformationChange = (requestInfoId: string, information: string) => {
-        setFieldMappings(prev => ({
-            ...prev,
-            [requestInfoId]: {
-                ...prev[requestInfoId],
-                information
-            }
-        }))
+    const handleInformationChange = (mappingId: string, information: string) => {
+        setFieldMappings(prev => prev.map(mapping => 
+            mapping.id === mappingId 
+                ? { ...mapping, information }
+                : mapping
+        ))
     }
+
+    const handleAddServiceRequestRow = () => {
+        setFieldMappings(prev => [...prev, { 
+            id: `sr-${Date.now()}`, 
+            requestInfo: "", 
+            required: false,
+            salesforceField: "", 
+            information: "" 
+        }])
+    }
+
+    const handleRemoveServiceRequestRow = (mappingId: string) => {
+        setFieldMappings(prev => prev.filter(mapping => mapping.id !== mappingId))
+    }
+
 
     const handleCategoryToggle = (categoryId: string) => {
         if (selectedCategories.includes(categoryId)) {
@@ -647,50 +650,38 @@ export default function ServiceRequestsConnectedAccounts() {
                                             <thead>
                                                 <tr className="border-b border-gray-200 dark:border-gray-700">
                                                     <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
-                                                        Request information
-                                                    </th>
-                                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
                                                         Salesforce field
                                                     </th>
                                                     <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
-                                                        Information that will be sent to Salesforce field
+                                                        Information that will be sent to Salesforce. Type @ to select values.
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {requestInformationFields.map((field) => {
-                                                    const mapping = fieldMappings[field.id] || { salesforceField: "", information: "" }
-                                                    return (
-                                                        <tr key={field.id} className="border-b border-gray-200 dark:border-gray-700">
-                                                            <td className="py-3 px-4">
-                                                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                                    {field.name}
-                                                                    {field.required && (
-                                                                        <span className="text-red-500 ml-1">*</span>
-                                                                    )}
-                                                                </div>
-                                                            </td>
-                                                            <td className="py-3 px-4">
-                                                                <Select
-                                                                    value={mapping.salesforceField}
-                                                                    onValueChange={(value) => handleSalesforceFieldChange(field.id, value)}
-                                                                >
-                                                                    <SelectTrigger className="w-full">
-                                                                        <SelectValue placeholder="Select field" />
-                                                                    </SelectTrigger>
-                                                                    <SelectContent>
-                                                                        {salesforceFields.map((sfField) => (
-                                                                            <SelectItem key={sfField.id} value={sfField.id}>
-                                                                                {sfField.name}
-                                                                            </SelectItem>
-                                                                        ))}
-                                                                    </SelectContent>
-                                                                </Select>
-                                                            </td>
-                                                            <td className="py-3 px-4">
+                                                {fieldMappings.map((mapping) => (
+                                                    <tr key={mapping.id} className="border-b border-gray-200 dark:border-gray-700">
+                                                        <td className="py-3 px-4">
+                                                            <Select
+                                                                value={mapping.salesforceField}
+                                                                onValueChange={(value) => handleSalesforceFieldChange(mapping.id, value)}
+                                                            >
+                                                                <SelectTrigger className="w-full">
+                                                                    <SelectValue placeholder="Select field" />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    {salesforceFields.map((sfField) => (
+                                                                        <SelectItem key={sfField.id} value={sfField.id}>
+                                                                            {sfField.name}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </SelectContent>
+                                                            </Select>
+                                                        </td>
+                                                        <td className="py-3 px-4">
+                                                            <div className="flex items-center gap-2">
                                                                 <MentionsInput
                                                                     value={mapping.information}
-                                                                    onChange={(e) => handleInformationChange(field.id, e.target.value)}
+                                                                    onChange={(e) => handleInformationChange(mapping.id, e.target.value)}
                                                                     placeholder="Type @ to mention a field..."
                                                                     singleLine
                                                                     style={{
@@ -750,12 +741,30 @@ export default function ServiceRequestsConnectedAccounts() {
                                                                         }}
                                                                     />
                                                                 </MentionsInput>
-                                                            </td>
-                                                        </tr>
-                                                    )
-                                                })}
+                                                                {!mapping.required && (
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="sm"
+                                                                        onClick={() => handleRemoveServiceRequestRow(mapping.id)}
+                                                                        className="text-red-600 hover:text-red-700"
+                                                                    >
+                                                                        Remove
+                                                                    </Button>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
                                             </tbody>
                                         </table>
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <Button
+                                            variant="ghost"
+                                            onClick={handleAddServiceRequestRow}
+                                        >
+                                            Add row
+                                        </Button>
                                     </div>
                                 </div>
                             </>
