@@ -455,7 +455,7 @@ export default function ServiceRequestsConnectedAccounts() {
                                 ) : (
                                     <Button
                                         variant="primary"
-                                        onClick={() => setIsModalOpen(true)}
+                                        onClick={handleAddConnection}
                                     >
                                         Connect
                                     </Button>
