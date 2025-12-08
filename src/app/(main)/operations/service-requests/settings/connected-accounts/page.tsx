@@ -444,7 +444,8 @@ export default function ServiceRequestsConnectedAccounts() {
                                                             <Mention
                                                                 trigger="@"
                                                                 data={mentionFields}
-                                                                displayTransform={(id) => id}
+                                                                displayTransform={(id) => `@${id}`}
+                                                                markup="@__id__"
                                                                 style={{
                                                                     backgroundColor: '#dbeafe',
                                                                     color: '#1e40af',
