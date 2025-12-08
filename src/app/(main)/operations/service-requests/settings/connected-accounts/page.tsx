@@ -323,6 +323,9 @@ export default function ServiceRequestsConnectedAccounts() {
     })
     const typeCount = typesFromCategories.length + individualTypes.length
 
+    // Determine if connected based on inherited connection or any connections
+    const isConnected = inheritedConnection?.isConnected || connections.some(conn => conn.isConnected)
+
     return (
         <div className="space-y-6">
             {/* Header with back navigation */}
@@ -415,26 +418,30 @@ export default function ServiceRequestsConnectedAccounts() {
                                                 variant="ghost"
                                                 size="sm"
                                                 className="p-2 h-8 w-8"
-                                                onClick={() => setIsKebabOpen(!isKebabOpen)}
+                                                onClick={() => setIsKebabOpen(prev => ({ ...prev, inherited: !prev.inherited }))}
                                             >
                                                 <RiMore2Line className="size-4" />
                                             </Button>
                                             
-                                            {isKebabOpen && (
+                                            {isKebabOpen.inherited && (
                                                 <>
-                                                    <div className="fixed inset-0 z-10" onClick={() => setIsKebabOpen(false)} />
+                                                    <div className="fixed inset-0 z-10" onClick={() => setIsKebabOpen(prev => ({ ...prev, inherited: false }))} />
                                                     <div className="absolute right-0 top-full mt-1 z-20 min-w-[140px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
                                                         <button
                                                             onClick={() => {
                                                                 setIsModalOpen(true)
-                                                                setIsKebabOpen(false)
+                                                                setIsKebabOpen(prev => ({ ...prev, inherited: false }))
                                                             }}
                                                             className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
                                                         >
                                                             View settings
                                                         </button>
                                                         <button
-                                                            onClick={handleDisable}
+                                                            onClick={() => {
+                                                                if (inheritedConnection) {
+                                                                    handleDisable(inheritedConnection.id)
+                                                                }
+                                                            }}
                                                             className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
                                                         >
                                                             Disconnect
