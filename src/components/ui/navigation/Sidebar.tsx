@@ -1794,7 +1794,7 @@ function ConnectedAccountsSettings() {
                         Configure which request information maps to which Salesforce fields and how the data is formatted.
                       </p>
                     </div>
-                  <div className="overflow-x-auto">
+                    <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                       <thead>
                         <tr className="border-b border-gray-200 dark:border-gray-700">
@@ -1887,14 +1887,15 @@ function ConnectedAccountsSettings() {
                         ))}
                       </tbody>
                     </table>
-                  </div>
-                  <div className="flex justify-start">
-                    <ButtonComponent
-                      variant="primary"
-                      onClick={handleAddServiceRequestRow}
-                    >
-                      Add row
-                    </ButtonComponent>
+                    </div>
+                    <div className="flex justify-start">
+                      <ButtonComponent
+                        variant="primary"
+                        onClick={handleAddServiceRequestRow}
+                      >
+                        Add row
+                      </ButtonComponent>
+                    </div>
                   </div>
                 </div>
               )}
