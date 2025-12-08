@@ -758,12 +758,12 @@ export default function ServiceRequestsConnectedAccounts() {
                                         </table>
                                     </div>
                                     <div className="flex justify-start">
-                                        <Button
-                                            variant="primary"
+                                        <button
                                             onClick={handleAddServiceRequestRow}
+                                            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium cursor-pointer"
                                         >
                                             Add row
-                                        </Button>
+                                        </button>
                                     </div>
                                 </div>
                             </>
