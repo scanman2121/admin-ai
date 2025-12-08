@@ -3,18 +3,17 @@
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
-import { Checkbox } from "@/components/Checkbox"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/Dialog"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { RiArrowLeftLine, RiMore2Line } from "@remixicon/react"
+import { RiArrowLeftLine, RiCloseLine, RiMore2Line, RiSearchLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 // Define tabs for the Service Requests Settings page
 const tabs = [
@@ -87,7 +86,27 @@ export default function ServiceRequestsConnectedAccounts() {
     })
     const [fieldMappings, setFieldMappings] = useState<Record<string, string>>(defaultFieldMappings)
     const [selectedServiceTypes, setSelectedServiceTypes] = useState<string[]>([])
+    const [serviceTypeSearch, setServiceTypeSearch] = useState("")
+    const [showServiceTypeResults, setShowServiceTypeResults] = useState(false)
     const [imageError, setImageError] = useState(false)
+    const serviceTypeSearchRef = useRef<HTMLDivElement>(null)
+
+    // Close service type dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (serviceTypeSearchRef.current && !serviceTypeSearchRef.current.contains(event.target as Node)) {
+                setShowServiceTypeResults(false)
+            }
+        }
+
+        if (showServiceTypeResults) {
+            document.addEventListener("mousedown", handleClickOutside)
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [showServiceTypeResults])
 
     const handleConfigChange = (field: string, value: string) => {
         setSalesforceConfig(prev => ({
@@ -118,14 +137,25 @@ export default function ServiceRequestsConnectedAccounts() {
     }
 
     const handleServiceTypeToggle = (serviceTypeId: string) => {
-        setSelectedServiceTypes(prev => {
-            if (prev.includes(serviceTypeId)) {
-                return prev.filter(id => id !== serviceTypeId)
-            } else {
-                return [...prev, serviceTypeId]
-            }
-        })
+        if (selectedServiceTypes.includes(serviceTypeId)) {
+            setSelectedServiceTypes(prev => prev.filter(id => id !== serviceTypeId))
+        } else {
+            setSelectedServiceTypes(prev => [...prev, serviceTypeId])
+            setServiceTypeSearch("")
+            setShowServiceTypeResults(false)
+        }
     }
+
+    const handleRemoveServiceType = (serviceTypeId: string) => {
+        setSelectedServiceTypes(prev => prev.filter(id => id !== serviceTypeId))
+    }
+
+    const filteredServiceTypes = serviceTypeCategories.filter(category => {
+        const matchesSearch = category.name.toLowerCase().includes(serviceTypeSearch.toLowerCase()) ||
+            category.description.toLowerCase().includes(serviceTypeSearch.toLowerCase())
+        const notAlreadySelected = !selectedServiceTypes.includes(category.id)
+        return matchesSearch && notAlreadySelected
+    })
 
     return (
         <div className="space-y-6">
@@ -181,9 +211,9 @@ export default function ServiceRequestsConnectedAccounts() {
                 {/* Salesforce Connection Card */}
                 <Card>
                     <div className="space-y-6">
-                        {/* Salesforce Header with Logo and Enable/Enabled Badge */}
-                        <div className="flex items-start justify-between gap-3 py-2">
-                            <div className="flex items-start gap-3 flex-1">
+                        {/* Salesforce Header with Logo and Connect/Connected Badge */}
+                        <div className="flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3 flex-1">
                                 {/* Square Logo container */}
                                 <div className="flex-shrink-0 bg-white border border-gray-300 dark:border-gray-600 rounded p-2 flex items-center justify-center w-16 h-16">
                                     {imageError ? (
@@ -210,7 +240,7 @@ export default function ServiceRequestsConnectedAccounts() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-shrink-0">
                                 {isConnected ? (
                                     <>
                                         <Badge variant="success">Connected</Badge>
@@ -335,39 +365,69 @@ export default function ServiceRequestsConnectedAccounts() {
                                         </p>
                                     </div>
 
-                                    <div className="space-y-2">
-                                        {serviceTypeCategories.map((category) => (
-                                            <div
-                                                key={category.id}
-                                                className="flex items-start justify-between gap-3 py-2"
-                                            >
-                                                <div className="flex-1">
-                                                    <Label
-                                                        htmlFor={`service-type-${category.id}`}
-                                                        className="text-sm font-medium text-gray-900 dark:text-gray-100 cursor-pointer"
-                                                    >
-                                                        {category.name}
-                                                    </Label>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                                        {category.description}
-                                                    </p>
-                                                </div>
-                                                <Checkbox
-                                                    id={`service-type-${category.id}`}
-                                                    checked={selectedServiceTypes.includes(category.id)}
-                                                    onCheckedChange={() => handleServiceTypeToggle(category.id)}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-
+                                    {/* Selected Service Types Chips */}
                                     {selectedServiceTypes.length > 0 && (
-                                        <div className="pt-2">
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                {selectedServiceTypes.length} service type{selectedServiceTypes.length !== 1 ? 's' : ''} selected
-                                            </p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {selectedServiceTypes.map((serviceTypeId) => {
+                                                const category = serviceTypeCategories.find(c => c.id === serviceTypeId)
+                                                if (!category) return null
+                                                return (
+                                                    <div
+                                                        key={serviceTypeId}
+                                                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                                                    >
+                                                        <span>{category.name}</span>
+                                                        <button
+                                                            onClick={() => handleRemoveServiceType(serviceTypeId)}
+                                                            className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded p-0.5 transition-colors"
+                                                            type="button"
+                                                        >
+                                                            <RiCloseLine className="size-3.5" />
+                                                        </button>
+                                                    </div>
+                                                )
+                                            })}
                                         </div>
                                     )}
+
+                                    {/* Service Type Search */}
+                                    <div className="relative" ref={serviceTypeSearchRef}>
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <RiSearchLine className="size-4 text-gray-400" />
+                                        </div>
+                                        <Input
+                                            placeholder="Search by service type or category..."
+                                            value={serviceTypeSearch}
+                                            onChange={(e) => {
+                                                setServiceTypeSearch(e.target.value)
+                                                setShowServiceTypeResults(true)
+                                            }}
+                                            onFocus={() => setShowServiceTypeResults(true)}
+                                            className="w-full pl-10"
+                                        />
+                                        
+                                        {/* Search Results Dropdown */}
+                                        {showServiceTypeResults && serviceTypeSearch && filteredServiceTypes.length > 0 && (
+                                            <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                                {filteredServiceTypes.map((category) => (
+                                                    <button
+                                                        key={category.id}
+                                                        onClick={() => handleServiceTypeToggle(category.id)}
+                                                        className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-start gap-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                                                    >
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                {category.name}
+                                                            </div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                                                {category.description}
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </>
                         )}
