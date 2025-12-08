@@ -20,7 +20,7 @@ import {
 import { QuickReplyTemplatesSettings } from "@/components/ui/settings/CannedResponsesSettings"
 import { TagsSettings } from "@/components/ui/settings/TagsSettings"
 import { cn, focusRing } from "@/lib/utils"
-import { RiMore2Line } from "@remixicon/react"
+import { RiCloseLine, RiMore2Line } from "@remixicon/react"
 import {
     Building,
     ChevronDown,
@@ -1305,7 +1305,35 @@ function ConnectedAccountsSettings() {
 
   const [fieldMappings, setFieldMappings] = useState<Array<{ id: string; requestInfo: string; required: boolean; salesforceField: string; information: string }>>(defaultFieldMappings)
   const [crmMappings, setCrmMappings] = useState<Array<{ id: string; salesforceField: string; hqoField: string }>>([])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([])
+  const [serviceTypeSearch, setServiceTypeSearch] = useState("")
+  const [showServiceTypeResults, setShowServiceTypeResults] = useState(false)
   const [imageError, setImageError] = useState(false)
+  const serviceTypeSearchRef = useRef<HTMLDivElement>(null)
+
+  // Service type categories
+  const serviceTypeCategories = [
+    { id: "cleaning-waste", name: "Cleaning & Waste", description: "Cleaning services and waste removal" },
+    { id: "temperature-air", name: "Temperature & Air", description: "HVAC and climate control issues" },
+    { id: "maintenance-repair", name: "Maintenance & Repair", description: "General maintenance and repair requests" },
+    { id: "security-safety", name: "Security & Safety", description: "Security and safety related issues" },
+    { id: "other", name: "Other", description: "Miscellaneous service requests" }
+  ]
+
+  // Sample service types (request types) - in real app, this would come from the service types data
+  const serviceTypes = [
+    { id: "more-cleaning", name: "More Cleaning", category: "Cleaning & Waste", categoryId: "cleaning-waste" },
+    { id: "bin-service", name: "Bin Service", category: "Cleaning & Waste", categoryId: "cleaning-waste" },
+    { id: "waste-removal", name: "Waste Removal", category: "Cleaning & Waste", categoryId: "cleaning-waste" },
+    { id: "ac-repair", name: "AC Repair", category: "Temperature & Air", categoryId: "temperature-air" },
+    { id: "heating-issue", name: "Heating Issue", category: "Temperature & Air", categoryId: "temperature-air" },
+    { id: "plumbing", name: "Plumbing", category: "Maintenance & Repair", categoryId: "maintenance-repair" },
+    { id: "electrical", name: "Electrical", category: "Maintenance & Repair", categoryId: "maintenance-repair" },
+    { id: "locksmith", name: "Locksmith", category: "Security & Safety", categoryId: "security-safety" },
+    { id: "porter-service", name: "Porter Service", category: "Hospitality & Concierge", categoryId: "hospitality-concierge" },
+    { id: "signage", name: "Signage", category: "Signage & Facilities", categoryId: "signage-facilities" },
+  ]
 
   // Available Salesforce fields for dropdown selection
   const salesforceFields = [
@@ -1367,12 +1395,103 @@ function ConnectedAccountsSettings() {
     setIsModalOpen(false)
   }
 
+  // Close service type dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (serviceTypeSearchRef.current && !serviceTypeSearchRef.current.contains(event.target as Node)) {
+        setShowServiceTypeResults(false)
+      }
+    }
+
+    if (showServiceTypeResults) {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [showServiceTypeResults])
+
   const handleDisable = () => {
     setIsConnected(false)
     setFieldMappings(defaultFieldMappings)
     setCrmMappings([])
+    setSelectedCategories([])
+    setSelectedTypes([])
     setIsKebabOpen(false)
   }
+
+  const handleCategoryToggle = (categoryId: string) => {
+    if (selectedCategories.includes(categoryId)) {
+      setSelectedCategories(prev => prev.filter(id => id !== categoryId))
+      // Also remove all types from this category
+      const categoryTypes = serviceTypes.filter(t => t.categoryId === categoryId).map(t => t.id)
+      setSelectedTypes(prev => prev.filter(id => !categoryTypes.includes(id)))
+    } else {
+      setSelectedCategories(prev => [...prev, categoryId])
+      // Automatically add all types from this category
+      const categoryTypes = serviceTypes.filter(t => t.categoryId === categoryId).map(t => t.id)
+      setSelectedTypes(prev => {
+        const newTypes = [...prev]
+        categoryTypes.forEach(typeId => {
+          if (!newTypes.includes(typeId)) {
+            newTypes.push(typeId)
+          }
+        })
+        return newTypes
+      })
+      setServiceTypeSearch("")
+      setShowServiceTypeResults(false)
+    }
+  }
+
+  const handleTypeToggle = (typeId: string) => {
+    if (selectedTypes.includes(typeId)) {
+      setSelectedTypes(prev => prev.filter(id => id !== typeId))
+    } else {
+      setSelectedTypes(prev => [...prev, typeId])
+      setServiceTypeSearch("")
+      setShowServiceTypeResults(false)
+    }
+  }
+
+  const handleRemoveCategory = (categoryId: string) => {
+    setSelectedCategories(prev => prev.filter(id => id !== categoryId))
+    const categoryTypes = serviceTypes.filter(t => t.categoryId === categoryId).map(t => t.id)
+    setSelectedTypes(prev => prev.filter(id => !categoryTypes.includes(id)))
+  }
+
+  const handleRemoveType = (typeId: string) => {
+    setSelectedTypes(prev => prev.filter(id => id !== typeId))
+  }
+
+  // Combine categories and types for search
+  const allSearchableItems = [
+    ...serviceTypeCategories.map(cat => ({ ...cat, type: 'category' as const })),
+    ...serviceTypes.map(type => ({ ...type, type: 'type' as const }))
+  ]
+
+  const filteredItems = allSearchableItems.filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(serviceTypeSearch.toLowerCase()) ||
+      ('description' in item && item.description?.toLowerCase().includes(serviceTypeSearch.toLowerCase()))
+    
+    if (item.type === 'category') {
+      return matchesSearch && !selectedCategories.includes(item.id)
+    } else {
+      return matchesSearch && !selectedTypes.includes(item.id)
+    }
+  })
+
+  // Calculate counts - include types from selected categories
+  const categoryCount = selectedCategories.length
+  const typesFromCategories = selectedCategories.flatMap(catId => 
+    serviceTypes.filter(t => t.categoryId === catId).map(t => t.id)
+  )
+  const individualTypes = selectedTypes.filter(typeId => {
+    const type = serviceTypes.find(t => t.id === typeId)
+    return type && !selectedCategories.includes(type.categoryId)
+  })
+  const typeCount = typesFromCategories.length + individualTypes.length
 
   const handleSalesforceFieldChange = (mappingId: string, salesforceField: string) => {
     setFieldMappings(prev => prev.map(mapping => 
@@ -1514,6 +1633,142 @@ function ConnectedAccountsSettings() {
           {/* Tabs and Content - Shown when connected */}
           {isConnected && (
             <>
+              {/* Service Types Selection */}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
+                      Service types
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Select which service types this Salesforce connection should apply to
+                    </p>
+                  </div>
+                  {/* Summary Box */}
+                  {(categoryCount > 0 || typeCount > 0) && (
+                    <div className="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md text-xs text-gray-600 dark:text-gray-400">
+                      {categoryCount > 0 && (
+                        <span>{categoryCount} {categoryCount === 1 ? 'Category' : 'Categories'}</span>
+                      )}
+                      {categoryCount > 0 && typeCount > 0 && <span className="mx-1">•</span>}
+                      {typeCount > 0 && (
+                        <span>{typeCount} {typeCount === 1 ? 'Type' : 'Types'}</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Selected Chips */}
+                {(selectedCategories.length > 0 || selectedTypes.length > 0) && (
+                  <div className="flex flex-wrap gap-2">
+                    {/* Category Chips */}
+                    {selectedCategories.map((categoryId) => {
+                      const category = serviceTypeCategories.find(c => c.id === categoryId)
+                      if (!category) return null
+                      return (
+                        <div
+                          key={`category-${categoryId}`}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
+                        >
+                          <span className="text-xs font-medium">Category:</span>
+                          <span>{category.name}</span>
+                          <button
+                            onClick={() => handleRemoveCategory(categoryId)}
+                            className="hover:bg-purple-200 dark:hover:bg-purple-800 rounded p-0.5 transition-colors"
+                            type="button"
+                          >
+                            <RiCloseLine className="size-3.5" />
+                          </button>
+                        </div>
+                      )
+                    })}
+                    {/* Type Chips - Only show types not included via categories */}
+                    {selectedTypes.map((typeId) => {
+                      const type = serviceTypes.find(t => t.id === typeId)
+                      if (!type) return null
+                      // Don't show type if its category is already selected
+                      if (selectedCategories.includes(type.categoryId)) return null
+                      return (
+                        <div
+                          key={`type-${typeId}`}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                        >
+                          <span className="text-xs font-medium">Type:</span>
+                          <span>{type.name}</span>
+                          <button
+                            onClick={() => handleRemoveType(typeId)}
+                            className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded p-0.5 transition-colors"
+                            type="button"
+                          >
+                            <RiCloseLine className="size-3.5" />
+                          </button>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {/* Service Type Search */}
+                <div className="relative" ref={serviceTypeSearchRef}>
+                  <Input
+                    placeholder="Search by service type or category..."
+                    value={serviceTypeSearch}
+                    onChange={(e) => {
+                      setServiceTypeSearch(e.target.value)
+                      setShowServiceTypeResults(true)
+                    }}
+                    onFocus={() => setShowServiceTypeResults(true)}
+                    className="w-full"
+                  />
+                  
+                  {/* Search Results Dropdown */}
+                  {showServiceTypeResults && serviceTypeSearch && filteredItems.length > 0 && (
+                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                      {filteredItems.map((item) => (
+                        <button
+                          key={`${item.type}-${item.id}`}
+                          onClick={() => {
+                            if (item.type === 'category') {
+                              handleCategoryToggle(item.id)
+                            } else {
+                              handleTypeToggle(item.id)
+                            }
+                          }}
+                          className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-start gap-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              {item.type === 'category' ? (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+                                  Category
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                                  Type
+                                </span>
+                              )}
+                              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                {item.name}
+                              </span>
+                            </div>
+                            {'description' in item && item.description && (
+                              <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                {item.description}
+                              </div>
+                            )}
+                            {item.type === 'type' && 'category' in item && (
+                              <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                                {item.category}
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <TabNavigation>
                 <TabNavigationLink
                   active={activeTab === 'service-request'}
@@ -1572,47 +1827,49 @@ function ConnectedAccountsSettings() {
                             </td>
                             <td className="py-3 px-4">
                               <div className="flex items-center gap-2">
-                                <MentionsInput
-                                  value={mapping.information}
-                                  onChange={(e) => handleInformationChange(mapping.id, e.target.value)}
-                                  placeholder="Type @ to mention a field..."
-                                  singleLine
-                                  style={{
-                                    control: { backgroundColor: 'transparent', fontSize: 14, fontWeight: 'normal' },
-                                    '&singleLine': {
-                                      control: { fontFamily: 'inherit', display: 'inline-block' },
-                                      highlighter: { padding: '8px 10px', border: '1px solid transparent', minHeight: '38px' },
-                                      input: {
-                                        padding: '8px 10px',
-                                        border: '1px solid rgb(209, 213, 219)',
-                                        borderRadius: '0.375rem',
-                                        backgroundColor: 'white',
-                                        color: 'rgb(17, 24, 39)',
-                                        fontSize: '14px',
-                                        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                                        width: '100%',
+                                <div className="flex-1">
+                                  <MentionsInput
+                                    value={mapping.information}
+                                    onChange={(e) => handleInformationChange(mapping.id, e.target.value)}
+                                    placeholder="Type @ to mention a field..."
+                                    singleLine
+                                    style={{
+                                      control: { backgroundColor: 'transparent', fontSize: 14, fontWeight: 'normal' },
+                                      '&singleLine': {
+                                        control: { fontFamily: 'inherit', display: 'inline-block' },
+                                        highlighter: { padding: '8px 10px', border: '1px solid transparent', minHeight: '38px' },
+                                        input: {
+                                          padding: '8px 10px',
+                                          border: '1px solid rgb(209, 213, 219)',
+                                          borderRadius: '0.375rem',
+                                          backgroundColor: 'white',
+                                          color: 'rgb(17, 24, 39)',
+                                          fontSize: '14px',
+                                          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                                          width: '100%',
+                                        },
                                       },
-                                    },
-                                    suggestions: {
-                                      list: {
-                                        backgroundColor: 'white',
-                                        border: '1px solid rgba(0,0,0,0.15)',
-                                        fontSize: 14,
-                                        borderRadius: '0.375rem',
-                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                      suggestions: {
+                                        list: {
+                                          backgroundColor: 'white',
+                                          border: '1px solid rgba(0,0,0,0.15)',
+                                          fontSize: 14,
+                                          borderRadius: '0.375rem',
+                                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                        },
+                                        item: { padding: '8px 12px', '&focused': { backgroundColor: '#f3f4f6' } },
                                       },
-                                      item: { padding: '8px 12px', '&focused': { backgroundColor: '#f3f4f6' } },
-                                    },
-                                  }}
-                                >
-                                  <Mention
-                                    trigger="@"
-                                    data={mentionFields}
-                                    displayTransform={(id) => `@${id}`}
-                                    markup="@__id__"
-                                    style={{ backgroundColor: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '4px' }}
-                                  />
-                                </MentionsInput>
+                                    }}
+                                  >
+                                    <Mention
+                                      trigger="@"
+                                      data={mentionFields}
+                                      displayTransform={(id) => `@${id}`}
+                                      markup="@__id__"
+                                      style={{ backgroundColor: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '4px' }}
+                                    />
+                                  </MentionsInput>
+                                </div>
                                 {!mapping.required && (
                                   <ButtonComponent
                                     variant="ghost"
@@ -1630,9 +1887,9 @@ function ConnectedAccountsSettings() {
                       </tbody>
                     </table>
                   </div>
-                  <div className="flex justify-end">
+                  <div className="flex justify-start">
                     <ButtonComponent
-                      variant="ghost"
+                      variant="primary"
                       onClick={handleAddServiceRequestRow}
                     >
                       Add row
@@ -1714,9 +1971,9 @@ function ConnectedAccountsSettings() {
                       </tbody>
                     </table>
                   </div>
-                  <div className="flex justify-end">
+                  <div className="flex justify-start">
                     <ButtonComponent
-                      variant="ghost"
+                      variant="primary"
                       onClick={handleAddCrmRow}
                     >
                       Add row

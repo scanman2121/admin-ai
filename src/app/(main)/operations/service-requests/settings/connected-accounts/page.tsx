@@ -8,7 +8,7 @@ import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { RiArrowLeftLine, RiCloseLine, RiMore2Line, RiSearchLine } from "@remixicon/react"
+import { RiArrowLeftLine, RiCloseLine, RiMore2Line } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -572,9 +572,6 @@ export default function ServiceRequestsConnectedAccounts() {
 
                                     {/* Service Type Search */}
                                     <div className="relative" ref={serviceTypeSearchRef}>
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <RiSearchLine className="size-4 text-gray-400" />
-                                        </div>
                                         <Input
                                             placeholder="Search by service type or category..."
                                             value={serviceTypeSearch}
@@ -583,7 +580,7 @@ export default function ServiceRequestsConnectedAccounts() {
                                                 setShowServiceTypeResults(true)
                                             }}
                                             onFocus={() => setShowServiceTypeResults(true)}
-                                            className="w-full pl-10"
+                                            className="w-full"
                                         />
                                         
                                         {/* Search Results Dropdown */}
@@ -679,68 +676,70 @@ export default function ServiceRequestsConnectedAccounts() {
                                                         </td>
                                                         <td className="py-3 px-4">
                                                             <div className="flex items-center gap-2">
-                                                                <MentionsInput
-                                                                    value={mapping.information}
-                                                                    onChange={(e) => handleInformationChange(mapping.id, e.target.value)}
-                                                                    placeholder="Type @ to mention a field..."
-                                                                    singleLine
-                                                                    style={{
-                                                                        control: {
-                                                                            backgroundColor: 'transparent',
-                                                                            fontSize: 14,
-                                                                            fontWeight: 'normal',
-                                                                        },
-                                                                        '&singleLine': {
+                                                                <div className="flex-1">
+                                                                    <MentionsInput
+                                                                        value={mapping.information}
+                                                                        onChange={(e) => handleInformationChange(mapping.id, e.target.value)}
+                                                                        placeholder="Type @ to mention a field..."
+                                                                        singleLine
+                                                                        style={{
                                                                             control: {
-                                                                                fontFamily: 'inherit',
-                                                                                display: 'inline-block',
-                                                                            },
-                                                                            highlighter: {
-                                                                                padding: '8px 10px',
-                                                                                border: '1px solid transparent',
-                                                                                minHeight: '38px',
-                                                                            },
-                                                                            input: {
-                                                                                padding: '8px 10px',
-                                                                                border: '1px solid rgb(209, 213, 219)',
-                                                                                borderRadius: '0.375rem',
-                                                                                backgroundColor: 'white',
-                                                                                color: 'rgb(17, 24, 39)',
-                                                                                fontSize: '14px',
-                                                                                boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                                                                                width: '100%',
-                                                                            },
-                                                                        },
-                                                                        suggestions: {
-                                                                            list: {
-                                                                                backgroundColor: 'white',
-                                                                                border: '1px solid rgba(0,0,0,0.15)',
+                                                                                backgroundColor: 'transparent',
                                                                                 fontSize: 14,
-                                                                                borderRadius: '0.375rem',
-                                                                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                                                                fontWeight: 'normal',
                                                                             },
-                                                                            item: {
-                                                                                padding: '8px 12px',
-                                                                                '&focused': {
-                                                                                    backgroundColor: '#f3f4f6',
+                                                                            '&singleLine': {
+                                                                                control: {
+                                                                                    fontFamily: 'inherit',
+                                                                                    display: 'inline-block',
+                                                                                },
+                                                                                highlighter: {
+                                                                                    padding: '8px 10px',
+                                                                                    border: '1px solid transparent',
+                                                                                    minHeight: '38px',
+                                                                                },
+                                                                                input: {
+                                                                                    padding: '8px 10px',
+                                                                                    border: '1px solid rgb(209, 213, 219)',
+                                                                                    borderRadius: '0.375rem',
+                                                                                    backgroundColor: 'white',
+                                                                                    color: 'rgb(17, 24, 39)',
+                                                                                    fontSize: '14px',
+                                                                                    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                                                                                    width: '100%',
                                                                                 },
                                                                             },
-                                                                        },
-                                                                    }}
-                                                                >
-                                                                    <Mention
-                                                                        trigger="@"
-                                                                        data={mentionFields}
-                                                                        displayTransform={(id) => `@${id}`}
-                                                                        markup="@__id__"
-                                                                        style={{
-                                                                            backgroundColor: '#dbeafe',
-                                                                            color: '#1e40af',
-                                                                            padding: '2px 4px',
-                                                                            borderRadius: '4px',
+                                                                            suggestions: {
+                                                                                list: {
+                                                                                    backgroundColor: 'white',
+                                                                                    border: '1px solid rgba(0,0,0,0.15)',
+                                                                                    fontSize: 14,
+                                                                                    borderRadius: '0.375rem',
+                                                                                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                                                                },
+                                                                                item: {
+                                                                                    padding: '8px 12px',
+                                                                                    '&focused': {
+                                                                                        backgroundColor: '#f3f4f6',
+                                                                                    },
+                                                                                },
+                                                                            },
                                                                         }}
-                                                                    />
-                                                                </MentionsInput>
+                                                                    >
+                                                                        <Mention
+                                                                            trigger="@"
+                                                                            data={mentionFields}
+                                                                            displayTransform={(id) => `@${id}`}
+                                                                            markup="@__id__"
+                                                                            style={{
+                                                                                backgroundColor: '#dbeafe',
+                                                                                color: '#1e40af',
+                                                                                padding: '2px 4px',
+                                                                                borderRadius: '4px',
+                                                                            }}
+                                                                        />
+                                                                    </MentionsInput>
+                                                                </div>
                                                                 {!mapping.required && (
                                                                     <Button
                                                                         variant="ghost"
@@ -758,9 +757,9 @@ export default function ServiceRequestsConnectedAccounts() {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div className="flex justify-end">
+                                    <div className="flex justify-start">
                                         <Button
-                                            variant="ghost"
+                                            variant="primary"
                                             onClick={handleAddServiceRequestRow}
                                         >
                                             Add row
