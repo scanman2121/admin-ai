@@ -6,6 +6,7 @@ import { Card } from "@/components/Card"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/Dialog"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { RiArrowLeftLine, RiCloseLine, RiMore2Line, RiSearchLine } from "@remixicon/react"
 import Image from "next/image"
@@ -25,14 +26,26 @@ const tabs = [
     { name: "Connected accounts", href: "/operations/service-requests/settings/connected-accounts" },
 ]
 
-// Salesforce fields that need to be mapped
-const salesforceMappingFields = [
-    { id: "Subject", name: "Subject", required: true },
-    { id: "Description", name: "Description", required: true },
-    { id: "Building_Name__c", name: "Building Name", required: false },
-    { id: "Your_Location__c", name: "Your Location", required: false },
-    { id: "OwnerId", name: "Owner", required: false },
-    { id: "Origin", name: "Origin", required: false }
+// Request information fields that will be mapped to Salesforce
+const requestInformationFields = [
+    { id: "subject", name: "Subject", required: true },
+    { id: "description", name: "Description", required: true },
+    { id: "location", name: "Location", required: false },
+    { id: "owner", name: "Owner", required: false },
+    { id: "creator", name: "Creator", required: false }
+]
+
+// Available Salesforce fields for dropdown selection
+const salesforceFields = [
+    { id: "Subject", name: "Subject" },
+    { id: "Description", name: "Description" },
+    { id: "Building_Name__c", name: "Building Name" },
+    { id: "Your_Location__c", name: "Your Location" },
+    { id: "OwnerId", name: "Owner" },
+    { id: "CreatedById", name: "Created By" },
+    { id: "Origin", name: "Origin" },
+    { id: "Status", name: "Status" },
+    { id: "Priority", name: "Priority" }
 ]
 
 // Available fields for mentions
@@ -50,14 +63,13 @@ const mentionFields = [
     { id: "assignedTo", display: "Assigned To" }
 ]
 
-// Default field mappings
-const defaultFieldMappings: Record<string, string> = {
-    "Subject": "@issueTypeName",
-    "Description": "@description. sent by @adminEmail",
-    "Building_Name__c": "@building",
-    "Your_Location__c": "@location_name....@building",
-    "OwnerId": "@userId",
-    "Origin": "Community"
+// Default field mappings - maps request info field ID to { salesforceField, information }
+const defaultFieldMappings: Record<string, { salesforceField: string; information: string }> = {
+    "subject": { salesforceField: "Subject", information: "@issueTypeName" },
+    "description": { salesforceField: "Description", information: "@description. sent by @adminEmail" },
+    "location": { salesforceField: "Your_Location__c", information: "@location_name....@building" },
+    "owner": { salesforceField: "OwnerId", information: "@userId" },
+    "creator": { salesforceField: "CreatedById", information: "@requestor" }
 }
 
 // Service type categories
@@ -92,7 +104,7 @@ interface SalesforceConnection {
     name: string
     isInherited: boolean
     isConnected: boolean
-    fieldMappings: Record<string, string>
+    fieldMappings: Record<string, { salesforceField: string; information: string }>
     selectedCategories: string[]
     selectedTypes: string[]
     salesforceConfig?: {
@@ -131,7 +143,7 @@ export default function ServiceRequestsConnectedAccounts() {
         consumerKey: "",
         consumerSecret: ""
     })
-    const [fieldMappings, setFieldMappings] = useState<Record<string, string>>(defaultFieldMappings)
+    const [fieldMappings, setFieldMappings] = useState<Record<string, { salesforceField: string; information: string }>>(defaultFieldMappings)
     const [selectedCategories, setSelectedCategories] = useState<string[]>([])
     const [selectedTypes, setSelectedTypes] = useState<string[]>([])
     const [serviceTypeSearch, setServiceTypeSearch] = useState("")
@@ -196,7 +208,7 @@ export default function ServiceRequestsConnectedAccounts() {
             consumerKey: "",
             consumerSecret: ""
         })
-        setFieldMappings({})
+        setFieldMappings(defaultFieldMappings)
         setSelectedCategories([])
         setSelectedTypes([])
         setIsModalOpen(false)
@@ -239,16 +251,29 @@ export default function ServiceRequestsConnectedAccounts() {
             consumerKey: "",
             consumerSecret: ""
         })
-        setFieldMappings({})
+        setFieldMappings(defaultFieldMappings)
         setSelectedCategories([])
         setSelectedTypes([])
         setIsModalOpen(true)
     }
 
-    const handleFieldMappingChange = (salesforceFieldId: string, templateValue: string) => {
+    const handleSalesforceFieldChange = (requestInfoId: string, salesforceField: string) => {
         setFieldMappings(prev => ({
             ...prev,
-            [salesforceFieldId]: templateValue
+            [requestInfoId]: {
+                ...prev[requestInfoId],
+                salesforceField
+            }
+        }))
+    }
+
+    const handleInformationChange = (requestInfoId: string, information: string) => {
+        setFieldMappings(prev => ({
+            ...prev,
+            [requestInfoId]: {
+                ...prev[requestInfoId],
+                information
+            }
         }))
     }
 
@@ -606,96 +631,131 @@ export default function ServiceRequestsConnectedAccounts() {
                                     </div>
                                 </div>
 
-                                {/* Field Mapping */}
+                                {/* Information Sent to Salesforce */}
                                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
                                     <div>
                                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
-                                            Field mapping
+                                            Information sent to Salesforce
                                         </h3>
                                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                                            Map your service request fields to Salesforce fields. Use @ to mention fields.
+                                            Configure which request information maps to which Salesforce fields and how the data is formatted.
                                         </p>
                                     </div>
 
-                                    <div className="space-y-3">
-                                        {salesforceMappingFields.map((field) => {
-                                            const currentValue = fieldMappings[field.id] ?? ""
-                                            return (
-                                                <div key={field.id} className="flex items-start gap-4">
-                                                    <div className="w-48 flex-shrink-0">
-                                                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                            {field.name}
-                                                            {field.required && (
-                                                                <span className="text-red-500 ml-1">*</span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <MentionsInput
-                                                            value={currentValue}
-                                                            onChange={(e) => handleFieldMappingChange(field.id, e.target.value)}
-                                                            placeholder="Type @ to mention a field..."
-                                                            singleLine
-                                                            style={{
-                                                                control: {
-                                                                    backgroundColor: 'transparent',
-                                                                    fontSize: 14,
-                                                                    fontWeight: 'normal',
-                                                                },
-                                                                '&singleLine': {
-                                                                    control: {
-                                                                        fontFamily: 'inherit',
-                                                                        display: 'inline-block',
-                                                                    },
-                                                                    highlighter: {
-                                                                        padding: '8px 10px',
-                                                                        border: '1px solid transparent',
-                                                                        minHeight: '38px',
-                                                                    },
-                                                                    input: {
-                                                                        padding: '8px 10px',
-                                                                        border: '1px solid rgb(209, 213, 219)',
-                                                                        borderRadius: '0.375rem',
-                                                                        backgroundColor: 'white',
-                                                                        color: 'rgb(17, 24, 39)',
-                                                                        fontSize: '14px',
-                                                                        boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                                                                    },
-                                                                },
-                                                                suggestions: {
-                                                                    list: {
-                                                                        backgroundColor: 'white',
-                                                                        border: '1px solid rgba(0,0,0,0.15)',
-                                                                        fontSize: 14,
-                                                                        borderRadius: '0.375rem',
-                                                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                                                    },
-                                                                    item: {
-                                                                        padding: '8px 12px',
-                                                                        '&focused': {
-                                                                            backgroundColor: '#f3f4f6',
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full border-collapse">
+                                            <thead>
+                                                <tr className="border-b border-gray-200 dark:border-gray-700">
+                                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                        Request information
+                                                    </th>
+                                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                        Salesforce field
+                                                    </th>
+                                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                        Information that will be sent to Salesforce field
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {requestInformationFields.map((field) => {
+                                                    const mapping = fieldMappings[field.id] || { salesforceField: "", information: "" }
+                                                    return (
+                                                        <tr key={field.id} className="border-b border-gray-200 dark:border-gray-700">
+                                                            <td className="py-3 px-4">
+                                                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                    {field.name}
+                                                                    {field.required && (
+                                                                        <span className="text-red-500 ml-1">*</span>
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                            <td className="py-3 px-4">
+                                                                <Select
+                                                                    value={mapping.salesforceField}
+                                                                    onValueChange={(value) => handleSalesforceFieldChange(field.id, value)}
+                                                                >
+                                                                    <SelectTrigger className="w-full">
+                                                                        <SelectValue placeholder="Select field" />
+                                                                    </SelectTrigger>
+                                                                    <SelectContent>
+                                                                        {salesforceFields.map((sfField) => (
+                                                                            <SelectItem key={sfField.id} value={sfField.id}>
+                                                                                {sfField.name}
+                                                                            </SelectItem>
+                                                                        ))}
+                                                                    </SelectContent>
+                                                                </Select>
+                                                            </td>
+                                                            <td className="py-3 px-4">
+                                                                <MentionsInput
+                                                                    value={mapping.information}
+                                                                    onChange={(e) => handleInformationChange(field.id, e.target.value)}
+                                                                    placeholder="Type @ to mention a field..."
+                                                                    singleLine
+                                                                    style={{
+                                                                        control: {
+                                                                            backgroundColor: 'transparent',
+                                                                            fontSize: 14,
+                                                                            fontWeight: 'normal',
                                                                         },
-                                                                    },
-                                                                },
-                                                            }}
-                                                        >
-                                                            <Mention
-                                                                trigger="@"
-                                                                data={mentionFields}
-                                                                displayTransform={(id) => `@${id}`}
-                                                                markup="@__id__"
-                                                                style={{
-                                                                    backgroundColor: '#dbeafe',
-                                                                    color: '#1e40af',
-                                                                    padding: '2px 4px',
-                                                                    borderRadius: '4px',
-                                                                }}
-                                                            />
-                                                        </MentionsInput>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })}
+                                                                        '&singleLine': {
+                                                                            control: {
+                                                                                fontFamily: 'inherit',
+                                                                                display: 'inline-block',
+                                                                            },
+                                                                            highlighter: {
+                                                                                padding: '8px 10px',
+                                                                                border: '1px solid transparent',
+                                                                                minHeight: '38px',
+                                                                            },
+                                                                            input: {
+                                                                                padding: '8px 10px',
+                                                                                border: '1px solid rgb(209, 213, 219)',
+                                                                                borderRadius: '0.375rem',
+                                                                                backgroundColor: 'white',
+                                                                                color: 'rgb(17, 24, 39)',
+                                                                                fontSize: '14px',
+                                                                                boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                                                                                width: '100%',
+                                                                            },
+                                                                        },
+                                                                        suggestions: {
+                                                                            list: {
+                                                                                backgroundColor: 'white',
+                                                                                border: '1px solid rgba(0,0,0,0.15)',
+                                                                                fontSize: 14,
+                                                                                borderRadius: '0.375rem',
+                                                                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                                                            },
+                                                                            item: {
+                                                                                padding: '8px 12px',
+                                                                                '&focused': {
+                                                                                    backgroundColor: '#f3f4f6',
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    }}
+                                                                >
+                                                                    <Mention
+                                                                        trigger="@"
+                                                                        data={mentionFields}
+                                                                        displayTransform={(id) => `@${id}`}
+                                                                        markup="@__id__"
+                                                                        style={{
+                                                                            backgroundColor: '#dbeafe',
+                                                                            color: '#1e40af',
+                                                                            padding: '2px 4px',
+                                                                            borderRadius: '4px',
+                                                                        }}
+                                                                    />
+                                                                </MentionsInput>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })}
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </>
