@@ -37,7 +37,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { RiCloseLine, RiMore2Line, RiSearchLine } from "@remixicon/react"
+import { RiMore2Line } from "@remixicon/react"
 import Image from "next/image"
 import { MentionsInput, Mention } from "react-mentions"
 
