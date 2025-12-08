@@ -1307,15 +1307,6 @@ function ConnectedAccountsSettings() {
   const [crmMappings, setCrmMappings] = useState<Array<{ id: string; salesforceField: string; hqoField: string }>>([])
   const [imageError, setImageError] = useState(false)
 
-  // Request information fields that will be mapped to Salesforce
-  const requestInformationFields = [
-    { id: "subject", name: "Subject", required: true },
-    { id: "description", name: "Description", required: true },
-    { id: "location", name: "Location", required: false },
-    { id: "owner", name: "Owner", required: false },
-    { id: "creator", name: "Creator", required: false }
-  ]
-
   // Available Salesforce fields for dropdown selection
   const salesforceFields = [
     { id: "Subject", name: "Subject" },
