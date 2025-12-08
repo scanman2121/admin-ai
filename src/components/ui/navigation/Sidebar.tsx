@@ -1465,7 +1465,7 @@ function ConnectedAccountsSettings() {
                   active={activeTab === 'service-request'}
                   onClick={() => setActiveTab('service-request')}
                 >
-                  Service request configuration
+                  Service request
                 </TabNavigationLink>
                 <TabNavigationLink
                   active={activeTab === 'crm'}
