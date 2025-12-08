@@ -1633,142 +1633,6 @@ function ConnectedAccountsSettings() {
           {/* Tabs and Content - Shown when connected */}
           {isConnected && (
             <>
-              {/* Service Types Selection */}
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
-                      Service types
-                    </h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Select which service types this Salesforce connection should apply to
-                    </p>
-                  </div>
-                  {/* Summary Box */}
-                  {(categoryCount > 0 || typeCount > 0) && (
-                    <div className="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md text-xs text-gray-600 dark:text-gray-400">
-                      {categoryCount > 0 && (
-                        <span>{categoryCount} {categoryCount === 1 ? 'Category' : 'Categories'}</span>
-                      )}
-                      {categoryCount > 0 && typeCount > 0 && <span className="mx-1">•</span>}
-                      {typeCount > 0 && (
-                        <span>{typeCount} {typeCount === 1 ? 'Type' : 'Types'}</span>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Selected Chips */}
-                {(selectedCategories.length > 0 || selectedTypes.length > 0) && (
-                  <div className="flex flex-wrap gap-2">
-                    {/* Category Chips */}
-                    {selectedCategories.map((categoryId) => {
-                      const category = serviceTypeCategories.find(c => c.id === categoryId)
-                      if (!category) return null
-                      return (
-                        <div
-                          key={`category-${categoryId}`}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
-                        >
-                          <span className="text-xs font-medium">Category:</span>
-                          <span>{category.name}</span>
-                          <button
-                            onClick={() => handleRemoveCategory(categoryId)}
-                            className="hover:bg-purple-200 dark:hover:bg-purple-800 rounded p-0.5 transition-colors"
-                            type="button"
-                          >
-                            <RiCloseLine className="size-3.5" />
-                          </button>
-                        </div>
-                      )
-                    })}
-                    {/* Type Chips - Only show types not included via categories */}
-                    {selectedTypes.map((typeId) => {
-                      const type = serviceTypes.find(t => t.id === typeId)
-                      if (!type) return null
-                      // Don't show type if its category is already selected
-                      if (selectedCategories.includes(type.categoryId)) return null
-                      return (
-                        <div
-                          key={`type-${typeId}`}
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
-                        >
-                          <span className="text-xs font-medium">Type:</span>
-                          <span>{type.name}</span>
-                          <button
-                            onClick={() => handleRemoveType(typeId)}
-                            className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded p-0.5 transition-colors"
-                            type="button"
-                          >
-                            <RiCloseLine className="size-3.5" />
-                          </button>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-
-                {/* Service Type Search */}
-                <div className="relative" ref={serviceTypeSearchRef}>
-                  <Input
-                    placeholder="Search by service type or category..."
-                    value={serviceTypeSearch}
-                    onChange={(e) => {
-                      setServiceTypeSearch(e.target.value)
-                      setShowServiceTypeResults(true)
-                    }}
-                    onFocus={() => setShowServiceTypeResults(true)}
-                    className="w-full"
-                  />
-                  
-                  {/* Search Results Dropdown */}
-                  {showServiceTypeResults && serviceTypeSearch && filteredItems.length > 0 && (
-                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                      {filteredItems.map((item) => (
-                        <button
-                          key={`${item.type}-${item.id}`}
-                          onClick={() => {
-                            if (item.type === 'category') {
-                              handleCategoryToggle(item.id)
-                            } else {
-                              handleTypeToggle(item.id)
-                            }
-                          }}
-                          className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-start gap-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
-                        >
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              {item.type === 'category' ? (
-                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
-                                  Category
-                                </span>
-                              ) : (
-                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                                  Type
-                                </span>
-                              )}
-                              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                {item.name}
-                              </span>
-                            </div>
-                            {'description' in item && item.description && (
-                              <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                {item.description}
-                              </div>
-                            )}
-                            {item.type === 'type' && 'category' in item && (
-                              <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                                {item.category}
-                              </div>
-                            )}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
               <TabNavigation>
                 <TabNavigationLink
                   active={activeTab === 'service-request'}
@@ -1787,12 +1651,149 @@ function ConnectedAccountsSettings() {
               {/* Service Request Configuration Tab */}
               {activeTab === 'service-request' && (
                 <div className="pt-4 space-y-4">
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">Information sent to Salesforce</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Configure which request information maps to which Salesforce fields and how the data is formatted.
-                    </p>
+                  {/* Service Types Selection */}
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
+                          Service types
+                        </h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Select which service types this Salesforce connection should apply to
+                        </p>
+                      </div>
+                      {/* Summary Box */}
+                      {(categoryCount > 0 || typeCount > 0) && (
+                        <div className="bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-md text-xs text-gray-600 dark:text-gray-400">
+                          {categoryCount > 0 && (
+                            <span>{categoryCount} {categoryCount === 1 ? 'Category' : 'Categories'}</span>
+                          )}
+                          {categoryCount > 0 && typeCount > 0 && <span className="mx-1">•</span>}
+                          {typeCount > 0 && (
+                            <span>{typeCount} {typeCount === 1 ? 'Type' : 'Types'}</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Selected Chips */}
+                    {(selectedCategories.length > 0 || selectedTypes.length > 0) && (
+                      <div className="flex flex-wrap gap-2">
+                        {/* Category Chips */}
+                        {selectedCategories.map((categoryId) => {
+                          const category = serviceTypeCategories.find(c => c.id === categoryId)
+                          if (!category) return null
+                          return (
+                            <div
+                              key={`category-${categoryId}`}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
+                            >
+                              <span className="text-xs font-medium">Category:</span>
+                              <span>{category.name}</span>
+                              <button
+                                onClick={() => handleRemoveCategory(categoryId)}
+                                className="hover:bg-purple-200 dark:hover:bg-purple-800 rounded p-0.5 transition-colors"
+                                type="button"
+                              >
+                                <RiCloseLine className="size-3.5" />
+                              </button>
+                            </div>
+                          )
+                        })}
+                        {/* Type Chips - Only show types not included via categories */}
+                        {selectedTypes.map((typeId) => {
+                          const type = serviceTypes.find(t => t.id === typeId)
+                          if (!type) return null
+                          // Don't show type if its category is already selected
+                          if (selectedCategories.includes(type.categoryId)) return null
+                          return (
+                            <div
+                              key={`type-${typeId}`}
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+                            >
+                              <span className="text-xs font-medium">Type:</span>
+                              <span>{type.name}</span>
+                              <button
+                                onClick={() => handleRemoveType(typeId)}
+                                className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded p-0.5 transition-colors"
+                                type="button"
+                              >
+                                <RiCloseLine className="size-3.5" />
+                              </button>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+
+                    {/* Service Type Search */}
+                    <div className="relative" ref={serviceTypeSearchRef}>
+                      <Input
+                        placeholder="Search by service type or category..."
+                        value={serviceTypeSearch}
+                        onChange={(e) => {
+                          setServiceTypeSearch(e.target.value)
+                          setShowServiceTypeResults(true)
+                        }}
+                        onFocus={() => setShowServiceTypeResults(true)}
+                        className="w-full"
+                      />
+                      
+                      {/* Search Results Dropdown */}
+                      {showServiceTypeResults && serviceTypeSearch && filteredItems.length > 0 && (
+                        <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                          {filteredItems.map((item) => (
+                            <button
+                              key={`${item.type}-${item.id}`}
+                              onClick={() => {
+                                if (item.type === 'category') {
+                                  handleCategoryToggle(item.id)
+                                } else {
+                                  handleTypeToggle(item.id)
+                                }
+                              }}
+                              className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-start gap-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                            >
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  {item.type === 'category' ? (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+                                      Category
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                                      Type
+                                    </span>
+                                  )}
+                                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                    {item.name}
+                                  </span>
+                                </div>
+                                {'description' in item && item.description && (
+                                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                    {item.description}
+                                  </div>
+                                )}
+                                {item.type === 'type' && 'category' in item && (
+                                  <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                                    {item.category}
+                                  </div>
+                                )}
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
+
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">Information sent to Salesforce</h3>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Configure which request information maps to which Salesforce fields and how the data is formatted.
+                      </p>
+                    </div>
                   <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                       <thead>
