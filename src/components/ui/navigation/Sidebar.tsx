@@ -1797,7 +1797,7 @@ function ConnectedAccountsSettings() {
                     <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                       <thead>
-                        <tr className="border-b border-gray-200 dark:border-gray-700">
+                        <tr>
                           <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
                             Salesforce field
                           </th>
@@ -1808,7 +1808,7 @@ function ConnectedAccountsSettings() {
                       </thead>
                       <tbody>
                         {fieldMappings.map((mapping) => (
-                          <tr key={mapping.id} className="border-b border-gray-200 dark:border-gray-700">
+                          <tr key={mapping.id}>
                             <td className="py-3 px-4">
                               <Select
                                 value={mapping.salesforceField}
@@ -1912,7 +1912,7 @@ function ConnectedAccountsSettings() {
                   <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                       <thead>
-                        <tr className="border-b border-gray-200 dark:border-gray-700">
+                        <tr>
                           <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
                             Salesforce field
                           </th>
@@ -1923,7 +1923,7 @@ function ConnectedAccountsSettings() {
                       </thead>
                       <tbody>
                         {crmMappings.map((mapping) => (
-                          <tr key={mapping.id} className="border-b border-gray-200 dark:border-gray-700">
+                          <tr key={mapping.id}>
                             <td className="py-3 px-4">
                               <Select
                                 value={mapping.salesforceField}
