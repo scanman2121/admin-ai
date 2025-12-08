@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { RiArrowLeftLine, RiCloseLine, RiMore2Line, RiSearchLine } from "@remixicon/react"
+import { RiArrowLeftLine, RiCloseLine, RiMore2Line, RiSearchLine, RiLink } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -86,12 +86,42 @@ const serviceTypes = [
     { id: "signage", name: "Signage", category: "Signage & Facilities", categoryId: "signage-facilities" },
 ]
 
+interface SalesforceConnection {
+    id: string
+    name: string
+    isInherited: boolean
+    isConnected: boolean
+    fieldMappings: Record<string, string>
+    selectedCategories: string[]
+    selectedTypes: string[]
+    salesforceConfig?: {
+        instanceUrl: string
+        username: string
+    }
+}
+
 export default function ServiceRequestsConnectedAccounts() {
     const pathname = usePathname()
     
-    const [isConnected, setIsConnected] = useState(false)
+    // Mock inherited connection from global settings (in real app, this would come from API)
+    const [inheritedConnection] = useState<SalesforceConnection | null>({
+        id: "inherited-1",
+        name: "Salesforce",
+        isInherited: true,
+        isConnected: true,
+        fieldMappings: defaultFieldMappings,
+        selectedCategories: ["cleaning-waste"],
+        selectedTypes: [],
+        salesforceConfig: {
+            instanceUrl: "https://company.salesforce.com",
+            username: "admin@company.com"
+        }
+    })
+    
+    const [connections, setConnections] = useState<SalesforceConnection[]>([])
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [isKebabOpen, setIsKebabOpen] = useState(false)
+    const [editingConnectionId, setEditingConnectionId] = useState<string | null>(null)
+    const [isKebabOpen, setIsKebabOpen] = useState<Record<string, boolean>>({})
     const [salesforceConfig, setSalesforceConfig] = useState({
         instanceUrl: "",
         username: "",
@@ -134,17 +164,84 @@ export default function ServiceRequestsConnectedAccounts() {
 
     const handleConnect = () => {
         // Demo prototype - fake connection, no actual Salesforce API call
-        setIsConnected(true)
-        setFieldMappings({ ...defaultFieldMappings })
-        setIsModalOpen(false)
-    }
-
-    const handleDisable = () => {
-        setIsConnected(false)
+        const newConnection: SalesforceConnection = {
+            id: `connection-${Date.now()}`,
+            name: "Salesforce",
+            isInherited: false,
+            isConnected: true,
+            fieldMappings: { ...fieldMappings },
+            selectedCategories: [...selectedCategories],
+            selectedTypes: [...selectedTypes],
+            salesforceConfig: {
+                instanceUrl: salesforceConfig.instanceUrl,
+                username: salesforceConfig.username
+            }
+        }
+        
+        if (editingConnectionId) {
+            setConnections(prev => prev.map(conn => 
+                conn.id === editingConnectionId ? newConnection : conn
+            ))
+        } else {
+            setConnections(prev => [...prev, newConnection])
+        }
+        
+        // Reset form
+        setSalesforceConfig({
+            instanceUrl: "",
+            username: "",
+            password: "",
+            securityToken: "",
+            consumerKey: "",
+            consumerSecret: ""
+        })
         setFieldMappings({})
         setSelectedCategories([])
         setSelectedTypes([])
-        setIsKebabOpen(false)
+        setIsModalOpen(false)
+        setEditingConnectionId(null)
+    }
+
+    const handleDisable = (connectionId: string) => {
+        setConnections(prev => prev.filter(conn => conn.id !== connectionId))
+        setIsKebabOpen(prev => {
+            const next = { ...prev }
+            delete next[connectionId]
+            return next
+        })
+    }
+
+    const handleEdit = (connection: SalesforceConnection) => {
+        setEditingConnectionId(connection.id)
+        setSalesforceConfig({
+            instanceUrl: connection.salesforceConfig?.instanceUrl || "",
+            username: connection.salesforceConfig?.username || "",
+            password: "",
+            securityToken: "",
+            consumerKey: "",
+            consumerSecret: ""
+        })
+        setFieldMappings(connection.fieldMappings)
+        setSelectedCategories(connection.selectedCategories)
+        setSelectedTypes(connection.selectedTypes)
+        setIsModalOpen(true)
+        setIsKebabOpen(prev => ({ ...prev, [connection.id]: false }))
+    }
+
+    const handleAddConnection = () => {
+        setEditingConnectionId(null)
+        setSalesforceConfig({
+            instanceUrl: "",
+            username: "",
+            password: "",
+            securityToken: "",
+            consumerKey: "",
+            consumerSecret: ""
+        })
+        setFieldMappings({})
+        setSelectedCategories([])
+        setSelectedTypes([])
+        setIsModalOpen(true)
     }
 
     const handleFieldMappingChange = (salesforceFieldId: string, templateValue: string) => {
