@@ -43,6 +43,7 @@ const mentionFields = [
     { id: "location_name", display: "Location Name" },
     { id: "userId", display: "User ID" },
     { id: "adminEmail", display: "Admin Email" },
+    { id: "requestor", display: "Requestor" },
     { id: "created_date", display: "Created Date" },
     { id: "status", display: "Status" },
     { id: "priority", display: "Priority" },
