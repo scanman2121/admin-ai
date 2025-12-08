@@ -6,7 +6,6 @@ import { Card } from "@/components/Card"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/Dialog"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { RiArrowLeftLine, RiCloseLine, RiMore2Line, RiSearchLine } from "@remixicon/react"
@@ -14,6 +13,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
+import { MentionsInput, Mention } from "react-mentions"
+import "react-mentions/lib/style.css"
 
 // Define tabs for the Service Requests Settings page
 const tabs = [
@@ -36,26 +37,27 @@ const salesforceMappingFields = [
     { id: "Origin", name: "Origin", required: false }
 ]
 
-// Service request field templates that can be used in mappings
-const serviceRequestFieldTemplates = [
-    { value: "{issueTypeName}", label: "Issue Type Name" },
-    { value: "{description}", label: "Description" },
-    { value: "{description}. sent by {adminEmail}", label: "Description + Admin Email" },
-    { value: "{building}", label: "Building" },
-    { value: "{location_name}", label: "Location Name" },
-    { value: "{location_name}....{building}", label: "Location Name + Building" },
-    { value: "{userId}", label: "User ID" },
-    { value: "{adminEmail}", label: "Admin Email" },
-    { value: "Community", label: "Community (Static)" }
+// Available fields for mentions
+const mentionFields = [
+    { id: "issueTypeName", display: "Issue Type Name" },
+    { id: "description", display: "Description" },
+    { id: "building", display: "Building" },
+    { id: "location_name", display: "Location Name" },
+    { id: "userId", display: "User ID" },
+    { id: "adminEmail", display: "Admin Email" },
+    { id: "created_date", display: "Created Date" },
+    { id: "status", display: "Status" },
+    { id: "priority", display: "Priority" },
+    { id: "assignedTo", display: "Assigned To" }
 ]
 
 // Default field mappings
 const defaultFieldMappings: Record<string, string> = {
-    "Subject": "{issueTypeName}",
-    "Description": "{description}. sent by {adminEmail}",
-    "Building_Name__c": "{building}",
-    "Your_Location__c": "{location_name}....{building}",
-    "OwnerId": "{userId}",
+    "Subject": "@issueTypeName",
+    "Description": "@description. sent by @adminEmail",
+    "Building_Name__c": "@building",
+    "Your_Location__c": "@location_name....@building",
+    "OwnerId": "@userId",
     "Origin": "Community"
 }
 
@@ -292,68 +294,6 @@ export default function ServiceRequestsConnectedAccounts() {
                         {/* Field Mapping and Service Types - Shown when connected */}
                         {isConnected && (
                             <>
-                                {/* Field Mapping Table */}
-                                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
-                                    <div>
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
-                                            Field mapping
-                                        </h3>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                                            Map your service request fields to Salesforce fields
-                                        </p>
-                                    </div>
-
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableHeaderCell>Salesforce field</TableHeaderCell>
-                                                <TableHeaderCell>Service request field mapping</TableHeaderCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {salesforceMappingFields.map((field) => {
-                                                const currentValue = fieldMappings[field.id] ?? ""
-                                                return (
-                                                    <TableRow key={field.id}>
-                                                        <TableCell>
-                                                            <div>
-                                                                <div className="font-medium text-gray-900 dark:text-gray-100">
-                                                                    {field.name}
-                                                                </div>
-                                                                {field.required && (
-                                                                    <span className="text-xs text-red-500">Required</span>
-                                                                )}
-                                                            </div>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <Select
-                                                                value={currentValue || undefined}
-                                                                onValueChange={(value) => handleFieldMappingChange(field.id, value)}
-                                                            >
-                                                                <SelectTrigger className="w-full max-w-md">
-                                                                    <SelectValue placeholder="Select mapping" />
-                                                                </SelectTrigger>
-                                                                <SelectContent>
-                                                                    {serviceRequestFieldTemplates.map((template) => (
-                                                                        <SelectItem key={template.value} value={template.value}>
-                                                                            {template.label}
-                                                                        </SelectItem>
-                                                                    ))}
-                                                                </SelectContent>
-                                                            </Select>
-                                                            {currentValue && (
-                                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                                    Template: {currentValue}
-                                                                </p>
-                                                            )}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )
-                                            })}
-                                        </TableBody>
-                                    </Table>
-                                </div>
-
                                 {/* Service Types Selection */}
                                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
                                     <div>
@@ -427,6 +367,95 @@ export default function ServiceRequestsConnectedAccounts() {
                                                 ))}
                                             </div>
                                         )}
+                                    </div>
+                                </div>
+
+                                {/* Field Mapping */}
+                                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                                    <div>
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50 mb-1">
+                                            Field mapping
+                                        </h3>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            Map your service request fields to Salesforce fields. Use @ to mention fields.
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        {salesforceMappingFields.map((field) => {
+                                            const currentValue = fieldMappings[field.id] ?? ""
+                                            return (
+                                                <div key={field.id} className="flex items-start gap-4">
+                                                    <div className="w-48 flex-shrink-0">
+                                                        <div className="font-medium text-gray-900 dark:text-gray-100">
+                                                            {field.name}
+                                                        </div>
+                                                        {field.required && (
+                                                            <span className="text-xs text-red-500">Required</span>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <MentionsInput
+                                                            value={currentValue}
+                                                            onChange={(e) => handleFieldMappingChange(field.id, e.target.value)}
+                                                            placeholder="Type @ to mention a field..."
+                                                            singleLine
+                                                            style={{
+                                                                control: {
+                                                                    backgroundColor: 'transparent',
+                                                                    fontSize: 14,
+                                                                    fontWeight: 'normal',
+                                                                },
+                                                                '&multiLine': {
+                                                                    control: {
+                                                                        fontFamily: 'inherit',
+                                                                        minHeight: 40,
+                                                                    },
+                                                                    highlighter: {
+                                                                        padding: 8,
+                                                                        border: '1px solid transparent',
+                                                                    },
+                                                                    input: {
+                                                                        padding: 8,
+                                                                        border: '1px solid rgb(209, 213, 219)',
+                                                                        borderRadius: '0.375rem',
+                                                                        backgroundColor: 'white',
+                                                                        color: 'rgb(17, 24, 39)',
+                                                                    },
+                                                                },
+                                                                suggestions: {
+                                                                    list: {
+                                                                        backgroundColor: 'white',
+                                                                        border: '1px solid rgba(0,0,0,0.15)',
+                                                                        fontSize: 14,
+                                                                        borderRadius: '0.375rem',
+                                                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                                                    },
+                                                                    item: {
+                                                                        padding: '8px 12px',
+                                                                        '&focused': {
+                                                                            backgroundColor: '#f3f4f6',
+                                                                        },
+                                                                    },
+                                                                },
+                                                            }}
+                                                        >
+                                                            <Mention
+                                                                trigger="@"
+                                                                data={mentionFields}
+                                                                displayTransform={(id, display) => `@${id}`}
+                                                                style={{
+                                                                    backgroundColor: '#dbeafe',
+                                                                    color: '#1e40af',
+                                                                    padding: '2px 4px',
+                                                                    borderRadius: '4px',
+                                                                }}
+                                                            />
+                                                        </MentionsInput>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
                                     </div>
                                 </div>
                             </>
