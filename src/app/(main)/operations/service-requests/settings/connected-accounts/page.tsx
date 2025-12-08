@@ -113,7 +113,7 @@ export default function ServiceRequestsConnectedAccounts() {
         id: "inherited-1",
         name: "Salesforce",
         isInherited: true,
-        isConnected: true,
+        isConnected: false,
         fieldMappings: defaultFieldMappings,
         selectedCategories: ["cleaning-waste"],
         selectedTypes: [],
