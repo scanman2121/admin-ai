@@ -12,6 +12,7 @@ import { Switch } from "@/components/Switch"
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Button } from "@/components/ui/button"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import {
     Drawer,
     DrawerClose,
@@ -19,7 +20,7 @@ import {
     DrawerTitle,
     DrawerTrigger
 } from "@/components/ui/drawer"
-import { MultiSelect } from "@/components/ui/select"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { QuickReplyTemplatesSettings } from "@/components/ui/settings/CannedResponsesSettings"
 import { TagsSettings } from "@/components/ui/settings/TagsSettings"
 import { Textarea } from "@/components/ui/textarea"
@@ -28,7 +29,9 @@ import { cn, focusRing } from "@/lib/utils"
 import { RiCloseLine, RiMore2Line } from "@remixicon/react"
 import {
     Building,
+    Check,
     ChevronDown,
+    ChevronsUpDown,
     ExternalLink,
     FolderOpen,
     HandCoins,
@@ -2118,20 +2121,208 @@ function ConnectedAccountsSettings() {
   )
 }
 
+// Building Multi-Select with Typeahead Component
+function BuildingMultiSelect({
+  value,
+  onValueChange,
+  options,
+  placeholder = "Select buildings",
+  disabled = false
+}: {
+  value: string[]
+  onValueChange: (value: string[]) => void
+  options: string[]
+  placeholder?: string
+  disabled?: boolean
+}) {
+  const [open, setOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const ALL_BUILDINGS = "All buildings"
+  
+  // Check if "All buildings" is selected
+  const isAllBuildingsSelected = value.includes(ALL_BUILDINGS)
+  
+  // Add "All buildings" as the first option
+  const allOptions = [ALL_BUILDINGS, ...options]
+  
+  const filteredOptions = allOptions.filter(option =>
+    option.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const handleSelect = (option: string) => {
+    if (option === ALL_BUILDINGS) {
+      // If selecting "All buildings", replace all selections with just "All buildings"
+      onValueChange([ALL_BUILDINGS])
+    } else {
+      // If selecting a specific building
+      if (value.includes(option)) {
+        // Deselecting a building
+        const newValue = value.filter(v => v !== option)
+        // If we removed the last building and had "All buildings", keep "All buildings"
+        // Otherwise, if we removed all buildings, select "All buildings"
+        if (newValue.length === 0 || (newValue.length === 1 && newValue[0] === ALL_BUILDINGS)) {
+          onValueChange([ALL_BUILDINGS])
+        } else {
+          // Remove "All buildings" if it exists when selecting specific buildings
+          onValueChange(newValue.filter(v => v !== ALL_BUILDINGS))
+        }
+      } else {
+        // Selecting a new building - remove "All buildings" if present
+        const newValue = value.filter(v => v !== ALL_BUILDINGS)
+        onValueChange([...newValue, option])
+      }
+    }
+  }
+
+  const handleRemove = (option: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (option === ALL_BUILDINGS) {
+      // If removing "All buildings", select all individual buildings
+      onValueChange(options)
+    } else {
+      const newValue = value.filter(v => v !== option)
+      // If no buildings left, select "All buildings"
+      if (newValue.length === 0 || (newValue.length === 1 && newValue[0] === ALL_BUILDINGS)) {
+        onValueChange([ALL_BUILDINGS])
+      } else {
+        onValueChange(newValue)
+      }
+    }
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          disabled={disabled}
+          className={cn(
+            "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+            value.length === 0 && "text-muted-foreground"
+          )}
+        >
+          <div className="flex flex-1 flex-wrap gap-1 overflow-hidden">
+            {value.length === 0 ? (
+              <span className="text-muted-foreground">{placeholder}</span>
+            ) : isAllBuildingsSelected ? (
+              <div className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 text-xs">
+                <span>All buildings</span>
+                <button
+                  type="button"
+                  onClick={(e) => handleRemove(ALL_BUILDINGS, e)}
+                  className="text-primary hover:text-primary/80 focus:outline-none"
+                >
+                  ×
+                </button>
+              </div>
+            ) : (
+              value.map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 text-xs"
+                >
+                  <span className="max-w-[150px] truncate">{item}</span>
+                  <button
+                    type="button"
+                    onClick={(e) => handleRemove(item, e)}
+                    className="text-primary hover:text-primary/80 focus:outline-none"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+        <Command>
+          <CommandInput 
+            placeholder="Search buildings..." 
+            value={searchQuery}
+            onValueChange={setSearchQuery}
+          />
+          {value.length > 0 && !isAllBuildingsSelected && (
+            <div className="border-b p-2">
+              <div className="flex flex-wrap gap-1">
+                {value.map((item) => (
+                  <div
+                    key={item}
+                    className="flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 text-xs"
+                  >
+                    <span className="max-w-[150px] truncate">{item}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => handleRemove(item, e)}
+                      className="text-primary hover:text-primary/80 focus:outline-none"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <CommandList>
+            <CommandEmpty>No building found.</CommandEmpty>
+            <CommandGroup>
+              {filteredOptions.map((option) => {
+                const isSelected = option === ALL_BUILDINGS 
+                  ? isAllBuildingsSelected 
+                  : value.includes(option)
+                return (
+                  <CommandItem
+                    key={option}
+                    value={option}
+                    onSelect={() => handleSelect(option)}
+                  >
+                    <div
+                      className={cn(
+                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                        isSelected
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
+                      )}
+                    >
+                      <Check className="h-4 w-4" />
+                    </div>
+                    {option}
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
 // Feedback Settings Component
 function FeedbackSettings() {
   // Get all building labels for default selection
   const allBuildingLabels = buildings.map(b => b.label)
   
-  // Initialize state with all buildings selected for each feedback type
+  // Initialize state with "All buildings" selected for each feedback type
   const [feedbackSettings, setFeedbackSettings] = useState({
-    serviceRequests: allBuildingLabels,
-    events: allBuildingLabels,
-    resourceBooking: allBuildingLabels,
+    serviceRequests: ["All buildings"],
+    events: ["All buildings"],
+    resourceBooking: ["All buildings"],
+  })
+
+  // State for enabled/disabled toggles for each feature
+  const [featureEnabled, setFeatureEnabled] = useState({
+    serviceRequests: true,
+    events: true,
+    resourceBooking: true,
   })
 
   // State for comments on feedback
   const [commentsEnabled, setCommentsEnabled] = useState(true)
+
+  // State for push notifications on feedback reminders
+  const [pushNotificationsEnabled, setPushNotificationsEnabled] = useState(true)
 
   // State for prompt titles and helper text for each vertical
   const [promptSettings, setPromptSettings] = useState({
@@ -2153,6 +2344,13 @@ function FeedbackSettings() {
     setFeedbackSettings(prev => ({
       ...prev,
       [type]: buildings
+    }))
+  }
+
+  const handleFeatureToggle = (type: 'serviceRequests' | 'events' | 'resourceBooking') => {
+    setFeatureEnabled(prev => ({
+      ...prev,
+      [type]: !prev[type]
     }))
   }
 
@@ -2183,6 +2381,7 @@ function FeedbackSettings() {
             <TableHead>
               <TableRow>
                 <TableHeaderCell>Feature</TableHeaderCell>
+                <TableHeaderCell>Enabled</TableHeaderCell>
                 <TableHeaderCell>Buildings</TableHeaderCell>
               </TableRow>
             </TableHead>
@@ -2192,11 +2391,18 @@ function FeedbackSettings() {
                   Service Requests
                 </TableCell>
                 <TableCell>
-                  <MultiSelect
+                  <Switch
+                    checked={featureEnabled.serviceRequests}
+                    onCheckedChange={() => handleFeatureToggle('serviceRequests')}
+                  />
+                </TableCell>
+                <TableCell>
+                  <BuildingMultiSelect
                     value={feedbackSettings.serviceRequests}
                     onValueChange={(buildings) => handleBuildingChange('serviceRequests', buildings)}
                     options={allBuildingLabels}
                     placeholder="Select buildings"
+                    disabled={!featureEnabled.serviceRequests}
                   />
                 </TableCell>
               </TableRow>
@@ -2205,11 +2411,18 @@ function FeedbackSettings() {
                   Events
                 </TableCell>
                 <TableCell>
-                  <MultiSelect
+                  <Switch
+                    checked={featureEnabled.events}
+                    onCheckedChange={() => handleFeatureToggle('events')}
+                  />
+                </TableCell>
+                <TableCell>
+                  <BuildingMultiSelect
                     value={feedbackSettings.events}
                     onValueChange={(buildings) => handleBuildingChange('events', buildings)}
                     options={allBuildingLabels}
                     placeholder="Select buildings"
+                    disabled={!featureEnabled.events}
                   />
                 </TableCell>
               </TableRow>
@@ -2218,11 +2431,18 @@ function FeedbackSettings() {
                   Resource booking
                 </TableCell>
                 <TableCell>
-                  <MultiSelect
+                  <Switch
+                    checked={featureEnabled.resourceBooking}
+                    onCheckedChange={() => handleFeatureToggle('resourceBooking')}
+                  />
+                </TableCell>
+                <TableCell>
+                  <BuildingMultiSelect
                     value={feedbackSettings.resourceBooking}
                     onValueChange={(buildings) => handleBuildingChange('resourceBooking', buildings)}
                     options={allBuildingLabels}
                     placeholder="Select buildings"
+                    disabled={!featureEnabled.resourceBooking}
                   />
                 </TableCell>
               </TableRow>
@@ -2233,18 +2453,18 @@ function FeedbackSettings() {
 
       {/* Prompt Customization Card */}
       <Card>
-        <div className="p-6">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
+        <div className="p-4">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-4">
             Prompt customization
           </h3>
           
-          <div className="space-y-8">
+          <div className="space-y-6">
             {/* Service Requests */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
                 Service Requests
               </h4>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div>
                   <Label htmlFor="service-requests-title" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Prompt title
@@ -2273,11 +2493,11 @@ function FeedbackSettings() {
             </div>
 
             {/* Events */}
-            <div className="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-8">
+            <div className="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-6">
               <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
                 Events
               </h4>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div>
                   <Label htmlFor="events-title" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Prompt title
@@ -2306,11 +2526,11 @@ function FeedbackSettings() {
             </div>
 
             {/* Resource Booking */}
-            <div className="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-8">
+            <div className="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-6">
               <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
                 Resource booking
               </h4>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div>
                   <Label htmlFor="resource-booking-title" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     Prompt title
@@ -2343,8 +2563,8 @@ function FeedbackSettings() {
 
       {/* Comments on Feedback Card */}
       <Card>
-        <div className="p-6">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
+        <div className="p-4">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-4">
             Comments on feedback
           </h3>
           
@@ -2360,6 +2580,30 @@ function FeedbackSettings() {
             <Switch
               checked={commentsEnabled}
               onCheckedChange={setCommentsEnabled}
+            />
+          </div>
+        </div>
+      </Card>
+
+      {/* Push Notifications Card */}
+      <Card>
+        <div className="p-4">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-4">
+            Push notifications
+          </h3>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Enable push notifications
+              </label>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Send a one-time push notification if the user doesn't respond to the in-app feedback prompt.
+              </p>
+            </div>
+            <Switch
+              checked={pushNotificationsEnabled}
+              onCheckedChange={setPushNotificationsEnabled}
             />
           </div>
         </div>
