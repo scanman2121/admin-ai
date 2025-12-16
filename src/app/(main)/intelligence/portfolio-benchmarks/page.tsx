@@ -1,360 +1,402 @@
 "use client"
 
+import { Button } from "@/components/Button"
 import { PageTemplate } from "@/components/PageTemplate"
-import { Card } from "@/components/ui/card"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
+import { RiDeleteBinLine, RiStarFill } from "@remixicon/react"
+import { usePathname } from "next/navigation"
+import { useState } from "react"
 
-// Define tabs for the Portfolio Benchmarks page
+// Define tabs for the Feedback page
 const tabs = [
-    { name: "Overview", href: "/intelligence/portfolio-benchmarks" },
-    { name: "Market Analysis", href: "/intelligence/portfolio-benchmarks/market-analysis" },
-    { name: "Peer Comparison", href: "/intelligence/portfolio-benchmarks/peer-comparison" },
-    { name: "Historical Trends", href: "/intelligence/portfolio-benchmarks/historical-trends" },
+    { name: "All feedback", href: "/intelligence/portfolio-benchmarks" },
+    { name: "Resources", href: "/intelligence/portfolio-benchmarks/resources" },
+    { name: "Service Requests", href: "/intelligence/portfolio-benchmarks/service-requests" },
+    { name: "Events", href: "/intelligence/portfolio-benchmarks/events" },
+    { name: "By Staff", href: "/intelligence/portfolio-benchmarks/by-staff" },
 ]
 
-// Top performing buildings data
-const topPerformingBuildings = [
-    {
-        name: "Tech Square",
-        score: "91/100",
-        rank: 1,
-    },
-    {
-        name: "125 Lincoln",
-        score: "87/100",
-        rank: 2,
-    },
-    {
-        name: "Riverfront Tower",
-        score: "82/100",
-        rank: 3,
-    },
-]
-
-// Building comparison data
-const buildingComparisonData = [
-    {
-        name: "Tech Square",
-        amenityUsage: 88.5,
-        satisfaction: 4.8,
-    },
-    {
-        name: "125 Lincoln",
-        amenityUsage: 78.5,
-        satisfaction: 4.3,
-    },
-    {
-        name: "Riverfront Tower",
-        amenityUsage: 72.5,
-        satisfaction: 4.0,
-    },
-    {
-        name: "Harborview Plaza",
-        amenityUsage: 52.5,
-        satisfaction: 3.2,
-    },
-]
-
-// Feedback insights data
-const feedbackInsights = {
-    buildingName: "125 Lincoln",
-    responses: 142,
-    responseRate: "68.5%",
-    overallSatisfaction: 4.2,
-    sentimentBreakdown: {
-        positive: 65,
-        neutral: 25,
-        negative: 10,
-    },
-    positiveThemes: [
-        { theme: "Lobby Renovation", mentions: 42, percentage: 29.6 },
-        { theme: "Staff Responsiveness", mentions: 38, percentage: 26.8 },
-        { theme: "Building Cleanliness", mentions: 35, percentage: 24.6 },
-    ],
-    negativeThemes: [
-        { theme: "HVAC Issues", mentions: 18, percentage: 12.7 },
-        { theme: "Elevator Wait Times", mentions: 15, percentage: 10.6 },
-        { theme: "Limited Parking", mentions: 12, percentage: 8.5 },
-    ],
+// Demo feedback data
+interface FeedbackItem {
+    id: string
+    type: "Resource Booking" | "Service Request" | "Event"
+    itemName: string
+    building: string
+    rating: number
+    comment?: string
+    submittedBy: string
+    submittedDate: string
+    staffMember?: string
 }
 
-function PortfolioPerformanceOverview() {
-    return (
-        <Card className="p-6">
-            <div className="flex justify-between items-center mb-4">
-                <div>
-                    <h2 className="text-lg font-semibold">Portfolio Performance Overview</h2>
-                    <p className="text-sm text-gray-500">AI-powered analysis of your building portfolio</p>
-                </div>
-                <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">4 Buildings</span>
-                </div>
-            </div>
+const allFeedbackData: FeedbackItem[] = [
+    // Resource Bookings
+    {
+        id: "1",
+        type: "Resource Booking",
+        itemName: "Conference Room A - 3rd Floor",
+        building: "Main Tower",
+        rating: 5,
+        comment: "Perfect space for our team meeting. Clean, well-equipped, and quiet.",
+        submittedBy: "Sarah Johnson",
+        submittedDate: "3/15/2025",
+    },
+    {
+        id: "2",
+        type: "Resource Booking",
+        itemName: "Parking Spot #42",
+        building: "East Wing",
+        rating: 4,
+        comment: "Convenient location, though the spot was a bit tight.",
+        submittedBy: "Michael Chen",
+        submittedDate: "3/14/2025",
+    },
+    {
+        id: "3",
+        type: "Resource Booking",
+        itemName: "Gym - Morning Session",
+        building: "Main Tower",
+        rating: 5,
+        comment: "Great facilities! Equipment was clean and well-maintained.",
+        submittedBy: "Emily Rodriguez",
+        submittedDate: "3/13/2025",
+    },
+    {
+        id: "4",
+        type: "Resource Booking",
+        itemName: "Conference Room B - 2nd Floor",
+        building: "West Building",
+        rating: 3,
+        comment: "Room was okay but the projector wasn't working properly.",
+        submittedBy: "David Kim",
+        submittedDate: "3/12/2025",
+    },
+    // Service Requests
+    {
+        id: "5",
+        type: "Service Request",
+        itemName: "HVAC Repair - Office Too Cold",
+        building: "Main Tower",
+        rating: 5,
+        comment: "Fixed quickly and efficiently. Staff was very professional.",
+        submittedBy: "Jennifer Martinez",
+        submittedDate: "3/15/2025",
+        staffMember: "John Smith",
+    },
+    {
+        id: "6",
+        type: "Service Request",
+        itemName: "Light Bulb Replacement - Hallway",
+        building: "East Wing",
+        rating: 4,
+        comment: "Quick response time. Thank you!",
+        submittedBy: "Robert Taylor",
+        submittedDate: "3/14/2025",
+        staffMember: "Maria Garcia",
+    },
+    {
+        id: "7",
+        type: "Service Request",
+        itemName: "Plumbing Issue - Restroom",
+        building: "South Plaza",
+        rating: 2,
+        comment: "Took longer than expected to resolve. Had to follow up multiple times.",
+        submittedBy: "Lisa Anderson",
+        submittedDate: "3/13/2025",
+        staffMember: "James Wilson",
+    },
+    {
+        id: "8",
+        type: "Service Request",
+        itemName: "Cleaning Request - Spill in Break Room",
+        building: "Main Tower",
+        rating: 5,
+        comment: "Cleaned up immediately. Excellent service!",
+        submittedBy: "Thomas Brown",
+        submittedDate: "3/12/2025",
+        staffMember: "Patricia Lee",
+    },
+    {
+        id: "9",
+        type: "Service Request",
+        itemName: "Elevator Maintenance Request",
+        building: "West Building",
+        rating: 3,
+        comment: "Issue was resolved but took a while.",
+        submittedBy: "Amanda White",
+        submittedDate: "3/11/2025",
+        staffMember: "John Smith",
+    },
+    // Events
+    {
+        id: "10",
+        type: "Event",
+        itemName: "Building Networking Happy Hour",
+        building: "Main Tower",
+        rating: 5,
+        comment: "Amazing event! Great networking opportunity and the food was fantastic.",
+        submittedBy: "Christopher Davis",
+        submittedDate: "3/15/2025",
+        staffMember: "Sarah Johnson",
+    },
+    {
+        id: "11",
+        type: "Event",
+        itemName: "Wellness Workshop - Yoga Session",
+        building: "East Wing",
+        rating: 4,
+        comment: "Really enjoyed the session. Instructor was great!",
+        submittedBy: "Michelle Harris",
+        submittedDate: "3/14/2025",
+        staffMember: "Robert Miller",
+    },
+    {
+        id: "12",
+        type: "Event",
+        itemName: "Lunch & Learn - Financial Planning",
+        building: "South Plaza",
+        rating: 5,
+        comment: "Very informative and well-organized. Looking forward to more!",
+        submittedBy: "Daniel Moore",
+        submittedDate: "3/13/2025",
+        staffMember: "Sarah Johnson",
+    },
+    {
+        id: "13",
+        type: "Event",
+        itemName: "Coffee & Donuts Morning Social",
+        building: "Main Tower",
+        rating: 4,
+        comment: "Nice way to start the day. Good variety of options.",
+        submittedBy: "Jessica Thompson",
+        submittedDate: "3/12/2025",
+        staffMember: "Maria Garcia",
+    },
+    {
+        id: "14",
+        type: "Event",
+        itemName: "Building Tour for New Tenants",
+        building: "West Building",
+        rating: 3,
+        comment: "Tour was okay but felt rushed. Could have been more detailed.",
+        submittedBy: "Kevin Martinez",
+        submittedDate: "3/11/2025",
+        staffMember: "James Wilson",
+    },
+]
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white rounded-lg p-4 border">
-                    <div className="text-sm text-gray-500">Occupancy Rate</div>
-                    <div className="text-3xl font-semibold mt-1">90.2%</div>
-                    <div className="flex items-center gap-1 mt-1">
-                        <span className="text-sm text-gray-500">vs. Industry Avg: 89.5%</span>
-                        <span className="text-sm text-green-600">↑ 1.8%</span>
-                    </div>
-                </div>
+// Staff members for By Staff tab
+const staffMembers = [
+    { name: "John Smith", role: "Maintenance Technician" },
+    { name: "Maria Garcia", role: "Facilities Coordinator" },
+    { name: "James Wilson", role: "Building Manager" },
+    { name: "Patricia Lee", role: "Cleaning Staff" },
+    { name: "Sarah Johnson", role: "Events Coordinator" },
+    { name: "Robert Miller", role: "Wellness Coordinator" },
+]
 
-                <div className="bg-white rounded-lg p-4 border">
-                    <div className="text-sm text-gray-500">Tenant Satisfaction</div>
-                    <div className="text-3xl font-semibold mt-1">4.0/5</div>
-                    <div className="flex items-center gap-1 mt-1">
-                        <span className="text-sm text-gray-500">vs. Industry Avg: 3.8/5</span>
-                        <span className="text-sm text-green-600">↑ 3.5%</span>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg p-4 border">
-                    <div className="text-sm text-gray-500">Avg. Revenue</div>
-                    <div className="text-3xl font-semibold mt-1">$31.2</div>
-                    <div className="flex items-center gap-1 mt-1">
-                        <span className="text-sm text-gray-500">vs. Industry Avg: $30.0/sqft</span>
-                        <span className="text-sm text-green-600">↑ 2.7%</span>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg p-4 border">
-                    <div className="text-sm text-gray-500">Amenity Usage</div>
-                    <div className="text-3xl font-semibold mt-1">67.0%</div>
-                    <div className="flex items-center gap-1 mt-1">
-                        <span className="text-sm text-gray-500">vs. Industry Avg: 65.0%</span>
-                        <span className="text-sm text-green-600">↑ 5.3%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div className="mt-6">
-                <Tabs defaultValue="top-performers">
-                    <TabsList>
-                        <TabsTrigger value="top-performers">Top Performers</TabsTrigger>
-                        <TabsTrigger value="needs-attention">Needs Attention</TabsTrigger>
-                        <TabsTrigger value="industry-comparison">Industry Comparison</TabsTrigger>
-                    </TabsList>
-                </Tabs>
-
-                <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {topPerformingBuildings.map((building) => (
-                        <div key={building.name} className="bg-white rounded-lg p-4 border">
-                            <div className="flex justify-between items-center">
-                                <h3 className="font-medium">{building.name}</h3>
-                                <span className="text-lg">{building.rank}</span>
-                            </div>
-                            <div className="mt-2">
-                                <div className="text-sm text-gray-500">Score: {building.score}</div>
-                            </div>
-                            <button className="mt-4 text-primary text-sm flex items-center gap-1">
-                                View Details
-                                <span className="text-lg">→</span>
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
-                <span>✨ AI-generated ranking based on multiple performance metrics</span>
-                <span className="ml-4">Last updated: 3/31/2025</span>
-            </div>
-        </Card>
-    )
-}
-
-function BuildingComparison() {
-    return (
-        <Card className="p-6">
-            <div className="flex justify-between items-center mb-4">
-                <div>
-                    <h2 className="text-lg font-semibold">Building Comparison</h2>
-                    <p className="text-sm text-gray-500">Compare performance metrics across buildings</p>
-                </div>
-            </div>
-
-            <Tabs defaultValue="amenity-usage">
-                <TabsList>
-                    <TabsTrigger value="amenity-usage">Amenity Usage</TabsTrigger>
-                    <TabsTrigger value="feedback-themes">Feedback Themes</TabsTrigger>
-                </TabsList>
-            </Tabs>
-
-            <div className="mt-6 space-y-4">
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <span>Conference/Meeting Rooms</span>
-                    <span className="ml-auto">Portfolio Avg: 68.5%</span>
-                </div>
-
-                {buildingComparisonData.map((building) => (
-                    <div key={building.name} className="space-y-2">
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm font-medium">{building.name}</span>
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm text-primary">{building.amenityUsage}%</span>
-                                <span className="text-sm text-gray-500">{building.satisfaction}/5</span>
-                            </div>
-                        </div>
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                                className="h-full bg-primary rounded-full"
-                                style={{ width: `${building.amenityUsage}%` }}
-                            />
-                        </div>
-                    </div>
+function FeedbackTable({ feedback, onDelete }: { feedback: FeedbackItem[], onDelete: (id: string) => void }) {
+    const renderStars = (rating: number) => {
+        return (
+            <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <RiStarFill
+                        key={star}
+                        className={`size-4 ${star <= rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                    />
                 ))}
-
-                <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-                    <h3 className="font-medium mb-2">AI Insights</h3>
-                    <p className="text-sm text-gray-600">
-                        Tech Square has the highest conference room usage (88.5%) and satisfaction (4.8/5).
-                        Consider studying their booking system and room configurations to improve utilization in
-                        other buildings.
-                    </p>
-                </div>
-
-                <div className="mt-4 text-sm text-gray-500">
-                    Last updated: 3/31/2025
-                </div>
+                <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">{rating}/5</span>
             </div>
-        </Card>
-    )
-}
+        )
+    }
 
-function AIFeedbackInsights() {
     return (
-        <Card className="p-6">
-            <div className="flex justify-between items-center mb-4">
-                <div>
-                    <h2 className="text-lg font-semibold">AI-Powered Feedback Insights</h2>
-                    <p className="text-sm text-gray-500">Automated analysis of tenant feedback</p>
-                </div>
-                <select className="border rounded-md px-2 py-1 text-sm">
-                    <option>125 Lincoln</option>
-                    <option>Tech Square</option>
-                    <option>Riverfront Tower</option>
-                </select>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="text-3xl font-semibold">{feedbackInsights.overallSatisfaction}</div>
-                        <div className="text-sm text-gray-500">
-                            {feedbackInsights.responses} Responses
-                            <span className="ml-2">
-                                {feedbackInsights.responseRate} Response Rate
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="space-y-4">
-                        <div>
-                            <h3 className="font-medium mb-2">Sentiment Breakdown</h3>
-                            <div className="space-y-2">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm">Positive</span>
-                                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                        <div
-                                            className="h-full bg-green-500 rounded-full"
-                                            style={{ width: `${feedbackInsights.sentimentBreakdown.positive}%` }}
-                                        />
-                                    </div>
-                                    <span className="text-sm">{feedbackInsights.sentimentBreakdown.positive}%</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm">Neutral</span>
-                                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                        <div
-                                            className="h-full bg-gray-400 rounded-full"
-                                            style={{ width: `${feedbackInsights.sentimentBreakdown.neutral}%` }}
-                                        />
-                                    </div>
-                                    <span className="text-sm">{feedbackInsights.sentimentBreakdown.neutral}%</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="text-sm">Negative</span>
-                                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                        <div
-                                            className="h-full bg-red-500 rounded-full"
-                                            style={{ width: `${feedbackInsights.sentimentBreakdown.negative}%` }}
-                                        />
-                                    </div>
-                                    <span className="text-sm">{feedbackInsights.sentimentBreakdown.negative}%</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <h3 className="font-medium mb-2">Response Trend</h3>
-                            <div className="h-32 bg-gray-50 rounded-lg"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <div className="space-y-6">
-                        <div>
-                            <h3 className="font-medium mb-3">Top Positive Themes</h3>
-                            <div className="space-y-3">
-                                {feedbackInsights.positiveThemes.map((theme) => (
-                                    <div key={theme.theme} className="flex items-center gap-2">
-                                        <span className="text-sm flex-1">{theme.theme}</span>
-                                        <span className="text-sm text-gray-500">{theme.mentions} mentions</span>
-                                        <span className="text-sm text-green-600">{theme.percentage}%</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div>
-                            <h3 className="font-medium mb-3">Top Negative Themes</h3>
-                            <div className="space-y-3">
-                                {feedbackInsights.negativeThemes.map((theme) => (
-                                    <div key={theme.theme} className="flex items-center gap-2">
-                                        <span className="text-sm flex-1">{theme.theme}</span>
-                                        <span className="text-sm text-gray-500">{theme.mentions} mentions</span>
-                                        <span className="text-sm text-red-600">{theme.percentage}%</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <h3 className="font-medium mb-2">AI Theme Analysis</h3>
-                            <p className="text-sm text-gray-600">
-                                Recent lobby renovations have significantly improved tenant perception, with a 15.2%
-                                increase in positive mentions. HVAC issues are decreasing (-5.3%) but remain the top
-                                concern. Consider targeted communication about ongoing HVAC improvements to further
-                                reduce concerns.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="mt-4 text-sm text-gray-500">
-                Last updated: 3/31/2025
-            </div>
-        </Card>
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableHeaderCell>Type</TableHeaderCell>
+                        <TableHeaderCell>Item</TableHeaderCell>
+                        <TableHeaderCell>Building</TableHeaderCell>
+                        <TableHeaderCell>Rating</TableHeaderCell>
+                        <TableHeaderCell>Comment</TableHeaderCell>
+                        <TableHeaderCell>Submitted By</TableHeaderCell>
+                        <TableHeaderCell>Date</TableHeaderCell>
+                        <TableHeaderCell className="text-right">Actions</TableHeaderCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {feedback.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={8} className="text-center text-gray-500 dark:text-gray-400 py-8">
+                                No feedback found
+                            </TableCell>
+                        </TableRow>
+                    ) : (
+                        feedback.map((item) => (
+                            <TableRow key={item.id}>
+                                <TableCell>
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                        {item.type}
+                                    </span>
+                                </TableCell>
+                                <TableCell className="font-medium text-gray-900 dark:text-gray-100">
+                                    {item.itemName}
+                                </TableCell>
+                                <TableCell className="text-gray-600 dark:text-gray-400">
+                                    {item.building}
+                                </TableCell>
+                                <TableCell>
+                                    {renderStars(item.rating)}
+                                </TableCell>
+                                <TableCell className="text-gray-600 dark:text-gray-400 max-w-md">
+                                    {item.comment || "-"}
+                                </TableCell>
+                                <TableCell className="text-gray-600 dark:text-gray-400">
+                                    {item.submittedBy}
+                                </TableCell>
+                                <TableCell className="text-gray-600 dark:text-gray-400">
+                                    {item.submittedDate}
+                                </TableCell>
+                                <TableCell className="text-right">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => onDelete(item.id)}
+                                        className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                    >
+                                        <RiDeleteBinLine className="size-4" />
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
+                </TableBody>
+            </Table>
+        </div>
     )
 }
 
-export default function PortfolioBenchmarks() {
+function ByStaffTable({ feedback, onDelete }: { feedback: FeedbackItem[], onDelete: (id: string) => void }) {
+    const renderStars = (rating: number) => {
+        return (
+            <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <RiStarFill
+                        key={star}
+                        className={`size-4 ${star <= rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                    />
+                ))}
+                <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">{rating}/5</span>
+            </div>
+        )
+    }
+
+    return (
+        <div className="space-y-8">
+            {staffMembers.map((staff) => {
+                const staffFeedback = feedback.filter(f => f.staffMember === staff.name)
+                if (staffFeedback.length === 0) return null
+
+                return (
+                    <div key={staff.name} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                        <div className="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">{staff.name}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{staff.role}</p>
+                        </div>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableHeaderCell>Type</TableHeaderCell>
+                                    <TableHeaderCell>Item</TableHeaderCell>
+                                    <TableHeaderCell>Building</TableHeaderCell>
+                                    <TableHeaderCell>Rating</TableHeaderCell>
+                                    <TableHeaderCell>Comment</TableHeaderCell>
+                                    <TableHeaderCell>Submitted By</TableHeaderCell>
+                                    <TableHeaderCell>Date</TableHeaderCell>
+                                    <TableHeaderCell className="text-right">Actions</TableHeaderCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {staffFeedback.map((item) => (
+                                    <TableRow key={item.id}>
+                                        <TableCell>
+                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                                {item.type}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell className="font-medium text-gray-900 dark:text-gray-100">
+                                            {item.itemName}
+                                        </TableCell>
+                                        <TableCell className="text-gray-600 dark:text-gray-400">
+                                            {item.building}
+                                        </TableCell>
+                                        <TableCell>
+                                            {renderStars(item.rating)}
+                                        </TableCell>
+                                        <TableCell className="text-gray-600 dark:text-gray-400 max-w-md">
+                                            {item.comment || "-"}
+                                        </TableCell>
+                                        <TableCell className="text-gray-600 dark:text-gray-400">
+                                            {item.submittedBy}
+                                        </TableCell>
+                                        <TableCell className="text-gray-600 dark:text-gray-400">
+                                            {item.submittedDate}
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => onDelete(item.id)}
+                                                className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                            >
+                                                <RiDeleteBinLine className="size-4" />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                )
+            })}
+        </div>
+    )
+}
+
+export default function Feedback() {
+    const [feedback, setFeedback] = useState<FeedbackItem[]>(allFeedbackData)
+    const pathname = usePathname()
+
+    const handleDelete = (id: string) => {
+        if (confirm("Are you sure you want to delete this feedback?")) {
+            setFeedback(prev => prev.filter(item => item.id !== id))
+        }
+    }
+
+    // Filter feedback based on current tab
+    let filteredFeedback = feedback
+    if (pathname.includes("/resources")) {
+        filteredFeedback = feedback.filter(f => f.type === "Resource Booking")
+    } else if (pathname.includes("/service-requests")) {
+        filteredFeedback = feedback.filter(f => f.type === "Service Request")
+    } else if (pathname.includes("/events")) {
+        filteredFeedback = feedback.filter(f => f.type === "Event")
+    } else if (pathname.includes("/by-staff")) {
+        filteredFeedback = feedback.filter(f => f.staffMember !== undefined)
+    }
+    // Base route "/intelligence/portfolio-benchmarks" shows all feedback (no filter)
+
     return (
         <PageTemplate
-            title="Portfolio Benchmarks"
-            primaryCta="Export Report"
-            onPrimaryClick={() => { }}
+            title="Feedback"
             tabs={tabs}
         >
-            <div className="space-y-6">
-                <PortfolioPerformanceOverview />
-                <BuildingComparison />
-                <AIFeedbackInsights />
-            </div>
+            {pathname.includes("/by-staff") ? (
+                <ByStaffTable feedback={filteredFeedback} onDelete={handleDelete} />
+            ) : (
+                <FeedbackTable feedback={filteredFeedback} onDelete={handleDelete} />
+            )}
         </PageTemplate>
     )
-} 
+}

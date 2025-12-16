@@ -96,7 +96,7 @@ const filesItems = [
 // Intelligence sub-navigation items
 const intelligenceItems = [
   { name: "Dashboard", href: siteConfig.baseLinks.intelligence.dashboard },
-  { name: "Portfolio Benchmarks", href: siteConfig.baseLinks.intelligence.portfolioBenchmarks },
+  { name: "Feedback", href: siteConfig.baseLinks.intelligence.portfolioBenchmarks },
   { name: "Assessments", href: siteConfig.baseLinks.intelligence.assessments },
   { name: "About intelligence", href: siteConfig.baseLinks.intelligence.aboutIntelligence },
 ] as const
