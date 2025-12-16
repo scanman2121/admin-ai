@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
+import { Switch } from "@/components/Switch"
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Button } from "@/components/ui/button"
@@ -21,6 +22,7 @@ import {
 import { MultiSelect } from "@/components/ui/select"
 import { QuickReplyTemplatesSettings } from "@/components/ui/settings/CannedResponsesSettings"
 import { TagsSettings } from "@/components/ui/settings/TagsSettings"
+import { Textarea } from "@/components/ui/textarea"
 import { buildings } from "@/data/data"
 import { cn, focusRing } from "@/lib/utils"
 import { RiCloseLine, RiMore2Line } from "@remixicon/react"
@@ -2128,6 +2130,25 @@ function FeedbackSettings() {
     resourceBooking: allBuildingLabels,
   })
 
+  // State for comments on feedback
+  const [commentsEnabled, setCommentsEnabled] = useState(true)
+
+  // State for prompt titles and helper text for each vertical
+  const [promptSettings, setPromptSettings] = useState({
+    serviceRequests: {
+      title: "How was your service request experience?",
+      helperText: ""
+    },
+    events: {
+      title: "How was your event experience?",
+      helperText: ""
+    },
+    resourceBooking: {
+      title: "How was your booking experience?",
+      helperText: ""
+    }
+  })
+
   const handleBuildingChange = (type: 'serviceRequests' | 'events' | 'resourceBooking', buildings: string[]) => {
     setFeedbackSettings(prev => ({
       ...prev,
@@ -2135,62 +2156,214 @@ function FeedbackSettings() {
     }))
   }
 
+  const handlePromptChange = (
+    type: 'serviceRequests' | 'events' | 'resourceBooking',
+    field: 'title' | 'helperText',
+    value: string
+  ) => {
+    setPromptSettings(prev => ({
+      ...prev,
+      [type]: {
+        ...prev[type],
+        [field]: value
+      }
+    }))
+  }
+
   return (
-    <div>
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Feedback settings</h2>
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Turn on user feedback for Service Requests, Events, and Resource booking</p>
-      
-      <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Feature</TableHeaderCell>
-              <TableHeaderCell>Buildings</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell className="font-medium text-gray-900 dark:text-gray-100">
-                Service Requests
-              </TableCell>
-              <TableCell>
-                <MultiSelect
-                  value={feedbackSettings.serviceRequests}
-                  onValueChange={(buildings) => handleBuildingChange('serviceRequests', buildings)}
-                  options={allBuildingLabels}
-                  placeholder="Select buildings"
-                />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium text-gray-900 dark:text-gray-100">
-                Events
-              </TableCell>
-              <TableCell>
-                <MultiSelect
-                  value={feedbackSettings.events}
-                  onValueChange={(buildings) => handleBuildingChange('events', buildings)}
-                  options={allBuildingLabels}
-                  placeholder="Select buildings"
-                />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium text-gray-900 dark:text-gray-100">
-                Resource booking
-              </TableCell>
-              <TableCell>
-                <MultiSelect
-                  value={feedbackSettings.resourceBooking}
-                  onValueChange={(buildings) => handleBuildingChange('resourceBooking', buildings)}
-                  options={allBuildingLabels}
-                  placeholder="Select buildings"
-                />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Feedback settings</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          When a user completes a booking, attends an event, or has a service request closed, they'll see a short in-app prompt asking them to rate their experience. Ratings take one tap to submit, with an optional comment for additional feedback, and are only requested once per completed item.
+        </p>
+        
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Feature</TableHeaderCell>
+                <TableHeaderCell>Buildings</TableHeaderCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium text-gray-900 dark:text-gray-100">
+                  Service Requests
+                </TableCell>
+                <TableCell>
+                  <MultiSelect
+                    value={feedbackSettings.serviceRequests}
+                    onValueChange={(buildings) => handleBuildingChange('serviceRequests', buildings)}
+                    options={allBuildingLabels}
+                    placeholder="Select buildings"
+                  />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium text-gray-900 dark:text-gray-100">
+                  Events
+                </TableCell>
+                <TableCell>
+                  <MultiSelect
+                    value={feedbackSettings.events}
+                    onValueChange={(buildings) => handleBuildingChange('events', buildings)}
+                    options={allBuildingLabels}
+                    placeholder="Select buildings"
+                  />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium text-gray-900 dark:text-gray-100">
+                  Resource booking
+                </TableCell>
+                <TableCell>
+                  <MultiSelect
+                    value={feedbackSettings.resourceBooking}
+                    onValueChange={(buildings) => handleBuildingChange('resourceBooking', buildings)}
+                    options={allBuildingLabels}
+                    placeholder="Select buildings"
+                  />
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       </div>
+
+      {/* Prompt Customization Card */}
+      <Card>
+        <div className="p-6">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
+            Prompt customization
+          </h3>
+          
+          <div className="space-y-8">
+            {/* Service Requests */}
+            <div className="space-y-4">
+              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                Service Requests
+              </h4>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="service-requests-title" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Prompt title
+                  </Label>
+                  <Input
+                    id="service-requests-title"
+                    value={promptSettings.serviceRequests.title}
+                    onChange={(e) => handlePromptChange('serviceRequests', 'title', e.target.value)}
+                    placeholder="e.g., How was your service request experience?"
+                    className="mt-2"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="service-requests-helper" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Helper text <span className="text-gray-500 dark:text-gray-400 font-normal">(optional)</span>
+                  </Label>
+                  <Textarea
+                    id="service-requests-helper"
+                    value={promptSettings.serviceRequests.helperText}
+                    onChange={(e) => handlePromptChange('serviceRequests', 'helperText', e.target.value)}
+                    placeholder="Add optional helper text to guide users"
+                    className="mt-2 min-h-[80px]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Events */}
+            <div className="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-8">
+              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                Events
+              </h4>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="events-title" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Prompt title
+                  </Label>
+                  <Input
+                    id="events-title"
+                    value={promptSettings.events.title}
+                    onChange={(e) => handlePromptChange('events', 'title', e.target.value)}
+                    placeholder="e.g., How was your event experience?"
+                    className="mt-2"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="events-helper" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Helper text <span className="text-gray-500 dark:text-gray-400 font-normal">(optional)</span>
+                  </Label>
+                  <Textarea
+                    id="events-helper"
+                    value={promptSettings.events.helperText}
+                    onChange={(e) => handlePromptChange('events', 'helperText', e.target.value)}
+                    placeholder="Add optional helper text to guide users"
+                    className="mt-2 min-h-[80px]"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Resource Booking */}
+            <div className="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-8">
+              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                Resource booking
+              </h4>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="resource-booking-title" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Prompt title
+                  </Label>
+                  <Input
+                    id="resource-booking-title"
+                    value={promptSettings.resourceBooking.title}
+                    onChange={(e) => handlePromptChange('resourceBooking', 'title', e.target.value)}
+                    placeholder="e.g., How was your booking experience?"
+                    className="mt-2"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="resource-booking-helper" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Helper text <span className="text-gray-500 dark:text-gray-400 font-normal">(optional)</span>
+                  </Label>
+                  <Textarea
+                    id="resource-booking-helper"
+                    value={promptSettings.resourceBooking.helperText}
+                    onChange={(e) => handlePromptChange('resourceBooking', 'helperText', e.target.value)}
+                    placeholder="Add optional helper text to guide users"
+                    className="mt-2 min-h-[80px]"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Comments on Feedback Card */}
+      <Card>
+        <div className="p-6">
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-6">
+            Comments on feedback
+          </h3>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Enable comments
+              </label>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Allow users to add optional comments alongside their 5-star rating
+              </p>
+            </div>
+            <Switch
+              checked={commentsEnabled}
+              onCheckedChange={setCommentsEnabled}
+            />
+          </div>
+        </div>
+      </Card>
     </div>
   )
 }
