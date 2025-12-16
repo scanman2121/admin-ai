@@ -23,7 +23,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { QuickReplyTemplatesSettings } from "@/components/ui/settings/CannedResponsesSettings"
 import { TagsSettings } from "@/components/ui/settings/TagsSettings"
-import { Textarea } from "@/components/ui/textarea"
 import { buildings } from "@/data/data"
 import { cn, focusRing } from "@/lib/utils"
 import { RiCloseLine, RiMore2Line } from "@remixicon/react"
@@ -2324,22 +2323,6 @@ function FeedbackSettings() {
   // State for push notifications on feedback reminders
   const [pushNotificationsEnabled, setPushNotificationsEnabled] = useState(true)
 
-  // State for prompt titles and helper text for each vertical
-  const [promptSettings, setPromptSettings] = useState({
-    serviceRequests: {
-      title: "How was your service request experience?",
-      helperText: ""
-    },
-    events: {
-      title: "How was your event experience?",
-      helperText: ""
-    },
-    resourceBooking: {
-      title: "How was your booking experience?",
-      helperText: ""
-    }
-  })
-
   const handleBuildingChange = (type: 'serviceRequests' | 'events' | 'resourceBooking', buildings: string[]) => {
     setFeedbackSettings(prev => ({
       ...prev,
@@ -2351,20 +2334,6 @@ function FeedbackSettings() {
     setFeatureEnabled(prev => ({
       ...prev,
       [type]: !prev[type]
-    }))
-  }
-
-  const handlePromptChange = (
-    type: 'serviceRequests' | 'events' | 'resourceBooking',
-    field: 'title' | 'helperText',
-    value: string
-  ) => {
-    setPromptSettings(prev => ({
-      ...prev,
-      [type]: {
-        ...prev[type],
-        [field]: value
-      }
     }))
   }
 
@@ -2450,116 +2419,6 @@ function FeedbackSettings() {
           </Table>
         </div>
       </div>
-
-      {/* Prompt Customization Card */}
-      <Card>
-        <div className="p-4">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-4">
-            Prompt customization
-          </h3>
-          
-          <div className="space-y-6">
-            {/* Service Requests */}
-            <div className="space-y-3">
-              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                Service Requests
-              </h4>
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="service-requests-title" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Prompt title
-                  </Label>
-                  <Input
-                    id="service-requests-title"
-                    value={promptSettings.serviceRequests.title}
-                    onChange={(e) => handlePromptChange('serviceRequests', 'title', e.target.value)}
-                    placeholder="e.g., How was your service request experience?"
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="service-requests-helper" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Helper text <span className="text-gray-500 dark:text-gray-400 font-normal">(optional)</span>
-                  </Label>
-                  <Textarea
-                    id="service-requests-helper"
-                    value={promptSettings.serviceRequests.helperText}
-                    onChange={(e) => handlePromptChange('serviceRequests', 'helperText', e.target.value)}
-                    placeholder="Add optional helper text to guide users"
-                    className="mt-2 min-h-[80px]"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Events */}
-            <div className="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-6">
-              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                Events
-              </h4>
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="events-title" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Prompt title
-                  </Label>
-                  <Input
-                    id="events-title"
-                    value={promptSettings.events.title}
-                    onChange={(e) => handlePromptChange('events', 'title', e.target.value)}
-                    placeholder="e.g., How was your event experience?"
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="events-helper" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Helper text <span className="text-gray-500 dark:text-gray-400 font-normal">(optional)</span>
-                  </Label>
-                  <Textarea
-                    id="events-helper"
-                    value={promptSettings.events.helperText}
-                    onChange={(e) => handlePromptChange('events', 'helperText', e.target.value)}
-                    placeholder="Add optional helper text to guide users"
-                    className="mt-2 min-h-[80px]"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Resource Booking */}
-            <div className="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-6">
-              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                Resource booking
-              </h4>
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="resource-booking-title" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Prompt title
-                  </Label>
-                  <Input
-                    id="resource-booking-title"
-                    value={promptSettings.resourceBooking.title}
-                    onChange={(e) => handlePromptChange('resourceBooking', 'title', e.target.value)}
-                    placeholder="e.g., How was your booking experience?"
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="resource-booking-helper" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Helper text <span className="text-gray-500 dark:text-gray-400 font-normal">(optional)</span>
-                  </Label>
-                  <Textarea
-                    id="resource-booking-helper"
-                    value={promptSettings.resourceBooking.helperText}
-                    onChange={(e) => handlePromptChange('resourceBooking', 'helperText', e.target.value)}
-                    placeholder="Add optional helper text to guide users"
-                    className="mt-2 min-h-[80px]"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
 
       {/* Comments on Feedback Card */}
       <Card>
