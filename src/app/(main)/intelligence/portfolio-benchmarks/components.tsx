@@ -130,11 +130,30 @@ export function ByStaffTable({ feedback, onDelete }: { feedback: FeedbackItem[],
                 const staffFeedback = feedback.filter(f => f.staffMember === staff.name)
                 if (staffFeedback.length === 0) return null
 
+                // Calculate average rating
+                const totalRatings = staffFeedback.length
+                const averageRating = staffFeedback.reduce((sum, item) => sum + item.rating, 0) / totalRatings
+                const roundedAverage = Math.round(averageRating * 10) / 10 // Round to 1 decimal place
+
                 return (
-                    <div key={staff.name} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                        <div className="bg-gray-50 dark:bg-gray-800 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">{staff.name}</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">{staff.role}</p>
+                    <div key={staff.name} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900">
+                        <div className="bg-white dark:bg-gray-900 px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-start justify-between">
+                            <div>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">{staff.name}</h3>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">{staff.role}</p>
+                            </div>
+                            <div className="text-right">
+                                <div className="flex items-center gap-1 justify-end">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <RiStarFill
+                                            key={star}
+                                            className={`size-4 ${star <= Math.round(averageRating) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                                        />
+                                    ))}
+                                    <span className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-50">{roundedAverage.toFixed(1)}</span>
+                                </div>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{totalRatings} {totalRatings === 1 ? 'rating' : 'ratings'}</p>
+                            </div>
                         </div>
                         <Table>
                             <TableHead>
