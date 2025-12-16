@@ -1,8 +1,8 @@
 "use client"
 
 import { PageTemplate } from "@/components/PageTemplate"
-import { FeedbackTable } from "./components"
-import { useFeedbackData } from "./hooks"
+import { FeedbackTable } from "../components"
+import { useFeedbackData } from "../hooks"
 
 // Define tabs for the Feedback page
 const tabs = [
@@ -13,15 +13,16 @@ const tabs = [
     { name: "By Staff", href: "/intelligence/portfolio-benchmarks/by-staff" },
 ]
 
-export default function Feedback() {
+export default function ResourcesFeedback() {
     const { feedback, handleDelete } = useFeedbackData()
+    const filteredFeedback = feedback.filter(f => f.type === "Resource Booking")
 
     return (
         <PageTemplate
             title="Feedback"
             tabs={tabs}
         >
-            <FeedbackTable feedback={feedback} onDelete={handleDelete} />
+            <FeedbackTable feedback={filteredFeedback} onDelete={handleDelete} />
         </PageTemplate>
     )
 }
