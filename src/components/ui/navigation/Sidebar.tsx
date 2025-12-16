@@ -2338,7 +2338,7 @@ function FeedbackSettings() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-6">
       <div>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Feedback settings</h2>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -2397,7 +2397,7 @@ function FeedbackSettings() {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium text-gray-900 dark:text-gray-100">
-                  Resource booking
+                  Resource Bookings
                 </TableCell>
                 <TableCell>
                   <Switch
@@ -2421,50 +2421,46 @@ function FeedbackSettings() {
       </div>
 
       {/* Comments on Feedback Card */}
-      <Card>
-        <div className="p-4">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-4">
-            Comments on feedback
-          </h3>
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Enable comments
-              </label>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Allow users to add optional comments alongside their 5-star rating
-              </p>
-            </div>
-            <Switch
-              checked={commentsEnabled}
-              onCheckedChange={setCommentsEnabled}
-            />
+      <Card className="p-4">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-4">
+          Comments on feedback
+        </h3>
+        
+        <div className="flex items-center justify-between">
+          <div>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Enable comments
+            </label>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Allow users to add optional comments alongside their 5-star rating
+            </p>
           </div>
+          <Switch
+            checked={commentsEnabled}
+            onCheckedChange={setCommentsEnabled}
+          />
         </div>
       </Card>
 
       {/* Push Notifications Card */}
-      <Card>
-        <div className="p-4">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-4">
-            Push notifications
-          </h3>
-          
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Enable push notifications
-              </label>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Send a one-time push notification if the user doesn't respond to the in-app feedback prompt.
-              </p>
-            </div>
-            <Switch
-              checked={pushNotificationsEnabled}
-              onCheckedChange={setPushNotificationsEnabled}
-            />
+      <Card className="p-4">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-4">
+          Push notifications
+        </h3>
+        
+        <div className="flex items-center justify-between">
+          <div>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Enable push notifications
+            </label>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Send a one-time push notification if the user doesn't respond to the in-app feedback prompt.
+            </p>
           </div>
+          <Switch
+            checked={pushNotificationsEnabled}
+            onCheckedChange={setPushNotificationsEnabled}
+          />
         </div>
       </Card>
     </div>
