@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/Select"
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Button } from "@/components/ui/button"
 import {
@@ -17,8 +18,10 @@ import {
     DrawerTitle,
     DrawerTrigger
 } from "@/components/ui/drawer"
+import { MultiSelect } from "@/components/ui/select"
 import { QuickReplyTemplatesSettings } from "@/components/ui/settings/CannedResponsesSettings"
 import { TagsSettings } from "@/components/ui/settings/TagsSettings"
+import { buildings } from "@/data/data"
 import { cn, focusRing } from "@/lib/utils"
 import { RiCloseLine, RiMore2Line } from "@remixicon/react"
 import {
@@ -104,7 +107,7 @@ export function Sidebar() {
   const { collapsed } = useContext(SidebarContext)
   const sidebarRef = useRef<HTMLElement>(null)
   const [announcement, setAnnouncement] = useState<string>("")
-  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email' | 'tags' | 'quick-reply-templates' | 'connected-accounts'>('general')
+  const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email' | 'feedback' | 'tags' | 'quick-reply-templates' | 'connected-accounts'>('general')
 
   // Check if current path is in each section
   const isInPortfolio = portfolioItems.some(item =>
@@ -1007,6 +1010,17 @@ export function Sidebar() {
                             Email
                           </button>
                           <button 
+                            onClick={() => setSettingsTab('feedback')}
+                            className={cn(
+                              "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                              settingsTab === 'feedback'
+                                ? "text-primary bg-primary/10"
+                                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                            )}
+                          >
+                            Feedback
+                          </button>
+                          <button 
                             onClick={() => setSettingsTab('tags')}
                             className={cn(
                               "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
@@ -1251,6 +1265,11 @@ export function Sidebar() {
                               </div>
                             </div>
                           </div>
+                        )}
+
+                        {/* Feedback Tab Content */}
+                        {settingsTab === 'feedback' && (
+                          <FeedbackSettings />
                         )}
 
                         {/* Tags Tab Content */}
@@ -2093,6 +2112,85 @@ function ConnectedAccountsSettings() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  )
+}
+
+// Feedback Settings Component
+function FeedbackSettings() {
+  // Get all building labels for default selection
+  const allBuildingLabels = buildings.map(b => b.label)
+  
+  // Initialize state with all buildings selected for each feedback type
+  const [feedbackSettings, setFeedbackSettings] = useState({
+    serviceRequests: allBuildingLabels,
+    events: allBuildingLabels,
+    resourceBooking: allBuildingLabels,
+  })
+
+  const handleBuildingChange = (type: 'serviceRequests' | 'events' | 'resourceBooking', buildings: string[]) => {
+    setFeedbackSettings(prev => ({
+      ...prev,
+      [type]: buildings
+    }))
+  }
+
+  return (
+    <div>
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Feedback settings</h2>
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Turn on user feedback for Service Requests, Events, and Resource booking</p>
+      
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell>Feature</TableHeaderCell>
+              <TableHeaderCell>Buildings</TableHeaderCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell className="font-medium text-gray-900 dark:text-gray-100">
+                Service Requests
+              </TableCell>
+              <TableCell>
+                <MultiSelect
+                  value={feedbackSettings.serviceRequests}
+                  onValueChange={(buildings) => handleBuildingChange('serviceRequests', buildings)}
+                  options={allBuildingLabels}
+                  placeholder="Select buildings"
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium text-gray-900 dark:text-gray-100">
+                Events
+              </TableCell>
+              <TableCell>
+                <MultiSelect
+                  value={feedbackSettings.events}
+                  onValueChange={(buildings) => handleBuildingChange('events', buildings)}
+                  options={allBuildingLabels}
+                  placeholder="Select buildings"
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium text-gray-900 dark:text-gray-100">
+                Resource booking
+              </TableCell>
+              <TableCell>
+                <MultiSelect
+                  value={feedbackSettings.resourceBooking}
+                  onValueChange={(buildings) => handleBuildingChange('resourceBooking', buildings)}
+                  options={allBuildingLabels}
+                  placeholder="Select buildings"
+                />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }
