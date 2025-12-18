@@ -61,22 +61,35 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${roboto.variable}`}>
+    <html lang="en" className={`${inter.variable} ${roboto.variable}`} suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // Remove dark class if present and prevent system preference detection
+                if (document.documentElement.classList.contains('dark')) {
+                  document.documentElement.classList.remove('dark');
+                }
+                // Ensure light mode is always applied
+                document.documentElement.setAttribute('data-theme', 'light');
+              })();
+            `,
+          }}
+        />
       </head>
       <body
         className={cn(
-          "min-h-screen font-sans text-gray-900 antialiased bg-[#F6F7F8] dark:bg-gray-950 dark:text-gray-50",
+          "min-h-screen font-sans text-gray-900 antialiased bg-[#F6F7F8]",
           inter.variable,
           roboto.variable,
         )}
       >
-        <ThemeProvider defaultTheme="system" attribute="class">
+        <ThemeProvider defaultTheme="light" forcedTheme="light" attribute="class" enableSystem={false}>
           {children}
           <ToastContainer />
         </ThemeProvider>
-
         {/* Initialize toast system */}
         <Script id="toast-init">
           {`
