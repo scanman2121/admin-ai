@@ -5,6 +5,7 @@ import { Inter, Roboto } from "next/font/google"
 import Script from "next/script"
 import "./globals.css"
 import { siteConfig } from "./siteConfig"
+import { ForceLightMode } from "@/components/ForceLightMode"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -68,10 +69,38 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // Remove dark class if present and prevent system preference detection
+                // Immediately remove dark class if present
                 if (document.documentElement.classList.contains('dark')) {
                   document.documentElement.classList.remove('dark');
                 }
+                // Override localStorage to prevent theme storage
+                try {
+                  const originalSetItem = localStorage.setItem;
+                  localStorage.setItem = function(key, value) {
+                    if (key === 'theme' && value !== 'light') {
+                      return; // Block setting theme to anything other than light
+                    }
+                    return originalSetItem.call(localStorage, key, value);
+                  };
+                  // Force theme to light in localStorage
+                  localStorage.setItem('theme', 'light');
+                } catch(e) {}
+                // Watch for dark class additions and remove them immediately
+                const observer = new MutationObserver(function(mutations) {
+                  mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                      if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                      }
+                    }
+                  });
+                });
+                observer.observe(document.documentElement, {
+                  attributes: true,
+                  attributeFilter: ['class'],
+                  childList: false,
+                  subtree: false
+                });
                 // Ensure light mode is always applied
                 document.documentElement.setAttribute('data-theme', 'light');
               })();
@@ -86,9 +115,10 @@ export default function RootLayout({
           roboto.variable,
         )}
       >
-        <ThemeProvider defaultTheme="light" forcedTheme="light" attribute="class" enableSystem={false}>
+        <ThemeProvider defaultTheme="light" forcedTheme="light" attribute="class" enableSystem={false} disableTransitionOnChange>
           {children}
           <ToastContainer />
+          <ForceLightMode />
         </ThemeProvider>
         {/* Initialize toast system */}
         <Script id="toast-init">
