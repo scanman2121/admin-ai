@@ -4,10 +4,10 @@ import { CommunicationsTab } from "@/components/ui/communications/Communications
 import { FloatingActionBar } from "@/components/ui/navigation/FloatingActionBar"
 import { Header } from "@/components/ui/navigation/Header"
 import { Sidebar } from "@/components/ui/navigation/Sidebar"
-import { TenantSidebar } from "@/components/ui/navigation/TenantSidebar"
 import { SidebarToggle } from "@/components/ui/navigation/SidebarToggle"
-import { ViewProvider, useView } from "@/contexts/ViewContext"
+import { TenantSidebar } from "@/components/ui/navigation/TenantSidebar"
 import { DemoProvider } from "@/contexts/DemoContext"
+import { ViewProvider, useView } from "@/contexts/ViewContext"
 import { cn } from "@/lib/utils"
 import { createContext, useContext, useEffect, useState } from "react"
 

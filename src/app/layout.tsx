@@ -1,3 +1,4 @@
+import { ForceLightMode } from "@/components/ForceLightMode"
 import { cn } from "@/lib/utils"
 import type { Metadata } from "next"
 import { ThemeProvider } from "next-themes"
@@ -5,7 +6,6 @@ import { Inter, Roboto } from "next/font/google"
 import Script from "next/script"
 import "./globals.css"
 import { siteConfig } from "./siteConfig"
-import { ForceLightMode } from "@/components/ForceLightMode"
 
 const inter = Inter({
   subsets: ["latin"],
