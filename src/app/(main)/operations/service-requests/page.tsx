@@ -81,6 +81,26 @@ const createServiceRequestsColumns = (
         enableSorting: true,
     },
     {
+        accessorKey: "description",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Description" />
+        ),
+        cell: ({ row }: { row: any }) => {
+            const description = row.getValue("description") as string;
+            return (
+                <div className="max-w-md">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                        {description || "-"}
+                    </p>
+                </div>
+            );
+        },
+        meta: {
+            displayName: "Description",
+        },
+        enableSorting: false,
+    },
+    {
         accessorKey: "issueType",
         header: "Issue Type",
         cell: ({ row: _row }: { row: any }) => {
