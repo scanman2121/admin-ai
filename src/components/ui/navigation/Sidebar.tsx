@@ -25,7 +25,7 @@ import { QuickReplyTemplatesSettings } from "@/components/ui/settings/CannedResp
 import { TagsSettings } from "@/components/ui/settings/TagsSettings"
 import { buildings } from "@/data/data"
 import { cn, focusRing } from "@/lib/utils"
-import { RiCloseLine, RiMore2Line } from "@remixicon/react"
+import { RiCloseLine, RiMore2Line, RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react"
 import {
     Building,
     Check,
@@ -318,12 +318,15 @@ export function Sidebar() {
             onClick={toggleCollapsed}
             className={cn(
               "flex items-center justify-center w-6 h-6 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors",
-              collapsed && "opacity-0 pointer-events-none",
               focusRing
             )}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <ChevronLeft className="size-4 text-gray-600 dark:text-gray-400" />
+            {collapsed ? (
+              <RiArrowRightSLine className="size-4 text-gray-600 dark:text-gray-400" />
+            ) : (
+              <RiArrowLeftSLine className="size-4 text-gray-600 dark:text-gray-400" />
+            )}
           </button>
         </div>
         <nav className="flex flex-1 flex-col">

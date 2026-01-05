@@ -3,6 +3,7 @@
 import { SidebarContext } from "@/app/(main)/layout"
 import { siteConfig } from "@/app/siteConfig"
 import { cn, focusRing } from "@/lib/utils"
+import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react"
 import {
   Building,
   CreditCard,
@@ -12,8 +13,7 @@ import {
   UserCircle,
   Users,
   Calendar,
-  ClipboardList,
-  ChevronLeft
+  ClipboardList
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -61,12 +61,15 @@ export function TenantSidebar() {
             onClick={toggleCollapsed}
             className={cn(
               "flex items-center justify-center w-6 h-6 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors",
-              collapsed && "opacity-0 pointer-events-none",
               focusRing
             )}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <ChevronLeft className="size-4 text-gray-600 dark:text-gray-400" />
+            {collapsed ? (
+              <RiArrowRightSLine className="size-4 text-gray-600 dark:text-gray-400" />
+            ) : (
+              <RiArrowLeftSLine className="size-4 text-gray-600 dark:text-gray-400" />
+            )}
           </button>
         </div>
         <nav className="flex flex-1 flex-col">
