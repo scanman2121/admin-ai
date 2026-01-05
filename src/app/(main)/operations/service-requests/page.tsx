@@ -594,21 +594,11 @@ export default function ServiceRequests() {
         <div className="space-y-6">
             {/* Approval Cards */}
             {pendingApprovals.length > 0 && (
-                <div>
-                    <div className="mb-3">
-                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                            Pending approvals ({pendingApprovals.length})
-                        </h3>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            Quick actions for service requests awaiting your approval
-                        </p>
-                    </div>
-                    <ApprovalCards
-                        requests={pendingApprovals}
-                        onApprove={handleCardApprove}
-                        onDeny={handleCardDeny}
-                    />
-                </div>
+                <ApprovalCards
+                    requests={pendingApprovals}
+                    onApprove={handleCardApprove}
+                    onDeny={handleCardDeny}
+                />
             )}
 
             <ServiceRequestsDataTable 

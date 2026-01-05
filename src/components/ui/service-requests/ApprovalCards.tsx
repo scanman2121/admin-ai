@@ -1,10 +1,8 @@
 "use client"
 
 import { Button } from "@/components/Button"
-import { Card } from "@/components/Card"
 import { getRelativeTime } from "@/lib/utils"
-import { CalendarClock, ChevronDown, X } from "lucide-react"
-import { useState } from "react"
+import { CalendarClock } from "lucide-react"
 
 interface ApprovalRequest {
     id: string
@@ -20,33 +18,22 @@ interface ApprovalCardsProps {
     requests: ApprovalRequest[]
     onApprove: (id: string) => void
     onDeny: (id: string) => void
-    onDismiss?: (id: string) => void
 }
 
-export function ApprovalCards({ requests, onApprove, onDeny, onDismiss }: ApprovalCardsProps) {
-    const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set())
-    
-    // Filter out dismissed requests
-    const visibleRequests = requests.filter(req => !dismissedIds.has(req.id))
-    
-    if (visibleRequests.length === 0) {
+export function ApprovalCards({ requests, onApprove, onDeny }: ApprovalCardsProps) {
+    if (requests.length === 0) {
         return null
     }
     
-    const handleDismiss = (id: string) => {
-        setDismissedIds(prev => new Set(prev).add(id))
-        if (onDismiss) {
-            onDismiss(id)
-        }
-    }
+    const visibleRequests = requests
     
     return (
         <div className="relative mb-6">
-            <div className="relative" style={{ minHeight: visibleRequests.length > 0 ? '80px' : '0' }}>
+            <div className="relative" style={{ minHeight: visibleRequests.length > 0 ? '70px' : '0' }}>
                 {visibleRequests.map((request, index) => {
                     // Only show top 3 cards with full visibility, others fade out
                     const isVisible = index < 3
-                    const stackOffset = index * 6
+                    const stackOffset = index * 8
                     const scale = index === 0 ? 1 : 1 - index * 0.02
                     
                     return (
@@ -60,75 +47,65 @@ export function ApprovalCards({ requests, onApprove, onDeny, onDismiss }: Approv
                                 pointerEvents: index === 0 ? 'auto' : 'none',
                             }}
                         >
-                            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-shadow">
-                                <div className="px-3 py-2">
+                            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+                                <div className="px-4 py-3">
                                     <div className="flex items-center gap-3">
                                         {/* Icon */}
                                         <div className="flex-shrink-0">
-                                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/20">
-                                                <CalendarClock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                                            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/20">
+                                                <CalendarClock className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                                             </div>
                                         </div>
                                         
                                         {/* Content */}
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-xs text-gray-900 dark:text-gray-50 leading-tight">
+                                            <p className="text-sm text-gray-900 dark:text-gray-50 leading-snug">
                                                 A service request with <strong>{request.requestorName}</strong>
                                                 {request.requestorCompany && (
                                                     <> from <strong>{request.requestorCompany}</strong></>
                                                 )} is awaiting your approval.
                                             </p>
-                                            <div className="mt-1 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 flex-wrap">
+                                            <div className="mt-1.5 flex items-center gap-2.5 text-xs text-gray-500 dark:text-gray-400">
                                                 <span className="truncate">{request.request}</span>
                                                 {request.building && (
-                                                    <span>• {request.building}</span>
+                                                    <>
+                                                        <span className="text-gray-300 dark:text-gray-600">•</span>
+                                                        <span>{request.building}</span>
+                                                    </>
                                                 )}
                                                 {request.floor && (
-                                                    <span>• {request.floor}</span>
+                                                    <>
+                                                        <span className="text-gray-300 dark:text-gray-600">•</span>
+                                                        <span>{request.floor}</span>
+                                                    </>
                                                 )}
-                                                <span>• {getRelativeTime(request.created)}</span>
+                                                <span className="text-gray-300 dark:text-gray-600">•</span>
+                                                <span>{getRelativeTime(request.created)}</span>
                                             </div>
                                         </div>
                                         
                                         {/* Actions */}
-                                        <div className="flex-shrink-0 flex items-center gap-1.5">
+                                        <div className="flex-shrink-0 flex items-center gap-2">
                                             <Button
                                                 variant="default"
                                                 size="sm"
                                                 onClick={() => onDeny(request.id)}
-                                                className="bg-pink-600 hover:bg-pink-700 text-white h-7 px-3 text-xs"
+                                                className="bg-pink-600 hover:bg-pink-700 text-white h-8 px-4 rounded-md text-sm font-medium"
                                             >
                                                 Deny
                                             </Button>
-                                            <div className="relative">
-                                                <Button
-                                                    variant="default"
-                                                    size="sm"
-                                                    onClick={() => onApprove(request.id)}
-                                                    className="bg-blue-600 hover:bg-blue-700 text-white h-7 px-3 text-xs"
-                                                >
-                                                    Approve
-                                                </Button>
-                                                <button
-                                                    className="absolute -right-1 -top-1 flex items-center justify-center w-3.5 h-3.5 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                                                    aria-label="More options"
-                                                >
-                                                    <ChevronDown className="w-2.5 h-2.5 text-gray-600 dark:text-gray-400" />
-                                                </button>
-                                            </div>
-                                            {onDismiss && (
-                                                <button
-                                                    onClick={() => handleDismiss(request.id)}
-                                                    className="p-0.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
-                                                    aria-label="Dismiss"
-                                                >
-                                                    <X className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
-                                                </button>
-                                            )}
+                                            <Button
+                                                variant="default"
+                                                size="sm"
+                                                onClick={() => onApprove(request.id)}
+                                                className="bg-blue-600 hover:bg-blue-700 text-white h-8 px-4 rounded-md text-sm font-medium"
+                                            >
+                                                Approve
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
-                            </Card>
+                            </div>
                         </div>
                     )
                 })}
