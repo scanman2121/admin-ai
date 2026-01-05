@@ -147,18 +147,23 @@ const createServiceRequestsColumns = (
         enableColumnFilter: true,
     },
     {
-        accessorKey: "dateTime",
+        accessorKey: "created",
         header: ({ column }: { column: any }) => (
-            <DataTableColumnHeader column={column} title="Date & Time" />
+            <DataTableColumnHeader column={column} title="Created" />
         ),
         cell: ({ row }: { row: any }) => {
-            const dateTime = row.getValue("dateTime") as string;
-            return <span className="text-gray-600 dark:text-gray-400">{dateTime}</span>;
+            const created = row.getValue("created") as string;
+            return <span className="text-gray-600 dark:text-gray-400">{getRelativeTime(created)}</span>;
         },
         meta: {
-            displayName: "Date & Time",
+            displayName: "Created",
         },
         enableSorting: true,
+        sortingFn: (rowA: any, rowB: any) => {
+            const dateA = new Date(rowA.getValue("created")).getTime();
+            const dateB = new Date(rowB.getValue("created")).getTime();
+            return dateA - dateB;
+        },
     },
     {
         accessorKey: "building",
@@ -254,14 +259,14 @@ const createServiceRequestsColumns = (
     {
         accessorKey: "lastUpdated",
         header: ({ column }: { column: any }) => (
-            <DataTableColumnHeader column={column} title="Last updated" />
+            <DataTableColumnHeader column={column} title="Updated" />
         ),
         cell: ({ row }: { row: any }) => {
             const lastUpdated = row.getValue("lastUpdated") as string;
             return <span className="text-gray-600 dark:text-gray-400">{getRelativeTime(lastUpdated)}</span>;
         },
         meta: {
-            displayName: "Last updated",
+            displayName: "Updated",
         },
         enableSorting: true,
         sortingFn: (rowA: any, rowB: any) => {
@@ -468,12 +473,12 @@ export default function ServiceRequests() {
             "ID",
             "Request",
             "Requestor",
-            "Date & Time",
+            "Created",
             "Building",
             "Floor",
             "Assignee",
             "Owner",
-            "Last Updated",
+            "Updated",
             "Status",
             "Issue Type"
         ].join(",")
@@ -485,7 +490,7 @@ export default function ServiceRequests() {
                 row.id,
                 `"${row.request}"`,
                 `"${requestorName}"`,
-                row.dateTime,
+                row.created || row.dateTime,
                 row.building,
                 row.floor,
                 row.assignee,

@@ -939,6 +939,7 @@ const createWorkOrderFromUser = (user: any, request: string, issueType: string, 
     request,
     dateTime: createdDate.toLocaleDateString() + " " + 
               createdDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+    created: createdDate.toISOString(),
     lastUpdated: lastUpdatedDate.toISOString(),
     description,
     building: user.buildings[0] || "Main Tower",
