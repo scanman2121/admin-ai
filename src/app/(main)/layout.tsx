@@ -61,7 +61,7 @@ function MainLayoutContent({
       </a>
       <div className="flex min-h-screen bg-gray-50">
         {view === "tenant" ? <TenantSidebar /> : <Sidebar />}
-        <SidebarToggle />
+        {collapsed && <SidebarToggle />}
         <div className={cn(
           "flex flex-col flex-1 transition-all duration-300",
           collapsed ? "lg:ml-16" : "lg:ml-64"
