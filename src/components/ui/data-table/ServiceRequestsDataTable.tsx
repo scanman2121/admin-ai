@@ -45,8 +45,8 @@ export function ServiceRequestsDataTable<TData, TValue>({
 }: ServiceRequestsDataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
-    company: false,
     issueType: false,
+    description: false,
   })
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [sorting, setSorting] = React.useState<SortingState>([])

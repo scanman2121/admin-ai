@@ -160,6 +160,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
     const [approver, setApprover] = useState(serviceRequestDetail?.approver || null)
     
     const [ownerId, setOwnerId] = useState<string | null>(null)
+    const [showDescription, setShowDescription] = useState(false)
     
     // Status management
     const [currentStatus, setCurrentStatus] = useState(serviceRequestDetail?.status || 'New')
@@ -429,10 +430,20 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                                 </div>
 
                                 <div className="md:col-span-2">
-                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                                        {serviceRequestDetail.description || "The air conditioning unit in Conference Room A has stopped working. The room temperature is rising and affecting meeting comfort. Please investigate and repair as soon as possible."}
-                                    </h3>
-                                    <p className="text-xs text-gray-500">Description</p>
+                                    <div className="flex items-center justify-between mb-1">
+                                        <p className="text-xs text-gray-500">Description</p>
+                                        <button
+                                            onClick={() => setShowDescription(!showDescription)}
+                                            className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                                        >
+                                            {showDescription ? "Hide" : "Show"}
+                                        </button>
+                                    </div>
+                                    {showDescription && (
+                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
+                                            {serviceRequestDetail.description || "The air conditioning unit in Conference Room A has stopped working. The room temperature is rising and affecting meeting comfort. Please investigate and repair as soon as possible."}
+                                        </h3>
+                                    )}
                                 </div>
 
                                 <div>

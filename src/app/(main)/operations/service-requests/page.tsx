@@ -44,7 +44,6 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
             const request = row.getValue("request") as string;
             const requestorDetails = row.original.requestorDetails;
             const name = requestorDetails?.name || "";
-            const company = requestorDetails?.company || "";
 
             return (
                 <div className="min-w-0 flex-1">
@@ -61,8 +60,6 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
                         >
                             {name}
                         </button>
-                        <span className="text-gray-500 mx-1">·</span>
-                        <span className="text-gray-600 dark:text-gray-400">{company}</span>
                     </div>
                 </div>
             );
@@ -72,6 +69,18 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
             className: "w-72 min-w-72",
         },
         enableSorting: true,
+    },
+    {
+        accessorKey: "issueType",
+        header: "Issue Type",
+        cell: ({ row: _row }: { row: any }) => {
+            return null; // Hidden column
+        },
+        meta: {
+            displayName: "Issue Type",
+        },
+        filterFn: "equals" as const,
+        enableColumnFilter: true,
     },
     {
         accessorKey: "dateTime",
@@ -86,24 +95,6 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
             displayName: "Date & Time",
         },
         enableSorting: true,
-    },
-    {
-        accessorKey: "description",
-        header: "Description",
-        cell: ({ row }: { row: any }) => {
-            const description = row.getValue("description") as string;
-            return (
-                <div className="max-w-48 text-gray-600 dark:text-gray-400">
-                    <span className="line-clamp-2">
-                        {description || "-"}
-                    </span>
-                </div>
-            );
-        },
-        meta: {
-            displayName: "Description",
-            className: "w-48 max-w-48",
-        },
     },
     {
         accessorKey: "building",
@@ -138,24 +129,18 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         ),
         cell: ({ row }: { row: any }) => {
             const assignee = row.getValue("assignee") as string;
-            return <span className="text-gray-600 dark:text-gray-400">{assignee}</span>;
+            const owner = row.original.owner as string;
+            return (
+                <div className="flex flex-col">
+                    <span className="text-gray-600 dark:text-gray-400">{assignee}</span>
+                    {owner && (
+                        <span className="text-sm text-gray-500 dark:text-gray-500 mt-0.5">Owner: {owner}</span>
+                    )}
+                </div>
+            );
         },
         meta: {
             displayName: "Assignee",
-        },
-        enableSorting: true,
-    },
-    {
-        accessorKey: "owner",
-        header: ({ column }: { column: any }) => (
-            <DataTableColumnHeader column={column} title="Owner" />
-        ),
-        cell: ({ row }: { row: any }) => {
-            const owner = row.getValue("owner") as string;
-            return <span className="text-gray-600 dark:text-gray-400">{owner}</span>;
-        },
-        meta: {
-            displayName: "Owner",
         },
         enableSorting: true,
     },
@@ -212,31 +197,6 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         enableColumnFilter: true,
         enableSorting: true,
     },
-    // Hidden columns for filtering
-    {
-        accessorKey: "company",
-        header: "Company",
-        cell: ({ row: _row }: { row: any }) => {
-            return null; // Hidden column
-        },
-        meta: {
-            displayName: "Company",
-        },
-        filterFn: "equals" as const,
-        enableColumnFilter: true,
-    },
-    {
-        accessorKey: "issueType",
-        header: "Issue Type",
-        cell: ({ row: _row }: { row: any }) => {
-            return null; // Hidden column
-        },
-        meta: {
-            displayName: "Issue Type",
-        },
-        filterFn: "equals" as const,
-        enableColumnFilter: true,
-    },
 ]
 
 export default function ServiceRequests() {
@@ -278,9 +238,7 @@ export default function ServiceRequests() {
             "ID",
             "Request",
             "Requestor",
-            "Company",
             "Date & Time",
-            "Description",
             "Building",
             "Floor",
             "Assignee",
@@ -292,16 +250,12 @@ export default function ServiceRequests() {
 
         const csvRows = data.map(row => {
             const requestorName = row.requestorDetails?.name || ""
-            const company = row.requestorDetails?.company || ""
-            const description = (row.description || "").replace(/"/g, '""') // Escape quotes
             
             return [
                 row.id,
                 `"${row.request}"`,
                 `"${requestorName}"`,
-                `"${company}"`,
                 row.dateTime,
-                `"${description}"`,
                 row.building,
                 row.floor,
                 row.assignee,
