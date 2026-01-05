@@ -46,6 +46,40 @@ const createServiceRequestsColumns = (
         enableHiding: false,
     },
     {
+        accessorKey: "messages",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Msg" />
+        ),
+        cell: ({ row }: { row: any }) => {
+            const unreadCount = row.original.unreadMessages as number | undefined || 0;
+            const requestId = row.original.id;
+            
+            const handleMessageClick = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                // Navigate to service request detail page with messages tab
+                router.push(`/operations/service-requests/${requestId}?tab=messages`);
+            };
+            
+            return (
+                <div 
+                    className="relative inline-flex items-center justify-center cursor-pointer"
+                    onClick={handleMessageClick}
+                >
+                    <MessageCircle className="w-5 h-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
+                    {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-pink-500 rounded-full">
+                            {unreadCount}
+                        </span>
+                    )}
+                </div>
+            );
+        },
+        meta: {
+            displayName: "Msg",
+        },
+        enableSorting: false,
+    },
+    {
         accessorKey: "request",
         header: ({ column }: { column: any }) => (
             <DataTableColumnHeader column={column} title="Request" />
@@ -374,40 +408,6 @@ const createServiceRequestsColumns = (
         },
         meta: {
             displayName: "Approval",
-        },
-        enableSorting: false,
-    },
-    {
-        accessorKey: "messages",
-        header: ({ column }: { column: any }) => (
-            <DataTableColumnHeader column={column} title="Messages" />
-        ),
-        cell: ({ row }: { row: any }) => {
-            const unreadCount = row.original.unreadMessages as number | undefined || 0;
-            const requestId = row.original.id;
-            
-            const handleMessageClick = (e: React.MouseEvent) => {
-                e.stopPropagation();
-                // Navigate to service request detail page with messages tab
-                router.push(`/operations/service-requests/${requestId}?tab=messages`);
-            };
-            
-            return (
-                <div 
-                    className="relative inline-flex items-center justify-center cursor-pointer"
-                    onClick={handleMessageClick}
-                >
-                    <MessageCircle className="w-5 h-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
-                    {unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full">
-                            {unreadCount}
-                        </span>
-                    )}
-                </div>
-            );
-        },
-        meta: {
-            displayName: "Messages",
         },
         enableSorting: false,
     },
