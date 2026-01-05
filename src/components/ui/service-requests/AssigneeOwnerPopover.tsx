@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/popover"
 import { Input } from "@/components/Input"
 import { cn } from "@/lib/utils"
-import { Check, PaperPlaneIcon, Settings2 } from "lucide-react"
+import { Check, Send, Settings2 } from "lucide-react"
 import { useState } from "react"
 
 interface User {
@@ -214,7 +214,7 @@ export function AssigneeOwnerPopover({
                                 console.log("Invite new user")
                             }}
                         >
-                            <PaperPlaneIcon className="w-4 h-4 text-gray-400" />
+                            <Send className="w-4 h-4 text-gray-400" />
                             <span className="text-sm text-gray-900 dark:text-gray-50">Invite and add...</span>
                         </div>
                     </div>
