@@ -1014,6 +1014,23 @@ export const serviceRequests = [
       approver: "Sarah Williams" // Waiting for Sarah Williams
     };
   })(),
+  // Example with approve/deny buttons (no approver set)
+  (() => {
+    const workOrder = createWorkOrderFromUser(
+    kevinChenUser!,
+    "Conference Room Access Request",
+    "Security",
+    "New",
+    "Requesting access to conference rooms 301-305 for upcoming client meetings. Access needed for next 2 weeks.",
+    "Security Team",
+    "Medium"
+    );
+    return {
+      ...workOrder,
+      approval: undefined, // Pending - shows approve/deny buttons
+      approver: undefined // No approver set - buttons will show
+    };
+  })(),
   createWorkOrderFromUser(
     kevinChenUser!,
     "Lost Device Replacement", 
