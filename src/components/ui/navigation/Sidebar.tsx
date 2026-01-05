@@ -48,7 +48,6 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { Mention, MentionsInput } from "react-mentions"
 import { HqOLogo } from "./HqOLogo"
 import { SidebarPopover } from "./SidebarPopover"
-import { ChevronLeft } from "lucide-react"
 
 // Portfolio sub-navigation items
 const portfolioItems = [
