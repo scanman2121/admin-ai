@@ -1,6 +1,7 @@
 "use client"
 
 import { Badge } from "@/components/Badge"
+import { Button } from "@/components/Button"
 import { Checkbox } from "@/components/Checkbox"
 import { DataTableColumnHeader } from "@/components/ui/data-table/DataTableColumnHeader"
 import { ServiceRequestsDataTable } from "@/components/ui/data-table/ServiceRequestsDataTable"
@@ -10,6 +11,7 @@ import { StatusPopover } from "@/components/ui/service-requests/StatusPopover"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { serviceRequests, serviceRequestStatuses } from "@/data/data"
 import { getRelativeTime } from "@/lib/utils"
+import { Check, MessageCircle, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -17,7 +19,9 @@ import { useState } from "react"
 const createServiceRequestsColumns = (
     onRequestorClick: (requestorDetails: any) => void,
     onAssigneeOwnerChange: (id: string, assignees: string[], owner: string | null) => void,
-    onStatusChange: (id: string, status: string) => void
+    onStatusChange: (id: string, status: string) => void,
+    onApprovalChange: (id: string, approval: string) => void,
+    router: any
 ) => [
     {
         id: "select",
@@ -261,6 +265,134 @@ const createServiceRequestsColumns = (
         enableColumnFilter: true,
         enableSorting: true,
     },
+    {
+        accessorKey: "approval",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Approval" />
+        ),
+        cell: ({ row }: { row: any }) => {
+            const requestId = row.original.id;
+            const approval = row.original.approval as string | undefined;
+            const approver = row.original.approver as string | undefined;
+            
+            // For demo purposes, assume current user is not the approver if approver is set
+            // In production, you would check against the actual current user
+            const isCurrentUserApprover = !approver; // If no approver set, show buttons
+            
+            const handleApprove = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                onApprovalChange(requestId, "Approved");
+            };
+            
+            const handleReject = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                onApprovalChange(requestId, "Rejected");
+            };
+            
+            if (approval === "Approved") {
+                return (
+                    <div 
+                        className="inline-flex items-center px-2 py-1 rounded bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <span className="text-sm font-medium text-green-700 dark:text-green-400">
+                            Approved
+                        </span>
+                    </div>
+                );
+            }
+            
+            if (approval === "Rejected") {
+                return (
+                    <div 
+                        className="inline-flex items-center px-2 py-1 rounded bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <span className="text-sm font-medium text-red-700 dark:text-red-400">
+                            Rejected
+                        </span>
+                    </div>
+                );
+            }
+            
+            // If there's an approver and current user is not the approver, show "Waiting for [Name]"
+            if (approver && !isCurrentUserApprover) {
+                return (
+                    <div 
+                        className="text-sm text-gray-600 dark:text-gray-400"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        Waiting for {approver}
+                    </div>
+                );
+            }
+            
+            // Show Approve/Reject buttons if approval is pending and user is the approver (or no approver set)
+            return (
+                <div 
+                    className="flex items-center gap-2"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleApprove}
+                        className="bg-green-600 hover:bg-green-700 text-white h-8 px-3"
+                    >
+                        <Check className="w-4 h-4 mr-1" />
+                        Approve
+                    </Button>
+                    <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleReject}
+                        className="bg-red-600 hover:bg-red-700 text-white h-8 px-3"
+                    >
+                        <X className="w-4 h-4 mr-1" />
+                        Reject
+                    </Button>
+                </div>
+            );
+        },
+        meta: {
+            displayName: "Approval",
+        },
+        enableSorting: false,
+    },
+    {
+        accessorKey: "messages",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Messages" />
+        ),
+        cell: ({ row }: { row: any }) => {
+            const unreadCount = row.original.unreadMessages as number | undefined || 0;
+            const requestId = row.original.id;
+            
+            const handleMessageClick = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                // Navigate to service request detail page with messages tab
+                router.push(`/operations/service-requests/${requestId}?tab=messages`);
+            };
+            
+            return (
+                <div 
+                    className="relative inline-flex items-center justify-center cursor-pointer"
+                    onClick={handleMessageClick}
+                >
+                    <MessageCircle className="w-5 h-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
+                    {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-red-500 rounded-full">
+                            {unreadCount}
+                        </span>
+                    )}
+                </div>
+            );
+        },
+        meta: {
+            displayName: "Messages",
+        },
+        enableSorting: false,
+    },
 ]
 
 export default function ServiceRequests() {
@@ -387,7 +519,21 @@ export default function ServiceRequests() {
         )
     }
 
-    const serviceRequestsColumns = createServiceRequestsColumns(handleRequestorClick, handleAssigneeOwnerChange, handleStatusChange)
+    const handleApprovalChange = (requestId: string, approval: string) => {
+        setData(prevData => 
+            prevData.map(request => {
+                if (request.id === requestId) {
+                    return {
+                        ...request,
+                        approval: approval
+                    }
+                }
+                return request
+            })
+        )
+    }
+
+    const serviceRequestsColumns = createServiceRequestsColumns(handleRequestorClick, handleAssigneeOwnerChange, handleStatusChange, handleApprovalChange, router)
 
     return (
         <div>

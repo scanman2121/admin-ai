@@ -919,6 +919,17 @@ const createWorkOrderFromUser = (user: any, request: string, issueType: string, 
   const hoursAgo = Math.random() * 48; // Updated within last 48 hours
   const lastUpdatedDate = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
   
+  // Randomly assign approval status (some approved, some pending)
+  const approvalStatuses = [undefined, undefined, undefined, "Approved", "Rejected"]; // More pending than approved/rejected
+  const approval = approvalStatuses[Math.floor(Math.random() * approvalStatuses.length)];
+  
+  // Randomly assign approver name (some with approver, some without)
+  const approverNames = [undefined, undefined, "Sarah Williams", "John Smith", "Emily Davis"]; // Some pending with approver
+  const approver = approval === undefined ? approverNames[Math.floor(Math.random() * approverNames.length)] : undefined;
+  
+  // Randomly assign unread message count (0-3)
+  const unreadMessages = Math.floor(Math.random() * 4);
+  
   return {
     id: `WO-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
     request,
@@ -931,6 +942,9 @@ const createWorkOrderFromUser = (user: any, request: string, issueType: string, 
     assignee,
     owner,
     status,
+    approval,
+    approver,
+    unreadMessages,
     requestor: `${user.name} - ${user.company}`,
     requestorDetails: {
       id: user.id,
@@ -977,15 +991,23 @@ export const serviceRequests = [
   // ACCESS REQUEST WORK ORDERS (These show up in work orders AND create the service requests in access control)
   
   // Different types of access requests
-  createWorkOrderFromUser(
-    jenniferMartinezUser!,
-    "New Employee MKA Request",
-    "Security",
-    "New",
-    "New hire Jennifer Martinez requires mobile key access setup for TechCorp Solutions. Position: Junior Developer, Start Date: 01/15/2025. Setup smartphone access and badge credentials.",
-    "Security Team",
-    "High"
-  ),
+  // Example with approver - Sarah Williams
+  (() => {
+    const workOrder = createWorkOrderFromUser(
+      jenniferMartinezUser!,
+      "New Employee MKA Request",
+      "Security",
+      "New",
+      "New hire Jennifer Martinez requires mobile key access setup for TechCorp Solutions. Position: Junior Developer, Start Date: 01/15/2025. Setup smartphone access and badge credentials.",
+      "Security Team",
+      "High"
+    );
+    return {
+      ...workOrder,
+      approval: undefined, // Pending
+      approver: "Sarah Williams" // Waiting for Sarah Williams
+    };
+  })(),
   createWorkOrderFromUser(
     kevinChenUser!,
     "Lost Device Replacement", 
