@@ -22,7 +22,7 @@ export default function MyHqO() {
       {/* Dashboard Cards Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Users Card */}
-      <Card className="p-6">
+      <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
         <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Users</h2>
@@ -55,7 +55,7 @@ export default function MyHqO() {
         </Card>
 
         {/* 30-day Communication Performance Card */}
-        <Card className="p-6">
+        <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">30-day Communication Performance</h2>
@@ -87,7 +87,7 @@ export default function MyHqO() {
         </Card>
 
         {/* Today's Traffic Report Card */}
-        <Card className="p-6">
+        <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Today's Traffic Report</h2>
@@ -115,7 +115,7 @@ export default function MyHqO() {
         </Card>
 
         {/* Today's Summary Card */}
-        <Card className="p-6">
+        <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Today's Summary</h2>
@@ -166,7 +166,7 @@ export default function MyHqO() {
       {/* Events and Outreach Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Events Card */}
-        <Card className="p-6">
+        <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Events</h2>
             <Button variant="light" size="xs" className="text-primary hover:text-primary/90">
@@ -220,7 +220,7 @@ export default function MyHqO() {
         </Card>
 
         {/* Outreach Card */}
-        <Card className="p-6">
+        <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Outreach</h2>
             <Button variant="light" size="xs" className="text-primary hover:text-primary/90">
