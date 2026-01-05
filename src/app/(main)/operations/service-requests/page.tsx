@@ -11,7 +11,7 @@ import { StatusPopover } from "@/components/ui/service-requests/StatusPopover"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { serviceRequests, serviceRequestStatuses } from "@/data/data"
 import { getRelativeTime } from "@/lib/utils"
-import { Check, MessageCircle, X } from "lucide-react"
+import { MessageCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -271,9 +271,9 @@ const createServiceRequestsColumns = (
                         className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded px-2 py-1 -mx-2 -my-1 inline-block"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <Badge variant={badgeVariant}>
-                            • {status}
-                        </Badge>
+                <Badge variant={badgeVariant}>
+                    • {status}
+                </Badge>
                     </div>
                 </StatusPopover>
             );
@@ -304,9 +304,9 @@ const createServiceRequestsColumns = (
                 onApprovalChange(requestId, "Approved");
             };
             
-            const handleReject = (e: React.MouseEvent) => {
+            const handleDeny = (e: React.MouseEvent) => {
                 e.stopPropagation();
-                onApprovalChange(requestId, "Rejected");
+                onApprovalChange(requestId, "Denied");
             };
             
             if (approval === "Approved") {
@@ -322,14 +322,14 @@ const createServiceRequestsColumns = (
                 );
             }
             
-            if (approval === "Rejected") {
+            if (approval === "Denied") {
                 return (
                     <div 
-                        className="inline-flex items-center px-2 py-1 rounded bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800"
+                        className="inline-flex items-center px-2 py-1 rounded bg-pink-50 dark:bg-pink-900/20 border border-pink-200 dark:border-pink-800"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <span className="text-sm font-medium text-red-700 dark:text-red-400">
-                            Rejected
+                        <span className="text-sm font-medium text-pink-700 dark:text-pink-400">
+                            Denied
                         </span>
                     </div>
                 );
@@ -347,7 +347,7 @@ const createServiceRequestsColumns = (
                 );
             }
             
-            // Show Approve/Reject buttons if approval is pending and user is the approver (or no approver set)
+            // Show Approve/Deny buttons if approval is pending and user is the approver (or no approver set)
             return (
                 <div 
                     className="flex items-center gap-2"
@@ -357,19 +357,17 @@ const createServiceRequestsColumns = (
                         variant="default"
                         size="sm"
                         onClick={handleApprove}
-                        className="bg-green-600 hover:bg-green-700 text-white h-8 px-3"
+                        className="bg-blue-600 hover:bg-blue-700 text-white h-8 px-3"
                     >
-                        <Check className="w-4 h-4 mr-1" />
                         Approve
                     </Button>
                     <Button
                         variant="default"
                         size="sm"
-                        onClick={handleReject}
-                        className="bg-red-600 hover:bg-red-700 text-white h-8 px-3"
+                        onClick={handleDeny}
+                        className="bg-pink-600 hover:bg-pink-700 text-white h-8 px-3"
                     >
-                        <X className="w-4 h-4 mr-1" />
-                        Reject
+                        Deny
                     </Button>
                 </div>
             );

@@ -440,9 +440,9 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                                         </button>
                                     </div>
                                     {showDescription && (
-                                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                                            {serviceRequestDetail.description || "The air conditioning unit in Conference Room A has stopped working. The room temperature is rising and affecting meeting comfort. Please investigate and repair as soon as possible."}
-                                        </h3>
+                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
+                                        {serviceRequestDetail.description || "The air conditioning unit in Conference Room A has stopped working. The room temperature is rising and affecting meeting comfort. Please investigate and repair as soon as possible."}
+                                    </h3>
                                     )}
                                 </div>
 

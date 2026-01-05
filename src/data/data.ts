@@ -32,8 +32,8 @@ export const statuses: { value: string; label: string; variant: string }[] = [
     variant: "warning",
   },
   {
-    value: "Rejected",
-    label: "Rejected",
+    value: "Denied",
+    label: "Denied",
     variant: "error",
   },
 ]
@@ -920,7 +920,7 @@ const createWorkOrderFromUser = (user: any, request: string, issueType: string, 
   const lastUpdatedDate = new Date(Date.now() - hoursAgo * 60 * 60 * 1000);
   
   // Randomly assign approval status (some approved, some pending)
-  const approvalStatuses = [undefined, undefined, undefined, "Approved", "Rejected"]; // More pending than approved/rejected
+  const approvalStatuses = [undefined, undefined, undefined, "Approved", "Denied"]; // More pending than approved/denied
   const approval = approvalStatuses[Math.floor(Math.random() * approvalStatuses.length)];
   
   // Randomly assign approver name (some with approver, some without)
@@ -994,13 +994,13 @@ export const serviceRequests = [
   // Example with approver - Sarah Williams
   (() => {
     const workOrder = createWorkOrderFromUser(
-      jenniferMartinezUser!,
-      "New Employee MKA Request",
-      "Security",
-      "New",
-      "New hire Jennifer Martinez requires mobile key access setup for TechCorp Solutions. Position: Junior Developer, Start Date: 01/15/2025. Setup smartphone access and badge credentials.",
-      "Security Team",
-      "High"
+    jenniferMartinezUser!,
+    "New Employee MKA Request",
+    "Security",
+    "New",
+    "New hire Jennifer Martinez requires mobile key access setup for TechCorp Solutions. Position: Junior Developer, Start Date: 01/15/2025. Setup smartphone access and badge credentials.",
+    "Security Team",
+    "High"
     );
     return {
       ...workOrder,
