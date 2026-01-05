@@ -8,6 +8,7 @@ import { ServiceRequestsDataTable } from "@/components/ui/data-table/ServiceRequ
 import { ServiceRequestsBulkActions } from "@/components/ui/service-requests/ServiceRequestsBulkActions"
 import { AssigneeOwnerPopover } from "@/components/ui/service-requests/AssigneeOwnerPopover"
 import { StatusPopover } from "@/components/ui/service-requests/StatusPopover"
+import { ApprovalCards } from "@/components/ui/service-requests/ApprovalCards"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { serviceRequests, serviceRequestStatuses } from "@/data/data"
 import { getRelativeTime } from "@/lib/utils"
@@ -564,8 +565,52 @@ export default function ServiceRequests() {
 
     const serviceRequestsColumns = createServiceRequestsColumns(handleRequestorClick, handleAssigneeOwnerChange, handleStatusChange, handleApprovalChange, router)
 
+    // Get pending approvals for the approval cards
+    const pendingApprovals = data
+        .filter(request => 
+            request.approval === undefined && 
+            request.approver === undefined
+        )
+        .slice(0, 5) // Show max 5 cards
+        .map(request => ({
+            id: request.id,
+            request: request.request,
+            requestorName: request.requestorDetails?.name || "Unknown",
+            requestorCompany: request.requestorDetails?.company,
+            created: request.created || request.lastUpdated,
+            building: request.building,
+            floor: request.floor,
+        }))
+
+    const handleCardApprove = (id: string) => {
+        handleApprovalChange(id, "Approved")
+    }
+
+    const handleCardDeny = (id: string) => {
+        handleApprovalChange(id, "Denied")
+    }
+
     return (
-        <div>
+        <div className="space-y-6">
+            {/* Approval Cards */}
+            {pendingApprovals.length > 0 && (
+                <div>
+                    <div className="mb-3">
+                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                            Pending approvals ({pendingApprovals.length})
+                        </h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            Quick actions for service requests awaiting your approval
+                        </p>
+                    </div>
+                    <ApprovalCards
+                        requests={pendingApprovals}
+                        onApprove={handleCardApprove}
+                        onDeny={handleCardDeny}
+                    />
+                </div>
+            )}
+
             <ServiceRequestsDataTable 
                 columns={serviceRequestsColumns} 
                 data={data} 
