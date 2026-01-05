@@ -1,9 +1,10 @@
 "use client"
 
-import { RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMegaphoneLine, RiShoppingBag3Line } from "@remixicon/react";
-import { Badge, Button, Card, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@tremor/react";
-import { useDemo } from "@/contexts/DemoContext";
+import { Card } from "@/components/Card";
 import { getDemoConfig } from "@/config/demos";
+import { useDemo } from "@/contexts/DemoContext";
+import { RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMegaphoneLine, RiShoppingBag3Line } from "@remixicon/react";
+import { Badge, Button, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@tremor/react";
 
 
 export default function MyHqO() {
@@ -22,9 +23,9 @@ export default function MyHqO() {
       {/* Dashboard Cards Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Users Card */}
-      <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2">
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Users</h2>
               <RiInformationLine className="size-4 text-gray-400" />
             </div>
@@ -32,7 +33,7 @@ export default function MyHqO() {
               View
             </Button>
           </div>
-          
+
           <div className="grid grid-cols-4 gap-6">
             <div className="space-y-1">
               <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">44,116</p>
@@ -55,7 +56,7 @@ export default function MyHqO() {
         </Card>
 
         {/* 30-day Communication Performance Card */}
-        <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+        <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">30-day Communication Performance</h2>
@@ -65,7 +66,7 @@ export default function MyHqO() {
               View
             </Button>
           </div>
-          
+
           <div className="grid grid-cols-4 gap-6">
             <div className="space-y-1">
               <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">11</p>
@@ -87,7 +88,7 @@ export default function MyHqO() {
         </Card>
 
         {/* Today's Traffic Report Card */}
-        <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+        <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Today's Traffic Report</h2>
@@ -97,7 +98,7 @@ export default function MyHqO() {
               View activity
             </Button>
           </div>
-          
+
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <div className="size-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
               <RiDoorOpenLine className="size-6 text-gray-400" />
@@ -115,7 +116,7 @@ export default function MyHqO() {
         </Card>
 
         {/* Today's Summary Card */}
-        <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+        <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Today's Summary</h2>
@@ -166,7 +167,7 @@ export default function MyHqO() {
       {/* Events and Outreach Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Events Card */}
-        <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+        <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Events</h2>
             <Button variant="light" size="xs" className="text-primary hover:text-primary/90">
@@ -184,7 +185,7 @@ export default function MyHqO() {
                       <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">{month}</div>
                       <div className="text-xl font-semibold text-gray-900 dark:text-gray-50">{day}</div>
                     </div>
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-medium text-gray-900 dark:text-gray-50">{event.title}</h3>
@@ -220,13 +221,13 @@ export default function MyHqO() {
         </Card>
 
         {/* Outreach Card */}
-        <Card className="p-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+        <Card className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">Outreach</h2>
             <Button variant="light" size="xs" className="text-primary hover:text-primary/90">
               View all
             </Button>
-                      </div>
+          </div>
 
           <TabGroup>
             <TabList className="mb-6">
@@ -297,7 +298,7 @@ export default function MyHqO() {
                   <Button variant="light" className="text-gray-600 hover:text-gray-900">
                     Create survey
                   </Button>
-                      </div>
+                </div>
               </TabPanel>
               <TabPanel>
                 {homepage.content.discover && homepage.content.discover.items && homepage.content.discover.items.length > 0 ? (
@@ -327,7 +328,7 @@ export default function MyHqO() {
               </TabPanel>
             </TabPanels>
           </TabGroup>
-          </Card>
+        </Card>
       </div>
 
     </div>

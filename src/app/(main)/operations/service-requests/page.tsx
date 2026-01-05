@@ -5,6 +5,8 @@ import { Checkbox } from "@/components/Checkbox"
 import { DataTableColumnHeader } from "@/components/ui/data-table/DataTableColumnHeader"
 import { ServiceRequestsDataTable } from "@/components/ui/data-table/ServiceRequestsDataTable"
 import { ServiceRequestsBulkActions } from "@/components/ui/service-requests/ServiceRequestsBulkActions"
+import { AssigneeOwnerPopover } from "@/components/ui/service-requests/AssigneeOwnerPopover"
+import { StatusPopover } from "@/components/ui/service-requests/StatusPopover"
 import { UserDetailsModal } from "@/components/ui/user-access/UserDetailsModal"
 import { serviceRequests, serviceRequestStatuses } from "@/data/data"
 import { getRelativeTime } from "@/lib/utils"
@@ -12,7 +14,11 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 // Factory function to create columns with click handlers
-const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) => void) => [
+const createServiceRequestsColumns = (
+    onRequestorClick: (requestorDetails: any) => void,
+    onAssigneeOwnerChange: (id: string, assignees: string[], owner: string | null) => void,
+    onStatusChange: (id: string, status: string) => void
+) => [
     {
         id: "select",
         header: ({ table }: { table: any }) => (
@@ -130,13 +136,56 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         cell: ({ row }: { row: any }) => {
             const assignee = row.getValue("assignee") as string;
             const owner = row.original.owner as string;
+            const requestId = row.original.id;
+            
+            // Convert single assignee to array format for the popover
+            const assignees = assignee ? [assignee] : [];
+            const currentOwner = owner || null;
+            
+            const handleAssigneesChange = (newAssignees: string[]) => {
+                // If owner is being removed, clear owner
+                const newOwner = currentOwner && newAssignees.includes(currentOwner) 
+                    ? currentOwner 
+                    : null;
+                onAssigneeOwnerChange(requestId, newAssignees, newOwner)
+            }
+            
+            const handleOwnerChange = (newOwner: string | null) => {
+                // Get current assignees from the row data
+                const currentAssignee = row.getValue("assignee") as string;
+                const currentAssignees = currentAssignee ? [currentAssignee] : [];
+                onAssigneeOwnerChange(requestId, currentAssignees, newOwner)
+            }
+            
             return (
-                <div className="flex flex-col">
-                    <span className="text-gray-600 dark:text-gray-400">{assignee}</span>
-                    {owner && (
-                        <span className="text-sm text-gray-500 dark:text-gray-500 mt-0.5">Owner: {owner}</span>
-                    )}
-                </div>
+                <AssigneeOwnerPopover
+                    assignees={assignees}
+                    owner={owner || null}
+                    onAssigneesChange={handleAssigneesChange}
+                    onOwnerChange={handleOwnerChange}
+                >
+                    <div 
+                        className="flex flex-col cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded px-2 py-1 -mx-2 -my-1"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {assignees.length > 0 ? (
+                            <>
+                                {assignees.map((a, idx) => (
+                                    <span key={idx} className="text-gray-600 dark:text-gray-400">
+                                        {a}
+                                    </span>
+                                ))}
+                                {owner && (
+                                    <span className="text-sm text-gray-500 dark:text-gray-500 mt-0.5">
+                                        Owner: {owner}
+                                    </span>
+                                )}
+                            </>
+                        ) : (
+                            <span className="text-gray-400 dark:text-gray-500 italic">No lead</span>
+                        )}
+                    </div>
+                </AssigneeOwnerPopover>
             );
         },
         meta: {
@@ -170,6 +219,7 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
         ),
         cell: ({ row }: { row: any }) => {
             const status = row.getValue("status") as string;
+            const requestId = row.original.id;
             const statusConfig = serviceRequestStatuses.find(s => s.value === status);
             
             let badgeVariant: "default" | "success" | "warning" | "error" = "default";
@@ -184,10 +234,24 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
             else if (status === "Denied" || status === "Failed" || status === "Cancelled") badgeVariant = "error";
             else if (status === "New" || status === "Assigned to Building") badgeVariant = "default";
 
+            const handleStatusChange = (newStatus: string) => {
+                onStatusChange(requestId, newStatus)
+            }
+
             return (
-                <Badge variant={badgeVariant}>
-                    • {status}
-                </Badge>
+                <StatusPopover
+                    currentStatus={status}
+                    onStatusChange={handleStatusChange}
+                >
+                    <div 
+                        className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded px-2 py-1 -mx-2 -my-1 inline-block"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <Badge variant={badgeVariant}>
+                            • {status}
+                        </Badge>
+                    </div>
+                </StatusPopover>
             );
         },
         meta: {
@@ -200,7 +264,7 @@ const createServiceRequestsColumns = (onRequestorClick: (requestorDetails: any) 
 ]
 
 export default function ServiceRequests() {
-    const [data] = useState(serviceRequests)
+    const [data, setData] = useState(serviceRequests)
     const [selectedUser, setSelectedUser] = useState<{
         id: string
         name: string
@@ -292,7 +356,38 @@ export default function ServiceRequests() {
         // TODO: Implement assign logic
     }
 
-    const serviceRequestsColumns = createServiceRequestsColumns(handleRequestorClick)
+    const handleAssigneeOwnerChange = (requestId: string, assignees: string[], owner: string | null) => {
+        setData(prevData => 
+            prevData.map(request => {
+                if (request.id === requestId) {
+                    // For now, store the first assignee (data structure supports single assignee)
+                    // In the future, this could be updated to support multiple assignees
+                    return {
+                        ...request,
+                        assignee: assignees.length > 0 ? assignees[0] : "",
+                        owner: owner || ""
+                    }
+                }
+                return request
+            })
+        )
+    }
+
+    const handleStatusChange = (requestId: string, newStatus: string) => {
+        setData(prevData => 
+            prevData.map(request => {
+                if (request.id === requestId) {
+                    return {
+                        ...request,
+                        status: newStatus
+                    }
+                }
+                return request
+            })
+        )
+    }
+
+    const serviceRequestsColumns = createServiceRequestsColumns(handleRequestorClick, handleAssigneeOwnerChange, handleStatusChange)
 
     return (
         <div>
