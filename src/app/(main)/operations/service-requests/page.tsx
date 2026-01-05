@@ -300,43 +300,28 @@ const createServiceRequestsColumns = (
                 onApprovalChange(requestId, "Denied");
             };
             
-            // Format date for display: MM/DD/YYYY, H:MM AM/PM
-            const formatApprovalDate = (dateString: string | undefined) => {
-                if (!dateString) return "";
-                const date = new Date(dateString);
-                const month = (date.getMonth() + 1).toString().padStart(2, "0");
-                const day = date.getDate().toString().padStart(2, "0");
-                const year = date.getFullYear();
-                const hours = date.getHours();
-                const minutes = date.getMinutes();
-                const ampm = hours >= 12 ? "PM" : "AM";
-                const displayHours = hours % 12 || 12;
-                const displayMinutes = minutes.toString().padStart(2, "0");
-                return `${month}/${day}/${year}, ${displayHours}:${displayMinutes} ${ampm}`;
-            };
-            
             if (approval === "Approved") {
                 const approverName = approver || "Unknown";
-                const dateTime = formatApprovalDate(approvalDate);
+                const relativeTime = approvalDate ? getRelativeTime(approvalDate) : "";
                 return (
                     <div 
                         className="text-sm text-gray-900 dark:text-gray-50"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        Approved by {approverName} {dateTime}
+                        Approved by {approverName} {relativeTime}
                     </div>
                 );
             }
             
             if (approval === "Denied") {
                 const approverName = approver || "Unknown";
-                const dateTime = formatApprovalDate(approvalDate);
+                const relativeTime = approvalDate ? getRelativeTime(approvalDate) : "";
                 return (
                     <div 
                         className="text-sm text-orange-600 dark:text-orange-400"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        Denied by {approverName} {dateTime}
+                        Denied by {approverName} {relativeTime}
                     </div>
                 );
             }

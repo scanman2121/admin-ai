@@ -1041,7 +1041,9 @@ export const serviceRequests = [
     "High",
     "David Wilson"
   ),
-  createWorkOrderFromUser(
+  // Example with approve/deny buttons
+  (() => {
+    const workOrder = createWorkOrderFromUser(
     rachelThompsonUser!,
     "New Phone Setup Request",
     "Security",
@@ -1049,7 +1051,13 @@ export const serviceRequests = [
     "Senior Paralegal Rachel Thompson received new company iPhone and requires mobile access transfer from old device. Legal Partners offices and client meeting rooms access needed.",
     "Unassigned",
     "Medium"
-  ),
+    );
+    return {
+      ...workOrder,
+      approval: undefined, // Pending - shows approve/deny buttons
+      approver: undefined // No approver set - buttons will show
+    };
+  })(),
   createWorkOrderFromUser(
     marcusRodriguezUser!,
     "Access Level Update Request",
@@ -1060,7 +1068,9 @@ export const serviceRequests = [
     "Medium",
     "Alex Chen"
   ),
-  createWorkOrderFromUser(
+  // Example with approve/deny buttons
+  (() => {
+    const workOrder = createWorkOrderFromUser(
     amandaKimUser!,
     "Tenant Departure Processing",
     "Security",
@@ -1068,7 +1078,13 @@ export const serviceRequests = [
     "External Contractor LLC contract ending. Process tenant departure for Amanda Kim - revoke building access and collect credentials.",
     "Unassigned",
     "High"
-  ),
+    );
+    return {
+      ...workOrder,
+      approval: undefined, // Pending - shows approve/deny buttons
+      approver: undefined // No approver set - buttons will show
+    };
+  })(),
   
   // Termination of Employment
   createWorkOrderFromUser(
@@ -1084,7 +1100,9 @@ export const serviceRequests = [
   // REGULAR FACILITY WORK ORDERS
   
   // Evgeny's requests
-  createWorkOrderFromUser(
+  // Example with approve/deny buttons
+  (() => {
+    const workOrder = createWorkOrderFromUser(
     evgenyUser!,
     "Office Cleaning Request",
     "Cleaning",
@@ -1092,7 +1110,13 @@ export const serviceRequests = [
     "Regular office cleaning needed for conference room",
     "Unassigned",
     "Low"
-  ),
+    );
+    return {
+      ...workOrder,
+      approval: undefined, // Pending - shows approve/deny buttons
+      approver: undefined // No approver set - buttons will show
+    };
+  })(),
   createWorkOrderFromUser(
     evgenyUser!,
     "Network Connection Issue",
@@ -1125,7 +1149,9 @@ export const serviceRequests = [
   ),
   
   // Emily Brown's requests
-  createWorkOrderFromUser(
+  // Example with approve/deny buttons
+  (() => {
+    const workOrder = createWorkOrderFromUser(
     emilyUser!,
     "Furniture Assembly",
     "Maintenance",
@@ -1133,7 +1159,13 @@ export const serviceRequests = [
     "New office furniture needs assembly and installation",
     "Unassigned",
     "Medium"
-  ),
+    );
+    return {
+      ...workOrder,
+      approval: undefined, // Pending - shows approve/deny buttons
+      approver: undefined // No approver set - buttons will show
+    };
+  })(),
   
   // David Rodriguez's requests
   createWorkOrderFromUser(
