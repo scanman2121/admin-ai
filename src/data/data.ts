@@ -924,8 +924,12 @@ const createWorkOrderFromUser = (user: any, request: string, issueType: string, 
   const approval = approvalStatuses[Math.floor(Math.random() * approvalStatuses.length)];
   
   // Randomly assign approver name (some with approver, some without)
-  const approverNames = [undefined, undefined, "Sarah Williams", "John Smith", "Emily Davis"]; // Some pending with approver
+  const approverNames = ["Abby Canova", "Sarah Williams", "John Smith", "Emily Davis", "Michael Chen"]; // Some pending with approver
   const approver = approval === undefined ? approverNames[Math.floor(Math.random() * approverNames.length)] : undefined;
+  
+  // If approved or denied, set approver and approval date
+  const approvalDate = approval ? new Date(Date.now() - Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000) : undefined;
+  const approverName = approval ? approverNames[Math.floor(Math.random() * approverNames.length)] : approver;
   
   // Randomly assign unread message count (0-3)
   const unreadMessages = Math.floor(Math.random() * 4);
@@ -943,7 +947,8 @@ const createWorkOrderFromUser = (user: any, request: string, issueType: string, 
     owner,
     status,
     approval,
-    approver,
+    approver: approverName,
+    approvalDate: approvalDate?.toISOString(),
     unreadMessages,
     requestor: `${user.name} - ${user.company}`,
     requestorDetails: {

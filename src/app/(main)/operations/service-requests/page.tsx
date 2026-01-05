@@ -46,40 +46,6 @@ const createServiceRequestsColumns = (
         enableHiding: false,
     },
     {
-        accessorKey: "messages",
-        header: ({ column }: { column: any }) => (
-            <DataTableColumnHeader column={column} title="Msg" />
-        ),
-        cell: ({ row }: { row: any }) => {
-            const unreadCount = row.original.unreadMessages as number | undefined || 0;
-            const requestId = row.original.id;
-            
-            const handleMessageClick = (e: React.MouseEvent) => {
-                e.stopPropagation();
-                // Navigate to service request detail page with messages tab
-                router.push(`/operations/service-requests/${requestId}?tab=messages`);
-            };
-            
-            return (
-                <div 
-                    className="relative inline-flex items-center justify-center cursor-pointer"
-                    onClick={handleMessageClick}
-                >
-                    <MessageCircle className="w-5 h-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
-                    {unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-pink-500 rounded-full">
-                            {unreadCount}
-                        </span>
-                    )}
-                </div>
-            );
-        },
-        meta: {
-            displayName: "Msg",
-        },
-        enableSorting: false,
-    },
-    {
         accessorKey: "request",
         header: ({ column }: { column: any }) => (
             <DataTableColumnHeader column={column} title="Request" />
@@ -113,6 +79,40 @@ const createServiceRequestsColumns = (
             className: "w-72 min-w-72",
         },
         enableSorting: true,
+    },
+    {
+        accessorKey: "messages",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Msg" />
+        ),
+        cell: ({ row }: { row: any }) => {
+            const unreadCount = row.original.unreadMessages as number | undefined || 0;
+            const requestId = row.original.id;
+            
+            const handleMessageClick = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                // Navigate to service request detail page with messages tab
+                router.push(`/operations/service-requests/${requestId}?tab=messages`);
+            };
+            
+            return (
+                <div 
+                    className="relative inline-flex items-center justify-center cursor-pointer"
+                    onClick={handleMessageClick}
+                >
+                    <MessageCircle className="w-5 h-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
+                    {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 flex items-center justify-center w-5 h-5 text-xs font-medium text-white bg-pink-500 rounded-full">
+                            {unreadCount}
+                        </span>
+                    )}
+                </div>
+            );
+        },
+        meta: {
+            displayName: "Msg",
+        },
+        enableSorting: false,
     },
     {
         accessorKey: "description",
@@ -271,6 +271,114 @@ const createServiceRequestsColumns = (
         },
     },
     {
+        accessorKey: "approval",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Approval" />
+        ),
+        cell: ({ row }: { row: any }) => {
+            const requestId = row.original.id;
+            const approval = row.original.approval as string | undefined;
+            const approver = row.original.approver as string | undefined;
+            const approvalDate = row.original.approvalDate as string | undefined;
+            
+            // For demo purposes, assume current user is not the approver if approver is set
+            // In production, you would check against the actual current user
+            const isCurrentUserApprover = !approver; // If no approver set, show buttons
+            
+            const handleApprove = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                onApprovalChange(requestId, "Approved");
+            };
+            
+            const handleDeny = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                onApprovalChange(requestId, "Denied");
+            };
+            
+            // Format date for display: MM/DD/YYYY, H:MM AM/PM
+            const formatApprovalDate = (dateString: string | undefined) => {
+                if (!dateString) return "";
+                const date = new Date(dateString);
+                const month = (date.getMonth() + 1).toString().padStart(2, "0");
+                const day = date.getDate().toString().padStart(2, "0");
+                const year = date.getFullYear();
+                const hours = date.getHours();
+                const minutes = date.getMinutes();
+                const ampm = hours >= 12 ? "PM" : "AM";
+                const displayHours = hours % 12 || 12;
+                const displayMinutes = minutes.toString().padStart(2, "0");
+                return `${month}/${day}/${year}, ${displayHours}:${displayMinutes} ${ampm}`;
+            };
+            
+            if (approval === "Approved") {
+                const approverName = approver || "Unknown";
+                const dateTime = formatApprovalDate(approvalDate);
+                return (
+                    <div 
+                        className="text-sm text-gray-900 dark:text-gray-50"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        Approved by {approverName} {dateTime}
+                    </div>
+                );
+            }
+            
+            if (approval === "Denied") {
+                const approverName = approver || "Unknown";
+                const dateTime = formatApprovalDate(approvalDate);
+                return (
+                    <div 
+                        className="text-sm text-orange-600 dark:text-orange-400"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        Denied by {approverName} {dateTime}
+                    </div>
+                );
+            }
+            
+            // If there's an approver and current user is not the approver, show "Waiting for [Name]"
+            if (approver && !isCurrentUserApprover) {
+                return (
+                    <div 
+                        className="text-sm text-gray-600 dark:text-gray-400"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        Waiting for {approver}
+                    </div>
+                );
+            }
+            
+            // Show Approve/Deny buttons if approval is pending and user is the approver (or no approver set)
+            return (
+                <div 
+                    className="flex items-center gap-2"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleApprove}
+                        className="bg-blue-600 hover:bg-blue-700 text-white h-8 px-3"
+                    >
+                        Approve
+                    </Button>
+                    <Button
+                        variant="default"
+                        size="sm"
+                        onClick={handleDeny}
+                        className="bg-pink-600 hover:bg-pink-700 text-white h-8 px-3"
+                    >
+                        Deny
+                    </Button>
+                </div>
+            );
+        },
+        meta: {
+            displayName: "Approval",
+        },
+        enableSorting: false,
+    },
+    {
         accessorKey: "status",
         header: ({ column }: { column: any }) => (
             <DataTableColumnHeader column={column} title="Status" />
@@ -318,98 +426,6 @@ const createServiceRequestsColumns = (
         filterFn: "equals" as const,
         enableColumnFilter: true,
         enableSorting: true,
-    },
-    {
-        accessorKey: "approval",
-        header: ({ column }: { column: any }) => (
-            <DataTableColumnHeader column={column} title="Approval" />
-        ),
-        cell: ({ row }: { row: any }) => {
-            const requestId = row.original.id;
-            const approval = row.original.approval as string | undefined;
-            const approver = row.original.approver as string | undefined;
-            
-            // For demo purposes, assume current user is not the approver if approver is set
-            // In production, you would check against the actual current user
-            const isCurrentUserApprover = !approver; // If no approver set, show buttons
-            
-            const handleApprove = (e: React.MouseEvent) => {
-                e.stopPropagation();
-                onApprovalChange(requestId, "Approved");
-            };
-            
-            const handleDeny = (e: React.MouseEvent) => {
-                e.stopPropagation();
-                onApprovalChange(requestId, "Denied");
-            };
-            
-            if (approval === "Approved") {
-                return (
-                    <div 
-                        className="inline-flex items-center px-2 py-1 rounded bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <span className="text-sm font-medium text-green-700 dark:text-green-400">
-                            Approved
-                        </span>
-                    </div>
-                );
-            }
-            
-            if (approval === "Denied") {
-                return (
-                    <div 
-                        className="inline-flex items-center px-2 py-1 rounded bg-pink-50 dark:bg-pink-900/20 border border-pink-200 dark:border-pink-800"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <span className="text-sm font-medium text-pink-700 dark:text-pink-400">
-                            Denied
-                        </span>
-                    </div>
-                );
-            }
-            
-            // If there's an approver and current user is not the approver, show "Waiting for [Name]"
-            if (approver && !isCurrentUserApprover) {
-                return (
-                    <div 
-                        className="text-sm text-gray-600 dark:text-gray-400"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        Waiting for {approver}
-                    </div>
-                );
-            }
-            
-            // Show Approve/Deny buttons if approval is pending and user is the approver (or no approver set)
-            return (
-                <div 
-                    className="flex items-center gap-2"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <Button
-                        variant="default"
-                        size="sm"
-                        onClick={handleApprove}
-                        className="bg-blue-600 hover:bg-blue-700 text-white h-8 px-3"
-                    >
-                        Approve
-                    </Button>
-                    <Button
-                        variant="default"
-                        size="sm"
-                        onClick={handleDeny}
-                        className="bg-pink-600 hover:bg-pink-700 text-white h-8 px-3"
-                    >
-                        Deny
-                    </Button>
-                </div>
-            );
-        },
-        meta: {
-            displayName: "Approval",
-        },
-        enableSorting: false,
     },
 ]
 
@@ -541,9 +557,14 @@ export default function ServiceRequests() {
         setData(prevData => 
             prevData.map(request => {
                 if (request.id === requestId) {
+                    // Set approver to current user (for demo, using a default name)
+                    // In production, get from auth context
+                    const currentUser = "Abby Canova";
                     return {
                         ...request,
-                        approval: approval
+                        approval: approval,
+                        approver: currentUser,
+                        approvalDate: new Date().toISOString()
                     }
                 }
                 return request
