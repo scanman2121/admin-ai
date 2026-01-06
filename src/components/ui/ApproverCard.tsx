@@ -1,8 +1,10 @@
 "use client"
 
+import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
 import { Input } from "@/components/Input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { getRelativeTime } from "@/lib/utils"
 import { Search, UserCheck, X } from "lucide-react"
 import { useState } from "react"
 
@@ -20,6 +22,10 @@ interface ApproverCardProps {
   approver?: Approver | null
   onAssignApprover?: (approver: Approver) => void
   onRemoveApprover?: () => void
+  approval?: string | undefined // "Approved", "Denied", or undefined (pending)
+  approvalDate?: string | undefined // ISO date string
+  onApprove?: () => void
+  onDeny?: () => void
 }
 
 // Mock search results - in a real app, this would come from an API
@@ -65,7 +71,11 @@ const mockApproverResults: Approver[] = [
 export function ApproverCard({ 
   approver, 
   onAssignApprover,
-  onRemoveApprover 
+  onRemoveApprover,
+  approval,
+  approvalDate,
+  onApprove,
+  onDeny
 }: ApproverCardProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [showSearchResults, setShowSearchResults] = useState(false)
@@ -151,36 +161,66 @@ export function ApproverCard({
 
         {/* Assigned Approver */}
         {approver ? (
-          <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Avatar className="size-10">
-                  <AvatarImage src={approver.avatar} alt={approver.name} />
-                  <AvatarFallback className="bg-green-100 text-green-600 text-sm">
-                    {approver.initials}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-green-900 dark:text-green-100">
-                      {approver.name}
-                    </p>
-                    <div className="text-xs text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-800/50 px-2 py-0.5 rounded">
-                      Approver
+          <div className="space-y-3">
+            <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Avatar className="size-10">
+                    <AvatarImage src={approver.avatar} alt={approver.name} />
+                    <AvatarFallback className="bg-green-100 text-green-600 text-sm">
+                      {approver.initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-green-900 dark:text-green-100">
+                        {approver.name}
+                      </p>
+                      <div className="text-xs text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-800/50 px-2 py-0.5 rounded">
+                        Approver
+                      </div>
                     </div>
+                    <p className="text-xs text-green-700 dark:text-green-300">
+                      {approver.role} • {approver.department}
+                    </p>
                   </div>
-                  <p className="text-xs text-green-700 dark:text-green-300">
-                    {approver.role} • {approver.department}
-                  </p>
                 </div>
+                <button
+                  onClick={handleRemoveApprover}
+                  className="p-1 hover:bg-green-100 dark:hover:bg-green-800/50 rounded transition-colors"
+                >
+                  <X className="h-4 w-4 text-green-400 hover:text-green-600 dark:hover:text-green-300" />
+                </button>
               </div>
-              <button
-                onClick={handleRemoveApprover}
-                className="p-1 hover:bg-green-100 dark:hover:bg-green-800/50 rounded transition-colors"
-              >
-                <X className="h-4 w-4 text-green-400 hover:text-green-600 dark:hover:text-green-300" />
-              </button>
             </div>
+
+            {/* Approval Status or Buttons */}
+            {approval === "Approved" ? (
+              <div className="text-sm text-gray-900 dark:text-gray-50">
+                Approved by {approver.name} {approvalDate ? getRelativeTime(approvalDate) : ""}
+              </div>
+            ) : approval === "Denied" ? (
+              <div className="text-sm text-orange-600 dark:text-orange-400">
+                Denied by {approver.name} {approvalDate ? getRelativeTime(approvalDate) : ""}
+              </div>
+            ) : onApprove && onDeny ? (
+              <div className="flex gap-2">
+                <Button
+                  variant="ghost"
+                  className="flex-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
+                  onClick={onApprove}
+                >
+                  Approve
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="flex-1 text-pink-600 hover:text-pink-700 hover:bg-pink-50 dark:text-pink-400 dark:hover:bg-pink-900/20"
+                  onClick={onDeny}
+                >
+                  Deny
+                </Button>
+              </div>
+            ) : null}
           </div>
         ) : (
           /* Empty State */

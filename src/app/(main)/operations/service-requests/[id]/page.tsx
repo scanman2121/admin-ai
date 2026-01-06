@@ -150,6 +150,9 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
     
     const serviceRequestDetail = getServiceRequestDetailData(params.id)
     
+    // Get approval from base service request data
+    const baseServiceRequest = serviceRequests.find(sr => sr.id === params.id)
+    
     // Messages state - initialize with existing messages from service request detail
     const [messages, setMessages] = useState(serviceRequestDetail?.messages || [])
     
@@ -158,6 +161,8 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
     )
     
     const [approver, setApprover] = useState(serviceRequestDetail?.approver || null)
+    const [approval, setApproval] = useState<string | undefined>(baseServiceRequest?.approval)
+    const [approvalDate, setApprovalDate] = useState<string | undefined>(baseServiceRequest?.approvalDate)
     
     const [ownerId, setOwnerId] = useState<string | null>(null)
     const [showDescription, setShowDescription] = useState(false)
@@ -211,6 +216,18 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
 
     const handleRemoveApprover = () => {
         setApprover(null)
+        setApproval(undefined)
+        setApprovalDate(undefined)
+    }
+
+    const handleApprove = () => {
+        setApproval("Approved")
+        setApprovalDate(new Date().toISOString())
+    }
+
+    const handleDeny = () => {
+        setApproval("Denied")
+        setApprovalDate(new Date().toISOString())
     }
 
     const handleStatusChange = (newStatus: string) => {
@@ -649,6 +666,10 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                         approver={approver}
                         onAssignApprover={handleAssignApprover}
                         onRemoveApprover={handleRemoveApprover}
+                        approval={approval}
+                        approvalDate={approvalDate}
+                        onApprove={handleApprove}
+                        onDeny={handleDeny}
                     />
 
                     {/* Assigned Personnel */}
