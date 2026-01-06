@@ -2,18 +2,19 @@
 
 import { Badge } from "@/components/Badge"
 import { Button } from "@/components/Button"
+import { Card } from "@/components/Card"
 import { Input } from "@/components/Input"
 import { Label } from "@/components/Label"
+import { RadioCardGroup, RadioCardGroupIndicator, RadioCardItem } from "@/components/RadioCard"
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Tooltip } from "@/components/Tooltip"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { RadioCardGroup, RadioCardGroupIndicator, RadioCardItem } from "@/components/RadioCard"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiMore2Line } from "@remixicon/react"
-import { Pencil, User, Users, DollarSign, CircleDollarSign, Lock } from "lucide-react"
+import { CircleDollarSign, DollarSign, Lock, Pencil, User, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -598,21 +599,21 @@ export default function ServiceRequestsServiceTypesCategories() {
     const [statusFilter, setStatusFilter] = useState("All")
     const [categoryFilter, setCategoryFilter] = useState("All Categories")
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
-    
+
     // Service Type Modal States
     const [isAddServiceTypeModalOpen, setIsAddServiceTypeModalOpen] = useState(false)
     const [isEditServiceTypeModalOpen, setIsEditServiceTypeModalOpen] = useState(false)
     const [editingServiceType, setEditingServiceType] = useState<typeof serviceTypesData[0] | null>(null)
     const [openServiceTypeDropdownId, setOpenServiceTypeDropdownId] = useState<number | null>(null)
-    
+
     // Category Modal States
     const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false)
     const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false)
     const [editingCategory, setEditingCategory] = useState<typeof categoriesData[0] | null>(null)
     const [openCategoryDropdownId, setOpenCategoryDropdownId] = useState<number | null>(null)
-    
+
     const [isSetupModalOpen, setIsSetupModalOpen] = useState(false)
-    
+
     const [newServiceType, setNewServiceType] = useState({
         requestType: "",
         description: "",
@@ -632,7 +633,7 @@ export default function ServiceRequestsServiceTypesCategories() {
             notifyAssignee: boolean;
         }>
     })
-    
+
     const [assignedToSearchQuery, setAssignedToSearchQuery] = useState("")
     const [isAssignedToDropdownOpen, setIsAssignedToDropdownOpen] = useState(false)
 
@@ -653,7 +654,7 @@ export default function ServiceRequestsServiceTypesCategories() {
         name: "",
         color: "blue"
     })
-    
+
     // Load statuses from localStorage or use default
     const [availableStatuses, setAvailableStatuses] = useState<typeof serviceRequestStatuses>(() => {
         if (typeof window !== 'undefined') {
@@ -732,7 +733,7 @@ export default function ServiceRequestsServiceTypesCategories() {
             if (serviceType.priceType === 'fixed' && serviceType.priceFixed) {
                 return `$${parseFloat(serviceType.priceFixed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
             }
-            
+
             if (serviceType.priceType === 'range') {
                 const min = serviceType.priceMin ? parseFloat(serviceType.priceMin).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
                 const max = serviceType.priceMax ? parseFloat(serviceType.priceMax).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
@@ -745,13 +746,13 @@ export default function ServiceRequestsServiceTypesCategories() {
                 }
             }
         }
-        
+
         // Fall back to category pricing if service type doesn't have pricing
         if (category && category.priceType && category.priceType !== 'none') {
             if (category.priceType === 'fixed' && category.priceFixed) {
                 return `$${parseFloat(category.priceFixed).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
             }
-            
+
             if (category.priceType === 'range') {
                 const min = category.priceMin ? parseFloat(category.priceMin).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
                 const max = category.priceMax ? parseFloat(category.priceMax).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ''
@@ -764,7 +765,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                 }
             }
         }
-        
+
         return '-'
     }
 
@@ -781,16 +782,16 @@ export default function ServiceRequestsServiceTypesCategories() {
     }
 
     const handleCategoryStatusToggle = (id: number) => {
-        setCategories(prev => 
-            prev.map(category => 
+        setCategories(prev =>
+            prev.map(category =>
                 category.id === id ? { ...category, status: !category.status } : category
             )
         )
     }
 
     const handleServiceTypeStatusToggle = (id: number) => {
-        setServiceTypes(prev => 
-            prev.map(item => 
+        setServiceTypes(prev =>
+            prev.map(item =>
                 item.id === id ? { ...item, status: !item.status } : item
             )
         )
@@ -842,12 +843,12 @@ export default function ServiceRequestsServiceTypesCategories() {
             return
         }
 
-        setCategories(prev => prev.map(item => 
-            item.id === editingCategory.id 
+        setCategories(prev => prev.map(item =>
+            item.id === editingCategory.id
                 ? { ...item, ...newCategory }
                 : item
         ))
-        
+
         setEditingCategory(null)
         setNewCategory({
             name: "",
@@ -922,7 +923,7 @@ export default function ServiceRequestsServiceTypesCategories() {
         } else if (serviceType.approval === "Building Manager" || serviceType.approval === "Property Manager") {
             approvalType = "specific-member"
         }
-        
+
         setNewServiceType({
             requestType: serviceType.requestType,
             description: serviceType.description,
@@ -961,10 +962,10 @@ export default function ServiceRequestsServiceTypesCategories() {
             return
         }
 
-        setServiceTypes(prev => prev.map(item => 
-            item.id === editingServiceType.id 
-                ? { 
-                    ...item, 
+        setServiceTypes(prev => prev.map(item =>
+            item.id === editingServiceType.id
+                ? {
+                    ...item,
                     ...newServiceType,
                     assignedTo: finalAssignedTo,
                     assignedToType: finalAssignedToType,
@@ -972,7 +973,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                 }
                 : item
         ))
-        
+
         setEditingServiceType(null)
         setNewServiceType({
             requestType: "",
@@ -1025,11 +1026,11 @@ export default function ServiceRequestsServiceTypesCategories() {
     const handleNotificationToggle = (statusName: string, notificationType: 'requestor' | 'assignee') => {
         setNewServiceType(prev => ({
             ...prev,
-            statuses: prev.statuses.map(status => 
-                status.name === statusName 
+            statuses: prev.statuses.map(status =>
+                status.name === statusName
                     ? {
                         ...status,
-                        [notificationType === 'requestor' ? 'notifyRequestor' : 'notifyAssignee']: 
+                        [notificationType === 'requestor' ? 'notifyRequestor' : 'notifyAssignee']:
                             !status[notificationType === 'requestor' ? 'notifyRequestor' : 'notifyAssignee']
                     }
                     : status
@@ -1084,12 +1085,12 @@ export default function ServiceRequestsServiceTypesCategories() {
 
         const updatedStatuses = [...availableStatuses, newStatusItem]
         setAvailableStatuses(updatedStatuses)
-        
+
         // Save to localStorage
         if (typeof window !== 'undefined') {
             localStorage.setItem('serviceRequestStatuses', JSON.stringify(updatedStatuses))
         }
-        
+
         // Also add to the service type's statuses
         setNewServiceType(prev => ({
             ...prev,
@@ -1111,10 +1112,10 @@ export default function ServiceRequestsServiceTypesCategories() {
 
     const filteredCategories = categories.filter(category => {
         const matchesSearch = category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            category.description.toLowerCase().includes(searchQuery.toLowerCase())
-        const matchesStatus = statusFilter === "All" || 
-                            (statusFilter === "Active" && category.status) ||
-                            (statusFilter === "Inactive" && !category.status)
+            category.description.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchesStatus = statusFilter === "All" ||
+            (statusFilter === "Active" && category.status) ||
+            (statusFilter === "Inactive" && !category.status)
         return matchesSearch && matchesStatus
     })
 
@@ -1122,10 +1123,10 @@ export default function ServiceRequestsServiceTypesCategories() {
         const categoryServiceTypes = serviceTypes.filter(serviceType => serviceType.category === categoryName)
         return categoryServiceTypes.filter(serviceType => {
             const matchesSearch = serviceType.requestType.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                serviceType.description.toLowerCase().includes(searchQuery.toLowerCase())
-            const matchesStatus = statusFilter === "All" || 
-                                (statusFilter === "Active" && serviceType.status) ||
-                                (statusFilter === "Inactive" && !serviceType.status)
+                serviceType.description.toLowerCase().includes(searchQuery.toLowerCase())
+            const matchesStatus = statusFilter === "All" ||
+                (statusFilter === "Active" && serviceType.status) ||
+                (statusFilter === "Inactive" && !serviceType.status)
             return matchesSearch && matchesStatus
         })
     }
@@ -1134,7 +1135,7 @@ export default function ServiceRequestsServiceTypesCategories() {
         <div className="space-y-6 max-w-full overflow-hidden">
             {/* Header with back navigation */}
             <div className="flex items-center gap-3">
-                <Link 
+                <Link
                     href="/operations/service-requests"
                     className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
@@ -1151,8 +1152,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                     </h1>
                 </div>
                 <div className="flex items-center gap-3 flex-wrap">
-                    <Button 
-                        variant="ghost" 
+                    <Button
+                        variant="ghost"
                         onClick={() => setIsSetupModalOpen(true)}
                         className="flex-shrink-0"
                     >
@@ -1179,7 +1180,7 @@ export default function ServiceRequestsServiceTypesCategories() {
 
             {/* Service Types and Categories Content */}
             <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h2 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-2">
                             Service types and categories
@@ -1188,17 +1189,17 @@ export default function ServiceRequestsServiceTypesCategories() {
                             Organize service requests by category and define specific service types with approval workflows
                         </p>
                     </div>
-                <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
-                        <Button 
-                            variant="ghost" 
+                    <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
+                        <Button
+                            variant="ghost"
                             onClick={() => setIsAddCategoryModalOpen(true)}
                             className="flex-shrink-0"
                         >
-                        <RiAddLine className="size-4 mr-1.5" />
-                        Add category
-                    </Button>
-                        <Button 
-                            variant="ghost" 
+                            <RiAddLine className="size-4 mr-1.5" />
+                            Add category
+                        </Button>
+                        <Button
+                            variant="ghost"
                             onClick={() => {
                                 // Initialize with all statuses selected
                                 const allStatuses = availableStatuses.map(status => ({
@@ -1225,258 +1226,143 @@ export default function ServiceRequestsServiceTypesCategories() {
                             }}
                             className="flex-shrink-0"
                         >
-                        <RiAddLine className="size-4 mr-1.5" />
-                        Add service type
-                    </Button>
+                            <RiAddLine className="size-4 mr-1.5" />
+                            Add service type
+                        </Button>
+                    </div>
                 </div>
-            </div>
 
-            {/* Search and Filters */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <input
-                    type="text"
-                    placeholder="Search categories and service types..."
-                    className="w-full sm:w-80 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap flex-shrink-0"
-                    >
-                        <option>All</option>
-                        <option>Active</option>
-                        <option>Inactive</option>
-                    </select>
-                    <select
-                        value={categoryFilter}
-                        onChange={(e) => setCategoryFilter(e.target.value)}
-                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap flex-shrink-0"
-                    >
-                        <option>All Categories</option>
-                        <option>Cleaning & Waste</option>
-                        <option>Temperature & Air</option>
-                        <option>Repairs & Maintenance</option>
-                        <option>Access & Security</option>
-                        <option>Hospitality & Concierge</option>
-                        <option>Signage & Facilities</option>
-                        <option>Other</option>
-                    </select>
+                {/* Search and Filters */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <input
+                        type="text"
+                        placeholder="Search categories and service types..."
+                        className="w-full sm:w-80 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <div className="flex items-center gap-3 flex-shrink-0 flex-wrap">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap flex-shrink-0"
+                        >
+                            <option>All</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                        </select>
+                        <select
+                            value={categoryFilter}
+                            onChange={(e) => setCategoryFilter(e.target.value)}
+                            className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap flex-shrink-0"
+                        >
+                            <option>All Categories</option>
+                            <option>Cleaning & Waste</option>
+                            <option>Temperature & Air</option>
+                            <option>Repairs & Maintenance</option>
+                            <option>Access & Security</option>
+                            <option>Hospitality & Concierge</option>
+                            <option>Signage & Facilities</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            {/* Desktop Table View */}
-            <div className="hidden lg:block border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden overflow-x-auto">
-                <table className="min-w-full">
-                    <thead className="bg-gray-50 dark:bg-gray-800">
-                        <tr>
-                            <th scope="col" className="w-40 px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Name / Request Type
-                            </th>
-                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
-                                Category
-                            </th>
-                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
-                                Approval
-                            </th>
-                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
-                                Assigned To
-                            </th>
-                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
-                                Price
-                            </th>
-                            <th scope="col" className="w-96 px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                Statuses
-                            </th>
-                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
-                                Enable
-                            </th>
-                            <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                        {filteredCategories.map((category) => {
-                            const isExpanded = expandedCategories.has(category.name)
-                            const categoryServiceTypes = getFilteredServiceTypes(category.name)
-                            
-                            return (
-                                <>
-                                    {/* Category Row */}
-                                    <tr key={`category-${category.id}`} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                        <td className="w-40 px-4 lg:px-6 py-4">
-                                            <button
-                                                onClick={() => toggleCategoryExpansion(category.name)}
-                                                className="flex items-center gap-2 text-left w-full"
-                                            >
-                                                {isExpanded ? (
-                                                    <RiArrowDownSLine className="size-4 text-gray-500 flex-shrink-0" />
-                                                ) : (
-                                                    <RiArrowRightSLine className="size-4 text-gray-500 flex-shrink-0" />
-                                                )}
-                                                <div className="min-w-0">
-                                                    <div className="text-sm font-semibold text-gray-900 dark:text-gray-50 truncate">
-                                                        {category.name}
-                                                    </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-                                                        {category.description} ({categoryServiceTypes.length} service types)
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        </td>
-                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
-                                            <Badge variant={getCategoryBadgeVariant(category.name)}>
-                                                Category
-                                            </Badge>
-                                        </td>
-                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                            -
-                                        </td>
-                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
-                                            {category.assignedTo ? (
-                                                <div className="flex items-center gap-2">
-                                                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                                        {category.assignedToType === 'user' ? (
-                                                            <User className="size-3 text-gray-500" />
-                                                        ) : (
-                                                            <Users className="size-3 text-gray-500" />
-                                                        )}
-                                                        <span>{category.assignedTo}</span>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <span className="text-gray-400 dark:text-gray-500">-</span>
-                                            )}
-                                        </td>
-                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                            {formatPrice({ priceType: (category as any).priceType || 'none' } as any, category)}
-                                        </td>
-                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                            -
-                                        </td>
-                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
-                                            <div className="flex justify-start">
-                                                <Switch
-                                                    checked={category.status}
-                                                    onCheckedChange={() => handleCategoryStatusToggle(category.id)}
-                                                />
-                                            </div>
-                                        </td>
-                                        <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <div className="flex items-center gap-1 justify-start">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="p-2 h-8 w-8"
-                                                    onClick={() => handleEditCategory(category)}
+                {/* Desktop Table View */}
+                <div className="hidden lg:block border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden overflow-x-auto">
+                    <table className="min-w-full">
+                        <thead className="bg-gray-50 dark:bg-gray-800">
+                            <tr>
+                                <th scope="col" className="w-40 px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Name / Request Type
+                                </th>
+                                <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                                    Category
+                                </th>
+                                <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                                    Approval
+                                </th>
+                                <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                                    Assigned To
+                                </th>
+                                <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                                    Price
+                                </th>
+                                <th scope="col" className="w-96 px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                    Statuses
+                                </th>
+                                <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                                    Enable
+                                </th>
+                                <th scope="col" className="px-4 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                            {filteredCategories.map((category) => {
+                                const isExpanded = expandedCategories.has(category.name)
+                                const categoryServiceTypes = getFilteredServiceTypes(category.name)
+
+                                return (
+                                    <>
+                                        {/* Category Row */}
+                                        <tr key={`category-${category.id}`} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
+                                            <td className="w-40 px-4 lg:px-6 py-4">
+                                                <button
+                                                    onClick={() => toggleCategoryExpansion(category.name)}
+                                                    className="flex items-center gap-2 text-left w-full"
                                                 >
-                                                    <Pencil className="size-4" style={{ color: '#696E72' }} />
-                                                </Button>
-                                                
-                                                <div className="relative">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        className="p-2 h-8 w-8"
-                                                        onClick={() => setOpenCategoryDropdownId(openCategoryDropdownId === category.id ? null : category.id)}
-                                                    >
-                                                        <RiMore2Line className="size-4" />
-                                                    </Button>
-                                                    
-                                                    {openCategoryDropdownId === category.id && (
-                                                        <>
-                                                            <div 
-                                                                className="fixed inset-0 z-10" 
-                                                                onClick={() => setOpenCategoryDropdownId(null)}
-                                                            />
-                                                            <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
-                                                                <button
-                                                                    onClick={() => handleDeleteCategory(category.id)}
-                                                                    className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
-                                                                >
-                                                                    <RiDeleteBin6Line className="size-4" />
-                                                                    Delete
-                                                                </button>
-                                                            </div>
-                                                        </>
+                                                    {isExpanded ? (
+                                                        <RiArrowDownSLine className="size-4 text-gray-500 flex-shrink-0" />
+                                                    ) : (
+                                                        <RiArrowRightSLine className="size-4 text-gray-500 flex-shrink-0" />
                                                     )}
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    
-                                    {/* Service Type Rows (shown when expanded) */}
-                                    {isExpanded && categoryServiceTypes.map((serviceType) => (
-                                        <tr key={`service-${serviceType.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
-                                            <td className="w-40 px-4 lg:px-6 py-4 pl-8 lg:pl-12">
-                                                <div className="space-y-1">
-                                                    <div className="text-sm font-medium text-gray-900 dark:text-gray-50 truncate">
-                                                        {serviceType.requestType}
+                                                    <div className="min-w-0">
+                                                        <div className="text-sm font-semibold text-gray-900 dark:text-gray-50 truncate">
+                                                            {category.name}
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                                                            {category.description} ({categoryServiceTypes.length} service types)
+                                                        </div>
                                                     </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">
-                                                        {serviceType.description}
-                                                    </div>
-                                                </div>
+                                                </button>
                                             </td>
                                             <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
-                                                <Badge variant={getCategoryBadgeVariant(serviceType.category)}>
-                                                    {serviceType.category}
+                                                <Badge variant={getCategoryBadgeVariant(category.name)}>
+                                                    Category
                                                 </Badge>
                                             </td>
-                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
-                                                {serviceType.approval}
+                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                -
                                             </td>
-                                            <td className="px-4 lg:px-6 py-4 text-sm text-gray-900 dark:text-gray-50">
-                                                {(() => {
-                                                    const categoryAssignedTo = category.assignedTo
-                                                    const isUsingCategoryAssignedTo = categoryAssignedTo && serviceType.assignedTo === categoryAssignedTo
-                                                    
-                                                    if (isUsingCategoryAssignedTo) {
-                                                        return (
-                                                            <div className="flex items-center gap-2">
-                                                                <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
-                                                                    {category.assignedToType === 'user' ? (
-                                                                        <User className="size-3 text-gray-500" />
-                                                                    ) : (
-                                                                        <Users className="size-3 text-gray-500" />
-                                                                    )}
-                                                                    <span>{serviceType.assignedTo}</span>
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    }
-                                                    
-                                                    return serviceType.assignedTo
-                                                })()}
+                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
+                                                {category.assignedTo ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
+                                                            {category.assignedToType === 'user' ? (
+                                                                <User className="size-3 text-gray-500" />
+                                                            ) : (
+                                                                <Users className="size-3 text-gray-500" />
+                                                            )}
+                                                            <span>{category.assignedTo}</span>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-gray-400 dark:text-gray-500">-</span>
+                                                )}
                                             </td>
-                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
-                                                {formatPrice(serviceType, category)}
+                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                {formatPrice({ priceType: (category as any).priceType || 'none' } as any, category)}
                                             </td>
-                                            <td className="w-96 px-4 lg:px-6 py-4">
-                                                <div className="flex flex-wrap gap-1 min-h-[32px]">
-                                                    {serviceType.statuses?.slice(0, 4).map((status) => (
-                                                        <span
-                                                            key={status}
-                                                            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 whitespace-nowrap"
-                                                        >
-                                                            {status}
-                                                        </span>
-                                                    ))}
-                                                    {(serviceType.statuses?.length || 0) > 4 && (
-                                                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 whitespace-nowrap">
-                                                            +{(serviceType.statuses?.length || 0) - 4} more
-                                                        </span>
-                                                    )}
-                                                </div>
+                                            <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                -
                                             </td>
                                             <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
                                                 <div className="flex justify-start">
                                                     <Switch
-                                                        checked={serviceType.status}
-                                                        onCheckedChange={() => handleServiceTypeStatusToggle(serviceType.id)}
+                                                        checked={category.status}
+                                                        onCheckedChange={() => handleCategoryStatusToggle(category.id)}
                                                     />
                                                 </div>
                                             </td>
@@ -1486,30 +1372,30 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                         variant="ghost"
                                                         size="sm"
                                                         className="p-2 h-8 w-8"
-                                                        onClick={() => handleEditServiceType(serviceType)}
+                                                        onClick={() => handleEditCategory(category)}
                                                     >
                                                         <Pencil className="size-4" style={{ color: '#696E72' }} />
                                                     </Button>
-                                                    
+
                                                     <div className="relative">
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
                                                             className="p-2 h-8 w-8"
-                                                            onClick={() => setOpenServiceTypeDropdownId(openServiceTypeDropdownId === serviceType.id ? null : serviceType.id)}
+                                                            onClick={() => setOpenCategoryDropdownId(openCategoryDropdownId === category.id ? null : category.id)}
                                                         >
                                                             <RiMore2Line className="size-4" />
                                                         </Button>
-                                                        
-                                                        {openServiceTypeDropdownId === serviceType.id && (
+
+                                                        {openCategoryDropdownId === category.id && (
                                                             <>
-                                                                <div 
-                                                                    className="fixed inset-0 z-10" 
-                                                                    onClick={() => setOpenServiceTypeDropdownId(null)}
+                                                                <div
+                                                                    className="fixed inset-0 z-10"
+                                                                    onClick={() => setOpenCategoryDropdownId(null)}
                                                                 />
                                                                 <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
                                                                     <button
-                                                                        onClick={() => handleDeleteServiceType(serviceType.id)}
+                                                                        onClick={() => handleDeleteCategory(category.id)}
                                                                         className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
                                                                     >
                                                                         <RiDeleteBin6Line className="size-4" />
@@ -1522,165 +1408,81 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 </div>
                                             </td>
                                         </tr>
-                                    ))}
-                                </>
-                            )
-                        })}
-                    </tbody>
-                </table>
-                
-                {filteredCategories.length === 0 && (
-                    <div className="p-8 text-center">
-                        <p className="text-gray-500 dark:text-gray-400">
-                            No categories or service types found matching your criteria.
-                        </p>
-                    </div>
-                )}
-            </div>
 
-            {/* Mobile Card View */}
-            <div className="lg:hidden space-y-4">
-                {filteredCategories.length === 0 ? (
-                    <div className="p-8 text-center border border-gray-200 dark:border-gray-700 rounded-lg">
-                        <p className="text-gray-500 dark:text-gray-400">
-                            No categories or service types found matching your criteria.
-                        </p>
-                    </div>
-                ) : (
-                    filteredCategories.map((category) => {
-                        const isExpanded = expandedCategories.has(category.name)
-                        const categoryServiceTypes = getFilteredServiceTypes(category.name)
-                        
-                        return (
-                            <div key={`category-mobile-${category.id}`} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                                {/* Category Card */}
-                                <div className="bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700">
-                                    <div className="flex items-start justify-between gap-4">
-                                        <button
-                                            onClick={() => toggleCategoryExpansion(category.name)}
-                                            className="flex-1 flex items-start gap-3 text-left"
-                                        >
-                                            {isExpanded ? (
-                                                <RiArrowDownSLine className="size-5 text-gray-500 flex-shrink-0 mt-0.5" />
-                                            ) : (
-                                                <RiArrowRightSLine className="size-5 text-gray-500 flex-shrink-0 mt-0.5" />
-                                            )}
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-50">
-                                                        {category.name}
-                                                    </h3>
-                                                    <Badge variant={getCategoryBadgeVariant(category.name)}>
-                                                        Category
-                                                    </Badge>
-                                                </div>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                                                    {category.description}
-                                                </p>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                    {categoryServiceTypes.length} service types
-                                                </p>
-                                            </div>
-                                        </button>
-                                        <div className="flex items-center gap-2 flex-shrink-0">
-                                            <Switch
-                                                checked={category.status}
-                                                onCheckedChange={() => handleCategoryStatusToggle(category.id)}
-                                            />
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="p-2 h-8 w-8"
-                                                onClick={() => handleEditCategory(category)}
-                                            >
-                                                <Pencil className="size-4" style={{ color: '#696E72' }} />
-                                            </Button>
-                                            <div className="relative">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    className="p-2 h-8 w-8"
-                                                    onClick={() => setOpenCategoryDropdownId(openCategoryDropdownId === category.id ? null : category.id)}
-                                                >
-                                                    <RiMore2Line className="size-4" />
-                                                </Button>
-                                                {openCategoryDropdownId === category.id && (
-                                                    <>
-                                                        <div 
-                                                            className="fixed inset-0 z-10" 
-                                                            onClick={() => setOpenCategoryDropdownId(null)}
-                                                        />
-                                                        <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
-                                                            <button
-                                                                onClick={() => handleDeleteCategory(category.id)}
-                                                                className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
-                                                            >
-                                                                <RiDeleteBin6Line className="size-4" />
-                                                                Delete
-                                                            </button>
+                                        {/* Service Type Rows (shown when expanded) */}
+                                        {isExpanded && categoryServiceTypes.map((serviceType) => (
+                                            <tr key={`service-${serviceType.id}`} className="hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
+                                                <td className="w-40 px-4 lg:px-6 py-4 pl-8 lg:pl-12">
+                                                    <div className="space-y-1">
+                                                        <div className="text-sm font-medium text-gray-900 dark:text-gray-50 truncate">
+                                                            {serviceType.requestType}
                                                         </div>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    {/* Category Assigned To */}
-                                    {category.assignedTo && (
-                                        <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                                            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Assigned to</div>
-                                            <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm w-fit">
-                                                {category.assignedToType === 'user' ? (
-                                                    <User className="size-3 text-gray-500" />
-                                                ) : (
-                                                    <Users className="size-3 text-gray-500" />
-                                                )}
-                                                <span>{category.assignedTo}</span>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {/* Category Pricing */}
-                                    {(() => {
-                                        const categoryPrice = formatPrice({ priceType: (category as any).priceType || 'none' } as any, category)
-                                        if (categoryPrice !== '-') {
-                                            return (
-                                                <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Default pricing</div>
-                                                    <div className="text-sm text-gray-900 dark:text-gray-50 font-medium">
-                                                        {categoryPrice}
-                                                    </div>
-                                                </div>
-                                            )
-                                        }
-                                        return null
-                                    })()}
-                                </div>
-                                
-                                {/* Service Types (shown when expanded) */}
-                                {isExpanded && categoryServiceTypes.length > 0 && (
-                                    <div className="bg-gray-50 dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                        {categoryServiceTypes.map((serviceType) => (
-                                            <div key={`service-mobile-${serviceType.id}`} className="p-4">
-                                                <div className="flex items-start justify-between gap-4 mb-3">
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
-                                                                {serviceType.requestType}
-                                                            </h4>
-                                                            <Badge variant={getCategoryBadgeVariant(serviceType.category)}>
-                                                                {serviceType.category}
-                                                            </Badge>
-                                                        </div>
-                                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">
                                                             {serviceType.description}
-                                                        </p>
+                                                        </div>
                                                     </div>
-                                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                                </td>
+                                                <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
+                                                    <Badge variant={getCategoryBadgeVariant(serviceType.category)}>
+                                                        {serviceType.category}
+                                                    </Badge>
+                                                </td>
+                                                <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
+                                                    {serviceType.approval}
+                                                </td>
+                                                <td className="px-4 lg:px-6 py-4 text-sm text-gray-900 dark:text-gray-50">
+                                                    {(() => {
+                                                        const categoryAssignedTo = category.assignedTo
+                                                        const isUsingCategoryAssignedTo = categoryAssignedTo && serviceType.assignedTo === categoryAssignedTo
+
+                                                        if (isUsingCategoryAssignedTo) {
+                                                            return (
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
+                                                                        {category.assignedToType === 'user' ? (
+                                                                            <User className="size-3 text-gray-500" />
+                                                                        ) : (
+                                                                            <Users className="size-3 text-gray-500" />
+                                                                        )}
+                                                                        <span>{serviceType.assignedTo}</span>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        }
+
+                                                        return serviceType.assignedTo
+                                                    })()}
+                                                </td>
+                                                <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-50">
+                                                    {formatPrice(serviceType, category)}
+                                                </td>
+                                                <td className="w-96 px-4 lg:px-6 py-4">
+                                                    <div className="flex flex-wrap gap-1 min-h-[32px]">
+                                                        {serviceType.statuses?.slice(0, 4).map((status) => (
+                                                            <span
+                                                                key={status}
+                                                                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 whitespace-nowrap"
+                                                            >
+                                                                {status}
+                                                            </span>
+                                                        ))}
+                                                        {(serviceType.statuses?.length || 0) > 4 && (
+                                                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                                                                +{(serviceType.statuses?.length || 0) - 4} more
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className="px-4 lg:px-6 py-4 whitespace-nowrap">
+                                                    <div className="flex justify-start">
                                                         <Switch
                                                             checked={serviceType.status}
                                                             onCheckedChange={() => handleServiceTypeStatusToggle(serviceType.id)}
                                                         />
+                                                    </div>
+                                                </td>
+                                                <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    <div className="flex items-center gap-1 justify-start">
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
@@ -1689,6 +1491,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                         >
                                                             <Pencil className="size-4" style={{ color: '#696E72' }} />
                                                         </Button>
+
                                                         <div className="relative">
                                                             <Button
                                                                 variant="ghost"
@@ -1698,10 +1501,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             >
                                                                 <RiMore2Line className="size-4" />
                                                             </Button>
+
                                                             {openServiceTypeDropdownId === serviceType.id && (
                                                                 <>
-                                                                    <div 
-                                                                        className="fixed inset-0 z-10" 
+                                                                    <div
+                                                                        className="fixed inset-0 z-10"
                                                                         onClick={() => setOpenServiceTypeDropdownId(null)}
                                                                     />
                                                                     <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
@@ -1717,66 +1521,263 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             )}
                                                         </div>
                                                     </div>
-                                                </div>
-                                                
-                                                <div className="space-y-2">
-                                                    <div className="flex items-center gap-4 text-xs">
-                                                        <div>
-                                                            <span className="text-gray-500 dark:text-gray-400">Approval:</span>
-                                                            <span className="ml-1 text-gray-900 dark:text-gray-50">{serviceType.approval}</span>
-                                                        </div>
-                                                        {(() => {
-                                                            const categoryAssignedTo = category.assignedTo
-                                                            const isUsingCategoryAssignedTo = categoryAssignedTo && serviceType.assignedTo === categoryAssignedTo
-                                                            
-                                                            if (isUsingCategoryAssignedTo || serviceType.assignedTo) {
-                                                                return (
-                                                                    <div>
-                                                                        <span className="text-gray-500 dark:text-gray-400">Assigned to:</span>
-                                                                        <span className="ml-1 text-gray-900 dark:text-gray-50">
-                                                                            {serviceType.assignedTo || '-'}
-                                                                        </span>
-                                                                    </div>
-                                                                )
-                                                            }
-                                                            return null
-                                                        })()}
-                                                        <div>
-                                                            <span className="text-gray-500 dark:text-gray-400">Price:</span>
-                                                            <span className="ml-1 text-gray-900 dark:text-gray-50">{formatPrice(serviceType, category)}</span>
-                                                        </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+
+                    {filteredCategories.length === 0 && (
+                        <div className="p-8 text-center">
+                            <p className="text-gray-500 dark:text-gray-400">
+                                No categories or service types found matching your criteria.
+                            </p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="lg:hidden space-y-4">
+                    {filteredCategories.length === 0 ? (
+                        <div className="p-8 text-center border border-gray-200 dark:border-gray-700 rounded-lg">
+                            <p className="text-gray-500 dark:text-gray-400">
+                                No categories or service types found matching your criteria.
+                            </p>
+                        </div>
+                    ) : (
+                        filteredCategories.map((category) => {
+                            const isExpanded = expandedCategories.has(category.name)
+                            const categoryServiceTypes = getFilteredServiceTypes(category.name)
+
+                            return (
+                                <div key={`category-mobile-${category.id}`} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                                    {/* Category Card */}
+                                    <div className="bg-white dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700">
+                                        <div className="flex items-start justify-between gap-4">
+                                            <button
+                                                onClick={() => toggleCategoryExpansion(category.name)}
+                                                className="flex-1 flex items-start gap-3 text-left"
+                                            >
+                                                {isExpanded ? (
+                                                    <RiArrowDownSLine className="size-5 text-gray-500 flex-shrink-0 mt-0.5" />
+                                                ) : (
+                                                    <RiArrowRightSLine className="size-5 text-gray-500 flex-shrink-0 mt-0.5" />
+                                                )}
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-50">
+                                                            {category.name}
+                                                        </h3>
+                                                        <Badge variant={getCategoryBadgeVariant(category.name)}>
+                                                            Category
+                                                        </Badge>
                                                     </div>
-                                                    
-                                                    {serviceType.statuses && serviceType.statuses.length > 0 && (
-                                                        <div>
-                                                            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Statuses</div>
-                                                            <div className="flex flex-wrap gap-1">
-                                                                {serviceType.statuses.slice(0, 6).map((status) => (
-                                                                    <span
-                                                                        key={status}
-                                                                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                                                                    >
-                                                                        {status}
-                                                                    </span>
-                                                                ))}
-                                                                {(serviceType.statuses.length || 0) > 6 && (
-                                                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
-                                                                        +{(serviceType.statuses.length || 0) - 6} more
-                                                                    </span>
-                                                                )}
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                                        {category.description}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                        {categoryServiceTypes.length} service types
+                                                    </p>
+                                                </div>
+                                            </button>
+                                            <div className="flex items-center gap-2 flex-shrink-0">
+                                                <Switch
+                                                    checked={category.status}
+                                                    onCheckedChange={() => handleCategoryStatusToggle(category.id)}
+                                                />
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="p-2 h-8 w-8"
+                                                    onClick={() => handleEditCategory(category)}
+                                                >
+                                                    <Pencil className="size-4" style={{ color: '#696E72' }} />
+                                                </Button>
+                                                <div className="relative">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="p-2 h-8 w-8"
+                                                        onClick={() => setOpenCategoryDropdownId(openCategoryDropdownId === category.id ? null : category.id)}
+                                                    >
+                                                        <RiMore2Line className="size-4" />
+                                                    </Button>
+                                                    {openCategoryDropdownId === category.id && (
+                                                        <>
+                                                            <div
+                                                                className="fixed inset-0 z-10"
+                                                                onClick={() => setOpenCategoryDropdownId(null)}
+                                                            />
+                                                            <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                                                                <button
+                                                                    onClick={() => handleDeleteCategory(category.id)}
+                                                                    className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
+                                                                >
+                                                                    <RiDeleteBin6Line className="size-4" />
+                                                                    Delete
+                                                                </button>
                                                             </div>
-                                                        </div>
+                                                        </>
                                                     )}
                                                 </div>
                                             </div>
-                                        ))}
+                                        </div>
+
+                                        {/* Category Assigned To */}
+                                        {category.assignedTo && (
+                                            <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Assigned to</div>
+                                                <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm w-fit">
+                                                    {category.assignedToType === 'user' ? (
+                                                        <User className="size-3 text-gray-500" />
+                                                    ) : (
+                                                        <Users className="size-3 text-gray-500" />
+                                                    )}
+                                                    <span>{category.assignedTo}</span>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Category Pricing */}
+                                        {(() => {
+                                            const categoryPrice = formatPrice({ priceType: (category as any).priceType || 'none' } as any, category)
+                                            if (categoryPrice !== '-') {
+                                                return (
+                                                    <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                                                        <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Default pricing</div>
+                                                        <div className="text-sm text-gray-900 dark:text-gray-50 font-medium">
+                                                            {categoryPrice}
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+                                            return null
+                                        })()}
                                     </div>
-                                )}
-                            </div>
-                        )
-                    })
-                )}
-            </div>
+
+                                    {/* Service Types (shown when expanded) */}
+                                    {isExpanded && categoryServiceTypes.length > 0 && (
+                                        <div className="bg-gray-50 dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                            {categoryServiceTypes.map((serviceType) => (
+                                                <div key={`service-mobile-${serviceType.id}`} className="p-4">
+                                                    <div className="flex items-start justify-between gap-4 mb-3">
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <h4 className="text-sm font-medium text-gray-900 dark:text-gray-50">
+                                                                    {serviceType.requestType}
+                                                                </h4>
+                                                                <Badge variant={getCategoryBadgeVariant(serviceType.category)}>
+                                                                    {serviceType.category}
+                                                                </Badge>
+                                                            </div>
+                                                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                                                {serviceType.description}
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                                            <Switch
+                                                                checked={serviceType.status}
+                                                                onCheckedChange={() => handleServiceTypeStatusToggle(serviceType.id)}
+                                                            />
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="sm"
+                                                                className="p-2 h-8 w-8"
+                                                                onClick={() => handleEditServiceType(serviceType)}
+                                                            >
+                                                                <Pencil className="size-4" style={{ color: '#696E72' }} />
+                                                            </Button>
+                                                            <div className="relative">
+                                                                <Button
+                                                                    variant="ghost"
+                                                                    size="sm"
+                                                                    className="p-2 h-8 w-8"
+                                                                    onClick={() => setOpenServiceTypeDropdownId(openServiceTypeDropdownId === serviceType.id ? null : serviceType.id)}
+                                                                >
+                                                                    <RiMore2Line className="size-4" />
+                                                                </Button>
+                                                                {openServiceTypeDropdownId === serviceType.id && (
+                                                                    <>
+                                                                        <div
+                                                                            className="fixed inset-0 z-10"
+                                                                            onClick={() => setOpenServiceTypeDropdownId(null)}
+                                                                        />
+                                                                        <div className="absolute right-0 top-full mt-1 z-20 min-w-[120px] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+                                                                            <button
+                                                                                onClick={() => handleDeleteServiceType(serviceType.id)}
+                                                                                className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
+                                                                            >
+                                                                                <RiDeleteBin6Line className="size-4" />
+                                                                                Delete
+                                                                            </button>
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="space-y-2">
+                                                        <div className="flex items-center gap-4 text-xs">
+                                                            <div>
+                                                                <span className="text-gray-500 dark:text-gray-400">Approval:</span>
+                                                                <span className="ml-1 text-gray-900 dark:text-gray-50">{serviceType.approval}</span>
+                                                            </div>
+                                                            {(() => {
+                                                                const categoryAssignedTo = category.assignedTo
+                                                                const isUsingCategoryAssignedTo = categoryAssignedTo && serviceType.assignedTo === categoryAssignedTo
+
+                                                                if (isUsingCategoryAssignedTo || serviceType.assignedTo) {
+                                                                    return (
+                                                                        <div>
+                                                                            <span className="text-gray-500 dark:text-gray-400">Assigned to:</span>
+                                                                            <span className="ml-1 text-gray-900 dark:text-gray-50">
+                                                                                {serviceType.assignedTo || '-'}
+                                                                            </span>
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                                return null
+                                                            })()}
+                                                            <div>
+                                                                <span className="text-gray-500 dark:text-gray-400">Price:</span>
+                                                                <span className="ml-1 text-gray-900 dark:text-gray-50">{formatPrice(serviceType, category)}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        {serviceType.statuses && serviceType.statuses.length > 0 && (
+                                                            <div>
+                                                                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Statuses</div>
+                                                                <div className="flex flex-wrap gap-1">
+                                                                    {serviceType.statuses.slice(0, 6).map((status) => (
+                                                                        <span
+                                                                            key={status}
+                                                                            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                                                                        >
+                                                                            {status}
+                                                                        </span>
+                                                                    ))}
+                                                                    {(serviceType.statuses.length || 0) > 6 && (
+                                                                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                                                                            +{(serviceType.statuses.length || 0) - 6} more
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )
+                        })
+                    )}
+                </div>
             </div>
 
             {/* Add Category Modal */}
@@ -1785,7 +1786,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                     <DialogHeader>
                         <DialogTitle>Add new category</DialogTitle>
                     </DialogHeader>
-                    
+
                     <div className="space-y-4 px-4 sm:px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="category-name">Category name *</Label>
@@ -1798,7 +1799,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             />
                         </div>
-                        
+
                         <div>
                             <Label htmlFor="category-description">Description *</Label>
                             <textarea
@@ -1810,7 +1811,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             />
                         </div>
-                        
+
                         <div>
                             <Label htmlFor="category-assigned">Assigned to (optional)</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
@@ -1827,11 +1828,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     }}
                                     onFocus={() => setIsAssignedToDropdownOpen(true)}
                                 />
-                                
+
                                 {isAssignedToDropdownOpen && (
                                     <>
-                                        <div 
-                                            className="fixed inset-0 z-10" 
+                                        <div
+                                            className="fixed inset-0 z-10"
                                             onClick={() => setIsAssignedToDropdownOpen(false)}
                                         />
                                         <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
@@ -1867,7 +1868,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </div>
                                     </>
                                 )}
-                                
+
                                 {newCategory.assignedTo && (
                                     <div className="mt-2 flex items-center gap-2">
                                         <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
@@ -1904,8 +1905,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                             <div className="flex items-start gap-8">
                                 <RadioGroup
                                     value={newCategory.priceType}
-                                    onValueChange={(value) => setNewCategory(prev => ({ 
-                                        ...prev, 
+                                    onValueChange={(value) => setNewCategory(prev => ({
+                                        ...prev,
                                         priceType: value as "none" | "fixed" | "range",
                                         priceFixed: value !== "fixed" ? "" : prev.priceFixed,
                                         priceMin: value !== "range" ? "" : prev.priceMin,
@@ -1932,7 +1933,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </Label>
                                     </div>
                                 </RadioGroup>
-                                
+
                                 <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
                                     {newCategory.priceType === "fixed" && (
                                         <div className="space-y-3">
@@ -1954,7 +1955,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             </div>
                                         </div>
                                     )}
-                                    
+
                                     {newCategory.priceType === "range" && (
                                         <div className="space-y-4">
                                             <Label className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Price range</Label>
@@ -1998,7 +1999,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             </div>
                                         </div>
                                     )}
-                                    
+
                                     {newCategory.priceType === "none" && (
                                         <div className="flex items-center h-12 text-sm text-gray-500 dark:text-gray-400 italic bg-gray-50/50 dark:bg-gray-800/30 rounded-lg px-4 border border-dashed border-gray-200 dark:border-gray-700">
                                             No pricing configured
@@ -2007,7 +2008,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsAddCategoryModalOpen(false)}>
                                 Cancel
@@ -2026,7 +2027,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                     <DialogHeader>
                         <DialogTitle>Edit category</DialogTitle>
                     </DialogHeader>
-                    
+
                     <div className="space-y-4 px-4 sm:px-6 py-4 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="edit-category-name">Category name *</Label>
@@ -2039,7 +2040,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             />
                         </div>
-                        
+
                         <div>
                             <Label htmlFor="edit-category-description">Description *</Label>
                             <textarea
@@ -2051,7 +2052,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             />
                         </div>
-                        
+
                         <div>
                             <Label htmlFor="edit-category-assigned">Assigned to (optional)</Label>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
@@ -2068,11 +2069,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     }}
                                     onFocus={() => setIsAssignedToDropdownOpen(true)}
                                 />
-                                
+
                                 {isAssignedToDropdownOpen && (
                                     <>
-                                        <div 
-                                            className="fixed inset-0 z-10" 
+                                        <div
+                                            className="fixed inset-0 z-10"
                                             onClick={() => setIsAssignedToDropdownOpen(false)}
                                         />
                                         <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
@@ -2108,7 +2109,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </div>
                                     </>
                                 )}
-                                
+
                                 {newCategory.assignedTo && (
                                     <div className="mt-2 flex items-center gap-2">
                                         <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
@@ -2145,8 +2146,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                             <div className="flex items-start gap-8">
                                 <RadioGroup
                                     value={newCategory.priceType}
-                                    onValueChange={(value) => setNewCategory(prev => ({ 
-                                        ...prev, 
+                                    onValueChange={(value) => setNewCategory(prev => ({
+                                        ...prev,
                                         priceType: value as "none" | "fixed" | "range",
                                         priceFixed: value !== "fixed" ? "" : prev.priceFixed,
                                         priceMin: value !== "range" ? "" : prev.priceMin,
@@ -2173,7 +2174,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </Label>
                                     </div>
                                 </RadioGroup>
-                                
+
                                 <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
                                     {newCategory.priceType === "fixed" && (
                                         <div className="space-y-3">
@@ -2195,7 +2196,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             </div>
                                         </div>
                                     )}
-                                    
+
                                     {newCategory.priceType === "range" && (
                                         <div className="space-y-4">
                                             <Label className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Price range</Label>
@@ -2239,7 +2240,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             </div>
                                         </div>
                                     )}
-                                    
+
                                     {newCategory.priceType === "none" && (
                                         <div className="flex items-center h-12 text-sm text-gray-500 dark:text-gray-400 italic bg-gray-50/50 dark:bg-gray-800/30 rounded-lg px-4 border border-dashed border-gray-200 dark:border-gray-700">
                                             No pricing configured
@@ -2248,7 +2249,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsEditCategoryModalOpen(false)}>
                                 Cancel
@@ -2267,8 +2268,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                     <DialogHeader>
                         <DialogTitle>Add service type</DialogTitle>
                     </DialogHeader>
-                    
-                    <div className="space-y-4 px-4 sm:px-6 py-4 overflow-y-auto flex-1">
+
+                    <div className="space-y-6 px-4 sm:px-6 py-6 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="service-type-name">Request type *</Label>
                             <Input
@@ -2276,9 +2277,10 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 placeholder="Enter request type"
                                 value={newServiceType.requestType}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, requestType: e.target.value }))}
+                                className="mt-2"
                             />
                         </div>
-                        
+
                         <div>
                             <Label htmlFor="service-type-description">Description *</Label>
                             <textarea
@@ -2287,17 +2289,17 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 placeholder="Enter description"
                                 value={newServiceType.description}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, description: e.target.value }))}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                                className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             />
                         </div>
-                        
+
                         <div>
                             <Label htmlFor="service-type-category">Category *</Label>
                             <select
                                 id="service-type-category"
                                 value={newServiceType.category}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, category: e.target.value }))}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                                className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             >
                                 <option>Cleaning & Waste</option>
                                 <option>Temperature & Air</option>
@@ -2308,108 +2310,110 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 <option>Other</option>
                             </select>
                         </div>
-                        
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <Label htmlFor="service-type-needs-approval">Needs approval</Label>
-                                <Switch
-                                    id="service-type-needs-approval"
-                                    checked={newServiceType.needsApproval}
-                                    onCheckedChange={(checked) => setNewServiceType(prev => ({ 
-                                        ...prev, 
-                                        needsApproval: checked,
-                                        approval: checked ? (prev.approvalType === "tenant-admin" ? "Tenant POC" : "Building Manager") : "None"
-                                    }))}
-                                />
-                            </div>
-                            
-                            {newServiceType.needsApproval && (
-                                <div className="space-y-3">
-                                    <RadioCardGroup
-                                        value={newServiceType.approvalType}
-                                        onValueChange={(value) => {
-                                            const approvalMap: Record<string, string> = {
-                                                "tenant-admin": "Tenant POC",
-                                                "specific-member": "Building Manager",
-                                                "team": "Building Manager",
-                                                "role": "Building Manager"
-                                            }
-                                            setNewServiceType(prev => ({ 
-                                                ...prev, 
-                                                approvalType: value as typeof prev.approvalType,
-                                                approval: approvalMap[value] || "Building Manager"
-                                            }))
-                                        }}
-                                    >
-                                        <RadioCardItem value="tenant-admin" className="h-auto">
-                                            <div className="flex items-start gap-3">
-                                                <RadioCardGroupIndicator className="mt-0.5" />
-                                                <div className="flex-1">
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
-                                                        Tenant Admin
-                                                    </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                                        When this request type is submitted, it must first be approved by the Tenant admin of the Tenant company submitting the request.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </RadioCardItem>
-                                        
-                                        <RadioCardItem value="specific-member" className="h-auto">
-                                            <div className="flex items-start gap-3">
-                                                <RadioCardGroupIndicator className="mt-0.5" />
-                                                <div className="flex-1">
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
-                                                        Specific Member
-                                                    </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                                        Select a specific member who must approve requests of this type before they can proceed.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </RadioCardItem>
-                                        
-                                        <RadioCardItem value="team" className="h-auto">
-                                            <div className="flex items-start gap-3">
-                                                <RadioCardGroupIndicator className="mt-0.5" />
-                                                <div className="flex-1">
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
-                                                        Team
-                                                    </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                                        Select a team that must approve requests of this type before they can proceed.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </RadioCardItem>
-                                        
-                                        <RadioCardItem value="role" className="h-auto">
-                                            <div className="flex items-start gap-3">
-                                                <RadioCardGroupIndicator className="mt-0.5" />
-                                                <div className="flex-1">
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
-                                                        Role
-                                                    </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                                        Select a specific role that must approve requests of this type before they can proceed.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </RadioCardItem>
-                                    </RadioCardGroup>
+
+                        <Card className="p-5">
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <Label htmlFor="service-type-needs-approval">Requires approval</Label>
+                                    <Switch
+                                        id="service-type-needs-approval"
+                                        checked={newServiceType.needsApproval}
+                                        onCheckedChange={(checked) => setNewServiceType(prev => ({
+                                            ...prev,
+                                            needsApproval: checked,
+                                            approval: checked ? (prev.approvalType === "tenant-admin" ? "Tenant POC" : "Building Manager") : "None"
+                                        }))}
+                                    />
                                 </div>
-                            )}
-                        </div>
-                        
+
+                                {newServiceType.needsApproval && (
+                                    <div className="space-y-3 pt-2">
+                                        <RadioCardGroup
+                                            value={newServiceType.approvalType}
+                                            onValueChange={(value) => {
+                                                const approvalMap: Record<string, string> = {
+                                                    "tenant-admin": "Tenant POC",
+                                                    "specific-member": "Building Manager",
+                                                    "team": "Building Manager",
+                                                    "role": "Building Manager"
+                                                }
+                                                setNewServiceType(prev => ({
+                                                    ...prev,
+                                                    approvalType: value as typeof prev.approvalType,
+                                                    approval: approvalMap[value] || "Building Manager"
+                                                }))
+                                            }}
+                                        >
+                                            <RadioCardItem value="tenant-admin" className="h-auto">
+                                                <div className="flex items-start gap-3">
+                                                    <RadioCardGroupIndicator className="mt-0.5" />
+                                                    <div className="flex-1">
+                                                        <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                            Tenant Admin
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                            When this request type is submitted, it must first be approved by the Tenant admin of the Tenant company submitting the request.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </RadioCardItem>
+
+                                            <RadioCardItem value="specific-member" className="h-auto">
+                                                <div className="flex items-start gap-3">
+                                                    <RadioCardGroupIndicator className="mt-0.5" />
+                                                    <div className="flex-1">
+                                                        <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                            Specific Member
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                            Select a specific member who must approve requests of this type before they can proceed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </RadioCardItem>
+
+                                            <RadioCardItem value="team" className="h-auto">
+                                                <div className="flex items-start gap-3">
+                                                    <RadioCardGroupIndicator className="mt-0.5" />
+                                                    <div className="flex-1">
+                                                        <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                            Team
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                            Select a team that must approve requests of this type before they can proceed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </RadioCardItem>
+
+                                            <RadioCardItem value="role" className="h-auto">
+                                                <div className="flex items-start gap-3">
+                                                    <RadioCardGroupIndicator className="mt-0.5" />
+                                                    <div className="flex-1">
+                                                        <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                            Role
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                            Select a specific role that must approve requests of this type before they can proceed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </RadioCardItem>
+                                        </RadioCardGroup>
+                                    </div>
+                                )}
+                            </div>
+                        </Card>
+
                         <div>
                             <Label htmlFor="service-type-assigned">Assigned to *</Label>
                             {(() => {
                                 const selectedCategory = categories.find(cat => cat.name === newServiceType.category)
                                 const hasCategoryAssignedTo = selectedCategory?.assignedTo
-                                
+
                                 if (hasCategoryAssignedTo) {
                                     return (
-                                        <div className="space-y-2">
+                                        <div className="space-y-2 mt-2">
                                             <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-md text-sm">
                                                 <span className="text-xs font-medium">
                                                     {selectedCategory?.assignedToType === 'user' ? 'U' : 'T'}
@@ -2422,7 +2426,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </div>
                                     )
                                 }
-                                
+
                                 return (
                                     <div className="relative">
                                         <Input
@@ -2435,11 +2439,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             }}
                                             onFocus={() => setIsAssignedToDropdownOpen(true)}
                                         />
-                                
+
                                         {isAssignedToDropdownOpen && (
                                             <>
-                                                <div 
-                                                    className="fixed inset-0 z-10" 
+                                                <div
+                                                    className="fixed inset-0 z-10"
                                                     onClick={() => setIsAssignedToDropdownOpen(false)}
                                                 />
                                                 <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
@@ -2475,7 +2479,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 </div>
                                             </>
                                         )}
-                                        
+
                                         {newServiceType.assignedTo && (
                                             <div className="mt-2 flex items-center gap-2">
                                                 <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
@@ -2511,7 +2515,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                             {(() => {
                                 const selectedCategory = categories.find(cat => cat.name === newServiceType.category)
                                 const hasCategoryPricing = selectedCategory && (selectedCategory as any).priceType && (selectedCategory as any).priceType !== 'none'
-                                
+
                                 if (hasCategoryPricing && (!newServiceType.priceType || newServiceType.priceType === 'none')) {
                                     return (
                                         <div className="space-y-3">
@@ -2550,8 +2554,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <div className="flex items-start gap-8">
                                                     <RadioGroup
                                                         value={newServiceType.priceType}
-                                                        onValueChange={(value) => setNewServiceType(prev => ({ 
-                                                            ...prev, 
+                                                        onValueChange={(value) => setNewServiceType(prev => ({
+                                                            ...prev,
                                                             priceType: value as "none" | "fixed" | "range",
                                                             priceFixed: value !== "fixed" ? "" : prev.priceFixed,
                                                             priceMin: value !== "range" ? "" : prev.priceMin,
@@ -2578,7 +2582,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                             </Label>
                                                         </div>
                                                     </RadioGroup>
-                                                    
+
                                                     <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
                                                         {(newServiceType.priceType as string) === "fixed" ? (
                                                             <div className="space-y-3">
@@ -2648,13 +2652,13 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </div>
                                     )
                                 }
-                                
+
                                 return (
                                     <div className="flex items-start gap-8">
                                         <RadioGroup
                                             value={newServiceType.priceType}
-                                            onValueChange={(value) => setNewServiceType(prev => ({ 
-                                                ...prev, 
+                                            onValueChange={(value) => setNewServiceType(prev => ({
+                                                ...prev,
                                                 priceType: value as "none" | "fixed" | "range",
                                                 priceFixed: value !== "fixed" ? "" : prev.priceFixed,
                                                 priceMin: value !== "range" ? "" : prev.priceMin,
@@ -2681,7 +2685,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 </Label>
                                             </div>
                                         </RadioGroup>
-                                        
+
                                         <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
                                             {newServiceType.priceType === "fixed" && (
                                                 <div className="space-y-3">
@@ -2703,7 +2707,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     </div>
                                                 </div>
                                             )}
-                                            
+
                                             {newServiceType.priceType === "range" && (
                                                 <div className="space-y-4">
                                                     <Label className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Price range</Label>
@@ -2747,7 +2751,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                     </div>
                                                 </div>
                                             )}
-                                            
+
                                             {newServiceType.priceType === "none" && (
                                                 <div className="flex items-center h-12 text-sm text-gray-500 dark:text-gray-400 italic bg-gray-50/50 dark:bg-gray-800/30 rounded-lg px-4 border border-dashed border-gray-200 dark:border-gray-700">
                                                     No pricing configured
@@ -2764,7 +2768,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
                                 Configure statuses for this service type
                             </p>
-                            
+
                             <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                                 <table className="min-w-full">
                                     <thead className="bg-gray-50 dark:bg-gray-800">
@@ -2803,26 +2807,26 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <span className="text-gray-400 dark:text-gray-500">-</span>
                                             </td>
                                         </tr>
-                                        
+
                                         {availableStatuses.filter(status => status.name !== "New").map((status) => {
                                             const isSelected = newServiceType.statuses.some(s => s.name === status.name)
                                             const selectedStatus = newServiceType.statuses.find(s => s.name === status.name)
-                                            
+
                                             return (
                                                 <tr key={status.name} className={isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''}>
                                                     <td className="px-3 py-2">
                                                         <label className="flex items-center space-x-2 cursor-pointer">
-                                        <input
-                                            type="checkbox"
+                                                            <input
+                                                                type="checkbox"
                                                                 checked={isSelected}
-                                            onChange={() => handleStatusToggleInModal(status.name)}
-                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                        />
+                                                                onChange={() => handleStatusToggleInModal(status.name)}
+                                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                            />
                                                             <div className="flex items-center gap-2">
                                                                 <div className={`w-3 h-3 rounded-full ${getColorClasses(status.color).bgClass}`}></div>
-                                        <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
+                                                                <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
                                                             </div>
-                                    </label>
+                                                        </label>
                                                     </td>
                                                     <td className="px-3 py-2 text-center">
                                                         {isSelected ? (
@@ -2847,7 +2851,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 </tr>
                                             )
                                         })}
-                                        
+
                                         {/* Add New Status Row */}
                                         {!isAddingNewStatus && (
                                             <tr className="border-t border-gray-200 dark:border-gray-700">
@@ -2862,7 +2866,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 </td>
                                             </tr>
                                         )}
-                                        
+
                                         {/* New Status Creation Card */}
                                         {isAddingNewStatus && (
                                             <tr className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
@@ -2878,7 +2882,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                 className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                             />
                                                         </div>
-                                                        
+
                                                         <div>
                                                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Choose a color:</p>
                                                             <div className="flex flex-wrap gap-1">
@@ -2887,17 +2891,16 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                         key={colorOption.value}
                                                                         type="button"
                                                                         onClick={() => setNewStatus(prev => ({ ...prev, color: colorOption.value }))}
-                                                                        className={`w-6 h-6 rounded-full border-2 transition-all ${
-                                                                            newStatus.color === colorOption.value
-                                                                                ? 'border-gray-900 dark:border-gray-100 ring-2 ring-offset-1 ring-gray-500'
-                                                                                : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
-                                                                        } ${colorOption.bgClass}`}
+                                                                        className={`w-6 h-6 rounded-full border-2 transition-all ${newStatus.color === colorOption.value
+                                                                            ? 'border-gray-900 dark:border-gray-100 ring-2 ring-offset-1 ring-gray-500'
+                                                                            : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                                                            } ${colorOption.bgClass}`}
                                                                         title={colorOption.name}
                                                                     />
                                                                 ))}
                                                             </div>
                                                         </div>
-                                                        
+
                                                         <div className="flex items-center gap-2">
                                                             <Button
                                                                 size="sm"
@@ -2922,7 +2925,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 </table>
                             </div>
                         </div>
-                        
+
                         <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsAddServiceTypeModalOpen(false)}>
                                 Cancel
@@ -2941,8 +2944,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                     <DialogHeader>
                         <DialogTitle>Edit service type</DialogTitle>
                     </DialogHeader>
-                    
-                    <div className="space-y-4 px-4 sm:px-6 py-4 overflow-y-auto flex-1">
+
+                    <div className="space-y-6 px-4 sm:px-6 py-6 overflow-y-auto flex-1">
                         <div>
                             <Label htmlFor="edit-service-type-name">Request type *</Label>
                             <Input
@@ -2950,9 +2953,10 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 placeholder="Enter request type"
                                 value={newServiceType.requestType}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, requestType: e.target.value }))}
+                                className="mt-2"
                             />
                         </div>
-                        
+
                         <div>
                             <Label htmlFor="edit-service-type-description">Description *</Label>
                             <textarea
@@ -2961,17 +2965,17 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 placeholder="Enter description"
                                 value={newServiceType.description}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, description: e.target.value }))}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                                className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             />
                         </div>
-                        
+
                         <div>
                             <Label htmlFor="edit-service-type-category">Category *</Label>
                             <select
                                 id="edit-service-type-category"
                                 value={newServiceType.category}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, category: e.target.value }))}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                                className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             >
                                 <option>Cleaning & Waste</option>
                                 <option>Temperature & Air</option>
@@ -2982,108 +2986,110 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 <option>Other</option>
                             </select>
                         </div>
-                        
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <Label htmlFor="edit-service-type-needs-approval">Needs approval</Label>
-                                <Switch
-                                    id="edit-service-type-needs-approval"
-                                    checked={newServiceType.needsApproval}
-                                    onCheckedChange={(checked) => setNewServiceType(prev => ({ 
-                                        ...prev, 
-                                        needsApproval: checked,
-                                        approval: checked ? (prev.approvalType === "tenant-admin" ? "Tenant POC" : "Building Manager") : "None"
-                                    }))}
-                                />
-                            </div>
-                            
-                            {newServiceType.needsApproval && (
-                                <div className="space-y-3">
-                                    <RadioCardGroup
-                                        value={newServiceType.approvalType}
-                                        onValueChange={(value) => {
-                                            const approvalMap: Record<string, string> = {
-                                                "tenant-admin": "Tenant POC",
-                                                "specific-member": "Building Manager",
-                                                "team": "Building Manager",
-                                                "role": "Building Manager"
-                                            }
-                                            setNewServiceType(prev => ({ 
-                                                ...prev, 
-                                                approvalType: value as typeof prev.approvalType,
-                                                approval: approvalMap[value] || "Building Manager"
-                                            }))
-                                        }}
-                                    >
-                                        <RadioCardItem value="tenant-admin" className="h-auto">
-                                            <div className="flex items-start gap-3">
-                                                <RadioCardGroupIndicator className="mt-0.5" />
-                                                <div className="flex-1">
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
-                                                        Tenant Admin
-                                                    </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                                        When this request type is submitted, it must first be approved by the Tenant admin of the Tenant company submitting the request.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </RadioCardItem>
-                                        
-                                        <RadioCardItem value="specific-member" className="h-auto">
-                                            <div className="flex items-start gap-3">
-                                                <RadioCardGroupIndicator className="mt-0.5" />
-                                                <div className="flex-1">
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
-                                                        Specific Member
-                                                    </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                                        Select a specific member who must approve requests of this type before they can proceed.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </RadioCardItem>
-                                        
-                                        <RadioCardItem value="team" className="h-auto">
-                                            <div className="flex items-start gap-3">
-                                                <RadioCardGroupIndicator className="mt-0.5" />
-                                                <div className="flex-1">
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
-                                                        Team
-                                                    </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                                        Select a team that must approve requests of this type before they can proceed.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </RadioCardItem>
-                                        
-                                        <RadioCardItem value="role" className="h-auto">
-                                            <div className="flex items-start gap-3">
-                                                <RadioCardGroupIndicator className="mt-0.5" />
-                                                <div className="flex-1">
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
-                                                        Role
-                                                    </div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                                        Select a specific role that must approve requests of this type before they can proceed.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </RadioCardItem>
-                                    </RadioCardGroup>
+
+                        <Card className="p-5">
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <Label htmlFor="edit-service-type-needs-approval">Requires approval</Label>
+                                    <Switch
+                                        id="edit-service-type-needs-approval"
+                                        checked={newServiceType.needsApproval}
+                                        onCheckedChange={(checked) => setNewServiceType(prev => ({
+                                            ...prev,
+                                            needsApproval: checked,
+                                            approval: checked ? (prev.approvalType === "tenant-admin" ? "Tenant POC" : "Building Manager") : "None"
+                                        }))}
+                                    />
                                 </div>
-                            )}
-                        </div>
-                        
+
+                                {newServiceType.needsApproval && (
+                                    <div className="space-y-3 pt-2">
+                                        <RadioCardGroup
+                                            value={newServiceType.approvalType}
+                                            onValueChange={(value) => {
+                                                const approvalMap: Record<string, string> = {
+                                                    "tenant-admin": "Tenant POC",
+                                                    "specific-member": "Building Manager",
+                                                    "team": "Building Manager",
+                                                    "role": "Building Manager"
+                                                }
+                                                setNewServiceType(prev => ({
+                                                    ...prev,
+                                                    approvalType: value as typeof prev.approvalType,
+                                                    approval: approvalMap[value] || "Building Manager"
+                                                }))
+                                            }}
+                                        >
+                                            <RadioCardItem value="tenant-admin" className="h-auto">
+                                                <div className="flex items-start gap-3">
+                                                    <RadioCardGroupIndicator className="mt-0.5" />
+                                                    <div className="flex-1">
+                                                        <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                            Tenant Admin
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                            When this request type is submitted, it must first be approved by the Tenant admin of the Tenant company submitting the request.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </RadioCardItem>
+
+                                            <RadioCardItem value="specific-member" className="h-auto">
+                                                <div className="flex items-start gap-3">
+                                                    <RadioCardGroupIndicator className="mt-0.5" />
+                                                    <div className="flex-1">
+                                                        <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                            Specific Member
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                            Select a specific member who must approve requests of this type before they can proceed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </RadioCardItem>
+
+                                            <RadioCardItem value="team" className="h-auto">
+                                                <div className="flex items-start gap-3">
+                                                    <RadioCardGroupIndicator className="mt-0.5" />
+                                                    <div className="flex-1">
+                                                        <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                            Team
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                            Select a team that must approve requests of this type before they can proceed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </RadioCardItem>
+
+                                            <RadioCardItem value="role" className="h-auto">
+                                                <div className="flex items-start gap-3">
+                                                    <RadioCardGroupIndicator className="mt-0.5" />
+                                                    <div className="flex-1">
+                                                        <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                            Role
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                            Select a specific role that must approve requests of this type before they can proceed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </RadioCardItem>
+                                        </RadioCardGroup>
+                                    </div>
+                                )}
+                            </div>
+                        </Card>
+
                         <div>
                             <Label htmlFor="edit-service-type-assigned">Assigned to *</Label>
                             {(() => {
                                 const selectedCategory = categories.find(cat => cat.name === newServiceType.category)
                                 const hasCategoryAssignedTo = selectedCategory?.assignedTo
-                                
+
                                 if (hasCategoryAssignedTo) {
                                     return (
-                                        <div className="space-y-2">
+                                        <div className="space-y-2 mt-2">
                                             <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-md text-sm">
                                                 <span className="text-xs font-medium">
                                                     {selectedCategory?.assignedToType === 'user' ? 'U' : 'T'}
@@ -3096,7 +3102,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </div>
                                     )
                                 }
-                                
+
                                 return (
                                     <div className="relative">
                                         <Input
@@ -3109,11 +3115,11 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             }}
                                             onFocus={() => setIsAssignedToDropdownOpen(true)}
                                         />
-                                        
+
                                         {isAssignedToDropdownOpen && (
                                             <>
-                                                <div 
-                                                    className="fixed inset-0 z-10" 
+                                                <div
+                                                    className="fixed inset-0 z-10"
                                                     onClick={() => setIsAssignedToDropdownOpen(false)}
                                                 />
                                                 <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
@@ -3149,7 +3155,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 </div>
                                             </>
                                         )}
-                                        
+
                                         {newServiceType.assignedTo && (
                                             <div className="mt-2 flex items-center gap-2">
                                                 <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-md text-sm">
@@ -3185,8 +3191,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                             <div className="flex items-start gap-8">
                                 <RadioGroup
                                     value={newServiceType.priceType}
-                                    onValueChange={(value) => setNewServiceType(prev => ({ 
-                                        ...prev, 
+                                    onValueChange={(value) => setNewServiceType(prev => ({
+                                        ...prev,
                                         priceType: value as "none" | "fixed" | "range",
                                         priceFixed: value !== "fixed" ? "" : prev.priceFixed,
                                         priceMin: value !== "range" ? "" : prev.priceMin,
@@ -3213,7 +3219,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                         </Label>
                                     </div>
                                 </RadioGroup>
-                                
+
                                 <div className="flex-1 border-l border-gray-200/60 dark:border-gray-700/60 pl-8">
                                     {newServiceType.priceType === "fixed" && (
                                         <div className="space-y-3">
@@ -3235,7 +3241,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             </div>
                                         </div>
                                     )}
-                                    
+
                                     {newServiceType.priceType === "range" && (
                                         <div className="space-y-4">
                                             <Label className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider block">Price range</Label>
@@ -3279,7 +3285,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                             </div>
                                         </div>
                                     )}
-                                    
+
                                     {newServiceType.priceType === "none" && (
                                         <div className="flex items-center h-12 text-sm text-gray-500 dark:text-gray-400 italic bg-gray-50/50 dark:bg-gray-800/30 rounded-lg px-4 border border-dashed border-gray-200 dark:border-gray-700">
                                             No pricing configured
@@ -3294,7 +3300,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
                                 Configure statuses for this service type
                             </p>
-                            
+
                             <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                                 <table className="min-w-full">
                                     <thead className="bg-gray-50 dark:bg-gray-800">
@@ -3333,26 +3339,26 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 <span className="text-gray-400 dark:text-gray-500">-</span>
                                             </td>
                                         </tr>
-                                        
+
                                         {availableStatuses.filter(status => status.name !== "New").map((status) => {
                                             const isSelected = newServiceType.statuses.some(s => s.name === status.name)
                                             const selectedStatus = newServiceType.statuses.find(s => s.name === status.name)
-                                            
+
                                             return (
                                                 <tr key={status.name} className={isSelected ? 'bg-blue-50 dark:bg-blue-900/20' : ''}>
                                                     <td className="px-3 py-2">
                                                         <label className="flex items-center space-x-2 cursor-pointer">
-                                        <input
-                                            type="checkbox"
+                                                            <input
+                                                                type="checkbox"
                                                                 checked={isSelected}
-                                            onChange={() => handleStatusToggleInModal(status.name)}
-                                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                        />
+                                                                onChange={() => handleStatusToggleInModal(status.name)}
+                                                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                            />
                                                             <div className="flex items-center gap-2">
                                                                 <div className={`w-3 h-3 rounded-full ${getColorClasses(status.color).bgClass}`}></div>
-                                        <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
+                                                                <span className="text-sm text-gray-700 dark:text-gray-300">{status.name}</span>
                                                             </div>
-                                    </label>
+                                                        </label>
                                                     </td>
                                                     <td className="px-3 py-2 text-center">
                                                         {isSelected ? (
@@ -3377,7 +3383,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 </tr>
                                             )
                                         })}
-                                        
+
                                         {/* Add New Status Row */}
                                         {!isAddingNewStatus && (
                                             <tr className="border-t border-gray-200 dark:border-gray-700">
@@ -3392,7 +3398,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                 </td>
                                             </tr>
                                         )}
-                                        
+
                                         {/* New Status Creation Card */}
                                         {isAddingNewStatus && (
                                             <tr className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
@@ -3408,7 +3414,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                 className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded-md bg-white dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                             />
                                                         </div>
-                                                        
+
                                                         <div>
                                                             <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Choose a color:</p>
                                                             <div className="flex flex-wrap gap-1">
@@ -3417,17 +3423,16 @@ export default function ServiceRequestsServiceTypesCategories() {
                                                                         key={colorOption.value}
                                                                         type="button"
                                                                         onClick={() => setNewStatus(prev => ({ ...prev, color: colorOption.value }))}
-                                                                        className={`w-6 h-6 rounded-full border-2 transition-all ${
-                                                                            newStatus.color === colorOption.value
-                                                                                ? 'border-gray-900 dark:border-gray-100 ring-2 ring-offset-1 ring-gray-500'
-                                                                                : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
-                                                                        } ${colorOption.bgClass}`}
+                                                                        className={`w-6 h-6 rounded-full border-2 transition-all ${newStatus.color === colorOption.value
+                                                                            ? 'border-gray-900 dark:border-gray-100 ring-2 ring-offset-1 ring-gray-500'
+                                                                            : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                                                            } ${colorOption.bgClass}`}
                                                                         title={colorOption.name}
                                                                     />
                                                                 ))}
                                                             </div>
                                                         </div>
-                                                        
+
                                                         <div className="flex items-center gap-2">
                                                             <Button
                                                                 size="sm"
@@ -3452,7 +3457,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 </table>
                             </div>
                         </div>
-                        
+
                         <DialogFooter>
                             <Button variant="ghost" onClick={() => setIsEditServiceTypeModalOpen(false)}>
                                 Cancel
