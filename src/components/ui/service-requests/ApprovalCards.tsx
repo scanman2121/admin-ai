@@ -28,7 +28,7 @@ export function ApprovalCards({ requests, onApprove, onDeny }: ApprovalCardsProp
     const visibleRequests = requests
     
     return (
-        <div className="relative mb-6">
+        <div className="relative">
             <div className="relative" style={{ minHeight: visibleRequests.length > 0 ? '70px' : '0' }}>
                 {visibleRequests.map((request, index) => {
                     // Only show top 3 cards with full visibility, others fade out

@@ -594,7 +594,7 @@ export default function ServiceRequests() {
         <div className="space-y-6">
             {/* Approval Cards */}
             {pendingApprovals.length > 0 && (
-                <div className="mb-8">
+                <div className="mb-12 -mt-2">
                     <ApprovalCards
                         requests={pendingApprovals}
                         onApprove={handleCardApprove}
