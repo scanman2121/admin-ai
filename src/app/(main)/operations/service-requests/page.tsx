@@ -594,11 +594,13 @@ export default function ServiceRequests() {
         <div className="space-y-6">
             {/* Approval Cards */}
             {pendingApprovals.length > 0 && (
-                <ApprovalCards
-                    requests={pendingApprovals}
-                    onApprove={handleCardApprove}
-                    onDeny={handleCardDeny}
-                />
+                <div className="mb-8">
+                    <ApprovalCards
+                        requests={pendingApprovals}
+                        onApprove={handleCardApprove}
+                        onDeny={handleCardDeny}
+                    />
+                </div>
             )}
 
             <ServiceRequestsDataTable 

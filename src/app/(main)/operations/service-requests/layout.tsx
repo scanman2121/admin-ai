@@ -65,9 +65,10 @@ export default function ServiceRequestsLayout({
                 </Button>
             </div>
 
-            <AIInsights insights={insights} className="mt-6" />
+            {/* Temporarily hidden - will be used later */}
+            {/* <AIInsights insights={insights} className="mt-6" /> */}
 
-            <TabNavigation>
+            {/* <TabNavigation>
                 {tabs.map((tab) => (
                     <TabNavigationLink
                         key={tab.name}
@@ -77,7 +78,7 @@ export default function ServiceRequestsLayout({
                         <Link href={tab.href}>{tab.name}</Link>
                     </TabNavigationLink>
                 ))}
-            </TabNavigation>
+            </TabNavigation> */}
 
             <div className="flex flex-col gap-4 w-full">
                 <div className="pt-6">{children}</div>
