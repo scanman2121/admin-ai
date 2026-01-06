@@ -349,7 +349,7 @@ const createServiceRequestsColumns = (
                         variant="ghost"
                         size="sm"
                         onClick={handleApprove}
-                        className="h-8 px-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
+                        className="h-8 px-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 border border-blue-600 dark:border-blue-400"
                     >
                         Approve
                     </Button>
@@ -357,7 +357,7 @@ const createServiceRequestsColumns = (
                         variant="ghost"
                         size="sm"
                         onClick={handleDeny}
-                        className="h-8 px-3 text-pink-600 hover:text-pink-700 hover:bg-pink-50 dark:text-pink-400 dark:hover:bg-pink-900/20"
+                        className="h-8 px-3 text-pink-600 hover:text-pink-700 hover:bg-pink-50 dark:text-pink-400 dark:hover:bg-pink-900/20 border border-pink-600 dark:border-pink-400"
                     >
                         Deny
                     </Button>
