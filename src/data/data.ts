@@ -931,8 +931,10 @@ const createWorkOrderFromUser = (user: any, request: string, issueType: string, 
   const approvalDate = approval ? new Date(Date.now() - Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000) : undefined;
   const approverName = approval ? approverNames[Math.floor(Math.random() * approverNames.length)] : approver;
   
-  // Randomly assign unread message count (0-3)
-  const unreadMessages = Math.floor(Math.random() * 4);
+  // Randomly assign unread message count (0-3), with higher probability of 0
+  // 40% chance of 0, 20% chance of 1, 20% chance of 2, 20% chance of 3
+  const rand = Math.random();
+  const unreadMessages = rand < 0.4 ? 0 : rand < 0.6 ? 1 : rand < 0.8 ? 2 : 3;
   
   return {
     id: `WO-${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
