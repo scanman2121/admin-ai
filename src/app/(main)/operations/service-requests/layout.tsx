@@ -1,18 +1,19 @@
 "use client"
 
 import { Button } from "@/components/Button"
-import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
-import { AIInsights } from "@/components/ui/insights/AIInsights"
-import { getPageInsights } from "@/lib/insights"
+// Temporarily commented out - will be used later
+// import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
+// import { AIInsights } from "@/components/ui/insights/AIInsights"
+// import { getPageInsights } from "@/lib/insights"
 import { RiSettings3Line } from "@remixicon/react"
-import Link from "next/link"
+// import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 
-const tabs = [
-    { name: "Requests", href: "/operations/service-requests" },
-    { name: "Equipment", href: "/operations/service-requests/equipment" },
-    { name: "Calendar", href: "/operations/service-requests/calendar" },
-] as const
+// const tabs = [
+//     { name: "Requests", href: "/operations/service-requests" },
+//     { name: "Equipment", href: "/operations/service-requests/equipment" },
+//     { name: "Calendar", href: "/operations/service-requests/calendar" },
+// ] as const
 
 export default function ServiceRequestsLayout({
     children,
@@ -21,7 +22,7 @@ export default function ServiceRequestsLayout({
 }>) {
     const pathname = usePathname()
     const router = useRouter()
-    const insights = getPageInsights("operations")
+    // const insights = getPageInsights("operations")
 
     // Check if we're on a service request detail page (e.g., /operations/service-requests/[id])
     // But exclude the base paths that should show tabs
