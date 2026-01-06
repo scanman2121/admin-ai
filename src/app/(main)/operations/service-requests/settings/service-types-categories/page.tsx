@@ -10,6 +10,7 @@ import { Tooltip } from "@/components/Tooltip"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { RadioCardGroup, RadioCardGroupIndicator, RadioCardItem } from "@/components/RadioCard"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiMore2Line } from "@remixicon/react"
 import { Pencil, User, Users, DollarSign, CircleDollarSign, Lock } from "lucide-react"
@@ -617,6 +618,8 @@ export default function ServiceRequestsServiceTypesCategories() {
         description: "",
         category: "Cleaning & Waste",
         approval: "None",
+        needsApproval: false,
+        approvalType: "tenant-admin" as "tenant-admin" | "specific-member" | "team" | "role",
         assignedTo: "",
         assignedToType: "user" as "user" | "team",
         priceType: "none" as "none" | "fixed" | "range",
@@ -894,6 +897,8 @@ export default function ServiceRequestsServiceTypesCategories() {
             description: "",
             category: "Cleaning & Waste",
             approval: "None",
+            needsApproval: false,
+            approvalType: "tenant-admin",
             assignedTo: "",
             assignedToType: "user",
             priceType: "none",
@@ -909,11 +914,22 @@ export default function ServiceRequestsServiceTypesCategories() {
 
     const handleEditServiceType = (serviceType: typeof serviceTypesData[0]) => {
         setEditingServiceType(serviceType)
+        const hasApproval = serviceType.approval && serviceType.approval !== "None"
+        // Map old approval values to new structure
+        let approvalType: "tenant-admin" | "specific-member" | "team" | "role" = "tenant-admin"
+        if (serviceType.approval === "Tenant POC") {
+            approvalType = "tenant-admin"
+        } else if (serviceType.approval === "Building Manager" || serviceType.approval === "Property Manager") {
+            approvalType = "specific-member"
+        }
+        
         setNewServiceType({
             requestType: serviceType.requestType,
             description: serviceType.description,
             category: serviceType.category,
             approval: serviceType.approval,
+            needsApproval: hasApproval as boolean,
+            approvalType: approvalType,
             assignedTo: serviceType.assignedTo,
             assignedToType: "user", // Default to user, could be enhanced to detect type
             priceType: (serviceType as any).priceType || "none",
@@ -963,6 +979,8 @@ export default function ServiceRequestsServiceTypesCategories() {
             description: "",
             category: "Cleaning & Waste",
             approval: "None",
+            needsApproval: false,
+            approvalType: "tenant-admin",
             assignedTo: "",
             assignedToType: "user",
             priceType: "none",
@@ -1193,6 +1211,8 @@ export default function ServiceRequestsServiceTypesCategories() {
                                     description: "",
                                     category: "Cleaning & Waste",
                                     approval: "None",
+                                    needsApproval: false,
+                                    approvalType: "tenant-admin",
                                     assignedTo: "",
                                     assignedToType: "user" as "user" | "team",
                                     priceType: "none" as "none" | "fixed" | "range",
@@ -2289,19 +2309,96 @@ export default function ServiceRequestsServiceTypesCategories() {
                             </select>
                         </div>
                         
-                        <div>
-                            <Label htmlFor="service-type-approval">Approval type</Label>
-                            <select
-                                id="service-type-approval"
-                                value={newServiceType.approval}
-                                onChange={(e) => setNewServiceType(prev => ({ ...prev, approval: e.target.value }))}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                            >
-                                <option>None</option>
-                                <option>Tenant POC</option>
-                                <option>Building Manager</option>
-                                <option>Property Manager</option>
-                            </select>
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="service-type-needs-approval">Needs approval</Label>
+                                <Switch
+                                    id="service-type-needs-approval"
+                                    checked={newServiceType.needsApproval}
+                                    onCheckedChange={(checked) => setNewServiceType(prev => ({ 
+                                        ...prev, 
+                                        needsApproval: checked,
+                                        approval: checked ? (prev.approvalType === "tenant-admin" ? "Tenant POC" : "Building Manager") : "None"
+                                    }))}
+                                />
+                            </div>
+                            
+                            {newServiceType.needsApproval && (
+                                <div className="space-y-3">
+                                    <RadioCardGroup
+                                        value={newServiceType.approvalType}
+                                        onValueChange={(value) => {
+                                            const approvalMap: Record<string, string> = {
+                                                "tenant-admin": "Tenant POC",
+                                                "specific-member": "Building Manager",
+                                                "team": "Building Manager",
+                                                "role": "Building Manager"
+                                            }
+                                            setNewServiceType(prev => ({ 
+                                                ...prev, 
+                                                approvalType: value as typeof prev.approvalType,
+                                                approval: approvalMap[value] || "Building Manager"
+                                            }))
+                                        }}
+                                    >
+                                        <RadioCardItem value="tenant-admin" className="h-auto">
+                                            <div className="flex items-start gap-3">
+                                                <RadioCardGroupIndicator className="mt-0.5" />
+                                                <div className="flex-1">
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                        Tenant Admin
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                        When this request type is submitted, it must first be approved by the Tenant admin of the Tenant company submitting the request.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </RadioCardItem>
+                                        
+                                        <RadioCardItem value="specific-member" className="h-auto">
+                                            <div className="flex items-start gap-3">
+                                                <RadioCardGroupIndicator className="mt-0.5" />
+                                                <div className="flex-1">
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                        Specific Member
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                        Select a specific member who must approve requests of this type before they can proceed.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </RadioCardItem>
+                                        
+                                        <RadioCardItem value="team" className="h-auto">
+                                            <div className="flex items-start gap-3">
+                                                <RadioCardGroupIndicator className="mt-0.5" />
+                                                <div className="flex-1">
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                        Team
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                        Select a team that must approve requests of this type before they can proceed.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </RadioCardItem>
+                                        
+                                        <RadioCardItem value="role" className="h-auto">
+                                            <div className="flex items-start gap-3">
+                                                <RadioCardGroupIndicator className="mt-0.5" />
+                                                <div className="flex-1">
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                        Role
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                        Select a specific role that must approve requests of this type before they can proceed.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </RadioCardItem>
+                                    </RadioCardGroup>
+                                </div>
+                            )}
                         </div>
                         
                         <div>
@@ -2886,19 +2983,96 @@ export default function ServiceRequestsServiceTypesCategories() {
                             </select>
                         </div>
                         
-                        <div>
-                            <Label htmlFor="edit-service-type-approval">Approval type</Label>
-                            <select
-                                id="edit-service-type-approval"
-                                value={newServiceType.approval}
-                                onChange={(e) => setNewServiceType(prev => ({ ...prev, approval: e.target.value }))}
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                            >
-                                <option>None</option>
-                                <option>Tenant POC</option>
-                                <option>Building Manager</option>
-                                <option>Property Manager</option>
-                            </select>
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="edit-service-type-needs-approval">Needs approval</Label>
+                                <Switch
+                                    id="edit-service-type-needs-approval"
+                                    checked={newServiceType.needsApproval}
+                                    onCheckedChange={(checked) => setNewServiceType(prev => ({ 
+                                        ...prev, 
+                                        needsApproval: checked,
+                                        approval: checked ? (prev.approvalType === "tenant-admin" ? "Tenant POC" : "Building Manager") : "None"
+                                    }))}
+                                />
+                            </div>
+                            
+                            {newServiceType.needsApproval && (
+                                <div className="space-y-3">
+                                    <RadioCardGroup
+                                        value={newServiceType.approvalType}
+                                        onValueChange={(value) => {
+                                            const approvalMap: Record<string, string> = {
+                                                "tenant-admin": "Tenant POC",
+                                                "specific-member": "Building Manager",
+                                                "team": "Building Manager",
+                                                "role": "Building Manager"
+                                            }
+                                            setNewServiceType(prev => ({ 
+                                                ...prev, 
+                                                approvalType: value as typeof prev.approvalType,
+                                                approval: approvalMap[value] || "Building Manager"
+                                            }))
+                                        }}
+                                    >
+                                        <RadioCardItem value="tenant-admin" className="h-auto">
+                                            <div className="flex items-start gap-3">
+                                                <RadioCardGroupIndicator className="mt-0.5" />
+                                                <div className="flex-1">
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                        Tenant Admin
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                        When this request type is submitted, it must first be approved by the Tenant admin of the Tenant company submitting the request.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </RadioCardItem>
+                                        
+                                        <RadioCardItem value="specific-member" className="h-auto">
+                                            <div className="flex items-start gap-3">
+                                                <RadioCardGroupIndicator className="mt-0.5" />
+                                                <div className="flex-1">
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                        Specific Member
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                        Select a specific member who must approve requests of this type before they can proceed.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </RadioCardItem>
+                                        
+                                        <RadioCardItem value="team" className="h-auto">
+                                            <div className="flex items-start gap-3">
+                                                <RadioCardGroupIndicator className="mt-0.5" />
+                                                <div className="flex-1">
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                        Team
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                        Select a team that must approve requests of this type before they can proceed.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </RadioCardItem>
+                                        
+                                        <RadioCardItem value="role" className="h-auto">
+                                            <div className="flex items-start gap-3">
+                                                <RadioCardGroupIndicator className="mt-0.5" />
+                                                <div className="flex-1">
+                                                    <div className="font-medium text-gray-900 dark:text-gray-50">
+                                                        Role
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                        Select a specific role that must approve requests of this type before they can proceed.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </RadioCardItem>
+                                    </RadioCardGroup>
+                                </div>
+                            )}
                         </div>
                         
                         <div>
