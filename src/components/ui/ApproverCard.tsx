@@ -207,14 +207,14 @@ export function ApproverCard({
               <div className="flex gap-2">
                 <Button
                   variant="ghost"
-                  className="flex-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
+                  className="flex-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 border border-blue-600 dark:border-blue-400"
                   onClick={onApprove}
                 >
                   Approve
                 </Button>
                 <Button
                   variant="ghost"
-                  className="flex-1 text-pink-600 hover:text-pink-700 hover:bg-pink-50 dark:text-pink-400 dark:hover:bg-pink-900/20"
+                  className="flex-1 text-pink-600 hover:text-pink-700 hover:bg-pink-50 dark:text-pink-400 dark:hover:bg-pink-900/20 border border-pink-600 dark:border-pink-400"
                   onClick={onDeny}
                 >
                   Deny
