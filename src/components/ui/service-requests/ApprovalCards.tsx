@@ -65,7 +65,7 @@ export function ApprovalCards({ requests, onApprove, onDeny }: ApprovalCardsProp
                                                     <> from <strong>{request.requestorCompany}</strong></>
                                                 )} is awaiting your approval.
                                             </p>
-                                            <div className="mt-1.5 flex items-center gap-2.5 text-xs text-gray-500 dark:text-gray-400">
+                                            <div className="mt-0.5 flex items-center gap-2.5 text-xs text-gray-500 dark:text-gray-400">
                                                 <span className="truncate">{request.request}</span>
                                                 {request.building && (
                                                     <>
