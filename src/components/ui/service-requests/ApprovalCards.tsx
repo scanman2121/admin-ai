@@ -87,20 +87,20 @@ export function ApprovalCards({ requests, onApprove, onDeny }: ApprovalCardsProp
                                         {/* Actions */}
                                         <div className="flex-shrink-0 flex items-center gap-2">
                                             <Button
-                                                variant="default"
-                                                size="sm"
-                                                onClick={() => onDeny(request.id)}
-                                                className="bg-pink-600 hover:bg-pink-700 text-white h-8 px-4 rounded-md text-sm font-medium"
-                                            >
-                                                Deny
-                                            </Button>
-                                            <Button
-                                                variant="default"
+                                                variant="ghost"
                                                 size="sm"
                                                 onClick={() => onApprove(request.id)}
-                                                className="bg-blue-600 hover:bg-blue-700 text-white h-8 px-4 rounded-md text-sm font-medium"
+                                                className="h-8 px-4 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
                                             >
                                                 Approve
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => onDeny(request.id)}
+                                                className="h-8 px-4 text-sm font-medium text-pink-600 hover:text-pink-700 hover:bg-pink-50 dark:text-pink-400 dark:hover:bg-pink-900/20"
+                                            >
+                                                Deny
                                             </Button>
                                         </div>
                                     </div>

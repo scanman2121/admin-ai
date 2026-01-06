@@ -346,18 +346,18 @@ const createServiceRequestsColumns = (
                     onClick={(e) => e.stopPropagation()}
                 >
                     <Button
-                        variant="default"
+                        variant="ghost"
                         size="sm"
                         onClick={handleApprove}
-                        className="bg-blue-600 hover:bg-blue-700 text-white h-8 px-3"
+                        className="h-8 px-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20"
                     >
                         Approve
                     </Button>
                     <Button
-                        variant="default"
+                        variant="ghost"
                         size="sm"
                         onClick={handleDeny}
-                        className="bg-pink-600 hover:bg-pink-700 text-white h-8 px-3"
+                        className="h-8 px-3 text-pink-600 hover:text-pink-700 hover:bg-pink-50 dark:text-pink-400 dark:hover:bg-pink-900/20"
                     >
                         Deny
                     </Button>
