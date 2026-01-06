@@ -167,6 +167,25 @@ const createServiceRequestsColumns = (
         },
     },
     {
+        accessorKey: "lastUpdated",
+        header: ({ column }: { column: any }) => (
+            <DataTableColumnHeader column={column} title="Updated" />
+        ),
+        cell: ({ row }: { row: any }) => {
+            const lastUpdated = row.getValue("lastUpdated") as string;
+            return <span className="text-gray-600 dark:text-gray-400">{getRelativeTime(lastUpdated)}</span>;
+        },
+        meta: {
+            displayName: "Updated",
+        },
+        enableSorting: true,
+        sortingFn: (rowA: any, rowB: any) => {
+            const dateA = new Date(rowA.getValue("lastUpdated")).getTime();
+            const dateB = new Date(rowB.getValue("lastUpdated")).getTime();
+            return dateA - dateB;
+        },
+    },
+    {
         accessorKey: "building",
         header: ({ column }: { column: any }) => (
             <DataTableColumnHeader column={column} title="Building" />
@@ -256,25 +275,6 @@ const createServiceRequestsColumns = (
             displayName: "Assignee",
         },
         enableSorting: true,
-    },
-    {
-        accessorKey: "lastUpdated",
-        header: ({ column }: { column: any }) => (
-            <DataTableColumnHeader column={column} title="Updated" />
-        ),
-        cell: ({ row }: { row: any }) => {
-            const lastUpdated = row.getValue("lastUpdated") as string;
-            return <span className="text-gray-600 dark:text-gray-400">{getRelativeTime(lastUpdated)}</span>;
-        },
-        meta: {
-            displayName: "Updated",
-        },
-        enableSorting: true,
-        sortingFn: (rowA: any, rowB: any) => {
-            const dateA = new Date(rowA.getValue("lastUpdated")).getTime();
-            const dateB = new Date(rowB.getValue("lastUpdated")).getTime();
-            return dateA - dateB;
-        },
     },
     {
         accessorKey: "approval",
