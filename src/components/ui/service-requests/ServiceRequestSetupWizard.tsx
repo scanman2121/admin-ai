@@ -17,11 +17,14 @@ interface Team {
 interface ServiceRequestSetupWizardProps {
   onComplete?: () => void
   onClose?: () => void
+  iframeUrl?: string
 }
 
-export function ServiceRequestSetupWizard({ onComplete, onClose }: ServiceRequestSetupWizardProps) {
+export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "https://v0-workflow-system-design-sage.vercel.app/" }: ServiceRequestSetupWizardProps) {
   const contentRef = useRef<HTMLDivElement>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   const [currentStep, setCurrentStep] = useState(1)
+  const [showIframe, setShowIframe] = useState(false)
   const [teams, setTeams] = useState<Team[]>([
     {
       id: 'property-team',
@@ -35,7 +38,7 @@ export function ServiceRequestSetupWizard({ onComplete, onClose }: ServiceReques
     description: ''
   })
 
-  const totalSteps = 1 // Currently just teams step, can be extended
+  const totalSteps = 2 // Teams step + iframe wizard steps
 
   const handleAddTeam = () => {
     if (!newTeam.name.trim()) return
@@ -59,51 +62,111 @@ export function ServiceRequestSetupWizard({ onComplete, onClose }: ServiceReques
 
   // Scroll to top when step changes
   useEffect(() => {
-    if (contentRef.current) {
+    if (contentRef.current && !showIframe) {
       contentRef.current.scrollTop = 0
     }
-  }, [currentStep])
+    if (iframeRef.current?.contentWindow && showIframe) {
+      try {
+        iframeRef.current.contentWindow.scrollTo({ top: 0, behavior: 'instant' })
+      } catch (e) {
+        // Cross-origin restrictions may prevent this
+      }
+    }
+  }, [currentStep, showIframe])
+
+  // Listen for messages from iframe to detect completion
+  useEffect(() => {
+    if (!showIframe) return
+
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const iframeOrigin = new URL(iframeUrl).origin
+        if (event.origin !== iframeOrigin) return
+        
+        // If the iframe sends a completion message
+        const data = event.data
+        if (data?.type === 'complete' || data?.completed || data?.finished) {
+          onComplete?.()
+        }
+      } catch (e) {
+        // Ignore errors
+      }
+    }
+
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [showIframe, iframeUrl, onComplete])
 
   const handleNext = () => {
-    if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1)
-    } else {
-      // Save teams and complete
+    if (currentStep === 1) {
+      // Save teams and move to iframe wizard
       // In a real app, this would save to the backend
       console.log('Teams configured:', teams)
+      setShowIframe(true)
+      setCurrentStep(2)
+    } else {
       onComplete?.()
     }
   }
 
   const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
+    if (showIframe) {
+      setShowIframe(false)
+      setCurrentStep(1)
     }
   }
 
   return (
     <div className="flex flex-col h-full">
-      {/* Progress Bar */}
-      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Step {currentStep} of {totalSteps}
-          </span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            {Math.round((currentStep / totalSteps) * 100)}% complete
-          </span>
+      {/* Progress Bar / Back Button for iframe */}
+      {showIframe ? (
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <Button variant="ghost" onClick={handleBack} className="flex items-center gap-2">
+            <RiArrowLeftLine className="size-4" />
+            Back to teams
+          </Button>
         </div>
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-          <div
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-          />
+      ) : (
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Step {currentStep} of {totalSteps}
+            </span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {Math.round((currentStep / totalSteps) * 100)}% complete
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div
+              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Step Content */}
-      <div ref={contentRef} className="flex-1 overflow-y-auto px-6 py-6">
-        {currentStep === 1 && (
+      <div ref={contentRef} className="flex-1 min-h-0">
+        {showIframe ? (
+          <iframe
+            ref={iframeRef}
+            src={iframeUrl}
+            className="w-full h-full border-0"
+            title="Service Request Setup Wizard"
+            allow="fullscreen"
+            onLoad={() => {
+              if (iframeRef.current?.contentWindow) {
+                try {
+                  iframeRef.current.contentWindow.scrollTo({ top: 0, behavior: 'instant' })
+                } catch (e) {
+                  // Cross-origin restrictions may prevent this
+                }
+              }
+            }}
+          />
+        ) : (
+          <div className="flex-1 overflow-y-auto px-6 py-6">
+            {currentStep === 1 && (
           <div className="max-w-3xl mx-auto space-y-6">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-50 mb-2">
@@ -197,30 +260,34 @@ export function ServiceRequestSetupWizard({ onComplete, onClose }: ServiceReques
             </Card>
           </div>
         )}
+          </div>
+        )}
       </div>
 
-      {/* Footer Actions */}
-      <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {currentStep > 1 && (
-            <Button variant="ghost" onClick={handleBack}>
-              <RiArrowLeftLine className="size-4 mr-2" />
-              Back
+      {/* Footer Actions - Only show for teams step, iframe handles its own navigation */}
+      {!showIframe && (
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {currentStep > 1 && (
+              <Button variant="ghost" onClick={handleBack}>
+                <RiArrowLeftLine className="size-4 mr-2" />
+                Back
+              </Button>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            {onClose && (
+              <Button variant="ghost" onClick={onClose}>
+                Cancel
+              </Button>
+            )}
+            <Button variant="primary" onClick={handleNext}>
+              Next
+              <RiArrowRightLine className="size-4 ml-2" />
             </Button>
-          )}
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          {onClose && (
-            <Button variant="ghost" onClick={onClose}>
-              Cancel
-            </Button>
-          )}
-          <Button variant="primary" onClick={handleNext}>
-            {currentStep === totalSteps ? 'Complete setup' : 'Next'}
-            {currentStep < totalSteps && <RiArrowRightLine className="size-4 ml-2" />}
-          </Button>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
