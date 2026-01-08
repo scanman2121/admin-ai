@@ -49,6 +49,8 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [currentStep, setCurrentStep] = useState(1)
   const [showIframe, setShowIframe] = useState(false)
+  const [iframeStep, setIframeStep] = useState(1)
+  const [iframeTotalSteps, setIframeTotalSteps] = useState(5) // Default to 5, will be updated from iframe
   const [teams, setTeams] = useState<Team[]>([
     {
       id: 'property-team',
@@ -64,7 +66,10 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
   const [editingTeamId, setEditingTeamId] = useState<string | null>(null)
   const [memberSearchQuery, setMemberSearchQuery] = useState<Record<string, string>>({})
 
-  const totalSteps = 2 // Teams step + iframe wizard steps
+  // Calculate total steps: 1 for teams + iframe steps
+  const totalSteps = 1 + iframeTotalSteps
+  // Calculate current step: 1 for teams, then 2+ for iframe steps
+  const overallStep = showIframe ? 1 + iframeStep : 1
 
   const handleAddTeam = () => {
     if (!newTeam.name.trim()) return
@@ -132,7 +137,7 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
     }
   }, [currentStep, showIframe])
 
-  // Listen for messages from iframe to detect completion
+  // Listen for messages from iframe to track step progress and completion
   useEffect(() => {
     if (!showIframe) return
 
@@ -141,8 +146,26 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
         const iframeOrigin = new URL(iframeUrl).origin
         if (event.origin !== iframeOrigin) return
         
-        // If the iframe sends a completion message
         const data = event.data
+        
+        // Track iframe step changes
+        if (data?.step !== undefined) {
+          setIframeStep(data.step)
+        }
+        if (data?.currentStep !== undefined) {
+          setIframeStep(data.currentStep)
+        }
+        if (data?.totalSteps !== undefined) {
+          setIframeTotalSteps(data.totalSteps)
+        }
+        if (data?.stepChange) {
+          setIframeStep(data.stepChange.current || iframeStep + 1)
+          if (data.stepChange.total) {
+            setIframeTotalSteps(data.stepChange.total)
+          }
+        }
+        
+        // If the iframe sends a completion message
         if (data?.type === 'complete' || data?.completed || data?.finished) {
           onComplete?.()
         }
@@ -153,7 +176,7 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
 
     window.addEventListener('message', handleMessage)
     return () => window.removeEventListener('message', handleMessage)
-  }, [showIframe, iframeUrl, onComplete])
+  }, [showIframe, iframeUrl, onComplete, iframeStep])
 
   const handleNext = () => {
     if (currentStep === 1) {
@@ -161,7 +184,7 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
       // In a real app, this would save to the backend
       console.log('Teams configured:', teams)
       setShowIframe(true)
-      setCurrentStep(2)
+      setIframeStep(1)
     } else {
       onComplete?.()
     }
@@ -169,39 +192,55 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
 
   const handleBack = () => {
     if (showIframe) {
-      setShowIframe(false)
-      setCurrentStep(1)
+      // If on first iframe step, go back to teams
+      if (iframeStep === 1) {
+        setShowIframe(false)
+        setCurrentStep(1)
+      } else {
+        // Otherwise, let iframe handle back navigation
+        // Send message to iframe to go back
+        if (iframeRef.current?.contentWindow) {
+          try {
+            iframeRef.current.contentWindow.postMessage(
+              { type: 'navigate', action: 'back' },
+              new URL(iframeUrl).origin
+            )
+          } catch (e) {
+            // If that doesn't work, just decrement step
+            setIframeStep(prev => Math.max(1, prev - 1))
+          }
+        }
+      }
     }
   }
 
   return (
     <div className="flex flex-col h-full">
-      {/* Progress Bar / Back Button for iframe */}
-      {showIframe ? (
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <Button variant="ghost" onClick={handleBack} className="flex items-center gap-2">
-            <RiArrowLeftLine className="size-4" />
-            Back to teams
-          </Button>
-        </div>
-      ) : (
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-2">
+      {/* Progress Bar */}
+      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            {showIframe && (
+              <Button variant="ghost" onClick={handleBack} className="flex items-center gap-2 -ml-2">
+                <RiArrowLeftLine className="size-4" />
+                {iframeStep === 1 ? 'Back to teams' : 'Back'}
+              </Button>
+            )}
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Step {currentStep} of {totalSteps}
-            </span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              {Math.round((currentStep / totalSteps) * 100)}% complete
+              Step {overallStep} of {totalSteps}
             </span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <div
-              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${(currentStep / totalSteps) * 100}%` }}
-            />
-          </div>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {Math.round((overallStep / totalSteps) * 100)}% complete
+          </span>
         </div>
-      )}
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${(overallStep / totalSteps) * 100}%` }}
+          />
+        </div>
+      </div>
 
       {/* Step Content */}
       <div ref={contentRef} className="flex-1 min-h-0">
