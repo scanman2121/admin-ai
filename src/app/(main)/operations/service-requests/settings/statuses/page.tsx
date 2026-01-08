@@ -8,6 +8,7 @@ import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Tooltip } from "@/components/Tooltip"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
+import { ServiceRequestSetupWizard } from "@/components/ui/service-requests/ServiceRequestSetupWizard"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line } from "@remixicon/react"
 import { Pencil, Lock } from "lucide-react"
@@ -759,8 +760,12 @@ export default function ServiceRequestsStatuses() {
                 isOpen={isSetupModalOpen}
                 onClose={() => setIsSetupModalOpen(false)}
                 title="Service Request Setup"
-                iframeUrl="https://v0-workflow-system-design-sage.vercel.app/"
-            />
+            >
+                <ServiceRequestSetupWizard
+                    onComplete={() => setIsSetupModalOpen(false)}
+                    onClose={() => setIsSetupModalOpen(false)}
+                />
+            </FullPageModal>
         </div>
     )
 }

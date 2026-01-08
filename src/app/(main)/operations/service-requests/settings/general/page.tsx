@@ -10,6 +10,7 @@ import { Switch } from "@/components/Switch"
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/Table"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { FullPageModal } from "@/components/ui/FullPageModal"
+import { ServiceRequestSetupWizard } from "@/components/ui/service-requests/ServiceRequestSetupWizard"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBinLine } from "@remixicon/react"
 import { Pencil } from "lucide-react"
 import Link from "next/link"
@@ -489,8 +490,12 @@ export default function ServiceRequestsGeneralSettings() {
                 isOpen={isSetupModalOpen}
                 onClose={() => setIsSetupModalOpen(false)}
                 title="Service Request Setup"
-                iframeUrl="https://v0-workflow-system-design-sage.vercel.app/"
-            />
+            >
+                <ServiceRequestSetupWizard
+                    onComplete={() => setIsSetupModalOpen(false)}
+                    onClose={() => setIsSetupModalOpen(false)}
+                />
+            </FullPageModal>
 
             {/* Add Field Modal */}
             <Dialog open={isAddFieldModalOpen} onOpenChange={setIsAddFieldModalOpen}>

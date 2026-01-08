@@ -12,6 +12,7 @@ import { Tooltip } from "@/components/Tooltip"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { ServiceRequestSetupWizard } from "@/components/ui/service-requests/ServiceRequestSetupWizard"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line, RiMore2Line } from "@remixicon/react"
 import { CircleDollarSign, DollarSign, Lock, Pencil, User, Users } from "lucide-react"
@@ -1245,7 +1246,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap flex-shrink-0"
+                            className="pl-3 pr-4 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap flex-shrink-0"
                         >
                             <option>All</option>
                             <option>Active</option>
@@ -1254,7 +1255,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                         <select
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
-                            className="px-3 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap flex-shrink-0"
+                            className="pl-3 pr-4 py-2 text-sm border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent whitespace-nowrap flex-shrink-0"
                         >
                             <option>All Categories</option>
                             <option>Cleaning & Waste</option>
@@ -2299,7 +2300,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 id="service-type-category"
                                 value={newServiceType.category}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, category: e.target.value }))}
-                                className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                                className="mt-2 block w-full pl-3 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             >
                                 <option>Cleaning & Waste</option>
                                 <option>Temperature & Air</option>
@@ -2975,7 +2976,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 id="edit-service-type-category"
                                 value={newServiceType.category}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, category: e.target.value }))}
-                                className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                                className="mt-2 block w-full pl-3 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
                             >
                                 <option>Cleaning & Waste</option>
                                 <option>Temperature & Air</option>
@@ -3475,8 +3476,12 @@ export default function ServiceRequestsServiceTypesCategories() {
                 isOpen={isSetupModalOpen}
                 onClose={() => setIsSetupModalOpen(false)}
                 title="Setup wizard"
-                iframeUrl="https://v0-workflow-system-design-sage.vercel.app/"
-            />
+            >
+                <ServiceRequestSetupWizard
+                    onComplete={() => setIsSetupModalOpen(false)}
+                    onClose={() => setIsSetupModalOpen(false)}
+                />
+            </FullPageModal>
         </div>
     )
 }

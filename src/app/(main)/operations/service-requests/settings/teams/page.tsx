@@ -10,6 +10,7 @@ import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
+import { ServiceRequestSetupWizard } from "@/components/ui/service-requests/ServiceRequestSetupWizard"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiBrushLine, RiDeleteBin6Line, RiMore2Line, RiSearchLine, RiServiceLine, RiShieldLine, RiTeamLine, RiToolsLine, RiUserAddLine } from "@remixicon/react"
 import { Pencil } from "lucide-react"
 import Link from "next/link"
@@ -900,8 +901,12 @@ export default function ServiceRequestsTeams() {
                 isOpen={isSetupModalOpen}
                 onClose={() => setIsSetupModalOpen(false)}
                 title="Service Request Setup"
-                iframeUrl="https://v0-workflow-system-design-sage.vercel.app/"
-            />
+            >
+                <ServiceRequestSetupWizard
+                    onComplete={() => setIsSetupModalOpen(false)}
+                    onClose={() => setIsSetupModalOpen(false)}
+                />
+            </FullPageModal>
         </div>
     )
 }
