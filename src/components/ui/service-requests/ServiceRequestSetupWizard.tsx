@@ -136,7 +136,7 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
         // Cross-origin restrictions may prevent this
       }
     }
-  }, [currentStep, showIframe])
+  }, [currentStep, showIframe, iframeStep])
 
   // Listen for messages from iframe to track step progress and completion
   useEffect(() => {
@@ -149,13 +149,18 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
 
         const data = event.data
 
-        // Track main step changes (not sub-steps)
-        // Only update if it's a main step change, not a sub-step
-        if (data?.mainStep !== undefined) {
+        // Track main step changes - look for main step indicators
+        // The iframe has 5 main steps, we need to detect when it moves between them
+        if (data?.mainStep !== undefined && data.mainStep >= 1 && data.mainStep <= 5) {
           setIframeStep(data.mainStep)
-        } else if (data?.step && typeof data.step === 'number' && data.step <= 5) {
-          // Only accept if it's a valid main step (1-5)
+        } else if (data?.step && typeof data.step === 'number' && data.step >= 1 && data.step <= 5) {
+          // Check if this is a main step (not a sub-step)
+          // Sub-steps are typically higher numbers or have different structure
           setIframeStep(data.step)
+        } else if (data?.stepChange?.mainStep) {
+          setIframeStep(data.stepChange.mainStep)
+        } else if (data?.navigateToStep && typeof data.navigateToStep === 'number') {
+          setIframeStep(data.navigateToStep)
         }
 
         // If the iframe sends a completion message
@@ -168,7 +173,10 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
     }
 
     window.addEventListener('message', handleMessage)
-    return () => window.removeEventListener('message', handleMessage)
+
+    return () => {
+      window.removeEventListener('message', handleMessage)
+    }
   }, [showIframe, iframeUrl, onComplete])
 
   const handleNext = () => {
@@ -207,15 +215,31 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
   }
 
   const handleIframeNext = () => {
+    // Always update our step tracking first
+    setIframeStep(prev => {
+      const nextStep = Math.min(iframeTotalSteps, prev + 1)
+      return nextStep
+    })
+
+    // Then try to send navigation message to iframe
     if (iframeRef.current?.contentWindow) {
       try {
+        const origin = new URL(iframeUrl).origin
+        // Try multiple message formats to navigate
         iframeRef.current.contentWindow.postMessage(
-          { type: 'navigate', action: 'next' },
-          new URL(iframeUrl).origin
+          { type: 'navigate', action: 'next', direction: 'next' },
+          origin
+        )
+        iframeRef.current.contentWindow.postMessage(
+          { type: 'step', action: 'next' },
+          origin
+        )
+        iframeRef.current.contentWindow.postMessage(
+          { type: 'goToNextStep' },
+          origin
         )
       } catch (e) {
-        // If that doesn't work, increment step
-        setIframeStep(prev => Math.min(iframeTotalSteps, prev + 1))
+        // Ignore - we've already updated our step
       }
     }
   }
@@ -227,16 +251,28 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
         setShowIframe(false)
         setCurrentStep(1)
       } else {
-        // Otherwise, send message to iframe to go back
+        // Always update our step tracking first
+        setIframeStep(prev => Math.max(1, prev - 1))
+
+        // Then try to send navigation message to iframe
         if (iframeRef.current?.contentWindow) {
           try {
+            const origin = new URL(iframeUrl).origin
+            // Try multiple message formats
             iframeRef.current.contentWindow.postMessage(
-              { type: 'navigate', action: 'back' },
-              new URL(iframeUrl).origin
+              { type: 'navigate', action: 'back', direction: 'back' },
+              origin
+            )
+            iframeRef.current.contentWindow.postMessage(
+              { type: 'step', action: 'previous' },
+              origin
+            )
+            iframeRef.current.contentWindow.postMessage(
+              { type: 'goToPreviousStep' },
+              origin
             )
           } catch (e) {
-            // If that doesn't work, just decrement step
-            setIframeStep(prev => Math.max(1, prev - 1))
+            // Ignore - we've already updated our step
           }
         }
       }
@@ -293,8 +329,12 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
                   if (iframeRef.current?.contentWindow) {
                     try {
                       iframeRef.current.contentWindow.scrollTo({ top: 0, behavior: 'instant' })
+                      // Reset to step 1 when iframe loads
+                      setIframeStep(1)
+
                       // Try to hide internal navigation and buttons via postMessage
-                      setTimeout(() => {
+                      // Send messages multiple times to ensure they're received
+                      const sendHideMessages = () => {
                         if (iframeRef.current?.contentWindow) {
                           try {
                             const origin = new URL(iframeUrl).origin
@@ -311,16 +351,37 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
                               { type: 'ui', hideNavigation: true, hideStepper: true, hideBottomNav: true },
                               origin
                             )
+                            iframeRef.current.contentWindow.postMessage(
+                              { type: 'setConfig', hideInternalNav: true },
+                              origin
+                            )
                           } catch (e) {
                             // Ignore
                           }
                         }
-                      }, 500)
+                      }
+
+                      // Send immediately and then retry
+                      setTimeout(sendHideMessages, 100)
+                      setTimeout(sendHideMessages, 500)
+                      setTimeout(sendHideMessages, 1000)
                     } catch (e) {
                       // Cross-origin restrictions may prevent this
                     }
                   }
                 }}
+              />
+              {/* Overlay to hide iframe's top stepper (1>2>3>4>5) - blocks interaction */}
+              <div
+                className="absolute top-0 left-0 right-0 h-20 bg-white dark:bg-gray-900 z-10"
+                onClick={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
+              />
+              {/* Overlay to hide iframe's bottom navigation buttons - blocks interaction */}
+              <div
+                className="absolute bottom-0 left-0 right-0 h-24 bg-white dark:bg-gray-900 z-10"
+                onClick={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
               />
             </div>
             {/* Sticky Footer Buttons for iframe */}
