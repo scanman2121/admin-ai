@@ -42,15 +42,16 @@ interface ServiceRequestSetupWizardProps {
   onComplete?: () => void
   onClose?: () => void
   iframeUrl?: string
+  title?: string
 }
 
-export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "https://v0-workflow-system-design-sage.vercel.app/" }: ServiceRequestSetupWizardProps) {
+export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "https://v0-workflow-system-design-sage.vercel.app/", title = "Service Request Setup" }: ServiceRequestSetupWizardProps) {
   const contentRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [currentStep, setCurrentStep] = useState(1)
   const [showIframe, setShowIframe] = useState(false)
   const [iframeStep, setIframeStep] = useState(1)
-  const [iframeTotalSteps, setIframeTotalSteps] = useState(5) // Default to 5, will be updated from iframe
+  const [iframeTotalSteps] = useState(5) // Fixed at 5 iframe steps
   const [teams, setTeams] = useState<Team[]>([
     {
       id: 'property-team',
@@ -66,9 +67,9 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
   const [editingTeamId, setEditingTeamId] = useState<string | null>(null)
   const [memberSearchQuery, setMemberSearchQuery] = useState<Record<string, string>>({})
 
-  // Calculate total steps: 1 for teams + iframe steps
-  const totalSteps = 1 + iframeTotalSteps
-  // Calculate current step: 1 for teams, then 2+ for iframe steps
+  // Calculate total steps: 1 for teams + 5 iframe steps = 6 total
+  const totalSteps = 6
+  // Calculate current step: 1 for teams, then 2-6 for iframe steps
   const overallStep = showIframe ? 1 + iframeStep : 1
 
   const handleAddTeam = () => {
@@ -148,21 +149,13 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
 
         const data = event.data
 
-        // Track iframe step changes
-        if (data?.step !== undefined) {
+        // Track main step changes (not sub-steps)
+        // Only update if it's a main step change, not a sub-step
+        if (data?.mainStep !== undefined) {
+          setIframeStep(data.mainStep)
+        } else if (data?.step && typeof data.step === 'number' && data.step <= 5) {
+          // Only accept if it's a valid main step (1-5)
           setIframeStep(data.step)
-        }
-        if (data?.currentStep !== undefined) {
-          setIframeStep(data.currentStep)
-        }
-        if (data?.totalSteps !== undefined) {
-          setIframeTotalSteps(data.totalSteps)
-        }
-        if (data?.stepChange) {
-          setIframeStep(data.stepChange.current || iframeStep + 1)
-          if (data.stepChange.total) {
-            setIframeTotalSteps(data.stepChange.total)
-          }
         }
 
         // If the iframe sends a completion message
@@ -176,7 +169,7 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
 
     window.addEventListener('message', handleMessage)
     return () => window.removeEventListener('message', handleMessage)
-  }, [showIframe, iframeUrl, onComplete, iframeStep])
+  }, [showIframe, iframeUrl, onComplete])
 
   const handleNext = () => {
     if (currentStep === 1) {
@@ -185,13 +178,23 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
       console.log('Teams configured:', teams)
       setShowIframe(true)
       setIframeStep(1)
-      // Send message to iframe to hide internal navigation
+      // Send messages to iframe to hide internal navigation and buttons
       setTimeout(() => {
         if (iframeRef.current?.contentWindow) {
           try {
+            const origin = new URL(iframeUrl).origin
+            // Try multiple message formats to hide navigation
             iframeRef.current.contentWindow.postMessage(
-              { type: 'hideNavigation', hide: true },
-              new URL(iframeUrl).origin
+              { type: 'hideNavigation', hide: true, hideStepper: true, hideButtons: true },
+              origin
+            )
+            iframeRef.current.contentWindow.postMessage(
+              { type: 'config', hideNav: true, hideStepper: true, hideButtons: true },
+              origin
+            )
+            iframeRef.current.contentWindow.postMessage(
+              { type: 'ui', hideNavigation: true, hideStepper: true, hideBottomNav: true },
+              origin
             )
           } catch (e) {
             // Ignore
@@ -242,21 +245,36 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
 
   return (
     <div className="flex flex-col h-full">
-      {/* Progress Bar */}
+      {/* Header with Progress Bar - Single Line */}
       <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+            {title}
+          </h2>
+          {onClose && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="p-2 h-8 w-8 hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              <RiCloseLine className="size-4" />
+            </Button>
+          )}
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
             Step {overallStep} of {totalSteps}
           </span>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div
+              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${(overallStep / totalSteps) * 100}%` }}
+            />
+          </div>
+          <span className="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
             {Math.round((overallStep / totalSteps) * 100)}% complete
           </span>
-        </div>
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-          <div
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${(overallStep / totalSteps) * 100}%` }}
-          />
         </div>
       </div>
 
@@ -275,18 +293,23 @@ export function ServiceRequestSetupWizard({ onComplete, onClose, iframeUrl = "ht
                   if (iframeRef.current?.contentWindow) {
                     try {
                       iframeRef.current.contentWindow.scrollTo({ top: 0, behavior: 'instant' })
-                      // Try to hide internal navigation via postMessage
+                      // Try to hide internal navigation and buttons via postMessage
                       setTimeout(() => {
                         if (iframeRef.current?.contentWindow) {
                           try {
+                            const origin = new URL(iframeUrl).origin
+                            // Try multiple message formats to hide navigation
                             iframeRef.current.contentWindow.postMessage(
-                              { type: 'hideNavigation', hide: true },
-                              new URL(iframeUrl).origin
+                              { type: 'hideNavigation', hide: true, hideStepper: true, hideButtons: true },
+                              origin
                             )
-                            // Also try alternative message formats
                             iframeRef.current.contentWindow.postMessage(
-                              { type: 'config', hideNav: true, hideStepper: true },
-                              new URL(iframeUrl).origin
+                              { type: 'config', hideNav: true, hideStepper: true, hideButtons: true },
+                              origin
+                            )
+                            iframeRef.current.contentWindow.postMessage(
+                              { type: 'ui', hideNavigation: true, hideStepper: true, hideBottomNav: true },
+                              origin
                             )
                           } catch (e) {
                             // Ignore

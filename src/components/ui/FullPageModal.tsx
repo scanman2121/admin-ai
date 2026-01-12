@@ -98,20 +98,22 @@ export function FullPageModal({ isOpen, onClose, title, iframeUrl, children }: F
       
       {/* Modal Container */}
       <div className="relative w-full h-full bg-white dark:bg-gray-900 flex flex-col">
-        {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-            {title}
-          </h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="p-2 h-8 w-8 hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
-            <RiCloseLine className="size-4" />
-          </Button>
-        </div>
+        {/* Modal Header - Only show for iframe, not for children */}
+        {!children && (
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+              {title}
+            </h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="p-2 h-8 w-8 hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              <RiCloseLine className="size-4" />
+            </Button>
+          </div>
+        )}
 
         {/* Modal Content - iframe or children */}
         <div ref={iframeContainerRef} className="flex-1 min-h-0">
