@@ -9,7 +9,7 @@ import { RadioCardGroup, RadioCardGroupIndicator, RadioCardItem } from "@/compon
 import { Switch } from "@/components/Switch"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Tooltip } from "@/components/Tooltip"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FullPageModal } from "@/components/ui/FullPageModal"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ServiceRequestSetupWizard } from "@/components/ui/service-requests/ServiceRequestSetupWizard"
@@ -2267,40 +2267,34 @@ export default function ServiceRequestsServiceTypesCategories() {
             <Dialog open={isAddServiceTypeModalOpen} onOpenChange={setIsAddServiceTypeModalOpen}>
                 <DialogContent className="max-w-4xl w-[calc(100vw-2rem)] sm:w-full max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>Add service type</DialogTitle>
+                        <DialogTitle>Add Custom Request Type</DialogTitle>
+                        <DialogDescription className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            Create a new request type for your organization
+                        </DialogDescription>
                     </DialogHeader>
 
                     <div className="space-y-6 px-4 sm:px-6 py-6 overflow-y-auto flex-1">
-                        <div>
-                            <Label htmlFor="service-type-name">Request type *</Label>
+                        <div className="space-y-2">
+                            <Label htmlFor="service-type-name" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Request type *
+                            </Label>
                             <Input
                                 id="service-type-name"
-                                placeholder="Enter request type"
+                                placeholder="e.g., Equipment Request"
                                 value={newServiceType.requestType}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, requestType: e.target.value }))}
-                                className="mt-2"
                             />
                         </div>
 
-                        <div>
-                            <Label htmlFor="service-type-description">Description *</Label>
-                            <textarea
-                                id="service-type-description"
-                                rows={3}
-                                placeholder="Enter description"
-                                value={newServiceType.description}
-                                onChange={(e) => setNewServiceType(prev => ({ ...prev, description: e.target.value }))}
-                                className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-                            />
-                        </div>
-
-                        <div>
-                            <Label htmlFor="service-type-category">Category *</Label>
+                        <div className="space-y-2">
+                            <Label htmlFor="service-type-category" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Category *
+                            </Label>
                             <select
                                 id="service-type-category"
                                 value={newServiceType.category}
                                 onChange={(e) => setNewServiceType(prev => ({ ...prev, category: e.target.value }))}
-                                className="mt-2 block w-full pl-3 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                                className="block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white text-sm"
                             >
                                 <option>Cleaning & Waste</option>
                                 <option>Temperature & Air</option>
@@ -2312,10 +2306,26 @@ export default function ServiceRequestsServiceTypesCategories() {
                             </select>
                         </div>
 
-                        <Card className="p-5">
-                            <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="service-type-description" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Description *
+                            </Label>
+                            <textarea
+                                id="service-type-description"
+                                rows={4}
+                                placeholder="Brief description of this request type"
+                                value={newServiceType.description}
+                                onChange={(e) => setNewServiceType(prev => ({ ...prev, description: e.target.value }))}
+                                className="block w-full px-3 py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white text-sm resize-none"
+                            />
+                        </div>
+
+                        <Card className="p-6">
+                            <div className="space-y-6">
                                 <div className="flex items-center justify-between">
-                                    <Label htmlFor="service-type-needs-approval">Requires approval</Label>
+                                    <Label htmlFor="service-type-needs-approval" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Requires approval
+                                    </Label>
                                     <Switch
                                         id="service-type-needs-approval"
                                         checked={newServiceType.needsApproval}
@@ -2328,7 +2338,7 @@ export default function ServiceRequestsServiceTypesCategories() {
                                 </div>
 
                                 {newServiceType.needsApproval && (
-                                    <div className="space-y-3 pt-2">
+                                    <div className="space-y-4 pt-2">
                                         <RadioCardGroup
                                             value={newServiceType.approvalType}
                                             onValueChange={(value) => {
@@ -2406,15 +2416,17 @@ export default function ServiceRequestsServiceTypesCategories() {
                             </div>
                         </Card>
 
-                        <div>
-                            <Label htmlFor="service-type-assigned">Assigned to *</Label>
+                        <div className="space-y-2">
+                            <Label htmlFor="service-type-assigned" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Assigned to *
+                            </Label>
                             {(() => {
                                 const selectedCategory = categories.find(cat => cat.name === newServiceType.category)
                                 const hasCategoryAssignedTo = selectedCategory?.assignedTo
 
                                 if (hasCategoryAssignedTo) {
                                     return (
-                                        <div className="space-y-2 mt-2">
+                                        <div className="space-y-2">
                                             <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-md text-sm">
                                                 <span className="text-xs font-medium">
                                                     {selectedCategory?.assignedToType === 'user' ? 'U' : 'T'}
