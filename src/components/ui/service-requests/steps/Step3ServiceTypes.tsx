@@ -108,7 +108,7 @@ export function Step3ServiceTypes({
   const handleApplyToCategory = () => {
     if (!pendingAction) return
 
-    const { type, categoryName, serviceTypeId, value } = pendingAction
+    const { type, categoryName, value } = pendingAction
 
     if (type === 'approval') {
       // Apply approval requirement to all service types in category
