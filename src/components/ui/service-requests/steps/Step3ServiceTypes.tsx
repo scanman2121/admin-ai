@@ -105,16 +105,6 @@ export function Step3ServiceTypes({
     }
   }
 
-  const handleApproverChange = (serviceTypeId: number, approver: string, categoryName: string) => {
-    setPendingAction({
-      type: 'approver',
-      categoryName,
-      serviceTypeId,
-      value: approver
-    })
-    setApplyModalOpen(true)
-  }
-
   const handleApplyToCategory = () => {
     if (!pendingAction) return
 
