@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/Button"
 import { Card } from "@/components/Card"
-import { Checkbox } from "@/components/Checkbox"
 import { RiAddLine, RiCheckboxCircleLine, RiCheckboxBlankCircleLine } from "@remixicon/react"
 import { Category } from "../types"
 
