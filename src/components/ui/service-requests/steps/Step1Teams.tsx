@@ -40,7 +40,7 @@ export function Step1Teams({
   editingTeamId,
   onEditingTeamIdChange
 }: Step1TeamsProps) {
-  const [newTeam, setNewTeam] = React.useState({
+  const [newTeam, setNewTeam] = useState({
     name: '',
     description: ''
   })
