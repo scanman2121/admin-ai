@@ -103,8 +103,6 @@ export function Step2Categories({
   }
 
   const selectedCount = allCategories.filter(c => c.status).length
-  const allSelected = selectedCount === allCategories.length
-  const someSelected = selectedCount > 0 && selectedCount < allCategories.length
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
