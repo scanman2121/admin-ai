@@ -10,8 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Check } from "lucide-react"
+import { Check, ExternalLink } from "lucide-react"
 import { useState } from "react"
+import Image from "next/image"
 import { featureGates, featureGateIds, type FeatureGateConfig } from "@/data/featureGates"
 
 export default function FeatureGatePage() {
@@ -37,92 +38,134 @@ export default function FeatureGatePage() {
         </Select>
       </div>
 
-      <Card className="p-8 pb-12">
-        {/* Header Section */}
-        <div className="mb-12">
-          <Badge variant="default" className="mb-2">
-            {feature.suite}
-          </Badge>
-          <h1 className="text-[28px] font-medium text-[#2D3338] dark:text-[#2D3338] mb-2">
-            {feature.title}
-          </h1>
-          <p className="text-lg text-[#2D3338] dark:text-[#2D3338] max-w-3xl mb-8">
-            {feature.subtitle}
-          </p>
-        </div>
+      {/* Integration Banner Layout */}
+      {feature.type === "integration" && feature.integration ? (
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Card className="p-12 max-w-lg text-center">
+            <div className="flex flex-col items-center space-y-6">
+              {/* Integration Logo */}
+              <div className="size-24 relative">
+                <Image
+                  src={feature.integration.logo}
+                  alt={`${feature.integration.name} logo`}
+                  fill
+                  className="object-contain"
+                />
+              </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Left Column - Features */}
-          <div className="lg:col-span-2 space-y-8">
-            {feature.features.map((featureItem, index) => {
-              const Icon = featureItem.icon
-              return (
-                <div key={index} className="flex gap-4">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="size-12 rounded-lg bg-white dark:bg-white border border-gray-200 dark:border-gray-200 shadow-sm flex items-center justify-center">
-                      <Icon className="size-6 text-[#2D3338] dark:text-[#2D3338] stroke-[1.5]" />
-                    </div>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-[18px] font-medium text-[#2D3338] dark:text-[#2D3338] mb-2">
-                      {featureItem.title}
-                    </h3>
-                    <p className="text-base text-[#696E72] dark:text-[#696E72] leading-relaxed">
-                      {featureItem.description}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
+              {/* Title */}
+              <div className="space-y-3">
+                <Badge variant="default">
+                  {feature.suite}
+                </Badge>
+                <h1 className="text-[28px] font-medium text-[#2D3338] dark:text-[#2D3338]">
+                  {feature.title}
+                </h1>
+                <p className="text-base text-[#696E72] dark:text-[#696E72] leading-relaxed">
+                  {feature.subtitle}
+                </p>
+              </div>
+
+              {/* CTA Button */}
+              <Button
+                size="lg"
+                className="mt-4"
+                onClick={() => window.open(feature.integration!.url, "_blank")}
+              >
+                {feature.integration.buttonText}
+                <ExternalLink className="ml-2 size-4" />
+              </Button>
+            </div>
+          </Card>
+        </div>
+      ) : (
+        <Card className="p-8 pb-12">
+          {/* Header Section */}
+          <div className="mb-12">
+            <Badge variant="default" className="mb-2">
+              {feature.suite}
+            </Badge>
+            <h1 className="text-[28px] font-medium text-[#2D3338] dark:text-[#2D3338] mb-2">
+              {feature.title}
+            </h1>
+            <p className="text-lg text-[#2D3338] dark:text-[#2D3338] max-w-3xl mb-8">
+              {feature.subtitle}
+            </p>
           </div>
 
-          {/* Right Column - Pricing Card (Sticky) */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-6">
-              <div className="rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow overflow-hidden">
-                <div className="p-6 space-y-6">
-                  {/* Header */}
-                  <div>
-                    <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">
-                      {feature.pricing.status === "upgrade-required" 
-                        ? "Upgrade your plan" 
-                        : "Included in your plan!"}
-                    </p>
-                    <p className={`${feature.pricing.status === "upgrade-required" ? "text-2xl" : "text-5xl"} font-bold text-gray-900 dark:text-gray-50 mb-2`}>
-                      {feature.pricing.price}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {feature.pricing.ctaText}
-                    </p>
-                  </div>
-
-                  {/* Included Features List */}
-                  <div className="space-y-3">
-                    {feature.includedFeatures.map((item, index) => (
-                      <div key={index} className="flex items-start gap-3">
-                        <div className="flex-shrink-0 mt-0.5">
-                          <Check className="size-5 text-blue-600 dark:text-blue-400" />
-                        </div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                          {item}
-                        </p>
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Left Column - Features */}
+            <div className="lg:col-span-2 space-y-8">
+              {feature.features.map((featureItem, index) => {
+                const Icon = featureItem.icon
+                return (
+                  <div key={index} className="flex gap-4">
+                    <div className="flex-shrink-0 mt-1">
+                      <div className="size-12 rounded-lg bg-white dark:bg-white border border-gray-200 dark:border-gray-200 shadow-sm flex items-center justify-center">
+                        <Icon className="size-6 text-[#2D3338] dark:text-[#2D3338] stroke-[1.5]" />
                       </div>
-                    ))}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-[18px] font-medium text-[#2D3338] dark:text-[#2D3338] mb-2">
+                        {featureItem.title}
+                      </h3>
+                      <p className="text-base text-[#696E72] dark:text-[#696E72] leading-relaxed">
+                        {featureItem.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )
+              })}
+            </div>
 
-                {/* CTA Button Section */}
-                <div className="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-6">
-                  <Button className="w-full" size="lg">
-                    {feature.pricing.buttonText}
-                  </Button>
+            {/* Right Column - Pricing Card (Sticky) */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-6">
+                <div className="rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow overflow-hidden">
+                  <div className="p-6 space-y-6">
+                    {/* Header */}
+                    <div>
+                      <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">
+                        {feature.pricing.status === "upgrade-required"
+                          ? "Upgrade your plan"
+                          : "Included in your plan!"}
+                      </p>
+                      <p className={`${feature.pricing.status === "upgrade-required" ? "text-2xl" : "text-5xl"} font-bold text-gray-900 dark:text-gray-50 mb-2`}>
+                        {feature.pricing.price}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {feature.pricing.ctaText}
+                      </p>
+                    </div>
+
+                    {/* Included Features List */}
+                    <div className="space-y-3">
+                      {feature.includedFeatures.map((item, index) => (
+                        <div key={index} className="flex items-start gap-3">
+                          <div className="flex-shrink-0 mt-0.5">
+                            <Check className="size-5 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                            {item}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* CTA Button Section */}
+                  <div className="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-6">
+                    <Button className="w-full" size="lg">
+                      {feature.pricing.buttonText}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+      )}
     </div>
   )
 }

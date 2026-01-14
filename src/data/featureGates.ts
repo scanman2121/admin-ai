@@ -5,6 +5,7 @@ export interface FeatureGateConfig {
   suite: string
   title: string
   subtitle: string
+  type?: "standard" | "integration"
   features: {
     icon: React.ComponentType<{ className?: string }>
     title: string
@@ -17,6 +18,12 @@ export interface FeatureGateConfig {
     status?: "included" | "contact-team" | "upgrade-required"
   }
   includedFeatures: string[]
+  integration?: {
+    name: string
+    logo: string
+    url: string
+    buttonText: string
+  }
 }
 
 export const featureGates: Record<string, FeatureGateConfig> = {
@@ -142,6 +149,26 @@ export const featureGates: Record<string, FeatureGateConfig> = {
       "Visitor history and reporting",
       "Integration with access control systems"
     ]
+  },
+  "visitor-management-prism": {
+    id: "visitor-management-prism",
+    suite: "Access Control",
+    title: "Visitor Management with Prism",
+    subtitle: "Your visitor management is powered by Prism. Access your visitor management portal to manage guests, registrations, and check-ins.",
+    type: "integration",
+    features: [],
+    pricing: {
+      price: "",
+      ctaText: "",
+      buttonText: "",
+    },
+    includedFeatures: [],
+    integration: {
+      name: "Prism",
+      logo: "/logos/prism.png",
+      url: "https://connect.buildingengines.com/login",
+      buttonText: "Go to Prism Portal"
+    }
   },
   "access-control-included": {
     id: "access-control-included",
