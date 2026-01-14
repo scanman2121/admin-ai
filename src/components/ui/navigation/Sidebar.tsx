@@ -14,32 +14,32 @@ import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerTitle,
-    DrawerTrigger
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTitle,
+  DrawerTrigger
 } from "@/components/ui/drawer"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { QuickReplyTemplatesSettings } from "@/components/ui/settings/CannedResponsesSettings"
 import { TagsSettings } from "@/components/ui/settings/TagsSettings"
 import { buildings } from "@/data/data"
 import { cn, focusRing } from "@/lib/utils"
-import { RiCloseLine, RiMore2Line, RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react"
+import { RiArrowLeftSLine, RiArrowRightSLine, RiCloseLine, RiMore2Line } from "@remixicon/react"
 import {
-    Building,
-    Check,
-    ChevronDown,
-    ChevronsUpDown,
-    ExternalLink,
-    FolderOpen,
-    HandCoins,
-    Home,
-    LayoutDashboard,
-    LineChart,
-    Megaphone,
-    MonitorSmartphone,
-    Settings
+  Building,
+  Check,
+  ChevronDown,
+  ChevronsUpDown,
+  ExternalLink,
+  FolderOpen,
+  HandCoins,
+  Home,
+  LayoutDashboard,
+  LineChart,
+  Megaphone,
+  MonitorSmartphone,
+  Settings
 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -222,7 +222,7 @@ export function Sidebar() {
       case ' ':
         if (document.activeElement?.tagName === 'BUTTON') {
           event.preventDefault()
-          ;(document.activeElement as HTMLButtonElement)?.click()
+            ; (document.activeElement as HTMLButtonElement)?.click()
         }
         break
     }
@@ -239,7 +239,7 @@ export function Sidebar() {
   const toggleSection = useCallback((section: SectionId) => {
     // Don't toggle sections when sidebar is collapsed
     if (collapsed) return
-    
+
     // Announce section state changes to screen readers
     const announceChange = (sectionName: string, isExpanding: boolean) => {
       const action = isExpanding ? "expanded" : "collapsed"
@@ -252,7 +252,7 @@ export function Sidebar() {
     const getSectionName = (sectionId: SectionId): string => {
       const names = {
         portfolio: "Portfolio",
-        commerce: "Commerce", 
+        commerce: "Commerce",
         experienceManager: "Experience Manager",
         operations: "Operations",
         files: "Files",
@@ -261,14 +261,14 @@ export function Sidebar() {
       }
       return names[sectionId]
     }
-    
+
     // If clicking the same section, just close it
     if (openSection === section) {
       setOpenSection(null)
       announceChange(getSectionName(section), false)
       return
     }
-    
+
     // If switching to a different section, close current first, then open new one
     if (openSection && openSection !== section) {
       setOpenSection(null)
@@ -288,7 +288,7 @@ export function Sidebar() {
   }, [collapsed, openSection])
 
   return (
-    <nav 
+    <nav
       ref={sidebarRef}
       className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:flex-col"
       onKeyDown={handleKeyDown}
@@ -296,9 +296,9 @@ export function Sidebar() {
       aria-label="Main navigation"
     >
       {/* Screen reader announcements for section state changes */}
-      <div 
-        aria-live="polite" 
-        aria-atomic="true" 
+      <div
+        aria-live="polite"
+        aria-atomic="true"
         className="sr-only"
         role="status"
       >
@@ -416,11 +416,11 @@ export function Sidebar() {
                   )}
 
                   {/* Sub-navigation items with animation */}
-                  <div 
+                  <div
                     className={cn(
                       "overflow-hidden transition-all duration-300 ease-in-out",
-                      !collapsed && openSection === 'portfolio' 
-                        ? "max-h-96 opacity-100" 
+                      !collapsed && openSection === 'portfolio'
+                        ? "max-h-96 opacity-100"
                         : "max-h-0 opacity-0"
                     )}
                     id="portfolio-submenu"
@@ -428,7 +428,7 @@ export function Sidebar() {
                     aria-labelledby="portfolio-button"
                     aria-hidden={!(openSection === 'portfolio' && !collapsed)}
                   >
-                    <ul 
+                    <ul
                       className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out"
                       role="group"
                       aria-label="Portfolio navigation"
@@ -509,8 +509,8 @@ export function Sidebar() {
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    !collapsed && openSection === 'experienceManager' 
-                      ? "max-h-96 opacity-100" 
+                    !collapsed && openSection === 'experienceManager'
+                      ? "max-h-96 opacity-100"
                       : "max-h-0 opacity-0"
                   )}>
                     <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
@@ -590,8 +590,8 @@ export function Sidebar() {
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    !collapsed && openSection === 'operations' 
-                      ? "max-h-96 opacity-100" 
+                    !collapsed && openSection === 'operations'
+                      ? "max-h-96 opacity-100"
                       : "max-h-0 opacity-0"
                   )}>
                     <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
@@ -671,8 +671,8 @@ export function Sidebar() {
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    !collapsed && openSection === 'commerce' 
-                      ? "max-h-96 opacity-100" 
+                    !collapsed && openSection === 'commerce'
+                      ? "max-h-96 opacity-100"
                       : "max-h-0 opacity-0"
                   )}>
                     <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
@@ -752,8 +752,8 @@ export function Sidebar() {
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    !collapsed && openSection === 'files' 
-                      ? "max-h-96 opacity-100" 
+                    !collapsed && openSection === 'files'
+                      ? "max-h-96 opacity-100"
                       : "max-h-0 opacity-0"
                   )}>
                     <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
@@ -833,8 +833,8 @@ export function Sidebar() {
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    !collapsed && openSection === 'intelligence' 
-                      ? "max-h-96 opacity-100" 
+                    !collapsed && openSection === 'intelligence'
+                      ? "max-h-96 opacity-100"
                       : "max-h-0 opacity-0"
                   )}>
                     <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
@@ -914,8 +914,8 @@ export function Sidebar() {
                   {/* Sub-navigation items with animation */}
                   <div className={cn(
                     "overflow-hidden transition-all duration-300 ease-in-out",
-                    !collapsed && openSection === 'settingsAndSetup' 
-                      ? "max-h-96 opacity-100" 
+                    !collapsed && openSection === 'settingsAndSetup'
+                      ? "max-h-96 opacity-100"
                       : "max-h-0 opacity-0"
                   )}>
                     <ul className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out">
@@ -994,7 +994,7 @@ export function Sidebar() {
                       <div className="px-6">
                         <h3 className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Settings</h3>
                         <div className="space-y-1">
-                          <button 
+                          <button
                             onClick={() => setSettingsTab('general')}
                             className={cn(
                               "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
@@ -1005,7 +1005,7 @@ export function Sidebar() {
                           >
                             General
                           </button>
-                          <button 
+                          <button
                             onClick={() => setSettingsTab('apps')}
                             className={cn(
                               "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
@@ -1016,7 +1016,7 @@ export function Sidebar() {
                           >
                             Apps
                           </button>
-                          <button 
+                          <button
                             onClick={() => setSettingsTab('email')}
                             className={cn(
                               "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
@@ -1027,7 +1027,7 @@ export function Sidebar() {
                           >
                             Email
                           </button>
-                          <button 
+                          <button
                             onClick={() => setSettingsTab('feedback')}
                             className={cn(
                               "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
@@ -1038,7 +1038,7 @@ export function Sidebar() {
                           >
                             Feedback
                           </button>
-                          <button 
+                          <button
                             onClick={() => setSettingsTab('tags')}
                             className={cn(
                               "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
@@ -1049,7 +1049,7 @@ export function Sidebar() {
                           >
                             Tags
                           </button>
-                          <button 
+                          <button
                             onClick={() => setSettingsTab('quick-reply-templates')}
                             className={cn(
                               "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
@@ -1060,7 +1060,7 @@ export function Sidebar() {
                           >
                             Quick reply templates
                           </button>
-                          <button 
+                          <button
                             onClick={() => setSettingsTab('connected-accounts')}
                             className={cn(
                               "w-full text-left px-3 py-2 text-sm font-medium rounded-md transition-colors",
@@ -1085,101 +1085,101 @@ export function Sidebar() {
                             <div>
                               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Company info</h2>
                               <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">General information about the tenant company</p>
-                          
-                          <div className="space-y-6">
-                            {/* Industry */}
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Industry</label>
-                              <div className="relative">
-                                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary">
-                                  <option>Computer Software</option>
-                                </select>
-                              </div>
-                            </div>
 
-                            {/* Number of employees */}
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Number of employees</label>
-                              <input 
-                                type="text" 
-                                placeholder="Enter number of employees"
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-primary"
-                              />
-                            </div>
-
-                            {/* Website */}
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Website <span className="text-red-500">*</span>
-                              </label>
-                              <input 
-                                type="url" 
-                                defaultValue="http://www.hqo.co"
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary"
-                              />
-                            </div>
-
-                            {/* Billing address */}
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Billing address <span className="text-red-500">*</span>
-                              </label>
-                              <textarea 
-                                rows={3}
-                                defaultValue="38 Chauncy St, Boston, MA 02111, USA"
-                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary"
-                              />
-                            </div>
-
-                            {/* Logo */}
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Logo</label>
-                              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center relative">
-                                <div className="flex flex-col items-center">
-                                  <div className="w-16 h-16 bg-[#1a365d] rounded-lg flex items-center justify-center mb-4">
-                                    <span className="text-white font-bold text-xl">HqO</span>
+                              <div className="space-y-6">
+                                {/* Industry */}
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Industry</label>
+                                  <div className="relative">
+                                    <select className="w-full pl-3 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary">
+                                      <option>Computer Software</option>
+                                    </select>
                                   </div>
-                                  <button className="absolute top-2 right-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                  </button>
-                                  <Button variant="outline" size="sm" className="mt-2">Upload file</Button>
+                                </div>
+
+                                {/* Number of employees */}
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Number of employees</label>
+                                  <input
+                                    type="text"
+                                    placeholder="Enter number of employees"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-primary"
+                                  />
+                                </div>
+
+                                {/* Website */}
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Website <span className="text-red-500">*</span>
+                                  </label>
+                                  <input
+                                    type="url"
+                                    defaultValue="http://www.hqo.co"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary"
+                                  />
+                                </div>
+
+                                {/* Billing address */}
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Billing address <span className="text-red-500">*</span>
+                                  </label>
+                                  <textarea
+                                    rows={3}
+                                    defaultValue="38 Chauncy St, Boston, MA 02111, USA"
+                                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary"
+                                  />
+                                </div>
+
+                                {/* Logo */}
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Logo</label>
+                                  <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center relative">
+                                    <div className="flex flex-col items-center">
+                                      <div className="w-16 h-16 bg-[#1a365d] rounded-lg flex items-center justify-center mb-4">
+                                        <span className="text-white font-bold text-xl">HqO</span>
+                                      </div>
+                                      <button className="absolute top-2 right-2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                      </button>
+                                      <Button variant="outline" size="sm" className="mt-2">Upload file</Button>
+                                    </div>
+                                  </div>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Accepted file types: PNG, JPEG</p>
                                 </div>
                               </div>
-                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Accepted file types: PNG, JPEG</p>
                             </div>
-                          </div>
-                        </div>
 
-                        {/* Domains Section */}
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Domains</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                            User domains that grant non-guest users access to the app. Generic domains cannot be added. View the list of generic domains in the Help Hub.
-                          </p>
-                          
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">URL domain</label>
-                            <div className="flex flex-wrap gap-2 p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800">
-                              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                                hqo.co
-                                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
-                              </span>
-                              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                                testlio.com
-                                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
-                              </span>
-                              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                                hqo.com
-                                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
-                              </span>
-                              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                                srv1.mail-tester.com
-                                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
-                              </span>
-                            </div>
-                          </div>
+                            {/* Domains Section */}
+                            <div>
+                              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Domains</h3>
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                                User domains that grant non-guest users access to the app. Generic domains cannot be added. View the list of generic domains in the Help Hub.
+                              </p>
+
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">URL domain</label>
+                                <div className="flex flex-wrap gap-2 p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800">
+                                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                    hqo.co
+                                    <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
+                                  </span>
+                                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                    testlio.com
+                                    <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
+                                  </span>
+                                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                    hqo.com
+                                    <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
+                                  </span>
+                                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                                    srv1.mail-tester.com
+                                    <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </>
                         )}
@@ -1189,14 +1189,14 @@ export function Sidebar() {
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Connected Apps</h2>
                             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Manage your external application integrations</p>
-                            
+
                             <div className="space-y-4">
                               {/* Essensys App */}
                               <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800">
                                 <div className="flex items-center gap-4">
                                   <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shrink-0">
                                     <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                                      <path d="M12 2L2 7v10c0 5.55 3.84 9.95 9 11 5.16-1.05 9-5.45 9-11V7l-10-5z"/>
+                                      <path d="M12 2L2 7v10c0 5.55 3.84 9.95 9 11 5.16-1.05 9-5.45 9-11V7l-10-5z" />
                                     </svg>
                                   </div>
                                   <div>
@@ -1224,7 +1224,7 @@ export function Sidebar() {
                                 <div className="flex items-center gap-4">
                                   <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shrink-0">
                                     <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                                      <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
+                                      <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z" />
                                     </svg>
                                   </div>
                                   <div>
@@ -1263,19 +1263,19 @@ export function Sidebar() {
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">Email Settings</h2>
                             <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Configure email notifications and preferences</p>
-                            
+
                             <div className="space-y-6">
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Notification Email</label>
-                                <input 
-                                  type="email" 
+                                <input
+                                  type="email"
                                   placeholder="notifications@company.com"
                                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-primary"
                                 />
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Frequency</label>
-                                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary">
+                                <select className="w-full pl-3 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-primary">
                                   <option>Daily</option>
                                   <option>Weekly</option>
                                   <option>Monthly</option>
@@ -1347,6 +1347,29 @@ function ConnectedAccountsSettings() {
   const [serviceTypeSearch, setServiceTypeSearch] = useState("")
   const [showServiceTypeResults, setShowServiceTypeResults] = useState(false)
   const [imageError, setImageError] = useState(false)
+  const [yardiImageError, setYardiImageError] = useState(false)
+  const [isYardiModalOpen, setIsYardiModalOpen] = useState(false)
+  const [yardiStep, setYardiStep] = useState<1 | 2 | 3 | 4 | 5 | 6>(1)
+  const [yardiConfig, setYardiConfig] = useState({
+    serverName: "",
+    database: "",
+    username: "",
+    password: "",
+    platform: "",
+    interfaceEntity: "",
+    interfaceLicense: ""
+  })
+  const [yardiTesting, setYardiTesting] = useState(false)
+  const [yardiTestResult, setYardiTestResult] = useState<{ status: 'idle' | 'success' | 'error'; message?: string }>({ status: 'idle' })
+  const [yardiProperties, setYardiProperties] = useState<Array<{ id: string; name: string; address: string; matchedBuilding?: string }>>([])
+  const [selectedYardiProperties, setSelectedYardiProperties] = useState<string[]>([])
+  const [yardiSyncFrequency, setYardiSyncFrequency] = useState<'nightly' | 'hourly' | 'manual'>('nightly')
+  const [yardiSyncOptions, setYardiSyncOptions] = useState({
+    tenants: true,
+    leases: true,
+    units: true,
+    billing: false
+  })
   const serviceTypeSearchRef = useRef<HTMLDivElement>(null)
 
   // Service type categories
@@ -1432,6 +1455,78 @@ function ConnectedAccountsSettings() {
     setIsModalOpen(false)
   }
 
+  const handleYardiConnect = () => {
+    setIsYardiModalOpen(true)
+    setYardiStep(1)
+    setYardiConfig({
+      serverName: "",
+      database: "",
+      username: "",
+      password: "",
+      platform: "",
+      interfaceEntity: "",
+      interfaceLicense: ""
+    })
+    setYardiTestResult({ status: 'idle' })
+    setYardiTesting(false)
+    setYardiProperties([])
+    setSelectedYardiProperties([])
+    setYardiSyncFrequency('nightly')
+    setYardiSyncOptions({
+      tenants: true,
+      leases: true,
+      units: true,
+      billing: false
+    })
+  }
+
+  const handleYardiFieldChange = (field: keyof typeof yardiConfig, value: string) => {
+    setYardiConfig(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleYardiTestConnection = () => {
+    setYardiTesting(true)
+    setYardiTestResult({ status: 'idle' })
+    setTimeout(() => {
+      const mockProperties = [
+        { id: "yardi-1", name: "Sunset Towers", address: "123 Main St, Boston, MA", matchedBuilding: buildings[0]?.label },
+        { id: "yardi-2", name: "Harbor Point", address: "500 Seaport Ave, Boston, MA", matchedBuilding: buildings[1]?.label },
+        { id: "yardi-3", name: "Elm Residences", address: "42 Elm St, Cambridge, MA" }
+      ]
+      setYardiTesting(false)
+      setYardiTestResult({ status: 'success', message: "Connection successful. 3 properties found." })
+      setYardiProperties(mockProperties)
+      setSelectedYardiProperties(mockProperties.map(p => p.id))
+    }, 800)
+  }
+
+  const handleYardiPropertyToggle = (propertyId: string) => {
+    setSelectedYardiProperties(prev =>
+      prev.includes(propertyId) ? prev.filter(id => id !== propertyId) : [...prev, propertyId]
+    )
+  }
+
+  const handleYardiNext = () => {
+    if (yardiStep === 2 && (!yardiConfig.serverName || !yardiConfig.database || !yardiConfig.username || !yardiConfig.password || !yardiConfig.platform || !yardiConfig.interfaceEntity || !yardiConfig.interfaceLicense)) {
+      return
+    }
+    if (yardiStep === 3 && yardiTestResult.status !== 'success') {
+      return
+    }
+    if (yardiStep === 4 && selectedYardiProperties.length === 0) {
+      return
+    }
+    setYardiStep(prev => (prev < 6 ? (prev + 1) as typeof yardiStep : prev))
+  }
+
+  const handleYardiBack = () => {
+    setYardiStep(prev => (prev > 1 ? (prev - 1) as typeof yardiStep : prev))
+  }
+
+  const handleActivateYardi = () => {
+    setIsYardiModalOpen(false)
+  }
+
   // Close service type dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -1511,7 +1606,7 @@ function ConnectedAccountsSettings() {
   const filteredItems = allSearchableItems.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(serviceTypeSearch.toLowerCase()) ||
       ('description' in item && item.description?.toLowerCase().includes(serviceTypeSearch.toLowerCase()))
-    
+
     if (item.type === 'category') {
       return matchesSearch && !selectedCategories.includes(item.id)
     } else {
@@ -1521,7 +1616,7 @@ function ConnectedAccountsSettings() {
 
   // Calculate counts - include types from selected categories
   const categoryCount = selectedCategories.length
-  const typesFromCategories = selectedCategories.flatMap(catId => 
+  const typesFromCategories = selectedCategories.flatMap(catId =>
     serviceTypes.filter(t => t.categoryId === catId).map(t => t.id)
   )
   const individualTypes = selectedTypes.filter(typeId => {
@@ -1531,28 +1626,28 @@ function ConnectedAccountsSettings() {
   const typeCount = typesFromCategories.length + individualTypes.length
 
   const handleSalesforceFieldChange = (mappingId: string, salesforceField: string) => {
-    setFieldMappings(prev => prev.map(mapping => 
-      mapping.id === mappingId 
+    setFieldMappings(prev => prev.map(mapping =>
+      mapping.id === mappingId
         ? { ...mapping, salesforceField }
         : mapping
     ))
   }
 
   const handleInformationChange = (mappingId: string, information: string) => {
-    setFieldMappings(prev => prev.map(mapping => 
-      mapping.id === mappingId 
+    setFieldMappings(prev => prev.map(mapping =>
+      mapping.id === mappingId
         ? { ...mapping, information }
         : mapping
     ))
   }
 
   const handleAddServiceRequestRow = () => {
-    setFieldMappings(prev => [...prev, { 
-      id: `sr-${Date.now()}`, 
-      requestInfo: "", 
+    setFieldMappings(prev => [...prev, {
+      id: `sr-${Date.now()}`,
+      requestInfo: "",
       required: false,
-      salesforceField: "", 
-      information: "" 
+      salesforceField: "",
+      information: ""
     }])
   }
 
@@ -1561,26 +1656,26 @@ function ConnectedAccountsSettings() {
   }
 
   const handleCrmSalesforceFieldChange = (mappingId: string, salesforceField: string) => {
-    setCrmMappings(prev => prev.map(mapping => 
-      mapping.id === mappingId 
+    setCrmMappings(prev => prev.map(mapping =>
+      mapping.id === mappingId
         ? { ...mapping, salesforceField }
         : mapping
     ))
   }
 
   const handleCrmHqoFieldChange = (mappingId: string, hqoField: string) => {
-    setCrmMappings(prev => prev.map(mapping => 
-      mapping.id === mappingId 
+    setCrmMappings(prev => prev.map(mapping =>
+      mapping.id === mappingId
         ? { ...mapping, hqoField }
         : mapping
     ))
   }
 
   const handleAddCrmRow = () => {
-    setCrmMappings(prev => [...prev, { 
-      id: `crm-${Date.now()}`, 
-      salesforceField: "", 
-      hqoField: "" 
+    setCrmMappings(prev => [...prev, {
+      id: `crm-${Date.now()}`,
+      salesforceField: "",
+      hqoField: ""
     }])
   }
 
@@ -1775,7 +1870,7 @@ function ConnectedAccountsSettings() {
                         onFocus={() => setShowServiceTypeResults(true)}
                         className="w-full"
                       />
-                      
+
                       {/* Search Results Dropdown */}
                       {showServiceTypeResults && serviceTypeSearch && filteredItems.length > 0 && (
                         <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
@@ -1832,98 +1927,98 @@ function ConnectedAccountsSettings() {
                       </p>
                     </div>
                     <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                      <thead>
-                        <tr>
-                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
-                            Salesforce field
-                          </th>
-                          <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
-                            Information that will be sent to Salesforce. Type @ to select values.
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {fieldMappings.map((mapping) => (
-                          <tr key={mapping.id}>
-                            <td className="py-3 px-4">
-                              <Select
-                                value={mapping.salesforceField}
-                                onValueChange={(value) => handleSalesforceFieldChange(mapping.id, value)}
-                              >
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Select field" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {salesforceFields.map((sfField) => (
-                                    <SelectItem key={sfField.id} value={sfField.id}>
-                                      {sfField.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </td>
-                            <td className="py-3 px-4">
-                              <div className="flex items-center gap-2">
-                                <div className="flex-1">
-                                  <MentionsInput
-                                    value={mapping.information}
-                                    onChange={(e) => handleInformationChange(mapping.id, e.target.value)}
-                                    placeholder="Type @ to mention a field..."
-                                    singleLine
-                                    style={{
-                                      control: { backgroundColor: 'transparent', fontSize: 14, fontWeight: 'normal' },
-                                      '&singleLine': {
-                                        control: { fontFamily: 'inherit', display: 'inline-block' },
-                                        highlighter: { padding: '8px 10px', border: '1px solid transparent', minHeight: '38px' },
-                                        input: {
-                                          padding: '8px 10px',
-                                          border: '1px solid rgb(209, 213, 219)',
-                                          borderRadius: '0.375rem',
-                                          backgroundColor: 'white',
-                                          color: 'rgb(17, 24, 39)',
-                                          fontSize: '14px',
-                                          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-                                          width: '100%',
-                                        },
-                                      },
-                                      suggestions: {
-                                        list: {
-                                          backgroundColor: 'white',
-                                          border: '1px solid rgba(0,0,0,0.15)',
-                                          fontSize: 14,
-                                          borderRadius: '0.375rem',
-                                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                        },
-                                        item: { padding: '8px 12px', '&focused': { backgroundColor: '#f3f4f6' } },
-                                      },
-                                    }}
-                                  >
-                                    <Mention
-                                      trigger="@"
-                                      data={mentionFields}
-                                      displayTransform={(id) => `@${id}`}
-                                      markup="@__id__"
-                                      style={{ backgroundColor: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '4px' }}
-                                    />
-                                  </MentionsInput>
-                                </div>
-                                {!mapping.required && (
-                                  <ButtonComponent
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleRemoveServiceRequestRow(mapping.id)}
-                                    className="text-red-600 hover:text-red-700"
-                                  >
-                                    Remove
-                                  </ButtonComponent>
-                                )}
-                              </div>
-                            </td>
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
+                              Salesforce field
+                            </th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-900 dark:text-gray-50">
+                              Information that will be sent to Salesforce. Type @ to select values.
+                            </th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {fieldMappings.map((mapping) => (
+                            <tr key={mapping.id}>
+                              <td className="py-3 px-4">
+                                <Select
+                                  value={mapping.salesforceField}
+                                  onValueChange={(value) => handleSalesforceFieldChange(mapping.id, value)}
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select field" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {salesforceFields.map((sfField) => (
+                                      <SelectItem key={sfField.id} value={sfField.id}>
+                                        {sfField.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </td>
+                              <td className="py-3 px-4">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex-1">
+                                    <MentionsInput
+                                      value={mapping.information}
+                                      onChange={(e) => handleInformationChange(mapping.id, e.target.value)}
+                                      placeholder="Type @ to mention a field..."
+                                      singleLine
+                                      style={{
+                                        control: { backgroundColor: 'transparent', fontSize: 14, fontWeight: 'normal' },
+                                        '&singleLine': {
+                                          control: { fontFamily: 'inherit', display: 'inline-block' },
+                                          highlighter: { padding: '8px 10px', border: '1px solid transparent', minHeight: '38px' },
+                                          input: {
+                                            padding: '8px 10px',
+                                            border: '1px solid rgb(209, 213, 219)',
+                                            borderRadius: '0.375rem',
+                                            backgroundColor: 'white',
+                                            color: 'rgb(17, 24, 39)',
+                                            fontSize: '14px',
+                                            boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                                            width: '100%',
+                                          },
+                                        },
+                                        suggestions: {
+                                          list: {
+                                            backgroundColor: 'white',
+                                            border: '1px solid rgba(0,0,0,0.15)',
+                                            fontSize: 14,
+                                            borderRadius: '0.375rem',
+                                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                          },
+                                          item: { padding: '8px 12px', '&focused': { backgroundColor: '#f3f4f6' } },
+                                        },
+                                      }}
+                                    >
+                                      <Mention
+                                        trigger="@"
+                                        data={mentionFields}
+                                        displayTransform={(id) => `@${id}`}
+                                        markup="@__id__"
+                                        style={{ backgroundColor: '#dbeafe', color: '#1e40af', padding: '2px 4px', borderRadius: '4px' }}
+                                      />
+                                    </MentionsInput>
+                                  </div>
+                                  {!mapping.required && (
+                                    <ButtonComponent
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleRemoveServiceRequestRow(mapping.id)}
+                                      className="text-red-600 hover:text-red-700"
+                                    >
+                                      Remove
+                                    </ButtonComponent>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                     <div className="flex justify-start">
                       <button
@@ -2022,6 +2117,37 @@ function ConnectedAccountsSettings() {
               )}
             </>
           )}
+        </div>
+      </Card>
+
+      {/* Yardi Connection Card */}
+      <Card>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 flex-1">
+            <div className="flex-shrink-0 bg-white border border-gray-300 dark:border-gray-600 rounded p-2 flex items-center justify-center w-16 h-16">
+              {yardiImageError ? (
+                <div className="text-xs font-semibold text-gray-700 dark:text-gray-300">Yardi</div>
+              ) : (
+                <Image
+                  src="/images/yardi.svg"
+                  alt="Yardi"
+                  width={60}
+                  height={20}
+                  className="object-contain"
+                  onError={() => setYardiImageError(true)}
+                />
+              )}
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">Yardi</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                Connect your Yardi account to sync property data and workflows
+              </p>
+            </div>
+          </div>
+          <ButtonComponent variant="primary" onClick={handleYardiConnect}>
+            Connect
+          </ButtonComponent>
         </div>
       </Card>
 
@@ -2130,6 +2256,282 @@ function ConnectedAccountsSettings() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Yardi Connect Modal */}
+      <Dialog open={isYardiModalOpen} onOpenChange={setIsYardiModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Connect Yardi</DialogTitle>
+          </DialogHeader>
+          <div className="px-6 py-4 space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Step {yardiStep} of 6</div>
+              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <span className="inline-block h-2 w-2 rounded-full bg-blue-500" />
+                Demo flow
+              </div>
+            </div>
+
+            {yardiStep === 1 && (
+              <div className="space-y-3">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-gray-50">Sync tenants, leases, and billing with Yardi Voyager</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Connect Yardi to keep tenants, leases, units, and billing in sync with HqO. You can review properties and choose what to sync before activation.
+                </p>
+              </div>
+            )}
+
+            {yardiStep === 2 && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <Label htmlFor="yardi-server">Server name <span className="text-red-500">*</span></Label>
+                    <Input
+                      id="yardi-server"
+                      placeholder="https://yardi.example.com"
+                      value={yardiConfig.serverName}
+                      onChange={(e) => handleYardiFieldChange("serverName", e.target.value)}
+                      className="mt-1"
+                    />
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Yardi server URL</p>
+                  </div>
+                  <div>
+                    <Label htmlFor="yardi-database">Database <span className="text-red-500">*</span></Label>
+                    <Input
+                      id="yardi-database"
+                      placeholder="Database name"
+                      value={yardiConfig.database}
+                      onChange={(e) => handleYardiFieldChange("database", e.target.value)}
+                      className="mt-1"
+                    />
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Yardi database name</p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="yardi-username">Username <span className="text-red-500">*</span></Label>
+                      <Input
+                        id="yardi-username"
+                        placeholder="API username"
+                        value={yardiConfig.username}
+                        onChange={(e) => handleYardiFieldChange("username", e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="yardi-password">Password <span className="text-red-500">*</span></Label>
+                      <Input
+                        id="yardi-password"
+                        type="password"
+                        placeholder="API password"
+                        value={yardiConfig.password}
+                        onChange={(e) => handleYardiFieldChange("password", e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="yardi-platform">Platform <span className="text-red-500">*</span></Label>
+                    <Input
+                      id="yardi-platform"
+                      placeholder='e.g., "SQL Server"'
+                      value={yardiConfig.platform}
+                      onChange={(e) => handleYardiFieldChange("platform", e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="yardi-entity">Interface entity <span className="text-red-500">*</span></Label>
+                      <Input
+                        id="yardi-entity"
+                        placeholder="Provided by Yardi"
+                        value={yardiConfig.interfaceEntity}
+                        onChange={(e) => handleYardiFieldChange("interfaceEntity", e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="yardi-license">Interface license <span className="text-red-500">*</span></Label>
+                      <Input
+                        id="yardi-license"
+                        placeholder="Provided by Yardi"
+                        value={yardiConfig.interfaceLicense}
+                        onChange={(e) => handleYardiFieldChange("interfaceLicense", e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Your Yardi admin can find these in Yardi Voyager under System Administration &gt; Interface Configuration.
+                </p>
+              </div>
+            )}
+
+            {yardiStep === 3 && (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Test your credentials with Yardi Voyager before selecting properties.
+                </p>
+                <div className="flex items-center gap-3">
+                  <ButtonComponent variant="primary" onClick={handleYardiTestConnection} disabled={yardiTesting}>
+                    {yardiTesting ? "Testing..." : "Test connection"}
+                  </ButtonComponent>
+                  {yardiTestResult.status === 'success' && (
+                    <div className="flex items-center gap-2 text-sm text-green-600">
+                      <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-green-100 text-green-700">✓</span>
+                      {yardiTestResult.message || "Connection successful"}
+                    </div>
+                  )}
+                  {yardiTestResult.status === 'error' && (
+                    <div className="text-sm text-red-600">
+                      {yardiTestResult.message || "Connection failed. Check credentials and network access."}
+                    </div>
+                  )}
+                </div>
+                {yardiTestResult.status !== 'success' && (
+                  <ul className="text-xs text-gray-500 dark:text-gray-400 list-disc list-inside space-y-1">
+                    <li>Verify server name, database, username, and password.</li>
+                    <li>Confirm your interface entity and license match your environment.</li>
+                    <li>Ensure HqO IPs are allowlisted for your Yardi environment.</li>
+                  </ul>
+                )}
+              </div>
+            )}
+
+            {yardiStep === 4 && (
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Select properties to sync</h3>
+                {yardiProperties.length === 0 ? (
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Run a successful test connection to load properties.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {yardiProperties.map((property) => (
+                      <label
+                        key={property.id}
+                        className="flex items-start gap-3 rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 hover:border-gray-300 dark:hover:border-gray-600"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedYardiProperties.includes(property.id)}
+                          onChange={() => handleYardiPropertyToggle(property.id)}
+                          className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium text-gray-900 dark:text-gray-50">{property.name}</span>
+                            {property.matchedBuilding && (
+                              <span className="text-[11px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-200">
+                                Auto-matched to {property.matchedBuilding}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{property.address || "-"}</p>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {yardiStep === 5 && (
+              <div className="space-y-4">
+                <div>
+                  <Label>Sync frequency</Label>
+                  <Select value={yardiSyncFrequency} onValueChange={(value) => setYardiSyncFrequency(value as typeof yardiSyncFrequency)}>
+                    <SelectTrigger className="mt-1 w-full">
+                      <SelectValue placeholder="Select sync frequency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="nightly">Nightly (default)</SelectItem>
+                      <SelectItem value="hourly">Hourly</SelectItem>
+                      <SelectItem value="manual">Manual</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>What to sync</Label>
+                  <div className="space-y-2">
+                    {[
+                      { key: "tenants", label: "Tenants" },
+                      { key: "leases", label: "Leases" },
+                      { key: "units", label: "Units" },
+                      { key: "billing", label: "Billing (if available)" }
+                    ].map(option => (
+                      <label key={option.key} className="flex items-center gap-2 text-sm text-gray-900 dark:text-gray-50">
+                        <input
+                          type="checkbox"
+                          checked={yardiSyncOptions[option.key as keyof typeof yardiSyncOptions]}
+                          onChange={() =>
+                            setYardiSyncOptions(prev => ({
+                              ...prev,
+                              [option.key]: !prev[option.key as keyof typeof yardiSyncOptions]
+                            }))
+                          }
+                          className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                        />
+                        {option.label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {yardiStep === 6 && (
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Review and activate</h3>
+                <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                  <p><span className="font-medium">Server:</span> {yardiConfig.serverName || "-"}</p>
+                  <p><span className="font-medium">Database:</span> {yardiConfig.database || "-"}</p>
+                  <p><span className="font-medium">Platform:</span> {yardiConfig.platform || "-"}</p>
+                  <p><span className="font-medium">Interface:</span> {yardiConfig.interfaceEntity || "-"} / {yardiConfig.interfaceLicense || "-"}</p>
+                  <p><span className="font-medium">Properties:</span> {selectedYardiProperties.length} selected</p>
+                  <p><span className="font-medium">Sync frequency:</span> {yardiSyncFrequency === 'nightly' ? "Nightly" : yardiSyncFrequency === 'hourly' ? "Hourly" : "Manual"}</p>
+                  <p>
+                    <span className="font-medium">Syncing:</span>{" "}
+                    {Object.entries(yardiSyncOptions)
+                      .filter(([, enabled]) => enabled)
+                      .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1))
+                      .join(", ") || "None"}
+                  </p>
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Activate to start your first sync. You can update settings or pause syncing anytime.
+                </p>
+              </div>
+            )}
+          </div>
+          <DialogFooter className="flex justify-between">
+            <div className="flex gap-2">
+              <ButtonComponent variant="ghost" onClick={() => setIsYardiModalOpen(false)}>Cancel</ButtonComponent>
+              {yardiStep > 1 && (
+                <ButtonComponent variant="ghost" onClick={handleYardiBack}>
+                  Back
+                </ButtonComponent>
+              )}
+            </div>
+            {yardiStep < 6 ? (
+              <ButtonComponent
+                variant="primary"
+                onClick={handleYardiNext}
+                disabled={
+                  (yardiStep === 2 && (!yardiConfig.serverName || !yardiConfig.database || !yardiConfig.username || !yardiConfig.password || !yardiConfig.platform || !yardiConfig.interfaceEntity || !yardiConfig.interfaceLicense)) ||
+                  (yardiStep === 3 && yardiTestResult.status !== 'success') ||
+                  (yardiStep === 4 && selectedYardiProperties.length === 0)
+                }
+              >
+                Next
+              </ButtonComponent>
+            ) : (
+              <ButtonComponent variant="primary" onClick={handleActivateYardi}>
+                Activate connection
+              </ButtonComponent>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
@@ -2151,13 +2553,13 @@ function BuildingMultiSelect({
   const [open, setOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const ALL_BUILDINGS = "All buildings"
-  
+
   // Check if "All buildings" is selected
   const isAllBuildingsSelected = value.includes(ALL_BUILDINGS)
-  
+
   // Add "All buildings" as the first option
   const allOptions = [ALL_BUILDINGS, ...options]
-  
+
   const filteredOptions = allOptions.filter(option =>
     option.toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -2251,8 +2653,8 @@ function BuildingMultiSelect({
       </PopoverTrigger>
       <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
         <Command>
-          <CommandInput 
-            placeholder="Search buildings..." 
+          <CommandInput
+            placeholder="Search buildings..."
             value={searchQuery}
             onValueChange={setSearchQuery}
           />
@@ -2281,8 +2683,8 @@ function BuildingMultiSelect({
             <CommandEmpty>No building found.</CommandEmpty>
             <CommandGroup>
               {filteredOptions.map((option) => {
-                const isSelected = option === ALL_BUILDINGS 
-                  ? isAllBuildingsSelected 
+                const isSelected = option === ALL_BUILDINGS
+                  ? isAllBuildingsSelected
                   : value.includes(option)
                 return (
                   <CommandItem
@@ -2316,7 +2718,7 @@ function BuildingMultiSelect({
 function FeedbackSettings() {
   // Get all building labels for default selection
   const allBuildingLabels = buildings.map(b => b.label)
-  
+
   // Initialize state with "All buildings" selected for each feedback type
   const [feedbackSettings, setFeedbackSettings] = useState({
     serviceRequests: ["All buildings"],
@@ -2358,7 +2760,7 @@ function FeedbackSettings() {
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           When a user completes a booking, attends an event, or has a service request closed, they'll see a short in-app prompt asking them to rate their experience. Ratings take one tap to submit, with an optional comment for additional feedback, and are only requested once per completed item.
         </p>
-        
+
         <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
           <Table>
             <TableHead>
@@ -2439,7 +2841,7 @@ function FeedbackSettings() {
         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-4">
           Comments on feedback
         </h3>
-        
+
         <div className="flex items-center justify-between">
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -2461,7 +2863,7 @@ function FeedbackSettings() {
         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-50 mb-4">
           Push notifications
         </h3>
-        
+
         <div className="flex items-center justify-between">
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
