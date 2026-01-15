@@ -25,6 +25,8 @@ export interface CentralizedUser {
   canHostVisitors: boolean
   // For service requests
   preferredContactMethod: "email" | "phone" | "both"
+  // User type for leads/prospects
+  userType?: "tenant" | "lead"
 }
 
 export const centralizedUsers: CentralizedUser[] = [
@@ -584,6 +586,51 @@ export const centralizedUsers: CentralizedUser[] = [
     acsStatus: "active",
     canHostVisitors: false,
     preferredContactMethod: "email"
+  },
+
+  // Leads / Prospects - Potential Tenants
+  {
+    id: "jerry-helfer-lead",
+    name: "Jerry Helfer",
+    initials: "JH",
+    email: "jerry.helfer@prospect.com",
+    role: "viewer",
+    company: "Helfer Enterprises",
+    department: "Executive",
+    title: "CEO",
+    phone: "(555) 700-1001",
+    buildings: [],
+    floorSuite: "Interested in Floor 10",
+    hasMobileAccess: false,
+    status: "active",
+    badgeId: "LEAD-JH-001",
+    startDate: "2025-01-10",
+    acsStatus: "pending",
+    canHostVisitors: false,
+    preferredContactMethod: "both",
+    userType: "lead"
+  },
+  {
+    id: "j-jones-lead",
+    name: "J. Jones",
+    initials: "JJ",
+    email: "j.jones@outlook.com",
+    role: "viewer",
+    company: "Helfer Enterprises",
+    department: "Operations",
+    title: "Operations Director",
+    phone: "(555) 700-1002",
+    buildings: [],
+    floorSuite: "Interested in Floor 10",
+    hasMobileAccess: false,
+    status: "active",
+    badgeId: "LEAD-JJ-002",
+    startDate: "2025-01-10",
+    manager: "jerry-helfer-lead",
+    acsStatus: "pending",
+    canHostVisitors: false,
+    preferredContactMethod: "email",
+    userType: "lead"
   }
 ]
 

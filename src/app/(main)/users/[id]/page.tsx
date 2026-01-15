@@ -10,7 +10,7 @@ import { UserRequestsTab } from "@/components/ui/user/UserRequestsTab"
 import { UserVisitorsTab } from "@/components/ui/user/UserVisitorsTab"
 import { centralizedUsers, getUserById } from "@/data/centralizedUsers"
 import { cn } from "@/lib/utils"
-import { Activity, Calendar, ChevronLeft, FileText, Shield, User as UserIcon } from "lucide-react"
+import { Activity, Calendar, ChevronLeft, FileText, Gift, Mail, Shield, Ticket, User as UserIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -52,7 +52,8 @@ const getUserDetailData = (userId: string) => {
         department: baseUser.department,
         title: baseUser.title,
         manager: baseUser.manager,
-        badgeId: baseUser.badgeId
+        badgeId: baseUser.badgeId,
+        userType: baseUser.userType
     }
 }
 
@@ -98,24 +99,54 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
                         )}
                     </div>
                     <div>
-                        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-50">
-                            {userDetail.name}
-                        </h1>
+                        <div className="flex items-center gap-2">
+                            <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-50">
+                                {userDetail.name}
+                            </h1>
+                            {userDetail.userType === "lead" && (
+                                <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">
+                                    Lead
+                                </span>
+                            )}
+                        </div>
+                        {userDetail.userType === "lead" && (
+                            <p className="text-sm text-gray-500 mt-1">
+                                {userDetail.title} at {userDetail.company}
+                            </p>
+                        )}
                     </div>
                 </div>
-                
-                {/* Status dropdown */}
-                <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1">
-                        <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                        <span className="text-sm font-medium text-green-700 dark:text-green-400">Active</span>
+
+                {/* Lead CTAs - shown only for leads */}
+                {userDetail.userType === "lead" ? (
+                    <div className="flex items-center gap-2">
+                        <Button variant="secondary" className="gap-2">
+                            <Ticket className="h-4 w-4" />
+                            Send Discount
+                        </Button>
+                        <Button variant="secondary" className="gap-2">
+                            <Gift className="h-4 w-4" />
+                            Send Credit
+                        </Button>
+                        <Button className="gap-2">
+                            <Mail className="h-4 w-4" />
+                            Send Invite
+                        </Button>
                     </div>
-                    <Button variant="ghost" size="sm">
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </Button>
-                </div>
+                ) : (
+                    /* Status dropdown for regular users */
+                    <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
+                            <div className="h-2 w-2 rounded-full bg-green-500"></div>
+                            <span className="text-sm font-medium text-green-700 dark:text-green-400">Active</span>
+                        </div>
+                        <Button variant="ghost" size="sm">
+                            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </Button>
+                    </div>
+                )}
             </div>
 
             {/* Tab navigation */}
