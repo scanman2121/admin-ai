@@ -58,11 +58,13 @@ const portfolioItems = [
   { name: "Audiences", href: siteConfig.baseLinks.audiences },
 ] as const
 
-// Commerce sub-navigation items
+// Payments sub-navigation items
 const commerceItems = [
   { name: "Transactions", href: siteConfig.baseLinks.transactions },
   { name: "Credits", href: siteConfig.baseLinks.credits },
   { name: "Discounts", href: siteConfig.baseLinks.discounts },
+  { name: "Inventory", href: siteConfig.baseLinks.inventory },
+  { name: "Invoices", href: siteConfig.baseLinks.invoices },
 ] as const
 
 // Experience Manager sub-navigation items
@@ -252,7 +254,7 @@ export function Sidebar() {
     const getSectionName = (sectionId: SectionId): string => {
       const names = {
         portfolio: "Portfolio",
-        commerce: "Commerce",
+        commerce: "Payments",
         experienceManager: "Experience Manager",
         operations: "Operations",
         files: "Files",
@@ -622,7 +624,7 @@ export function Sidebar() {
                   </div>
                 </li>
 
-                {/* Commerce accordion */}
+                {/* Payments accordion */}
                 <li className={cn(
                   (openSection === 'commerce' || isInPayments) && !collapsed
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-0.5"
@@ -634,7 +636,7 @@ export function Sidebar() {
                   {collapsed ? (
                     <SidebarPopover
                       icon={<HandCoins className="size-4 shrink-0" aria-hidden="true" />}
-                      title="Commerce"
+                      title="Payments"
                       items={commerceItems}
                       isActive={isActive}
                       isInSection={isInPayments}
@@ -654,7 +656,7 @@ export function Sidebar() {
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
                         <HandCoins className="size-4 shrink-0" aria-hidden="true" />
-                        {!collapsed && "Commerce"}
+                        {!collapsed && "Payments"}
                       </span>
                       {!collapsed && (
                         <ChevronDown

@@ -44,11 +44,13 @@ const portfolioItems = [
   { name: "Audiences", href: siteConfig.baseLinks.audiences },
 ] as const
 
-// Commerce sub-navigation items
+// Payments sub-navigation items
 const commerceItems = [
   { name: "Transactions", href: siteConfig.baseLinks.transactions },
   { name: "Credits", href: siteConfig.baseLinks.credits },
   { name: "Discounts", href: siteConfig.baseLinks.discounts },
+  { name: "Inventory", href: siteConfig.baseLinks.inventory },
+  { name: "Invoices", href: siteConfig.baseLinks.invoices },
 ] as const
 
 
@@ -104,7 +106,7 @@ export default function MobileSidebar() {
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
-  // Check if current path is in Commerce section
+  // Check if current path is in Payments section
   const isInPayments = commerceItems.some(item =>
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
@@ -301,7 +303,7 @@ export default function MobileSidebar() {
                 </div>
               </li>
 
-              {/* Commerce accordion */}
+              {/* Payments accordion */}
               <li className={cn(
                 (isCommerceOpen || isInPayments) ? "bg-[#F6F7F8] rounded-md overflow-hidden" : "",
                 isCommerceOpen ? "pb-3" : ""
@@ -319,7 +321,7 @@ export default function MobileSidebar() {
                 >
                   <span className="flex items-center gap-x-2.5">
                     <HandCoins className="size-4 shrink-0" aria-hidden="true" />
-                    Commerce
+                    Payments
                   </span>
                   {isCommerceOpen ? (
                     <ChevronDown className="size-4 shrink-0 transition-transform" aria-hidden="true" />

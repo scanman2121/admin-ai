@@ -9,6 +9,8 @@ export const siteConfig = {
     transactions: "/transactions",
     credits: "/credits",
     discounts: "/discounts",
+    inventory: "/inventory",
+    invoices: "/invoices",
     analytics: "/analytics",
     fileRepository: "/file-repository",
     users: "/users",

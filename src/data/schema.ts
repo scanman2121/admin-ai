@@ -47,6 +47,29 @@ export type Visitor = {
   badgeNumber: string
 }
 
+export type ServiceInventory = {
+  inventoryId: string
+  dateCreated: string
+  propertyName: string
+  serviceType: string
+  description: string
+  requestedBy: string
+  status: string
+  quantity: number
+}
+
+export type TenantInvoice = {
+  invoiceId: string
+  invoiceDate: string
+  propertyName: string
+  unitNumber: string
+  tenantName: string
+  description: string
+  amountDue: number
+  dueDate: string
+  paymentStatus: string
+}
+
 export type OverviewData = {
   date: string
   "Rows written": number
