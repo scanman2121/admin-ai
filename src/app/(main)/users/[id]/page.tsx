@@ -6,11 +6,12 @@ import { Switch } from "@/components/Switch"
 import { UserAccessTab } from "@/components/ui/user/UserAccessTab"
 import { UserActivityFeed } from "@/components/ui/user/UserActivityFeed"
 import { UserActivityTab } from "@/components/ui/user/UserActivityTab"
+import { UserPreferencesTab } from "@/components/ui/user/UserPreferencesTab"
 import { UserRequestsTab } from "@/components/ui/user/UserRequestsTab"
 import { UserVisitorsTab } from "@/components/ui/user/UserVisitorsTab"
 import { centralizedUsers, getUserById } from "@/data/centralizedUsers"
 import { cn } from "@/lib/utils"
-import { Activity, Calendar, ChevronLeft, FileText, Gift, Mail, Shield, Ticket, User as UserIcon } from "lucide-react"
+import { Activity, Calendar, ChevronLeft, FileText, Gift, Heart, Mail, Shield, Ticket, User as UserIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -212,6 +213,18 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
                         <Activity className="h-4 w-4" />
                         Activity
                     </button>
+                    <button
+                        onClick={() => setActiveTab("preferences")}
+                        className={cn(
+                            "border-b-2 py-2 px-1 text-sm font-medium flex items-center gap-2",
+                            activeTab === "preferences"
+                                ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                        )}
+                    >
+                        <Heart className="h-4 w-4" />
+                        Preferences
+                    </button>
                 </nav>
             </div>
 
@@ -337,9 +350,18 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
 
             {/* Activity tab */}
             {activeTab === "activity" && (
-                <UserActivityTab 
+                <UserActivityTab
                     userId={userDetail.id}
                     containerClassName="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                />
+            )}
+
+            {/* Preferences tab */}
+            {activeTab === "preferences" && (
+                <UserPreferencesTab
+                    userId={userDetail.id}
+                    userType={userDetail.userType}
+                    containerClassName="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
                 />
             )}
         </div>
