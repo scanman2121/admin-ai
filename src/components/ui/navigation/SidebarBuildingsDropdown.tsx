@@ -26,6 +26,13 @@ import { ModalAddBuilding } from "./ModalAddBuilding"
 
 const buildings = [
   {
+    value: "willis-tower",
+    name: "Willis Tower",
+    initials: "WT",
+    color: "bg-primary dark:bg-primary",
+    imageUrl: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=2644&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
     value: "highland-ave",
     name: "125 Highland Ave",
     initials: "HA",
@@ -109,8 +116,8 @@ const getPageName = (pathname: string): string => {
 export const BuildingsDropdownDesktop = () => {
   const [dropdownOpen, setDropdownOpen] = React.useState(false)
   const [hasOpenDialog, setHasOpenDialog] = React.useState(false)
-  const [isPortfolioView, setIsPortfolioView] = React.useState(false)
-  const [selectedBuilding, setSelectedBuilding] = React.useState(buildings[0])
+  const [isPortfolioView, setIsPortfolioView] = React.useState(true) // Default to portfolio view ON
+  const [selectedBuilding, setSelectedBuilding] = React.useState(buildings[0]) // Willis Tower is first
   const [isAnimating, setIsAnimating] = React.useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [starredBuildingId, setStarredBuildingId] = useState<string | null>(null)
@@ -140,10 +147,6 @@ export const BuildingsDropdownDesktop = () => {
     })
   }, [searchQuery, starredBuildingId])
 
-  // Get starred building as default
-  const starredBuilding = useMemo(() => {
-    return buildings.find(building => building.value === starredBuildingId)
-  }, [starredBuildingId])
 
   // Effect to handle portfolio view toggle when navigating between pages
   useEffect(() => {
@@ -185,9 +188,9 @@ export const BuildingsDropdownDesktop = () => {
   const handlePortfolioToggle = (checked: boolean) => {
     if (portfolioAllowed) {
       setIsPortfolioView(checked);
-      // When leaving portfolio view, set to starred building if available
-      if (!checked && starredBuilding) {
-        setSelectedBuilding(starredBuilding);
+      // When leaving portfolio view, set to Willis Tower (first building)
+      if (!checked) {
+        setSelectedBuilding(buildings[0]); // Willis Tower
       }
     }
   };
