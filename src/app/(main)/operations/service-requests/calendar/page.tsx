@@ -101,15 +101,17 @@ export default function CalendarPage() {
         })
     }, [allEvents, filterType, filterStatus])
 
-    // Convert to react-big-calendar format
+    // Convert to react-big-calendar format and sort by start time (earliest first)
     const calendarEvents = useMemo(() => {
-        return filteredEvents.map(event => ({
-            id: event.id,
-            title: event.title,
-            start: event.date,
-            end: addHours(event.date, 1), // Default 1 hour duration
-            resource: event
-        }))
+        return filteredEvents
+            .map(event => ({
+                id: event.id,
+                title: event.title,
+                start: event.date,
+                end: addHours(event.date, 1), // Default 1 hour duration
+                resource: event
+            }))
+            .sort((a, b) => a.start.getTime() - b.start.getTime())
     }, [filteredEvents])
 
     // Get unique statuses for filter
