@@ -47,15 +47,18 @@ export type Visitor = {
   badgeNumber: string
 }
 
+export type ServiceCategory = "Electrical" | "Plumbing" | "HVAC" | "Maintenance" | "Security" | "Cleaning" | "Other"
+
 export type ServiceInventory = {
   serviceId: string
   serviceName: string
-  category: string
+  category: ServiceCategory
   priceType: "fixed" | "quote" | "free"
   basePrice: number | null
   property: string
   status: "active" | "inactive"
   description?: string
+  serviceTypes?: string[] // Links to work order service types
 }
 
 export type TenantInvoice = {
