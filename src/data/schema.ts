@@ -48,26 +48,28 @@ export type Visitor = {
 }
 
 export type ServiceInventory = {
-  inventoryId: string
-  dateCreated: string
-  propertyName: string
-  serviceType: string
-  description: string
-  requestedBy: string
-  status: string
-  quantity: number
+  serviceId: string
+  serviceName: string
+  category: string
+  priceType: "fixed" | "quote" | "free"
+  basePrice: number | null
+  property: string
+  status: "active" | "inactive"
+  description?: string
 }
 
 export type TenantInvoice = {
   invoiceId: string
   invoiceDate: string
-  propertyName: string
-  unitNumber: string
+  property: string
   tenantName: string
   description: string
-  amountDue: number
+  amount: number
   dueDate: string
-  paymentStatus: string
+  status: "draft" | "pending" | "paid" | "overdue" | "void"
+  paymentMethod: "stripe" | "manual" | "external" | null
+  paidDate: string | null
+  serviceType?: string
 }
 
 export type OverviewData = {

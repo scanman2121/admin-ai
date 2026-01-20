@@ -30,7 +30,7 @@ export const invoicesColumns = [
             displayName: "Date",
         },
     }),
-    columnHelper.accessor("propertyName", {
+    columnHelper.accessor("property", {
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Property" />
         ),
@@ -38,16 +38,6 @@ export const invoicesColumns = [
         meta: {
             className: "text-left",
             displayName: "Property",
-        },
-    }),
-    columnHelper.accessor("unitNumber", {
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Unit" />
-        ),
-        enableSorting: true,
-        meta: {
-            className: "text-left",
-            displayName: "Unit",
         },
     }),
     columnHelper.accessor("tenantName", {
@@ -70,14 +60,14 @@ export const invoicesColumns = [
             displayName: "Description",
         },
     }),
-    columnHelper.accessor("amountDue", {
+    columnHelper.accessor("amount", {
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Amount Due" />
+            <DataTableColumnHeader column={column} title="Amount" />
         ),
         enableSorting: true,
         meta: {
             className: "text-right",
-            displayName: "Amount Due",
+            displayName: "Amount",
         },
         cell: ({ getValue }) => {
             const value = getValue()
@@ -98,7 +88,7 @@ export const invoicesColumns = [
             displayName: "Due Date",
         },
     }),
-    columnHelper.accessor("paymentStatus", {
+    columnHelper.accessor("status", {
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Status" />
         ),
@@ -108,22 +98,70 @@ export const invoicesColumns = [
             displayName: "Status",
         },
         cell: ({ row }) => {
-            const status = row.getValue("paymentStatus")
+            const status = row.getValue("status") as string
             let variant: BadgeProps["variant"] = "default"
+            let label = status
 
-            if (status === "Paid") {
+            if (status === "paid") {
                 variant = "success"
-            } else if (status === "Pending") {
+                label = "Paid"
+            } else if (status === "pending") {
                 variant = "warning"
-            } else if (status === "Overdue") {
+                label = "Pending"
+            } else if (status === "overdue") {
                 variant = "error"
+                label = "Overdue"
+            } else if (status === "draft") {
+                variant = "default"
+                label = "Draft"
+            } else if (status === "void") {
+                variant = "default"
+                label = "Void"
             }
 
             return (
                 <Badge variant={variant}>
-                    {status as React.ReactNode}
+                    {label}
                 </Badge>
             )
+        },
+    }),
+    columnHelper.accessor("paymentMethod", {
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Payment Method" />
+        ),
+        enableSorting: true,
+        meta: {
+            className: "text-left",
+            displayName: "Payment Method",
+        },
+        cell: ({ getValue }) => {
+            const method = getValue()
+            if (!method) {
+                return <span className="text-gray-400">-</span>
+            }
+
+            const labels: Record<string, string> = {
+                stripe: "Stripe",
+                manual: "Manual",
+                external: "External",
+            }
+
+            return <span>{labels[method] || method}</span>
+        },
+    }),
+    columnHelper.accessor("paidDate", {
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Paid Date" />
+        ),
+        enableSorting: true,
+        meta: {
+            className: "text-left",
+            displayName: "Paid Date",
+        },
+        cell: ({ getValue }) => {
+            const date = getValue()
+            return date ? <span>{date}</span> : <span className="text-gray-400">-</span>
         },
     }),
     columnHelper.display({

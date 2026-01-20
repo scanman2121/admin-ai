@@ -2,6 +2,7 @@
 
 import { Badge, BadgeProps } from "@/components/Badge"
 import { ServiceInventory } from "@/data/schema"
+import { formatters } from "@/lib/utils"
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
 import { DataTableColumnHeader } from "./DataTableColumnHeader"
 import { DataTableRowActions } from "./DataTableRowActions"
@@ -9,7 +10,7 @@ import { DataTableRowActions } from "./DataTableRowActions"
 const columnHelper = createColumnHelper<ServiceInventory>()
 
 export const inventoryColumns = [
-    columnHelper.accessor("inventoryId", {
+    columnHelper.accessor("serviceId", {
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Service ID" />
         ),
@@ -19,17 +20,83 @@ export const inventoryColumns = [
             displayName: "Service ID",
         },
     }),
-    columnHelper.accessor("dateCreated", {
+    columnHelper.accessor("serviceName", {
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Date" />
+            <DataTableColumnHeader column={column} title="Service Name" />
         ),
         enableSorting: true,
         meta: {
             className: "text-left",
-            displayName: "Date",
+            displayName: "Service Name",
         },
     }),
-    columnHelper.accessor("propertyName", {
+    columnHelper.accessor("category", {
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Category" />
+        ),
+        enableSorting: true,
+        meta: {
+            className: "text-left",
+            displayName: "Category",
+        },
+    }),
+    columnHelper.accessor("priceType", {
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Price Type" />
+        ),
+        enableSorting: true,
+        meta: {
+            className: "text-left",
+            displayName: "Price Type",
+        },
+        cell: ({ row }) => {
+            const priceType = row.getValue("priceType") as string
+            let variant: BadgeProps["variant"] = "default"
+            let label = priceType
+
+            if (priceType === "fixed") {
+                variant = "default"
+                label = "Fixed"
+            } else if (priceType === "quote") {
+                variant = "warning"
+                label = "Quote Required"
+            } else if (priceType === "free") {
+                variant = "success"
+                label = "Free"
+            }
+
+            return <Badge variant={variant}>{label}</Badge>
+        },
+    }),
+    columnHelper.accessor("basePrice", {
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Base Price" />
+        ),
+        enableSorting: true,
+        meta: {
+            className: "text-right",
+            displayName: "Base Price",
+        },
+        cell: ({ row }) => {
+            const price = row.getValue("basePrice") as number | null
+            const priceType = row.original.priceType
+
+            if (priceType === "free") {
+                return <span className="text-gray-500">-</span>
+            }
+
+            if (price === null) {
+                return <span className="text-gray-500">Quote</span>
+            }
+
+            return (
+                <span className="font-medium">
+                    {formatters.currency(price)}
+                </span>
+            )
+        },
+    }),
+    columnHelper.accessor("property", {
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Property" />
         ),
@@ -37,46 +104,6 @@ export const inventoryColumns = [
         meta: {
             className: "text-left",
             displayName: "Property",
-        },
-    }),
-    columnHelper.accessor("serviceType", {
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Service Type" />
-        ),
-        enableSorting: true,
-        meta: {
-            className: "text-left",
-            displayName: "Service Type",
-        },
-    }),
-    columnHelper.accessor("description", {
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Description" />
-        ),
-        enableSorting: true,
-        meta: {
-            className: "text-left",
-            displayName: "Description",
-        },
-    }),
-    columnHelper.accessor("requestedBy", {
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Requested By" />
-        ),
-        enableSorting: true,
-        meta: {
-            className: "text-left",
-            displayName: "Requested By",
-        },
-    }),
-    columnHelper.accessor("quantity", {
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Quantity" />
-        ),
-        enableSorting: true,
-        meta: {
-            className: "text-right",
-            displayName: "Quantity",
         },
     }),
     columnHelper.accessor("status", {
@@ -89,20 +116,18 @@ export const inventoryColumns = [
             displayName: "Status",
         },
         cell: ({ row }) => {
-            const status = row.getValue("status")
+            const status = row.getValue("status") as string
             let variant: BadgeProps["variant"] = "default"
 
-            if (status === "Completed") {
+            if (status === "active") {
                 variant = "success"
-            } else if (status === "In Progress") {
-                variant = "warning"
-            } else if (status === "Pending") {
+            } else if (status === "inactive") {
                 variant = "default"
             }
 
             return (
                 <Badge variant={variant}>
-                    {status as React.ReactNode}
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
                 </Badge>
             )
         },
