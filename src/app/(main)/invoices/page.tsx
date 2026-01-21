@@ -1,10 +1,12 @@
 "use client"
 
+import { Button } from "@/components/Button"
 import { PageHeader } from "@/components/PageHeader"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { invoicesColumns } from "@/components/ui/data-table/invoices-columns"
 import { tenantInvoices } from "@/data/data"
 import { TenantInvoice } from "@/data/schema"
+import { Download } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 function exportToCSV() {
@@ -65,19 +67,30 @@ export default function Invoices() {
     router.push("/invoices/new")
   }
 
+  const exportButton = (
+    <Button
+      variant="outline"
+      size="sm"
+      className="h-8"
+      onClick={exportToCSV}
+    >
+      <Download className="mr-2 h-4 w-4" />
+      Export
+    </Button>
+  )
+
   return (
     <div className="flex flex-col gap-5 w-full">
       <PageHeader
         title="Invoices"
         primaryCta="Create invoice"
         onPrimaryClick={handleCreateInvoice}
-        secondaryCta="Export CSV"
-        onSecondaryClick={exportToCSV}
       />
       <DataTable
         data={tenantInvoices}
         columns={invoicesColumns}
         onRowClick={handleRowClick}
+        customViewActions={exportButton}
       />
     </div>
   )
