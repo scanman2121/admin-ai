@@ -61,18 +61,42 @@ export type ServiceInventory = {
   serviceTypes?: string[] // Links to work order service types
 }
 
+export type InvoiceType = "service_request" | "resource_booking" | "event_registration" | "manual" | "recurring"
+
+export type InvoiceLineItem = {
+  id: string
+  serviceId?: string // Link to inventory item (optional for custom lines)
+  description: string
+  quantity: number
+  unitPrice: number
+  total: number
+}
+
+export type InvoiceSource = {
+  type: InvoiceType
+  sourceId?: string // e.g., work order ID, booking ID
+  sourceName?: string // Display name
+  sourceDate?: string
+  sourceStatus?: string
+  sourceRequestor?: string
+}
+
 export type TenantInvoice = {
   invoiceId: string
   invoiceDate: string
   property: string
   tenantName: string
-  description: string
-  amount: number
+  invoiceType: InvoiceType
+  source?: InvoiceSource
+  lineItems: InvoiceLineItem[]
+  subtotal: number
+  tax?: number
+  total: number
   dueDate: string
   status: "draft" | "pending" | "paid" | "overdue" | "void"
   paymentMethod: "stripe" | "manual" | "external" | null
   paidDate: string | null
-  serviceType?: string
+  notes?: string
 }
 
 export type OverviewData = {

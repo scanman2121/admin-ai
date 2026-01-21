@@ -1,13 +1,21 @@
 "use client"
 
 import { Badge, BadgeProps } from "@/components/Badge"
-import { TenantInvoice } from "@/data/schema"
+import { InvoiceType, TenantInvoice } from "@/data/schema"
 import { formatters } from "@/lib/utils"
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table"
 import { DataTableColumnHeader } from "./DataTableColumnHeader"
 import { DataTableRowActions } from "./DataTableRowActions"
 
 const columnHelper = createColumnHelper<TenantInvoice>()
+
+const invoiceTypeLabels: Record<InvoiceType, string> = {
+    service_request: "Service Request",
+    resource_booking: "Resource Booking",
+    event_registration: "Event Registration",
+    manual: "Manual",
+    recurring: "Recurring",
+}
 
 export const invoicesColumns = [
     columnHelper.accessor("invoiceId", {
@@ -30,6 +38,20 @@ export const invoicesColumns = [
             displayName: "Date",
         },
     }),
+    columnHelper.accessor("invoiceType", {
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Type" />
+        ),
+        enableSorting: true,
+        meta: {
+            className: "text-left",
+            displayName: "Type",
+        },
+        cell: ({ getValue }) => {
+            const type = getValue() as InvoiceType
+            return <span>{invoiceTypeLabels[type] || type}</span>
+        },
+    }),
     columnHelper.accessor("property", {
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Property" />
@@ -50,24 +72,14 @@ export const invoicesColumns = [
             displayName: "Tenant",
         },
     }),
-    columnHelper.accessor("description", {
+    columnHelper.accessor("total", {
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Description" />
-        ),
-        enableSorting: true,
-        meta: {
-            className: "text-left",
-            displayName: "Description",
-        },
-    }),
-    columnHelper.accessor("amount", {
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Amount" />
+            <DataTableColumnHeader column={column} title="Total" />
         ),
         enableSorting: true,
         meta: {
             className: "text-right",
-            displayName: "Amount",
+            displayName: "Total",
         },
         cell: ({ getValue }) => {
             const value = getValue()
@@ -148,20 +160,6 @@ export const invoicesColumns = [
             }
 
             return <span>{labels[method] || method}</span>
-        },
-    }),
-    columnHelper.accessor("paidDate", {
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Paid Date" />
-        ),
-        enableSorting: true,
-        meta: {
-            className: "text-left",
-            displayName: "Paid Date",
-        },
-        cell: ({ getValue }) => {
-            const date = getValue()
-            return date ? <span>{date}</span> : <span className="text-gray-400">-</span>
         },
     }),
     columnHelper.display({
