@@ -97,7 +97,7 @@ export function ServiceForm({ initialData, isEditing = false }: ServiceFormProps
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : "Save Service"}
+            {isSubmitting ? "Saving..." : "Save Item"}
           </Button>
         </div>
       </div>
@@ -106,12 +106,12 @@ export function ServiceForm({ initialData, isEditing = false }: ServiceFormProps
       <form onSubmit={handleSubmit} className="space-y-8">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">
-            {isEditing ? "Edit Service" : "Add New Service"}
+            {isEditing ? "Edit Item" : "Add New Item"}
           </h1>
           <p className="text-sm text-gray-500 mt-1">
             {isEditing
-              ? "Update the service details below"
-              : "Fill in the details to create a new service in the catalog"}
+              ? "Update the item details below"
+              : "Fill in the details to create a new item in the catalog"}
           </p>
         </div>
 

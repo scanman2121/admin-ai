@@ -22,7 +22,7 @@ export default function Inventory() {
     <div className="flex flex-col gap-5 w-full">
       <PageHeader
         title="Inventory"
-        primaryCta="Add new service"
+        primaryCta="Add new item"
         onPrimaryClick={handleAddService}
       />
       <DataTable
