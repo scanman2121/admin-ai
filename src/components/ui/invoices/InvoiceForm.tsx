@@ -20,7 +20,6 @@ import { ArrowLeft, Edit2 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { AddLineItemModal } from "./AddLineItemModal"
 import { LineItemsTable } from "./LineItemsTable"
 import { SourceCard } from "./SourceCard"
 
@@ -57,7 +56,6 @@ export function InvoiceForm({ initialData, isNew = false }: InvoiceFormProps) {
   const canEdit = !initialData || ["draft", "pending", "overdue"].includes(initialData.status)
   const [isEditing, setIsEditing] = useState(isNew || canEdit)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showAddModal, setShowAddModal] = useState(false)
 
   const [formData, setFormData] = useState<Partial<TenantInvoice>>({
     invoiceId: initialData?.invoiceId || "",
@@ -87,11 +85,6 @@ export function InvoiceForm({ initialData, isNew = false }: InvoiceFormProps) {
   const handleLineItemsChange = (lineItems: InvoiceLineItem[]) => {
     const { subtotal, total } = recalculateTotals(lineItems)
     setFormData({ ...formData, lineItems, subtotal, total })
-  }
-
-  const handleAddLineItem = (lineItem: InvoiceLineItem) => {
-    const newLineItems = [...(formData.lineItems || []), lineItem]
-    handleLineItemsChange(newLineItems)
   }
 
   const handleSubmit = async () => {
@@ -255,7 +248,6 @@ export function InvoiceForm({ initialData, isNew = false }: InvoiceFormProps) {
         <LineItemsTable
           lineItems={formData.lineItems || []}
           onLineItemsChange={handleLineItemsChange}
-          onAddItem={() => setShowAddModal(true)}
           isEditing={isEditing}
         />
 
@@ -351,13 +343,6 @@ export function InvoiceForm({ initialData, isNew = false }: InvoiceFormProps) {
           rows={3}
         />
       </Card>
-
-      {/* Add Line Item Modal */}
-      <AddLineItemModal
-        open={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onAdd={handleAddLineItem}
-      />
     </div>
   )
 }
