@@ -2,6 +2,7 @@
 
 import { Badge, BadgeProps } from "@/components/Badge"
 import { Button } from "@/components/Button"
+import { Card } from "@/components/Card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -176,17 +177,17 @@ export function InvoiceForm({ initialData, isNew = false }: InvoiceFormProps) {
 
       {/* Source Card */}
       {showSource && formData.source && (
-        <div className="space-y-2">
-          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+        <Card>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">
             Source
           </h2>
           <SourceCard source={formData.source} />
-        </div>
+        </Card>
       )}
 
       {/* Invoice Details */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-medium text-gray-900 border-b pb-2">
+      <Card>
+        <h2 className="text-lg font-medium text-gray-900 mb-4">
           Invoice Details
         </h2>
 
@@ -244,39 +245,44 @@ export function InvoiceForm({ initialData, isNew = false }: InvoiceFormProps) {
             />
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Line Items */}
-      <LineItemsTable
-        lineItems={formData.lineItems || []}
-        onLineItemsChange={handleLineItemsChange}
-        onAddItem={() => setShowAddModal(true)}
-        isEditing={isEditing}
-      />
+      <Card>
+        <h2 className="text-lg font-medium text-gray-900 mb-4">
+          Line Items
+        </h2>
+        <LineItemsTable
+          lineItems={formData.lineItems || []}
+          onLineItemsChange={handleLineItemsChange}
+          onAddItem={() => setShowAddModal(true)}
+          isEditing={isEditing}
+        />
 
-      {/* Totals */}
-      <div className="flex justify-end">
-        <div className="w-64 space-y-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Subtotal</span>
-            <span className="text-gray-900">{formatters.currency(formData.subtotal || 0)}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Tax ({formData.tax || 0}%)</span>
-            <span className="text-gray-900">
-              {formatters.currency((formData.subtotal || 0) * (formData.tax || 0) / 100)}
-            </span>
-          </div>
-          <div className="flex justify-between text-base font-medium border-t pt-2">
-            <span className="text-gray-900">Total</span>
-            <span className="text-gray-900">{formatters.currency(formData.total || 0)}</span>
+        {/* Totals */}
+        <div className="flex justify-end mt-6">
+          <div className="w-64 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-500">Subtotal</span>
+              <span className="text-gray-900">{formatters.currency(formData.subtotal || 0)}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-500">Tax ({formData.tax || 0}%)</span>
+              <span className="text-gray-900">
+                {formatters.currency((formData.subtotal || 0) * (formData.tax || 0) / 100)}
+              </span>
+            </div>
+            <div className="flex justify-between text-base font-medium border-t pt-2">
+              <span className="text-gray-900">Total</span>
+              <span className="text-gray-900">{formatters.currency(formData.total || 0)}</span>
+            </div>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Payment Section */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-medium text-gray-900 border-b pb-2">
+      <Card>
+        <h2 className="text-lg font-medium text-gray-900 mb-4">
           Payment
         </h2>
 
@@ -329,11 +335,13 @@ export function InvoiceForm({ initialData, isNew = false }: InvoiceFormProps) {
             </div>
           )}
         </div>
-      </div>
+      </Card>
 
       {/* Notes */}
-      <div className="space-y-2">
-        <Label htmlFor="notes">Notes</Label>
+      <Card>
+        <h2 className="text-lg font-medium text-gray-900 mb-4">
+          Notes
+        </h2>
         <Textarea
           id="notes"
           value={formData.notes}
@@ -342,7 +350,7 @@ export function InvoiceForm({ initialData, isNew = false }: InvoiceFormProps) {
           placeholder="Optional notes..."
           rows={3}
         />
-      </div>
+      </Card>
 
       {/* Add Line Item Modal */}
       <AddLineItemModal

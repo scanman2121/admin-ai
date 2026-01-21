@@ -1,13 +1,14 @@
 "use client"
 
 import { Button } from "@/components/Button"
+import { Card } from "@/components/Card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { MultiSelect, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ServiceCategory, ServiceInventory } from "@/data/schema"
 import { buildings } from "@/data/data"
+import { ServiceCategory, ServiceInventory } from "@/data/schema"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -116,126 +117,130 @@ export function ServiceForm({ initialData, isEditing = false }: ServiceFormProps
         </div>
 
         {/* Service Details Section */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-medium text-gray-900 border-b pb-2">
-            Service Details
+        <Card>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">
+            Item Details
           </h2>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="serviceName">
+                  Name <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="serviceName"
+                  placeholder="Enter item name"
+                  value={formData.serviceName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, serviceName: e.target.value })
+                  }
+                  required
+                  maxLength={100}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="serviceId">ID</Label>
+                <Input
+                  id="serviceId"
+                  value={formData.serviceId || (isEditing ? "" : "Auto-generated")}
+                  disabled
+                  className="bg-gray-50"
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <Label htmlFor="serviceName">
-                Service Name <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="serviceName"
-                placeholder="Enter service name"
-                value={formData.serviceName}
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                placeholder="Enter a description for this item"
+                value={formData.description}
                 onChange={(e) =>
-                  setFormData({ ...formData, serviceName: e.target.value })
+                  setFormData({ ...formData, description: e.target.value })
                 }
-                required
-                maxLength={100}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="serviceId">Service ID</Label>
-              <Input
-                id="serviceId"
-                value={formData.serviceId || (isEditing ? "" : "Auto-generated")}
-                disabled
-                className="bg-gray-50"
+                rows={3}
               />
             </div>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              placeholder="Enter a description for this service"
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              rows={3}
-            />
-          </div>
-        </div>
+        </Card>
 
         {/* Classification Section */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-medium text-gray-900 border-b pb-2">
+        <Card>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">
             Classification
           </h2>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="category">
-                Category <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, category: value as ServiceCategory })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.value} value={cat.value}>
-                      {cat.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="category">
+                  Category <span className="text-red-500">*</span>
+                </Label>
+                <Select
+                  value={formData.category}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, category: value as ServiceCategory })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.value} value={cat.value}>
+                        {cat.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="property">
+                  Property <span className="text-red-500">*</span>
+                </Label>
+                <Select
+                  value={formData.property}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, property: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a property" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {propertyOptions.map((prop) => (
+                      <SelectItem key={prop.value} value={prop.value}>
+                        {prop.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="property">
-                Property <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={formData.property}
+              <Label>Service Types (for work order linking)</Label>
+              <p className="text-xs text-gray-500 mb-2">
+                Select work order types that this item should create when requested
+              </p>
+              <MultiSelect
+                value={formData.serviceTypes || []}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, property: value })
+                  setFormData({ ...formData, serviceTypes: value })
                 }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a property" />
-                </SelectTrigger>
-                <SelectContent>
-                  {propertyOptions.map((prop) => (
-                    <SelectItem key={prop.value} value={prop.value}>
-                      {prop.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                options={serviceTypeOptions}
+                placeholder="Select service types"
+              />
             </div>
           </div>
-
-          <div className="space-y-2">
-            <Label>Service Types (for work order linking)</Label>
-            <p className="text-xs text-gray-500 mb-2">
-              Select work order types that this service should create when requested
-            </p>
-            <MultiSelect
-              value={formData.serviceTypes || []}
-              onValueChange={(value) =>
-                setFormData({ ...formData, serviceTypes: value })
-              }
-              options={serviceTypeOptions}
-              placeholder="Select service types"
-            />
-          </div>
-        </div>
+        </Card>
 
         {/* Pricing Section */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-medium text-gray-900 border-b pb-2">
+        <Card>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">
             Pricing
           </h2>
 
@@ -305,11 +310,11 @@ export function ServiceForm({ initialData, isEditing = false }: ServiceFormProps
               </div>
             )}
           </div>
-        </div>
+        </Card>
 
         {/* Status Section */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-medium text-gray-900 border-b pb-2">
+        <Card>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">
             Status
           </h2>
 
@@ -338,7 +343,7 @@ export function ServiceForm({ initialData, isEditing = false }: ServiceFormProps
               </div>
             </RadioGroup>
           </div>
-        </div>
+        </Card>
       </form>
     </div>
   )
