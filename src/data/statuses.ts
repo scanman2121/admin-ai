@@ -6,7 +6,7 @@ export const serviceRequestStatuses = [
         description: "Newly created service requests awaiting review",
         status: true,
         color: "purple",
-        orderCount: 45
+        orderCount: 156
     },
     {
         id: 2,
@@ -38,7 +38,7 @@ export const serviceRequestStatuses = [
         description: "Service requests that have been cancelled",
         status: true,
         color: "gray",
-        orderCount: 8
+        orderCount: 156
     },
     {
         id: 6,
