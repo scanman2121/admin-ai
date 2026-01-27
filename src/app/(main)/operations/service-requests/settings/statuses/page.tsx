@@ -11,7 +11,7 @@ import { FullPageModal } from "@/components/ui/FullPageModal"
 import { ServiceRequestSetupWizard } from "@/components/ui/service-requests/ServiceRequestSetupWizard"
 import { serviceRequestStatuses } from "@/data/statuses"
 import { RiAddLine, RiArrowDownSLine, RiArrowLeftLine, RiArrowRightSLine, RiDeleteBin6Line } from "@remixicon/react"
-import { Pencil, Lock } from "lucide-react"
+import { Pencil, Lock, Info } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -63,6 +63,9 @@ const presetStatusColors = {
     "Failed": "red"
 }
 
+// Protected statuses that cannot be deleted and appear at the top
+const protectedStatuses = ["New", "Completed", "Cancelled"]
+
 export default function ServiceRequestsStatuses() {
     const pathname = usePathname()
     
@@ -99,12 +102,6 @@ export default function ServiceRequestsStatuses() {
         notificationSettings: {} as Record<string, { notifyRequestor: boolean; notifyAssignee: boolean }>
     })
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set())
-
-    const handleStatusToggle = (id: number) => {
-        setStatuses(prev => prev.map(status => 
-            status.id === id ? { ...status, status: !status.status } : status
-        ))
-    }
 
     // Helper function to get color classes
     const getColorClasses = (color: string) => {
@@ -304,9 +301,9 @@ export default function ServiceRequestsStatuses() {
     }
 
     const handleDeleteStatus = (id: number) => {
-        // Prevent deletion of "New" status
+        // Prevent deletion of protected statuses
         const statusToDelete = statuses.find(status => status.id === id)
-        if (statusToDelete?.name === "New") {
+        if (statusToDelete && protectedStatuses.includes(statusToDelete.name)) {
             return
         }
         
@@ -319,14 +316,26 @@ export default function ServiceRequestsStatuses() {
         }
     }
 
-    const filteredStatuses = statuses.filter(status => {
-        const matchesSearch = status.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            status.description.toLowerCase().includes(searchQuery.toLowerCase())
-        const matchesFilter = statusFilter === "All" || 
-                            (statusFilter === "Enabled" && status.status) ||
-                            (statusFilter === "Disabled" && !status.status)
-        return matchesSearch && matchesFilter
-    })
+    const filteredStatuses = statuses
+        .filter(status => {
+            const matchesSearch = status.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                status.description.toLowerCase().includes(searchQuery.toLowerCase())
+            const matchesFilter = statusFilter === "All" ||
+                                (statusFilter === "Enabled" && status.status) ||
+                                (statusFilter === "Disabled" && !status.status)
+            return matchesSearch && matchesFilter
+        })
+        .sort((a, b) => {
+            const aIsProtected = protectedStatuses.includes(a.name)
+            const bIsProtected = protectedStatuses.includes(b.name)
+            if (aIsProtected && !bIsProtected) return -1
+            if (!aIsProtected && bIsProtected) return 1
+            if (aIsProtected && bIsProtected) {
+                // Sort protected statuses in the order: New, Completed, Cancelled
+                return protectedStatuses.indexOf(a.name) - protectedStatuses.indexOf(b.name)
+            }
+            return 0
+        })
 
     return (
         <div className="space-y-6">
@@ -432,7 +441,6 @@ export default function ServiceRequestsStatuses() {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Name</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type count</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enable</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
@@ -457,24 +465,6 @@ export default function ServiceRequestsStatuses() {
                                             {status.orderCount}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        {status.name === "New" ? (
-                                            <Tooltip content="New status is required and can't be disabled">
-                                                <div>
-                                                    <Switch
-                                                        checked={status.status}
-                                                        disabled={true}
-                                                        onCheckedChange={() => {}}
-                                                    />
-                                                </div>
-                                            </Tooltip>
-                                        ) : (
-                                            <Switch
-                                                checked={status.status}
-                                                onCheckedChange={() => handleStatusToggle(status.id)}
-                                            />
-                                        )}
-                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div className="flex items-center gap-2">
                                             <button
@@ -483,15 +473,10 @@ export default function ServiceRequestsStatuses() {
                                             >
                                                 <Pencil className="size-4" style={{ color: '#696E72' }} />
                                             </button>
-                                            {status.name === "New" ? (
-                                                <Tooltip content="New status is required and can't be deleted">
+                                            {protectedStatuses.includes(status.name) ? (
+                                                <Tooltip content="These statuses cannot be deleted">
                                                     <div>
-                                                        <button
-                                                            disabled
-                                                            className="text-gray-300 dark:text-gray-600 cursor-not-allowed"
-                                                        >
-                                                            <RiDeleteBin6Line className="size-4" />
-                                                        </button>
+                                                        <Info className="size-4 text-gray-400 dark:text-gray-500" />
                                                     </div>
                                                 </Tooltip>
                                             ) : (
