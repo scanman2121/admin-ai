@@ -40,6 +40,14 @@ const mockApproverResults: Approver[] = [
     department: "Operations"
   },
   {
+    id: "approver-team-1",
+    name: "Facilities Team",
+    email: "facilities-team@company.com",
+    initials: "FT",
+    role: "Approval Team",
+    department: "5 members"
+  },
+  {
     id: "approver-2",
     name: "Sarah Williams",
     email: "sarah.williams@company.com",
@@ -74,7 +82,7 @@ function ApproverInfo({ approver }: { approver: Approver }) {
     <div className="flex items-center gap-3">
       <Avatar className="size-10">
         <AvatarImage src={approver.avatar} alt={approver.name} />
-        <AvatarFallback className="bg-green-100 text-green-600 text-sm">
+        <AvatarFallback className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300 text-sm">
           {approver.initials}
         </AvatarFallback>
       </Avatar>
@@ -83,7 +91,7 @@ function ApproverInfo({ approver }: { approver: Approver }) {
           <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
             {approver.name}
           </p>
-          <div className="text-xs text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-800/50 px-2 py-0.5 rounded">
+          <div className="text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
             Approver
           </div>
         </div>
@@ -144,17 +152,17 @@ export function ApproverCard({
 
   const state = getApprovalState()
 
-  // Get title based on state
-  const getTitle = () => {
+  // Get internal card title based on state
+  const getInternalTitle = () => {
     switch (state) {
       case "approved":
         return "Approved"
       case "denied":
         return "Denied"
       case "pending":
-        return "Pending Approval"
+        return "Pending"
       default:
-        return "Approver"
+        return null
     }
   }
 
@@ -162,7 +170,7 @@ export function ApproverCard({
     <Card>
       <div>
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
-          {getTitle()}
+          Approver
         </h3>
 
         {/* Empty State - No approver assigned */}
@@ -194,7 +202,7 @@ export function ApproverCard({
                     >
                       <Avatar className="size-10">
                         <AvatarImage src={result.avatar} alt={result.name} />
-                        <AvatarFallback className="bg-green-100 text-green-600 text-sm">
+                        <AvatarFallback className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300 text-sm">
                           {result.initials}
                         </AvatarFallback>
                       </Avatar>
@@ -265,30 +273,43 @@ export function ApproverCard({
         {/* State 2: Approved */}
         {state === "approved" && approver && (
           <div className="p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <ApproverInfo approver={approver} />
-            {approvalDate && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ml-13">
-                {getRelativeTime(approvalDate)}
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                {getInternalTitle()}
               </p>
-            )}
+              {approvalDate && (
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {getRelativeTime(approvalDate)}
+                </p>
+              )}
+            </div>
+            <ApproverInfo approver={approver} />
           </div>
         )}
 
         {/* State 3: Denied */}
         {state === "denied" && approver && (
           <div className="p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <ApproverInfo approver={approver} />
-            {approvalDate && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 ml-13">
-                {getRelativeTime(approvalDate)}
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                {getInternalTitle()}
               </p>
-            )}
+              {approvalDate && (
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {getRelativeTime(approvalDate)}
+                </p>
+              )}
+            </div>
+            <ApproverInfo approver={approver} />
           </div>
         )}
 
         {/* State 4: Pending Approval */}
         {state === "pending" && approver && (
           <div className="p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+              {getInternalTitle()}
+            </p>
             <ApproverInfo approver={approver} />
           </div>
         )}
