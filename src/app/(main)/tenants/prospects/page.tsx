@@ -352,7 +352,7 @@ export default function TenantsProspectsPage() {
                 </Button>
             </div>
 
-            <AIInsights insights={insights} className="mt-6" />
+            <AIInsights insights={insights} />
 
             <div className="flex flex-col gap-4 w-full">
                 <TabNavigation>
