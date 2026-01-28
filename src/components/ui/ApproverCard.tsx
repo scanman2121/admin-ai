@@ -5,7 +5,7 @@ import { Card } from "@/components/Card"
 import { Input } from "@/components/Input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getRelativeTime } from "@/lib/utils"
-import { Search, UserCheck, X } from "lucide-react"
+import { Check, Hourglass, Search, UserCheck, X } from "lucide-react"
 import { useState } from "react"
 
 interface Approver {
@@ -169,9 +169,43 @@ export function ApproverCard({
   return (
     <Card>
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">
-          Approver
-        </h3>
+        <div className="flex items-baseline justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+            Approval
+          </h3>
+          {state === "approved" && (
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm font-medium text-green-600 dark:text-green-400 flex items-center gap-1.5">
+                <Check className="size-4" />
+                {getInternalTitle()}
+              </span>
+              {approvalDate && (
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {getRelativeTime(approvalDate)}
+                </span>
+              )}
+            </div>
+          )}
+          {state === "denied" && (
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm font-medium text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                <X className="size-4" />
+                {getInternalTitle()}
+              </span>
+              {approvalDate && (
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {getRelativeTime(approvalDate)}
+                </span>
+              )}
+            </div>
+          )}
+          {state === "pending" && (
+            <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400 flex items-center gap-1.5">
+              <Hourglass className="size-4" />
+              {getInternalTitle()}
+            </span>
+          )}
+        </div>
 
         {/* Empty State - No approver assigned */}
         {state === "empty" && (
@@ -273,16 +307,6 @@ export function ApproverCard({
         {/* State 2: Approved */}
         {state === "approved" && approver && (
           <div className="p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-sm font-semibold text-green-600 dark:text-green-400">
-                {getInternalTitle()}
-              </p>
-              {approvalDate && (
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {getRelativeTime(approvalDate)}
-                </p>
-              )}
-            </div>
             <ApproverInfo approver={approver} />
           </div>
         )}
@@ -290,16 +314,6 @@ export function ApproverCard({
         {/* State 3: Denied */}
         {state === "denied" && approver && (
           <div className="p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-sm font-semibold text-red-600 dark:text-red-400">
-                {getInternalTitle()}
-              </p>
-              {approvalDate && (
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {getRelativeTime(approvalDate)}
-                </p>
-              )}
-            </div>
             <ApproverInfo approver={approver} />
           </div>
         )}
@@ -307,9 +321,6 @@ export function ApproverCard({
         {/* State 4: Pending Approval */}
         {state === "pending" && approver && (
           <div className="p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <p className="text-sm font-semibold text-yellow-600 dark:text-yellow-400 mb-3">
-              {getInternalTitle()}
-            </p>
             <ApproverInfo approver={approver} />
           </div>
         )}
