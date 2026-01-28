@@ -353,8 +353,8 @@ export default function TenantsPage() {
     }
 
     const actionButtons = [
-        { label: '12 Critical Tenant Health Scores', onClick: handleOpenCriticalTHS },
-        { label: '4 Upcoming Renewals', onClick: handleOpenUpcomingRenewals },
+        { label: '12 Critical Tenant Health Scores', onClick: handleOpenCriticalTHS, variant: 'danger' as const },
+        { label: '4 Upcoming Renewals', onClick: handleOpenUpcomingRenewals, variant: 'warning' as const },
     ]
 
     return (

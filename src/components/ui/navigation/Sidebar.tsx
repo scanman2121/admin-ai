@@ -1,5 +1,5 @@
 "use client"
-import { SidebarContext } from "@/app/(main)/layout"
+import { SidebarContext } from "@/contexts/SidebarContext"
 import { siteConfig } from "@/app/siteConfig"
 import { Badge } from "@/components/Badge"
 import { Button as ButtonComponent } from "@/components/Button"

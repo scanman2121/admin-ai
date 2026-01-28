@@ -7,23 +7,10 @@ import { Sidebar } from "@/components/ui/navigation/Sidebar"
 import { SidebarToggle } from "@/components/ui/navigation/SidebarToggle"
 import { TenantSidebar } from "@/components/ui/navigation/TenantSidebar"
 import { DemoProvider } from "@/contexts/DemoContext"
+import { SidebarContext } from "@/contexts/SidebarContext"
 import { ViewProvider, useView } from "@/contexts/ViewContext"
 import { cn } from "@/lib/utils"
-import { createContext, useContext, useEffect, useState } from "react"
-
-// Create a context for the sidebar collapsed state
-type SidebarContextType = {
-  collapsed: boolean
-  toggleCollapsed: () => void
-}
-
-export const SidebarContext = createContext<SidebarContextType>({
-  collapsed: false,
-  toggleCollapsed: () => { },
-})
-
-// Custom hook to use the sidebar context
-export const useSidebar = () => useContext(SidebarContext)
+import { useEffect, useState } from "react"
 
 function MainLayoutContent({
   children,

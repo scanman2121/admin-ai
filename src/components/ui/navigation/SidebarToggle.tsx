@@ -1,6 +1,6 @@
 "use client"
 
-import { SidebarContext } from "@/app/(main)/layout"
+import { SidebarContext } from "@/contexts/SidebarContext"
 import {
     Tooltip,
     TooltipContent,

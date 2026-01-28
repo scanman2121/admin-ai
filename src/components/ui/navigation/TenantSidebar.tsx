@@ -1,6 +1,6 @@
 "use client"
 
-import { SidebarContext } from "@/app/(main)/layout"
+import { SidebarContext } from "@/contexts/SidebarContext"
 import { siteConfig } from "@/app/siteConfig"
 import { cn, focusRing } from "@/lib/utils"
 import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react"

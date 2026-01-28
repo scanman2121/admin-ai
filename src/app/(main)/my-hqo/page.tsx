@@ -6,7 +6,7 @@ import { useDemo } from "@/contexts/DemoContext";
 import { cn } from "@/lib/utils";
 import { RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMegaphoneLine, RiShoppingBag3Line } from "@remixicon/react";
 import { Badge, Button, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@tremor/react";
-import { Briefcase, ChevronDown, LayoutGrid, Megaphone, Settings2, TrendingUp } from "lucide-react";
+import { Briefcase, Megaphone, Settings2, TrendingUp } from "lucide-react";
 import { useState } from "react";
 
 type ViewType = "experience" | "leasing" | "operations" | "executive";
