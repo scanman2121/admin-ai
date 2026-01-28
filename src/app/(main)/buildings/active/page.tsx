@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/Button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import Link from "next/link"

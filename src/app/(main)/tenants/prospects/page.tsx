@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/Button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
