@@ -20,6 +20,7 @@ interface Building {
   type: string;
   floors: number;
   tenants: number;
+  ths?: number;
   status: string;
   lastUpdated: string;
 }
@@ -62,6 +63,29 @@ export const buildingsColumns: ColumnDef<Building>[] = [
   {
     accessorKey: "tenants",
     header: "Tenants",
+  },
+  {
+    accessorKey: "ths",
+    header: "THS",
+    cell: ({ row }) => {
+      const ths = row.getValue("ths") as number | undefined;
+      if (ths === undefined) return <span className="text-gray-400">—</span>;
+
+      let colorClass = "";
+      if (ths >= 80) {
+        colorClass = "text-green-600 dark:text-green-400";
+      } else if (ths >= 60) {
+        colorClass = "text-yellow-600 dark:text-yellow-400";
+      } else {
+        colorClass = "text-red-600 dark:text-red-400";
+      }
+
+      return (
+        <span className={`font-medium ${colorClass}`}>
+          {ths}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "status",

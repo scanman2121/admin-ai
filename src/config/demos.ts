@@ -52,6 +52,7 @@ export type DemoConfig = {
     type: string
     floors: number
     tenants: number
+    ths?: number
     status: string
     lastUpdated: string
   }>
@@ -118,6 +119,7 @@ export const demoConfigs: Record<DemoType, DemoConfig> = {
         type: "Office",
         floors: 12,
         tenants: 8,
+        ths: 82,
         status: "Active",
         lastUpdated: "2023-12-15",
       },
@@ -129,6 +131,7 @@ export const demoConfigs: Record<DemoType, DemoConfig> = {
         type: "Mixed Use",
         floors: 24,
         tenants: 15,
+        ths: 91,
         status: "Active",
         lastUpdated: "2023-11-20",
       },
@@ -140,6 +143,7 @@ export const demoConfigs: Record<DemoType, DemoConfig> = {
         type: "Retail",
         floors: 3,
         tenants: 5,
+        ths: 45,
         status: "Inactive",
         lastUpdated: "2023-10-05",
       },
@@ -151,6 +155,7 @@ export const demoConfigs: Record<DemoType, DemoConfig> = {
         type: "Office",
         floors: 18,
         tenants: 12,
+        ths: 76,
         status: "Active",
         lastUpdated: "2024-01-10",
       },
@@ -162,6 +167,7 @@ export const demoConfigs: Record<DemoType, DemoConfig> = {
         type: "Office",
         floors: 15,
         tenants: 10,
+        ths: 88,
         status: "Active",
         lastUpdated: "2024-02-01",
       },

@@ -228,7 +228,7 @@ export const BuildingsDropdownDesktop = () => {
                 <div className="flex shrink-0 items-center">
                   {isPortfolioView ? (
                     <span
-                      className="flex aspect-square size-6 items-center justify-center rounded bg-primary p-1 text-xs font-medium text-white dark:bg-primary"
+                      className="flex aspect-square size-6 items-center justify-center rounded bg-gray-500 p-1 text-xs font-medium text-white dark:bg-gray-600"
                       aria-hidden="true"
                     >
                       <Building className="size-4" />
@@ -268,7 +268,7 @@ export const BuildingsDropdownDesktop = () => {
                 <div className="flex shrink-0 items-center gap-x-2.5">
                   {isPortfolioView ? (
                     <span
-                      className="flex aspect-square size-6 items-center justify-center rounded bg-primary p-1 text-xs font-medium text-white dark:bg-primary"
+                      className="flex aspect-square size-6 items-center justify-center rounded bg-gray-500 p-1 text-xs font-medium text-white dark:bg-gray-600"
                       aria-hidden="true"
                     >
                       <Building className="size-4" />
