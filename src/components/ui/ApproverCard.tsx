@@ -274,7 +274,7 @@ export function ApproverCard({
         {state === "approved" && approver && (
           <div className="p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-semibold text-green-600 dark:text-green-400">
                 {getInternalTitle()}
               </p>
               {approvalDate && (
@@ -291,7 +291,7 @@ export function ApproverCard({
         {state === "denied" && approver && (
           <div className="p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
             <div className="flex items-center justify-between mb-3">
-              <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+              <p className="text-sm font-semibold text-red-600 dark:text-red-400">
                 {getInternalTitle()}
               </p>
               {approvalDate && (
@@ -307,7 +307,7 @@ export function ApproverCard({
         {/* State 4: Pending Approval */}
         {state === "pending" && approver && (
           <div className="p-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            <p className="text-sm font-semibold text-yellow-600 dark:text-yellow-400 mb-3">
               {getInternalTitle()}
             </p>
             <ApproverInfo approver={approver} />
