@@ -202,7 +202,7 @@ export function ApproverCard({
                 </span>
               )}
               {onReopenForApproval && (
-                <div className="relative translate-y-1.5">
+                <div className="relative translate-y-1">
                   <button
                     onClick={handleKebabClick}
                     onBlur={handleKebabBlur}
@@ -236,7 +236,7 @@ export function ApproverCard({
                 </span>
               )}
               {onReopenForApproval && (
-                <div className="relative translate-y-1.5">
+                <div className="relative translate-y-1">
                   <button
                     onClick={handleKebabClick}
                     onBlur={handleKebabBlur}
@@ -265,7 +265,7 @@ export function ApproverCard({
                 {getInternalTitle()}
               </span>
               {onReopenForApproval && (
-                <div className="relative translate-y-1.5">
+                <div className="relative translate-y-1">
                   <button
                     onClick={handleKebabClick}
                     onBlur={handleKebabBlur}
