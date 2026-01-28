@@ -50,9 +50,18 @@ export function getPageInsights(pageType: PageType): MetricInsight[] {
         case "tenants":
             return [
                 {
-                    title: "Total Tenants",
-                    value: "342",
-                    comparison: "across all properties",
+                    title: "Average THS",
+                    value: "72",
+                    comparison: "across all tenants",
+                    trend: "up",
+                    trendValue: 5,
+                },
+                {
+                    title: "Total LTV",
+                    value: "$5.67M",
+                    comparison: "lifetime value",
+                    trend: "up",
+                    trendValue: 12,
                 },
                 {
                     title: "Retention Rate",
@@ -67,13 +76,6 @@ export function getPageInsights(pageType: PageType): MetricInsight[] {
                     comparison: "vs. Market Avg: 2.8 years",
                     trend: "up",
                     trendValue: 14,
-                },
-                {
-                    title: "Satisfaction Score",
-                    value: "4.6 / 5",
-                    comparison: "from 245 responses",
-                    trend: "up",
-                    trendValue: 6,
                 },
             ];
 

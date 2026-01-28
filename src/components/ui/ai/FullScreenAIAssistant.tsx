@@ -286,18 +286,6 @@ export function FullScreenAIAssistant({ isOpen, onClose, onMinimize }: FullScree
         }
     }
 
-    const getCategoryIconBg = (category: string) => {
-        switch (category) {
-            case 'insights':
-            case 'tenant-health':
-            case 'tasks':
-            case 'generate':
-                return "text-gray-500 dark:text-gray-400"
-            default:
-                return ""
-        }
-    }
-
     const getCategoryLabel = (category: string) => {
         switch (category) {
             case 'tenant-health':

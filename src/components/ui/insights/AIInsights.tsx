@@ -12,12 +12,18 @@ interface MetricInsight {
   trendValue?: number;
 }
 
+interface ActionButton {
+  label: string;
+  onClick: () => void;
+}
+
 interface AIInsightsProps {
   insights: MetricInsight[];
   className?: string;
+  actionButtons?: ActionButton[];
 }
 
-export function AIInsights({ insights, className }: AIInsightsProps) {
+export function AIInsights({ insights, className, actionButtons }: AIInsightsProps) {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   return (
@@ -66,15 +72,27 @@ export function AIInsights({ insights, className }: AIInsightsProps) {
                 </div>
               </div>
             </button>
-            {isExpanded && (
-              <a
-                href="#"
-                className="flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-              >
-                View all insights
-                <RiArrowRightSLine className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </a>
-            )}
+            <div className="flex items-center gap-2">
+              {actionButtons && actionButtons.map((button, index) => (
+                <button
+                  key={index}
+                  onClick={button.onClick}
+                  className="flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                >
+                  <RiSparklingLine className="h-4 w-4 text-primary" />
+                  {button.label}
+                </button>
+              ))}
+              {isExpanded && (
+                <a
+                  href="#"
+                  className="flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                >
+                  View all insights
+                  <RiArrowRightSLine className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </a>
+              )}
+            </div>
           </div>
 
           <div

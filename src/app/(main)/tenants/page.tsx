@@ -5,10 +5,12 @@ import { DataTable } from "@/components/ui/data-table/DataTable"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
+import { cn } from "@/lib/utils"
+import { RiCloseLine, RiSparklingLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 // Define tabs for the Tenants page
 const tabs = [
@@ -85,6 +87,30 @@ const tenantsData = [
         healthScore: 58,
         lifetimeValue: 980000,
     },
+]
+
+// Mock data for critical tenant health scores (12 tenants with THS < 50)
+const criticalTHSData = [
+    { name: "Retail Solutions", building: "75 State Street", healthScore: 34, trend: -8 },
+    { name: "Metro Consulting", building: "200 Congress Ave", healthScore: 28, trend: -12 },
+    { name: "Urban Designs", building: "125 Highland Ave", healthScore: 31, trend: -5 },
+    { name: "Quick Services LLC", building: "400 Market Street", healthScore: 42, trend: -3 },
+    { name: "DataStream Inc", building: "500 Boylston Street", healthScore: 38, trend: -7 },
+    { name: "CloudNet Systems", building: "75 State Street", healthScore: 45, trend: -2 },
+    { name: "Bright Ideas Co", building: "125 Highland Ave", healthScore: 29, trend: -15 },
+    { name: "Summit Partners", building: "200 Congress Ave", healthScore: 47, trend: -4 },
+    { name: "Harbor Tech", building: "400 Market Street", healthScore: 33, trend: -9 },
+    { name: "Pinnacle Group", building: "500 Boylston Street", healthScore: 41, trend: -6 },
+    { name: "Atlas Industries", building: "75 State Street", healthScore: 36, trend: -11 },
+    { name: "Vertex Solutions", building: "125 Highland Ave", healthScore: 44, trend: -1 },
+]
+
+// Mock data for upcoming renewals (4 tenants)
+const upcomingRenewalsData = [
+    { name: "Global Enterprises", building: "400 Market Street", leaseEnd: "2024-05-31", daysRemaining: 45, ltv: "$890K" },
+    { name: "Tech Innovators", building: "200 Congress Ave", leaseEnd: "2026-01-31", daysRemaining: 90, ltv: "$2.1M" },
+    { name: "Acme Corporation", building: "125 Highland Ave", leaseEnd: "2025-01-14", daysRemaining: 120, ltv: "$1.25M" },
+    { name: "Financial Services Inc", building: "500 Boylston Street", leaseEnd: "2025-08-31", daysRemaining: 180, ltv: "$980K" },
 ]
 
 // Define columns for the tenants table
@@ -185,11 +211,162 @@ interface Tenant {
     [key: string]: any;
 }
 
+// AI Report Modal Component
+interface AIReportModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    reportType: 'critical-ths' | 'upcoming-renewals' | null;
+}
+
+function AIReportModal({ isOpen, onClose, reportType }: AIReportModalProps) {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape' && isOpen) {
+                onClose();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, onClose]);
+
+    if (!isOpen || !mounted) return null;
+
+    return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+            {/* Backdrop */}
+            <div
+                className="absolute inset-0 bg-black/50"
+                onClick={onClose}
+            />
+
+            {/* Modal */}
+            <div className={cn(
+                "relative z-10 w-[500px] max-h-[600px] bg-white dark:bg-gray-950 rounded-xl shadow-2xl",
+                "border border-gray-200 dark:border-gray-800",
+                "flex flex-col overflow-hidden"
+            )}>
+                {/* Header */}
+                <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+                    <div className="flex items-center gap-2">
+                        <RiSparklingLine className="size-5 text-primary" />
+                        <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">
+                            {reportType === 'critical-ths' ? 'Critical Tenant Health Scores' : 'Upcoming Renewals'}
+                        </h2>
+                    </div>
+                    <Button
+                        variant="ghost"
+                        onClick={onClose}
+                        className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 p-1.5 h-8 w-8"
+                    >
+                        <RiCloseLine className="size-5" aria-hidden="true" />
+                        <span className="sr-only">Close</span>
+                    </Button>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto p-4">
+                    {/* AI message */}
+                    <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 mb-4">
+                        <p className="text-sm text-gray-700 dark:text-gray-300">
+                            {reportType === 'critical-ths'
+                                ? "I've identified 12 tenants with critical health scores below 50. These tenants may need immediate attention to improve engagement and retention."
+                                : "Here are 4 tenants with upcoming lease renewals. Consider reaching out to discuss renewal terms and address any concerns."}
+                        </p>
+                    </div>
+
+                    {/* Table */}
+                    {reportType === 'critical-ths' ? (
+                        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                            <table className="w-full text-sm">
+                                <thead className="bg-gray-50 dark:bg-gray-900">
+                                    <tr>
+                                        <th className="text-left px-3 py-2 font-medium text-gray-700 dark:text-gray-300">Tenant</th>
+                                        <th className="text-left px-3 py-2 font-medium text-gray-700 dark:text-gray-300">Building</th>
+                                        <th className="text-center px-3 py-2 font-medium text-gray-700 dark:text-gray-300">THS</th>
+                                        <th className="text-center px-3 py-2 font-medium text-gray-700 dark:text-gray-300">Trend</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {criticalTHSData.map((tenant, index) => (
+                                        <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-900">
+                                            <td className="px-3 py-2 text-gray-900 dark:text-gray-100">{tenant.name}</td>
+                                            <td className="px-3 py-2 text-gray-600 dark:text-gray-400">{tenant.building}</td>
+                                            <td className="px-3 py-2 text-center">
+                                                <span className="font-medium text-red-600 dark:text-red-400">{tenant.healthScore}</span>
+                                            </td>
+                                            <td className="px-3 py-2 text-center">
+                                                <span className="text-red-600 dark:text-red-400">{tenant.trend}%</span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    ) : (
+                        <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                            <table className="w-full text-sm">
+                                <thead className="bg-gray-50 dark:bg-gray-900">
+                                    <tr>
+                                        <th className="text-left px-3 py-2 font-medium text-gray-700 dark:text-gray-300">Tenant</th>
+                                        <th className="text-left px-3 py-2 font-medium text-gray-700 dark:text-gray-300">Lease End</th>
+                                        <th className="text-center px-3 py-2 font-medium text-gray-700 dark:text-gray-300">Days</th>
+                                        <th className="text-right px-3 py-2 font-medium text-gray-700 dark:text-gray-300">LTV</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {upcomingRenewalsData.map((tenant, index) => (
+                                        <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-900">
+                                            <td className="px-3 py-2 text-gray-900 dark:text-gray-100">{tenant.name}</td>
+                                            <td className="px-3 py-2 text-gray-600 dark:text-gray-400">{tenant.leaseEnd}</td>
+                                            <td className="px-3 py-2 text-center">
+                                                <span className={cn(
+                                                    "font-medium",
+                                                    tenant.daysRemaining <= 60 ? "text-red-600 dark:text-red-400" :
+                                                    tenant.daysRemaining <= 120 ? "text-yellow-600 dark:text-yellow-400" :
+                                                    "text-green-600 dark:text-green-400"
+                                                )}>{tenant.daysRemaining}</span>
+                                            </td>
+                                            <td className="px-3 py-2 text-right font-medium text-gray-900 dark:text-gray-100">{tenant.ltv}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function TenantsPage() {
     const pathname = usePathname()
     const router = useRouter()
     const [data] = useState(tenantsData)
     const insights = getPageInsights("tenants")
+    const [reportModalOpen, setReportModalOpen] = useState(false)
+    const [reportType, setReportType] = useState<'critical-ths' | 'upcoming-renewals' | null>(null)
+
+    const handleOpenCriticalTHS = () => {
+        setReportType('critical-ths')
+        setReportModalOpen(true)
+    }
+
+    const handleOpenUpcomingRenewals = () => {
+        setReportType('upcoming-renewals')
+        setReportModalOpen(true)
+    }
+
+    const actionButtons = [
+        { label: '12 Critical Tenant Health Scores', onClick: handleOpenCriticalTHS },
+        { label: '4 Upcoming Renewals', onClick: handleOpenUpcomingRenewals },
+    ]
 
     return (
         <div className="flex h-full w-full flex-col space-y-8">
@@ -200,7 +377,7 @@ export default function TenantsPage() {
                 </Button>
             </div>
 
-            <AIInsights insights={insights} />
+            <AIInsights insights={insights} actionButtons={actionButtons} />
 
             <div className="flex flex-col gap-4 w-full">
                 <TabNavigation>
@@ -221,6 +398,13 @@ export default function TenantsPage() {
                     onRowClick={(row: Tenant) => router.push(`/tenants/${row.id}`)}
                 />
             </div>
+
+            {/* AI Report Modal */}
+            <AIReportModal
+                isOpen={reportModalOpen}
+                onClose={() => setReportModalOpen(false)}
+                reportType={reportType}
+            />
         </div>
     )
 } 
