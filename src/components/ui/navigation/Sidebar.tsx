@@ -310,7 +310,7 @@ export function Sidebar() {
         "flex h-full flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 transition-all duration-300",
         collapsed ? "w-16 px-2" : "w-64 px-3"
       )}>
-        <div className="flex h-16 shrink-0 items-center gap-2">
+        <div className="flex h-16 shrink-0 items-center justify-between">
           <Link href="/" className={cn(collapsed ? "pl-0" : "pl-1.5")}>
             <HqOLogo className="h-6 w-auto" />
             <span className="sr-only">HqO</span>

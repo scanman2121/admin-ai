@@ -5,7 +5,6 @@ import { DataTable } from "@/components/ui/data-table/DataTable"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
-import { RiAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { spacesColumns } from "../columns"
@@ -32,8 +31,7 @@ export default function AvailableSpacesPage() {
             <div className="flex items-center justify-between">
                 <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">Available Space</h1>
                 <Button onClick={() => router.push("/spaces/new")}>
-                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
-                    Add Space
+                    Add space
                 </Button>
             </div>
 

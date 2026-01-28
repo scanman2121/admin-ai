@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
-import { RiAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useMemo } from "react"
@@ -33,8 +32,7 @@ export default function BuildingsInactive() {
                     Buildings
                 </h1>
                 <Button>
-                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
-                    Add Building
+                    Add building
                 </Button>
             </div>
 

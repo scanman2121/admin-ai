@@ -5,7 +5,6 @@ import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { ModalAddUser } from "@/components/ui/settings/ModalAddUser"
 import { getPageInsights } from "@/lib/insights"
-import { RiAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -40,7 +39,6 @@ export default function UsersLayout({
                 </h1>
                 <ModalAddUser>
                     <Button>
-                        <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
                         Add user
                     </Button>
                 </ModalAddUser>

@@ -5,7 +5,6 @@ import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { getPageInsights } from "@/lib/insights"
-import { RiAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -138,7 +137,6 @@ export default function Audiences() {
                     Audiences
                 </h1>
                 <Button>
-                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
                     Create audience
                 </Button>
             </div>

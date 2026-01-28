@@ -5,7 +5,6 @@ import { DataTable } from "@/components/ui/data-table/DataTable"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
-import { RiAddLine } from "@remixicon/react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { buildingsColumns } from "./columns"
@@ -29,8 +28,7 @@ export default function Buildings() {
             <div className="flex items-center justify-between">
                 <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">Buildings</h1>
                 <Button onClick={() => router.push("/buildings/new")}>
-                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
-                    Add Building
+                    Add building
                 </Button>
             </div>
 

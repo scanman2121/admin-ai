@@ -7,7 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
 import { cn } from "@/lib/utils"
-import { RiAddLine } from "@remixicon/react"
 import { ColumnDef } from "@tanstack/react-table"
 import Image from "next/image"
 import Link from "next/link"
@@ -347,8 +346,7 @@ export default function TenantsProspectsPage() {
             <div className="flex items-center justify-between">
                 <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">Tenants</h1>
                 <Button onClick={() => router.push("/tenants/new")}>
-                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
-                    Add Tenant
+                    Add tenant
                 </Button>
             </div>
 

@@ -3,7 +3,6 @@
 import { Button } from "@/components/Button"
 import { TabNavigation, TabNavigationLink } from "@/components/TabNavigation"
 import { DataTable } from "@/components/ui/data-table/data-table"
-import { RiAddLine } from "@remixicon/react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -167,8 +166,7 @@ export default function SpacesActive() {
                     Spaces
                 </h1>
                 <Button>
-                    <RiAddLine className="size-4 shrink-0 mr-1.5" aria-hidden="true" />
-                    Add Space
+                    Add space
                 </Button>
             </div>
 
