@@ -230,6 +230,11 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
         setApprovalDate(new Date().toISOString())
     }
 
+    const handleReopenForApproval = () => {
+        setApproval(undefined)
+        setApprovalDate(undefined)
+    }
+
     const handleStatusChange = (newStatus: string) => {
         // If changing to Completed, show modal to add message to tenant
         if (newStatus === 'Completed') {
@@ -670,6 +675,7 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                         approvalDate={approvalDate}
                         onApprove={handleApprove}
                         onDeny={handleDeny}
+                        onReopenForApproval={handleReopenForApproval}
                     />
 
                     {/* Assigned Personnel */}

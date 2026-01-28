@@ -5,7 +5,7 @@ import { Card } from "@/components/Card"
 import { Input } from "@/components/Input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getRelativeTime } from "@/lib/utils"
-import { Check, Hourglass, Search, UserCheck, X } from "lucide-react"
+import { Check, Hourglass, MoreVertical, Search, UserCheck, X } from "lucide-react"
 import { useState } from "react"
 
 interface Approver {
@@ -26,6 +26,7 @@ interface ApproverCardProps {
   approvalDate?: string | undefined // ISO date string
   onApprove?: () => void
   onDeny?: () => void
+  onReopenForApproval?: () => void
 }
 
 // Mock search results - in a real app, this would come from an API
@@ -110,10 +111,12 @@ export function ApproverCard({
   approval,
   approvalDate,
   onApprove,
-  onDeny
+  onDeny,
+  onReopenForApproval
 }: ApproverCardProps) {
   const [searchTerm, setSearchTerm] = useState("")
   const [showSearchResults, setShowSearchResults] = useState(false)
+  const [showKebabMenu, setShowKebabMenu] = useState(false)
 
   const filteredResults = mockApproverResults.filter(person =>
     person.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -139,6 +142,20 @@ export function ApproverCard({
 
   const handleRemoveApprover = () => {
     onRemoveApprover?.()
+  }
+
+  const handleKebabClick = () => {
+    setShowKebabMenu(!showKebabMenu)
+  }
+
+  const handleKebabBlur = () => {
+    // Delay hiding to allow clicks on menu items
+    setTimeout(() => setShowKebabMenu(false), 200)
+  }
+
+  const handleReopenForApproval = () => {
+    onReopenForApproval?.()
+    setShowKebabMenu(false)
   }
 
   // Determine the current state
@@ -175,21 +192,42 @@ export function ApproverCard({
           </h3>
           {state === "approved" && (
             <div className="flex items-baseline gap-2">
-              <span className="text-sm font-medium text-green-600 dark:text-green-400 flex items-center gap-1.5">
-                <Check className="size-4" />
+              <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                <Check className="size-4 inline-block align-[-2px] mr-1" />
                 {getInternalTitle()}
               </span>
               {approvalDate && (
                 <span className="text-xs text-gray-500 dark:text-gray-400">
                   {getRelativeTime(approvalDate)}
                 </span>
+              )}
+              {onReopenForApproval && (
+                <div className="relative">
+                  <button
+                    onClick={handleKebabClick}
+                    onBlur={handleKebabBlur}
+                    className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
+                  >
+                    <MoreVertical className="size-4 text-gray-400" />
+                  </button>
+                  {showKebabMenu && (
+                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 min-w-[180px]">
+                      <button
+                        onClick={handleReopenForApproval}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                      >
+                        Reopen for Approval
+                      </button>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           )}
           {state === "denied" && (
             <div className="flex items-baseline gap-2">
-              <span className="text-sm font-medium text-red-600 dark:text-red-400 flex items-center gap-1.5">
-                <X className="size-4" />
+              <span className="text-sm font-medium text-pink-600 dark:text-pink-400">
+                <X className="size-4 inline-block align-[-2px] mr-1" />
                 {getInternalTitle()}
               </span>
               {approvalDate && (
@@ -197,13 +235,57 @@ export function ApproverCard({
                   {getRelativeTime(approvalDate)}
                 </span>
               )}
+              {onReopenForApproval && (
+                <div className="relative">
+                  <button
+                    onClick={handleKebabClick}
+                    onBlur={handleKebabBlur}
+                    className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
+                  >
+                    <MoreVertical className="size-4 text-gray-400" />
+                  </button>
+                  {showKebabMenu && (
+                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 min-w-[180px]">
+                      <button
+                        onClick={handleReopenForApproval}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                      >
+                        Reopen for Approval
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
           {state === "pending" && (
-            <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400 flex items-center gap-1.5">
-              <Hourglass className="size-4" />
-              {getInternalTitle()}
-            </span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
+                <Hourglass className="size-4 inline-block align-[-2px] mr-1" />
+                {getInternalTitle()}
+              </span>
+              {onReopenForApproval && (
+                <div className="relative">
+                  <button
+                    onClick={handleKebabClick}
+                    onBlur={handleKebabBlur}
+                    className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
+                  >
+                    <MoreVertical className="size-4 text-gray-400" />
+                  </button>
+                  {showKebabMenu && (
+                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 min-w-[180px]">
+                      <button
+                        onClick={handleReopenForApproval}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                      >
+                        Reopen for Approval
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           )}
         </div>
 
