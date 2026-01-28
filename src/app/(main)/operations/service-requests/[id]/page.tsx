@@ -678,6 +678,19 @@ export default function ServiceRequestDetailPage({ params }: { params: { id: str
                         onReopenForApproval={handleReopenForApproval}
                     />
 
+                    {/* Pending Approval Example - no onApprove/onDeny means user can't take action */}
+                    <ApproverCard
+                        approver={{
+                            id: "approver-pending",
+                            name: "Michael Zhang",
+                            email: "michael.zhang@company.com",
+                            initials: "MZ",
+                            role: "Operations Manager",
+                            department: "Operations"
+                        }}
+                        onReopenForApproval={handleReopenForApproval}
+                    />
+
                     {/* Assigned Personnel */}
                     <AssignedPersonnelCard
                         assignedPersonnel={assignedPersonnel}
