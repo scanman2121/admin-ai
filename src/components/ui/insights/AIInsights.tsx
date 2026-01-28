@@ -97,8 +97,10 @@ export function AIInsights({ insights, className, actionButtons }: AIInsightsPro
 
           <div
             className={cn(
-              "transition-all duration-300",
-              isExpanded ? "px-4 pb-4" : "invisible h-0"
+              "overflow-hidden transition-all duration-300 ease-in-out",
+              isExpanded
+                ? "max-h-[500px] opacity-100 px-4 pb-4"
+                : "max-h-0 opacity-0"
             )}
           >
             <div className={cn(
