@@ -6,6 +6,7 @@ import {
     RiAttachmentLine,
     RiCalendarEventLine,
     RiCloseLine,
+    RiContractLine,
     RiEmotionLine,
     RiFullscreenLine,
     RiGroup2Line,
@@ -765,7 +766,7 @@ export function CommunicationsPanel({
                             onClick={onMinimize}
                             aria-label="Minimize"
                         >
-                            <RiCloseLine className="size-4" />
+                            <RiContractLine className="size-4" />
                         </button>
                     )}
                     <button

@@ -89,6 +89,12 @@ export function HeaderActions() {
         setIsFullScreenAIOpen(true)
     }
 
+    // Handle switching from full screen back to drawer
+    const handleAIMinimize = () => {
+        setIsFullScreenAIOpen(false)
+        setIsAIDrawerOpen(true)
+    }
+
     // Handle search functionality
     const handleSearchToggle = () => {
         setIsSearchOpen(!isSearchOpen)
@@ -141,7 +147,7 @@ export function HeaderActions() {
                     </Button>
                 </Tooltip> */}
                 
-                <Tooltip content="User profile" side="bottom">
+                <Tooltip content="User profile" side="bottom" triggerAsChild>
                     <UserProfileHeader />
                 </Tooltip>
             </div>
@@ -202,7 +208,7 @@ export function HeaderActions() {
                     </div>
 
                     {/* Search Button */}
-                    <Tooltip content="Search (⌘K)" side="bottom">
+                    <Tooltip content="Search (⌘K)" side="bottom" triggerAsChild>
                         <Button
                             variant="ghost"
                             onClick={handleSearchToggle}
@@ -218,7 +224,7 @@ export function HeaderActions() {
                     </Tooltip>
                 </div>
 
-                <Tooltip content="Support" side="bottom">
+                <Tooltip content="Support" side="bottom" triggerAsChild>
                     <SupportDropdown align="end">
                         <Button
                             variant="ghost"
@@ -233,7 +239,7 @@ export function HeaderActions() {
                     </SupportDropdown>
                 </Tooltip>
 
-                <Tooltip content="AI Assistant" side="bottom">
+                <Tooltip content="AI Assistant" side="bottom" triggerAsChild>
                     <Button
                         variant="ghost"
                         onClick={handleAIAssistantClick}
@@ -248,7 +254,7 @@ export function HeaderActions() {
                     </Button>
                 </Tooltip>
 
-                <Tooltip content="Create" side="bottom">
+                <Tooltip content="Create" side="bottom" triggerAsChild>
                     <CreatePopover />
                 </Tooltip>
 
@@ -257,7 +263,7 @@ export function HeaderActions() {
                     <NotificationsPopover />
                 </Tooltip> */}
                 
-                <Tooltip content="User profile" side="bottom">
+                <Tooltip content="User profile" side="bottom" triggerAsChild>
                     <UserProfileHeader />
                 </Tooltip>
             </div>
@@ -274,6 +280,7 @@ export function HeaderActions() {
             <FullScreenAIAssistant
                 isOpen={isFullScreenAIOpen}
                 onClose={() => setIsFullScreenAIOpen(false)}
+                onMinimize={handleAIMinimize}
             />
 
             <FullScreenNotifications

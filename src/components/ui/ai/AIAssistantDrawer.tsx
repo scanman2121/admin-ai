@@ -10,8 +10,12 @@ import {
     RiCalendarCheckLine,
     RiCalendarEventLine,
     RiCloseLine,
+    RiCoinLine,
+    RiContactsLine,
+    RiDragMoveLine,
     RiFileChartLine,
     RiFullscreenLine,
+    RiHeartPulseLine,
     RiLightbulbLine,
     RiMagicLine,
     RiSendPlaneFill,
@@ -19,7 +23,8 @@ import {
     RiUserAddLine,
     RiVipCrownLine
 } from "@remixicon/react"
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 interface AIAssistantDrawerProps {
     isOpen: boolean
@@ -32,7 +37,7 @@ interface SuggestionCard {
     title: string
     description: string
     icon: React.ReactNode
-    category: 'insights' | 'tasks' | 'generate'
+    category: 'insights' | 'tenant-health' | 'tasks' | 'generate'
 }
 
 interface ChatSession {
@@ -42,11 +47,29 @@ interface ChatSession {
     messages: { role: 'user' | 'assistant', content: string }[]
 }
 
+interface Position {
+    x: number
+    y: number
+}
+
 export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistantDrawerProps) {
     const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>([])
     const [input, setInput] = useState('')
     const [showPreviousChats, setShowPreviousChats] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
+    const popoverRef = useRef<HTMLDivElement>(null)
+
+    // Dragging state
+    const [position, setPosition] = useState<Position>({ x: 0, y: 0 })
+    const [isDragging, setIsDragging] = useState(false)
+    const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 })
+    const [hasBeenDragged, setHasBeenDragged] = useState(false)
+    const [mounted, setMounted] = useState(false)
+
+    // Mount effect for portal (SSR safety)
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     // Sample previous chat sessions
     const previousChats: ChatSession[] = [
@@ -102,6 +125,28 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
             icon: <RiBuildingLine className="size-5" />,
             category: 'insights'
         },
+        // Tenant Health
+        {
+            id: 'tenant-health-report',
+            title: 'Run tenant health report',
+            description: 'Analyze tenant engagement and satisfaction',
+            icon: <RiHeartPulseLine className="size-5" />,
+            category: 'tenant-health'
+        },
+        {
+            id: 'deploy-credits',
+            title: 'Deploy credits to unhealthy tenants',
+            description: 'Incentivize engagement with credit rewards',
+            icon: <RiCoinLine className="size-5" />,
+            category: 'tenant-health'
+        },
+        {
+            id: 'touch-base-contacts',
+            title: 'Touch base with key contacts',
+            description: 'Reach out to important tenant contacts',
+            icon: <RiContactsLine className="size-5" />,
+            category: 'tenant-health'
+        },
         // Tasks
         {
             id: 'add-user',
@@ -148,12 +193,24 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
         }
     ]
 
+    // Initialize position when popover opens
+    useEffect(() => {
+        if (isOpen && !hasBeenDragged) {
+            // Position in bottom right corner with some padding
+            const padding = 24
+            setPosition({
+                x: window.innerWidth - 400 - padding, // 400 is popover width
+                y: window.innerHeight - 600 - padding // 600 is approximate popover height
+            })
+        }
+    }, [isOpen, hasBeenDragged])
+
     // Scroll to bottom of messages when new messages are added
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages])
 
-    // Handle escape key to close drawer
+    // Handle escape key to close popover
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape' && isOpen) {
@@ -167,28 +224,57 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
         }
     }, [isOpen, onClose])
 
-    // Prevent body scroll when drawer is open
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden'
-            document.documentElement.classList.add('ai-drawer-open')
-        } else {
-            document.body.style.overflow = ''
-            document.documentElement.classList.remove('ai-drawer-open')
+    // Handle drag
+    const handleMouseDown = useCallback((e: React.MouseEvent) => {
+        if (popoverRef.current) {
+            const rect = popoverRef.current.getBoundingClientRect()
+            setDragOffset({
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            })
+            setIsDragging(true)
+            setHasBeenDragged(true)
         }
+    }, [])
 
-        return () => {
-            document.body.style.overflow = ''
-            document.documentElement.classList.remove('ai-drawer-open')
+    const handleMouseMove = useCallback((e: MouseEvent) => {
+        if (isDragging) {
+            const newX = e.clientX - dragOffset.x
+            const newY = e.clientY - dragOffset.y
+
+            // Keep popover within viewport bounds
+            const maxX = window.innerWidth - 400 // popover width
+            const maxY = window.innerHeight - 100 // minimum visible height
+
+            setPosition({
+                x: Math.max(0, Math.min(newX, maxX)),
+                y: Math.max(0, Math.min(newY, maxY))
+            })
         }
-    }, [isOpen])
+    }, [isDragging, dragOffset])
+
+    const handleMouseUp = useCallback(() => {
+        setIsDragging(false)
+    }, [])
+
+    // Add global mouse listeners for dragging
+    useEffect(() => {
+        if (isDragging) {
+            document.addEventListener('mousemove', handleMouseMove)
+            document.addEventListener('mouseup', handleMouseUp)
+            return () => {
+                document.removeEventListener('mousemove', handleMouseMove)
+                document.removeEventListener('mouseup', handleMouseUp)
+            }
+        }
+    }, [isDragging, handleMouseMove, handleMouseUp])
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         if (!input.trim()) return
 
         const userQuestion = input.trim()
-        
+
         // Add user message
         const userMessage = { role: 'user' as const, content: userQuestion }
         setMessages(prev => [...prev, userMessage])
@@ -239,221 +325,247 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
         setShowPreviousChats(prev => !prev)
     }
 
-    return (
-        <>
+    if (!isOpen || !mounted) return null
+
+    return createPortal(
+        <div
+            ref={popoverRef}
+            style={{
+                left: position.x,
+                top: position.y,
+            }}
+            className={cn(
+                "fixed z-[100] w-[400px] h-[600px] bg-white dark:bg-gray-950 rounded-xl shadow-2xl",
+                "border border-gray-200 dark:border-gray-800",
+                "flex flex-col",
+                isDragging ? "cursor-grabbing select-none" : ""
+            )}
+        >
+            {/* Header - Draggable */}
             <div
                 className={cn(
-                    "fixed inset-y-0 right-0 z-40 w-96 bg-white dark:bg-gray-950 transform transition-transform duration-300 ease-in-out",
-                    "border-l border-gray-200 dark:border-gray-800",
-                    isOpen ? "translate-x-0" : "translate-x-full"
+                    "flex items-center justify-between border-b border-gray-200 dark:border-gray-800 px-4 py-3 rounded-t-xl",
+                    "cursor-grab active:cursor-grabbing"
                 )}
+                onMouseDown={handleMouseDown}
             >
-                {/* Header */}
-                <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+                <div className="flex items-center gap-2">
+                    <RiDragMoveLine className="size-4 text-gray-400" />
                     <h2 className="text-base font-medium text-gray-900 dark:text-gray-50">AI Assistant</h2>
-                    <div className="flex items-center gap-x-1">
-                        {/* New chat button group */}
-                        <div className="relative inline-flex shadow-sm rounded-md mr-1">
-                            <Button
-                                variant="secondary"
-                                className="py-1 px-3 h-8 text-xs rounded-r-none border-r border-gray-300 dark:border-gray-700"
-                                onClick={handleNewChat}
-                            >
-                                New chat
-                            </Button>
-                            <Button
-                                variant="secondary"
-                                className="p-0 w-8 h-8 flex items-center justify-center rounded-l-none"
-                                onClick={togglePreviousChats}
-                            >
-                                <RiArrowDownSLine className="size-4" />
-                                <span className="sr-only">Show previous chats</span>
-                            </Button>
+                </div>
+                <div className="flex items-center gap-x-1" onMouseDown={(e) => e.stopPropagation()}>
+                    {/* New chat button group */}
+                    <div className="relative inline-flex shadow-sm rounded-md mr-1">
+                        <Button
+                            variant="secondary"
+                            className="py-1 px-3 h-8 text-xs rounded-r-none border-r border-gray-300 dark:border-gray-700"
+                            onClick={handleNewChat}
+                        >
+                            New chat
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            className="p-0 w-8 h-8 flex items-center justify-center rounded-l-none"
+                            onClick={togglePreviousChats}
+                        >
+                            <RiArrowDownSLine className="size-4" />
+                            <span className="sr-only">Show previous chats</span>
+                        </Button>
 
-                            {/* Previous chats dropdown */}
-                            {showPreviousChats && (
-                                <div
-                                    className="absolute top-full right-0 mt-1 w-56 rounded-md shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden z-10"
-                                >
-                                    <div className="py-1">
-                                        <div className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
-                                            Previous chats
-                                        </div>
-                                        {previousChats.map(chat => (
-                                            <button
-                                                key={chat.id}
-                                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                                                onClick={() => handleLoadPreviousChat(chat)}
-                                            >
-                                                <div className="font-medium truncate">{chat.title}</div>
-                                                <div className="text-xs text-gray-500 dark:text-gray-400">{chat.date}</div>
-                                            </button>
-                                        ))}
+                        {/* Previous chats dropdown */}
+                        {showPreviousChats && (
+                            <div
+                                className="absolute top-full right-0 mt-1 w-56 rounded-md shadow-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden z-10"
+                            >
+                                <div className="py-1">
+                                    <div className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
+                                        Previous chats
                                     </div>
+                                    {previousChats.map(chat => (
+                                        <button
+                                            key={chat.id}
+                                            className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                            onClick={() => handleLoadPreviousChat(chat)}
+                                        >
+                                            <div className="font-medium truncate">{chat.title}</div>
+                                            <div className="text-xs text-gray-500 dark:text-gray-400">{chat.date}</div>
+                                        </button>
+                                    ))}
                                 </div>
-                            )}
-                        </div>
-                        <Button
-                            variant="ghost"
-                            onClick={onFullScreen}
-                            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                        >
-                            <RiFullscreenLine className="size-5" aria-hidden="true" />
-                            <span className="sr-only">Full screen</span>
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            onClick={onClose}
-                            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                        >
-                            <RiCloseLine className="size-5" aria-hidden="true" />
-                            <span className="sr-only">Close</span>
-                        </Button>
+                            </div>
+                        )}
                     </div>
-                </div>
-
-                {/* Messages or Suggestions */}
-                <div className="flex flex-col h-[calc(100%-8rem)] overflow-y-auto p-4">
-                    {messages.length > 0 ? (
-                        // Show message history if there are messages
-                        <>
-                            {messages.map((message, index) => (
-                                <div
-                                    key={index}
-                                    className={cn(
-                                        "mb-4 max-w-[85%] rounded-lg p-3 text-sm",
-                                        message.role === 'user'
-                                            ? "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary self-end rounded-br-none"
-                                            : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50 self-start rounded-bl-none"
-                                    )}
-                                >
-                                    {message.content}
-                                </div>
-                            ))}
-                            <div ref={messagesEndRef} />
-                        </>
-                    ) : (
-                        // Show categorized suggestion cards if no messages yet
-                        <div className="space-y-6">
-                            {/* Insights Section */}
-                            <div>
-                                <div className="flex items-center gap-2 mb-3">
-                                    <RiBarChartBoxLine className="size-5 text-primary" />
-                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Insights</h3>
-                                </div>
-                                <div className="grid grid-cols-1 gap-2">
-                                    {suggestionCards
-                                        .filter(card => card.category === 'insights')
-                                        .map((card) => (
-                                            <button
-                                                key={card.id}
-                                                onClick={() => handleSuggestionClick(card)}
-                                                className={cn(
-                                                    "flex items-start gap-3 rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
-                                                    "hover:bg-gray-50 dark:hover:bg-gray-900"
-                                                )}
-                                            >
-                                                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary">
-                                                    {card.icon}
-                                                </div>
-                                                <div>
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400">{card.description}</div>
-                                                </div>
-                                            </button>
-                                        ))}
-                                </div>
-                            </div>
-
-                            {/* Tasks Section */}
-                            <div>
-                                <div className="flex items-center gap-2 mb-3">
-                                    <RiTaskLine className="size-5 text-purple-500" />
-                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Tasks</h3>
-                                </div>
-                                <div className="grid grid-cols-1 gap-2">
-                                    {suggestionCards
-                                        .filter(card => card.category === 'tasks')
-                                        .map((card) => (
-                                            <button
-                                                key={card.id}
-                                                onClick={() => handleSuggestionClick(card)}
-                                                className={cn(
-                                                    "flex items-start gap-3 rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
-                                                    "hover:bg-gray-50 dark:hover:bg-gray-900"
-                                                )}
-                                            >
-                                                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
-                                                    {card.icon}
-                                                </div>
-                                                <div>
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400">{card.description}</div>
-                                                </div>
-                                            </button>
-                                        ))}
-                                </div>
-                            </div>
-
-                            {/* Generate Section */}
-                            <div>
-                                <div className="flex items-center gap-2 mb-3">
-                                    <RiMagicLine className="size-5 text-green-500" />
-                                    <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Generate</h3>
-                                </div>
-                                <div className="grid grid-cols-1 gap-2">
-                                    {suggestionCards
-                                        .filter(card => card.category === 'generate')
-                                        .map((card) => (
-                                            <button
-                                                key={card.id}
-                                                onClick={() => handleSuggestionClick(card)}
-                                                className={cn(
-                                                    "flex items-start gap-3 rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
-                                                    "hover:bg-gray-50 dark:hover:bg-gray-900"
-                                                )}
-                                            >
-                                                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400">
-                                                    {card.icon}
-                                                </div>
-                                                <div>
-                                                    <div className="font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
-                                                    <div className="text-sm text-gray-500 dark:text-gray-400">{card.description}</div>
-                                                </div>
-                                            </button>
-                                        ))}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Input */}
-                <div className="border-t border-gray-200 dark:border-gray-800 p-4">
-                    <form onSubmit={handleSubmit} className="flex gap-2">
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Type your message..."
-                            className={cn(
-                                "flex-1 rounded-lg border border-gray-200 dark:border-gray-800 bg-transparent px-3 py-2 text-sm",
-                                "placeholder:text-gray-500 dark:placeholder:text-gray-400",
-                                "focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary"
-                            )}
-                        />
-                        <Button
-                            type="submit"
-                            variant="primary"
-                            className="h-9 w-9 shrink-0 p-0"
-                            disabled={!input.trim()}
-                        >
-                            <RiSendPlaneFill className="size-4" />
-                            <span className="sr-only">Send message</span>
-                        </Button>
-                    </form>
+                    <Button
+                        variant="ghost"
+                        onClick={onFullScreen}
+                        className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                    >
+                        <RiFullscreenLine className="size-5" aria-hidden="true" />
+                        <span className="sr-only">Full screen</span>
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        onClick={onClose}
+                        className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                    >
+                        <RiCloseLine className="size-5" aria-hidden="true" />
+                        <span className="sr-only">Close</span>
+                    </Button>
                 </div>
             </div>
-        </>
+
+            {/* Messages or Suggestions */}
+            <div className="flex-1 flex flex-col overflow-y-auto p-4">
+                {messages.length > 0 ? (
+                    // Show message history if there are messages
+                    <>
+                        {messages.map((message, index) => (
+                            <div
+                                key={index}
+                                className={cn(
+                                    "mb-4 max-w-[85%] rounded-lg p-3 text-sm",
+                                    message.role === 'user'
+                                        ? "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary self-end rounded-br-none"
+                                        : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-50 self-start rounded-bl-none"
+                                )}
+                            >
+                                {message.content}
+                            </div>
+                        ))}
+                        <div ref={messagesEndRef} />
+                    </>
+                ) : (
+                    // Show categorized suggestion cards if no messages yet
+                    <div className="space-y-6">
+                        {/* Insights Section */}
+                        <div>
+                            <div className="flex items-center gap-2 mb-3">
+                                <RiBarChartBoxLine className="size-5 text-gray-500 dark:text-gray-400" />
+                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Insights</h3>
+                            </div>
+                            <div className="grid grid-cols-1 gap-2">
+                                {suggestionCards
+                                    .filter(card => card.category === 'insights')
+                                    .map((card) => (
+                                        <button
+                                            key={card.id}
+                                            onClick={() => handleSuggestionClick(card)}
+                                            className={cn(
+                                                "rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
+                                                "hover:bg-gray-50 dark:hover:bg-gray-900"
+                                            )}
+                                        >
+                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
+                                            <div className="text-xs text-gray-500 dark:text-gray-400">{card.description}</div>
+                                        </button>
+                                    ))}
+                            </div>
+                        </div>
+
+                        {/* Tenant Health Section */}
+                        <div>
+                            <div className="flex items-center gap-2 mb-3">
+                                <RiHeartPulseLine className="size-5 text-gray-500 dark:text-gray-400" />
+                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Tenant Health</h3>
+                            </div>
+                            <div className="grid grid-cols-1 gap-2">
+                                {suggestionCards
+                                    .filter(card => card.category === 'tenant-health')
+                                    .map((card) => (
+                                        <button
+                                            key={card.id}
+                                            onClick={() => handleSuggestionClick(card)}
+                                            className={cn(
+                                                "rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
+                                                "hover:bg-gray-50 dark:hover:bg-gray-900"
+                                            )}
+                                        >
+                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
+                                            <div className="text-xs text-gray-500 dark:text-gray-400">{card.description}</div>
+                                        </button>
+                                    ))}
+                            </div>
+                        </div>
+
+                        {/* Tasks Section */}
+                        <div>
+                            <div className="flex items-center gap-2 mb-3">
+                                <RiTaskLine className="size-5 text-gray-500 dark:text-gray-400" />
+                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Tasks</h3>
+                            </div>
+                            <div className="grid grid-cols-1 gap-2">
+                                {suggestionCards
+                                    .filter(card => card.category === 'tasks')
+                                    .map((card) => (
+                                        <button
+                                            key={card.id}
+                                            onClick={() => handleSuggestionClick(card)}
+                                            className={cn(
+                                                "rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
+                                                "hover:bg-gray-50 dark:hover:bg-gray-900"
+                                            )}
+                                        >
+                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
+                                            <div className="text-xs text-gray-500 dark:text-gray-400">{card.description}</div>
+                                        </button>
+                                    ))}
+                            </div>
+                        </div>
+
+                        {/* Generate Section */}
+                        <div>
+                            <div className="flex items-center gap-2 mb-3">
+                                <RiMagicLine className="size-5 text-gray-500 dark:text-gray-400" />
+                                <h3 className="text-sm font-medium text-gray-900 dark:text-gray-50">Generate</h3>
+                            </div>
+                            <div className="grid grid-cols-1 gap-2">
+                                {suggestionCards
+                                    .filter(card => card.category === 'generate')
+                                    .map((card) => (
+                                        <button
+                                            key={card.id}
+                                            onClick={() => handleSuggestionClick(card)}
+                                            className={cn(
+                                                "rounded-lg border border-gray-200 dark:border-gray-800 p-3 text-left transition-colors",
+                                                "hover:bg-gray-50 dark:hover:bg-gray-900"
+                                            )}
+                                        >
+                                            <div className="text-sm font-medium text-gray-900 dark:text-gray-50">{card.title}</div>
+                                            <div className="text-xs text-gray-500 dark:text-gray-400">{card.description}</div>
+                                        </button>
+                                    ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Input */}
+            <div className="border-t border-gray-200 dark:border-gray-800 p-4 rounded-b-xl">
+                <form onSubmit={handleSubmit} className="flex gap-2">
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Type your message..."
+                        className={cn(
+                            "flex-1 rounded-lg border border-gray-200 dark:border-gray-800 bg-transparent px-3 py-2 text-sm",
+                            "placeholder:text-gray-500 dark:placeholder:text-gray-400",
+                            "focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary"
+                        )}
+                    />
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        className="h-9 w-9 shrink-0 p-0"
+                        disabled={!input.trim()}
+                    >
+                        <RiSendPlaneFill className="size-4" />
+                        <span className="sr-only">Send message</span>
+                    </Button>
+                </form>
+            </div>
+        </div>,
+        document.body
     )
-} 
+}

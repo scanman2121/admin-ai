@@ -30,6 +30,8 @@ const tenantsData = [
         leaseStart: "2022-01-15",
         leaseEnd: "2025-01-14",
         status: "Active",
+        healthScore: 87,
+        lifetimeValue: 1250000,
     },
     {
         id: "2",
@@ -41,6 +43,8 @@ const tenantsData = [
         leaseStart: "2021-06-01",
         leaseEnd: "2024-05-31",
         status: "Active",
+        healthScore: 72,
+        lifetimeValue: 890000,
     },
     {
         id: "3",
@@ -52,6 +56,8 @@ const tenantsData = [
         leaseStart: "2020-03-15",
         leaseEnd: "2023-03-14",
         status: "Inactive",
+        healthScore: 34,
+        lifetimeValue: 450000,
     },
     {
         id: "4",
@@ -63,6 +69,8 @@ const tenantsData = [
         leaseStart: "2023-02-01",
         leaseEnd: "2026-01-31",
         status: "Active",
+        healthScore: 95,
+        lifetimeValue: 2100000,
     },
     {
         id: "5",
@@ -74,6 +82,8 @@ const tenantsData = [
         leaseStart: "2022-09-01",
         leaseEnd: "2025-08-31",
         status: "Active",
+        healthScore: 58,
+        lifetimeValue: 980000,
     },
 ]
 
@@ -113,6 +123,36 @@ const tenantsColumns = [
     {
         accessorKey: "employees",
         header: "Employees",
+    },
+    {
+        accessorKey: "healthScore",
+        header: "THS",
+        cell: ({ row }: { row: any }) => {
+            const score = row.getValue("healthScore") as number
+            let colorClass = "text-green-600 dark:text-green-400"
+            if (score < 50) {
+                colorClass = "text-red-600 dark:text-red-400"
+            } else if (score < 75) {
+                colorClass = "text-yellow-600 dark:text-yellow-400"
+            }
+            return (
+                <span className={`font-medium ${colorClass}`}>
+                    {score}
+                </span>
+            )
+        },
+    },
+    {
+        accessorKey: "lifetimeValue",
+        header: "LTV",
+        cell: ({ row }: { row: any }) => {
+            const value = row.getValue("lifetimeValue") as number
+            return (
+                <span className="font-medium text-gray-900 dark:text-gray-50">
+                    ${value.toLocaleString()}
+                </span>
+            )
+        },
     },
     {
         accessorKey: "leaseStart",
