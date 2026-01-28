@@ -52,6 +52,17 @@ interface Position {
     y: number
 }
 
+interface Size {
+    width: number
+    height: number
+}
+
+// Minimum and maximum sizes for the drawer
+const MIN_WIDTH = 400
+const MIN_HEIGHT = 400
+const MAX_WIDTH = 800
+const MAX_HEIGHT = 900
+
 export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistantDrawerProps) {
     const [messages, setMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>([])
     const [input, setInput] = useState('')
@@ -65,6 +76,11 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
     const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 })
     const [hasBeenDragged, setHasBeenDragged] = useState(false)
     const [mounted, setMounted] = useState(false)
+
+    // Resize state
+    const [size, setSize] = useState<Size>({ width: MIN_WIDTH, height: 600 })
+    const [isResizing, setIsResizing] = useState(false)
+    const [resizeStart, setResizeStart] = useState<{ x: number; y: number; width: number; height: number } | null>(null)
 
     // Mount effect for portal (SSR safety)
     useEffect(() => {
@@ -199,11 +215,11 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
             // Position in bottom right corner with some padding
             const padding = 24
             setPosition({
-                x: window.innerWidth - 400 - padding, // 400 is popover width
-                y: window.innerHeight - 600 - padding // 600 is approximate popover height
+                x: window.innerWidth - size.width - padding,
+                y: window.innerHeight - size.height - padding
             })
         }
-    }, [isOpen, hasBeenDragged])
+    }, [isOpen, hasBeenDragged, size.width, size.height])
 
     // Scroll to bottom of messages when new messages are added
     useEffect(() => {
@@ -243,7 +259,7 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
             const newY = e.clientY - dragOffset.y
 
             // Keep popover within viewport bounds
-            const maxX = window.innerWidth - 400 // popover width
+            const maxX = window.innerWidth - size.width
             const maxY = window.innerHeight - 100 // minimum visible height
 
             setPosition({
@@ -251,7 +267,7 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
                 y: Math.max(0, Math.min(newY, maxY))
             })
         }
-    }, [isDragging, dragOffset])
+    }, [isDragging, dragOffset, size.width])
 
     const handleMouseUp = useCallback(() => {
         setIsDragging(false)
@@ -268,6 +284,48 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
             }
         }
     }, [isDragging, handleMouseMove, handleMouseUp])
+
+    // Handle resize
+    const handleResizeMouseDown = useCallback((e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+        setIsResizing(true)
+        setResizeStart({
+            x: e.clientX,
+            y: e.clientY,
+            width: size.width,
+            height: size.height
+        })
+    }, [size])
+
+    const handleResizeMouseMove = useCallback((e: MouseEvent) => {
+        if (isResizing && resizeStart) {
+            const deltaX = e.clientX - resizeStart.x
+            const deltaY = e.clientY - resizeStart.y
+
+            const newWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, resizeStart.width + deltaX))
+            const newHeight = Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, resizeStart.height + deltaY))
+
+            setSize({ width: newWidth, height: newHeight })
+        }
+    }, [isResizing, resizeStart])
+
+    const handleResizeMouseUp = useCallback(() => {
+        setIsResizing(false)
+        setResizeStart(null)
+    }, [])
+
+    // Add global mouse listeners for resizing
+    useEffect(() => {
+        if (isResizing) {
+            document.addEventListener('mousemove', handleResizeMouseMove)
+            document.addEventListener('mouseup', handleResizeMouseUp)
+            return () => {
+                document.removeEventListener('mousemove', handleResizeMouseMove)
+                document.removeEventListener('mouseup', handleResizeMouseUp)
+            }
+        }
+    }, [isResizing, handleResizeMouseMove, handleResizeMouseUp])
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -333,12 +391,15 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
             style={{
                 left: position.x,
                 top: position.y,
+                width: size.width,
+                height: size.height,
             }}
             className={cn(
-                "fixed z-[100] w-[400px] h-[600px] bg-white dark:bg-gray-950 rounded-xl shadow-2xl",
+                "fixed z-[100] bg-white dark:bg-gray-950 rounded-xl shadow-2xl",
                 "border border-gray-200 dark:border-gray-800",
                 "flex flex-col",
-                isDragging ? "cursor-grabbing select-none" : ""
+                (isDragging || isResizing) ? "select-none" : "",
+                isDragging ? "cursor-grabbing" : ""
             )}
         >
             {/* Header - Draggable */}
@@ -564,6 +625,24 @@ export function AIAssistantDrawer({ isOpen, onClose, onFullScreen }: AIAssistant
                         <span className="sr-only">Send message</span>
                     </Button>
                 </form>
+            </div>
+
+            {/* Resize Handle - Bottom Right */}
+            <div
+                onMouseDown={handleResizeMouseDown}
+                className={cn(
+                    "absolute bottom-0 right-0 w-4 h-4 cursor-se-resize",
+                    "flex items-center justify-center",
+                    "hover:bg-gray-100 dark:hover:bg-gray-800 rounded-br-xl"
+                )}
+            >
+                <svg
+                    className="w-3 h-3 text-gray-400 dark:text-gray-600"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                >
+                    <path d="M22 22H20V20H22V22ZM22 18H20V16H22V18ZM18 22H16V20H18V22ZM22 14H20V12H22V14ZM18 18H16V16H18V18ZM14 22H12V20H14V22Z" />
+                </svg>
             </div>
         </div>,
         document.body

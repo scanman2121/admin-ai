@@ -27,13 +27,13 @@ import { buildings } from "@/data/data"
 import { cn, focusRing } from "@/lib/utils"
 import { RiArrowLeftSLine, RiArrowRightSLine, RiCloseLine, RiMore2Line } from "@remixicon/react"
 import {
+  Briefcase,
   Building,
   Check,
   ChevronDown,
   ChevronsUpDown,
   ExternalLink,
   FolderOpen,
-  HandCoins,
   Home,
   LayoutDashboard,
   LineChart,
@@ -49,13 +49,20 @@ import { Mention, MentionsInput } from "react-mentions"
 import { HqOLogo } from "./HqOLogo"
 import { SidebarPopover } from "./SidebarPopover"
 
-// Portfolio sub-navigation items
-const portfolioItems = [
+// CRM sub-navigation items (formerly Portfolio)
+const crmItems = [
   { name: "Buildings", href: siteConfig.baseLinks.buildings },
   { name: "Tenants", href: siteConfig.baseLinks.tenants },
   { name: "Users", href: siteConfig.baseLinks.users },
   { name: "Vendors", href: siteConfig.baseLinks.vendors },
   { name: "Audiences", href: siteConfig.baseLinks.audiences },
+] as const
+
+// Leasing sub-navigation items (own section)
+const leasingItems = [
+  { name: "Transaction Management", href: siteConfig.baseLinks.leasing.transactionManagement },
+  { name: "Leases", href: siteConfig.baseLinks.leasing.leases },
+  { name: "Tours", href: siteConfig.baseLinks.leasing.tours },
 ] as const
 
 // Payments sub-navigation items
@@ -104,7 +111,7 @@ const intelligenceItems = [
 ] as const
 
 // Type for section IDs to ensure type safety
-type SectionId = 'portfolio' | 'commerce' | 'experienceManager' | 'operations' | 'files' | 'settingsAndSetup' | 'intelligence';
+type SectionId = 'crm' | 'leasing' | 'commerce' | 'experienceManager' | 'operations' | 'files' | 'settingsAndSetup' | 'intelligence';
 
 export function Sidebar() {
   const pathname = usePathname()
@@ -116,7 +123,11 @@ export function Sidebar() {
   const [settingsTab, setSettingsTab] = useState<'general' | 'apps' | 'email' | 'feedback' | 'tags' | 'quick-reply-templates' | 'connected-accounts'>('general')
 
   // Check if current path is in each section
-  const isInPortfolio = portfolioItems.some(item =>
+  const isInCRM = crmItems.some(item =>
+    pathname === item.href || pathname.startsWith(item.href + "/")
+  )
+
+  const isInLeasing = leasingItems.some(item =>
     pathname === item.href || pathname.startsWith(item.href + "/")
   )
 
@@ -152,8 +163,10 @@ export function Sidebar() {
     if (isInMyHqO) {
       // Collapse all sections when My HqO is active
       setOpenSection(null)
-    } else if (isInPortfolio) {
-      setOpenSection('portfolio')
+    } else if (isInCRM) {
+      setOpenSection('crm')
+    } else if (isInLeasing) {
+      setOpenSection('leasing')
     } else if (isInPayments) {
       setOpenSection('commerce')
     } else if (isInExperienceManager) {
@@ -167,7 +180,7 @@ export function Sidebar() {
     } else if (isInIntelligence) {
       setOpenSection('intelligence')
     }
-  }, [isInMyHqO, isInPortfolio, isInPayments, isInExperienceManager, isInOperations, isInFiles, isInSettingsAndSetup, isInIntelligence])
+  }, [isInMyHqO, isInCRM, isInLeasing, isInPayments, isInExperienceManager, isInOperations, isInFiles, isInSettingsAndSetup, isInIntelligence])
 
   // Keyboard navigation handler
   const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
@@ -252,8 +265,9 @@ export function Sidebar() {
 
     // Get section display name
     const getSectionName = (sectionId: SectionId): string => {
-      const names = {
-        portfolio: "Portfolio",
+      const names: Record<SectionId, string> = {
+        crm: "CRM",
+        leasing: "Leasing",
         commerce: "Payments",
         experienceManager: "Experience Manager",
         operations: "Operations",
@@ -367,49 +381,49 @@ export function Sidebar() {
                   </Link>
                 </li>
 
-                {/* Portfolio accordion */}
+                {/* CRM accordion (formerly Portfolio) */}
                 <li className={cn(
-                  (openSection === 'portfolio' || isInPortfolio) && !collapsed
+                  (openSection === 'crm' || isInCRM) && !collapsed
                     ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-0.5"
                     : "",
-                  openSection === 'portfolio' && !collapsed
+                  openSection === 'crm' && !collapsed
                     ? "pb-1"
                     : ""
                 )}>
                   {collapsed ? (
                     <SidebarPopover
                       icon={<Building className="size-4 shrink-0" aria-hidden="true" />}
-                      title="Portfolio"
-                      items={portfolioItems}
+                      title="CRM"
+                      items={crmItems}
                       isActive={isActive}
-                      isInSection={isInPortfolio}
+                      isInSection={isInCRM}
                     />
                   ) : (
                     <button
-                      onClick={() => toggleSection('portfolio')}
+                      onClick={() => toggleSection('crm')}
                       className={cn(
                         "flex w-full items-center gap-x-2.5 py-2 text-[14px] font-medium transition",
                         collapsed ? "px-2 justify-center" : "px-3 justify-between",
-                        (openSection === 'portfolio' || isInPortfolio)
+                        (openSection === 'crm' || isInCRM)
                           ? "text-[#2D3338]"
                           : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
                         focusRing,
                       )}
-                      aria-expanded={openSection === 'portfolio'}
-                      aria-controls="portfolio-submenu"
-                      id="portfolio-button"
+                      aria-expanded={openSection === 'crm'}
+                      aria-controls="crm-submenu"
+                      id="crm-button"
                       role="button"
                       tabIndex={0}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
                         <Building className="size-4 shrink-0" aria-hidden="true" />
-                        {!collapsed && "Portfolio"}
+                        {!collapsed && "CRM"}
                       </span>
                       {!collapsed && (
                         <ChevronDown
                           className={cn(
                             "size-4 shrink-0 transition-transform duration-300 ease-in-out",
-                            openSection === 'portfolio' ? "rotate-0" : "-rotate-90"
+                            openSection === 'crm' ? "rotate-0" : "-rotate-90"
                           )}
                           aria-hidden="true"
                         />
@@ -421,21 +435,116 @@ export function Sidebar() {
                   <div
                     className={cn(
                       "overflow-hidden transition-all duration-300 ease-in-out",
-                      !collapsed && openSection === 'portfolio'
+                      !collapsed && openSection === 'crm'
                         ? "max-h-96 opacity-100"
                         : "max-h-0 opacity-0"
                     )}
-                    id="portfolio-submenu"
+                    id="crm-submenu"
                     role="region"
-                    aria-labelledby="portfolio-button"
-                    aria-hidden={!(openSection === 'portfolio' && !collapsed)}
+                    aria-labelledby="crm-button"
+                    aria-hidden={!(openSection === 'crm' && !collapsed)}
                   >
                     <ul
                       className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out"
                       role="group"
-                      aria-label="Portfolio navigation"
+                      aria-label="CRM navigation"
                     >
-                      {portfolioItems.map((item) => (
+                      {crmItems.map((item) => (
+                        <li key={item.name}>
+                          <Link
+                            href={item.href}
+                            className={cn(
+                              "group relative block rounded-md py-2 pl-8 pr-2 text-[14px] font-medium transition-all duration-200 ease-out",
+                              isActive(item.href)
+                                ? "bg-white dark:bg-gray-900 text-primary dark:text-primary shadow-sm"
+                                : "text-gray-600 hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8]",
+                              focusRing,
+                            )}
+                          >
+                            {/* Blue indicator line */}
+                            <div className={cn(
+                              "absolute -left-2 top-1/2 -translate-y-1/2 w-0.5 bg-primary rounded-r-sm transition-all duration-150 ease-out",
+                              isActive(item.href)
+                                ? "h-full opacity-100"
+                                : "h-1/2 opacity-0 group-hover:opacity-100"
+                            )} />
+                            {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+
+                {/* Leasing accordion */}
+                <li className={cn(
+                  (openSection === 'leasing' || isInLeasing) && !collapsed
+                    ? "bg-[#F6F7F8] rounded-md overflow-hidden pt-0.5"
+                    : "",
+                  openSection === 'leasing' && !collapsed
+                    ? "pb-1"
+                    : ""
+                )}>
+                  {collapsed ? (
+                    <SidebarPopover
+                      icon={<Briefcase className="size-4 shrink-0" aria-hidden="true" />}
+                      title="Leasing"
+                      items={leasingItems}
+                      isActive={isActive}
+                      isInSection={isInLeasing}
+                    />
+                  ) : (
+                    <button
+                      onClick={() => toggleSection('leasing')}
+                      className={cn(
+                        "flex w-full items-center gap-x-2.5 py-2 text-[14px] font-medium transition",
+                        collapsed ? "px-2 justify-center" : "px-3 justify-between",
+                        (openSection === 'leasing' || isInLeasing)
+                          ? "text-[#2D3338]"
+                          : "text-[#696E72] hover:text-gray-900 dark:text-gray-400 hover:dark:text-gray-50 hover:bg-[#F6F7F8] rounded-md",
+                        focusRing,
+                      )}
+                      aria-expanded={openSection === 'leasing'}
+                      aria-controls="leasing-submenu"
+                      id="leasing-button"
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
+                        <Briefcase className="size-4 shrink-0" aria-hidden="true" />
+                        {!collapsed && "Leasing"}
+                      </span>
+                      {!collapsed && (
+                        <ChevronDown
+                          className={cn(
+                            "size-4 shrink-0 transition-transform duration-300 ease-in-out",
+                            openSection === 'leasing' ? "rotate-0" : "-rotate-90"
+                          )}
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
+                  )}
+
+                  {/* Sub-navigation items with animation */}
+                  <div
+                    className={cn(
+                      "overflow-hidden transition-all duration-300 ease-in-out",
+                      !collapsed && openSection === 'leasing'
+                        ? "max-h-96 opacity-100"
+                        : "max-h-0 opacity-0"
+                    )}
+                    id="leasing-submenu"
+                    role="region"
+                    aria-labelledby="leasing-button"
+                    aria-hidden={!(openSection === 'leasing' && !collapsed)}
+                  >
+                    <ul
+                      className="mt-1 space-y-1 px-2 pb-2 transform transition-transform duration-300 ease-in-out"
+                      role="group"
+                      aria-label="Leasing navigation"
+                    >
+                      {leasingItems.map((item) => (
                         <li key={item.name}>
                           <Link
                             href={item.href}
@@ -635,7 +744,7 @@ export function Sidebar() {
                 )}>
                   {collapsed ? (
                     <SidebarPopover
-                      icon={<HandCoins className="size-4 shrink-0" aria-hidden="true" />}
+                      icon={<Briefcase className="size-4 shrink-0" aria-hidden="true" />}
                       title="Payments"
                       items={commerceItems}
                       isActive={isActive}
@@ -655,7 +764,7 @@ export function Sidebar() {
                       aria-expanded={openSection === 'commerce'}
                     >
                       <span className={cn("flex items-center", collapsed ? "" : "gap-x-2.5")}>
-                        <HandCoins className="size-4 shrink-0" aria-hidden="true" />
+                        <Briefcase className="size-4 shrink-0" aria-hidden="true" />
                         {!collapsed && "Payments"}
                       </span>
                       {!collapsed && (

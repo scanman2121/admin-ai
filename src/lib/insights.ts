@@ -11,7 +11,8 @@ type PageType =
     | "users"
     | "vendors"
     | "transactions"
-    | "portfolio";
+    | "portfolio"
+    | "leasing";
 
 export function getPageInsights(pageType: PageType): MetricInsight[] {
     switch (pageType) {
@@ -360,6 +361,38 @@ export function getPageInsights(pageType: PageType): MetricInsight[] {
                     title: "Tenant Satisfaction",
                     value: "4.7/5",
                     comparison: "from 2,456 reviews",
+                    trend: "up",
+                    trendValue: 5,
+                },
+            ];
+
+        case "leasing":
+            return [
+                {
+                    title: "Active Transactions",
+                    value: "24",
+                    comparison: "in pipeline",
+                    trend: "up",
+                    trendValue: 12,
+                },
+                {
+                    title: "Total Pipeline Value",
+                    value: "$8.6M",
+                    comparison: "potential revenue",
+                    trend: "up",
+                    trendValue: 18,
+                },
+                {
+                    title: "Tours This Month",
+                    value: "18",
+                    comparison: "vs. 14 last month",
+                    trend: "up",
+                    trendValue: 28,
+                },
+                {
+                    title: "Conversion Rate",
+                    value: "32%",
+                    comparison: "tour to lease",
                     trend: "up",
                     trendValue: 5,
                 },

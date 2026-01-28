@@ -3,22 +3,12 @@
 import { Button } from "@/components/Button"
 import { DataTable } from "@/components/ui/data-table/DataTable"
 import { AIInsights } from "@/components/ui/insights/AIInsights"
-import { TabNavigation, TabNavigationLink } from "@/components/ui/tab-navigation"
 import { getPageInsights } from "@/lib/insights"
 import { cn } from "@/lib/utils"
 import { RiCloseLine, RiSparklingLine } from "@remixicon/react"
 import Image from "next/image"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
-
-// Define tabs for the Tenants page
-const tabs = [
-    { name: "All Tenants", href: "/tenants" },
-    { name: "Active", href: "/tenants/active" },
-    { name: "Inactive", href: "/tenants/inactive" },
-    { name: "Prospects", href: "/tenants/prospects" },
-] as const
 
 // Mock data for tenants
 const tenantsData = [
@@ -346,7 +336,6 @@ function AIReportModal({ isOpen, onClose, reportType }: AIReportModalProps) {
 }
 
 export default function TenantsPage() {
-    const pathname = usePathname()
     const router = useRouter()
     const [data] = useState(tenantsData)
     const insights = getPageInsights("tenants")
@@ -380,18 +369,6 @@ export default function TenantsPage() {
             <AIInsights insights={insights} actionButtons={actionButtons} />
 
             <div className="flex flex-col gap-4 w-full">
-                <TabNavigation>
-                    {tabs.map((tab) => (
-                        <TabNavigationLink
-                            key={tab.name}
-                            asChild
-                            active={pathname === tab.href}
-                        >
-                            <Link href={tab.href}>{tab.name}</Link>
-                        </TabNavigationLink>
-                    ))}
-                </TabNavigation>
-
                 <DataTable
                     columns={tenantsColumns}
                     data={data}

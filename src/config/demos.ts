@@ -80,7 +80,7 @@ export const demoConfigs: Record<DemoType, DemoConfig> = {
     },
     homepage: {
       welcomeMessage: "Welcome back",
-      userName: "Ellie",
+      userName: "Drake",
       content: {
         events: [
           {
@@ -162,103 +162,6 @@ export const demoConfigs: Record<DemoType, DemoConfig> = {
         type: "Office",
         floors: 15,
         tenants: 10,
-        status: "Active",
-        lastUpdated: "2024-02-01",
-      },
-    ],
-    mapLocation: {
-      city: "Oakbrook Terrace",
-      state: "IL",
-      address: "1 Tower Ln, Oakbrook Terrace, IL 60181",
-      coordinates: {
-        lat: 41.8486,
-        lng: -87.9828,
-      },
-    },
-  },
-  hiffman: {
-    id: "hiffman",
-    name: "Hiffman Demo",
-    logo: {
-      type: "image",
-      imageUrl: "/hiffman.webp",
-      alt: "Hiffman Logo",
-    },
-    theme: {
-      primaryColor: "#1A4D3A", // Example green/teal for Hiffman
-      primaryColorDark: "#0F3D2A",
-    },
-    homepage: {
-      welcomeMessage: "Welcome back",
-      userName: "Sarah",
-      content: {
-        events: [
-          {
-            title: "Hiffman Community Networking Event",
-            date: "JUL 15",
-            time: "5–8 PM",
-            status: "Scheduled",
-            registered: 425,
-            capacity: "500 capacity",
-          },
-        ],
-        communications: [
-          {
-            title: "Q3 Building Updates & Maintenance Schedule",
-            scheduledDate: "07/20/2025",
-            scheduledTime: "10:00 AM",
-            channels: ["Email", "Push", "In app"],
-            daysUntil: 8,
-            status: "Scheduled",
-          },
-        ],
-        discover: {
-          title: "Discover Hiffman",
-          description: "Explore amenities and services at Hiffman properties",
-          items: [
-            {
-              title: "Wellness Center",
-              description: "State-of-the-art fitness facilities",
-            },
-            {
-              title: "Rooftop Terrace",
-              description: "Enjoy stunning city views",
-            },
-          ],
-        },
-      },
-    },
-    buildings: [
-      {
-        id: "1",
-        name: "Hiffman Plaza",
-        imageUrl: "https://images.unsplash.com/photo-1471039497385-b6d6ba609f9c?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        location: "Chicago, IL",
-        type: "Office",
-        floors: 15,
-        tenants: 12,
-        status: "Active",
-        lastUpdated: "2024-01-15",
-      },
-      {
-        id: "2",
-        name: "Hiffman Tower",
-        imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        location: "Chicago, IL",
-        type: "Mixed Use",
-        floors: 28,
-        tenants: 20,
-        status: "Active",
-        lastUpdated: "2024-01-20",
-      },
-      {
-        id: "3",
-        name: "Riverside Business Center",
-        imageUrl: "https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?q=80&w=2674&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        location: "Chicago, IL",
-        type: "Office",
-        floors: 8,
-        tenants: 15,
         status: "Active",
         lastUpdated: "2024-02-01",
       },

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react"
 
-export type DemoType = "generic" | "hiffman"
+export type DemoType = "generic"
 
 type DemoContextType = {
   demo: DemoType
@@ -22,7 +22,7 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   // Load demo from localStorage on mount
   useEffect(() => {
     const savedDemo = localStorage.getItem("selectedDemo") as DemoType
-    if (savedDemo === "generic" || savedDemo === "hiffman") {
+    if (savedDemo === "generic") {
       setDemoState(savedDemo)
     }
   }, [])
@@ -31,23 +31,12 @@ export function DemoProvider({ children }: { children: React.ReactNode }) {
   const setDemo = (newDemo: DemoType) => {
     setDemoState(newDemo)
     localStorage.setItem("selectedDemo", newDemo)
-    
-    // Apply theme if needed
-    if (newDemo === "hiffman") {
-      // Apply Hiffman theme
-      document.documentElement.setAttribute("data-demo", "hiffman")
-    } else {
-      document.documentElement.setAttribute("data-demo", "generic")
-    }
+    document.documentElement.setAttribute("data-demo", "generic")
   }
 
   // Apply theme on mount
   useEffect(() => {
-    if (demo === "hiffman") {
-      document.documentElement.setAttribute("data-demo", "hiffman")
-    } else {
-      document.documentElement.setAttribute("data-demo", "generic")
-    }
+    document.documentElement.setAttribute("data-demo", "generic")
   }, [demo])
 
   return (

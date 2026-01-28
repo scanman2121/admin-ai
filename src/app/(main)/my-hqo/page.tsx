@@ -3,20 +3,58 @@
 import { Card } from "@/components/Card";
 import { getDemoConfig } from "@/config/demos";
 import { useDemo } from "@/contexts/DemoContext";
+import { cn } from "@/lib/utils";
 import { RiCalendarEventLine, RiDoorOpenLine, RiFilterLine, RiInformationLine, RiMegaphoneLine, RiShoppingBag3Line } from "@remixicon/react";
 import { Badge, Button, Tab, TabGroup, TabList, TabPanel, TabPanels } from "@tremor/react";
+import { Briefcase, ChevronDown, LayoutGrid, Megaphone, Settings2, TrendingUp } from "lucide-react";
+import { useState } from "react";
 
+type ViewType = "experience" | "leasing" | "operations" | "executive";
+
+const views: { id: ViewType; label: string; icon: React.ElementType }[] = [
+  { id: "experience", label: "Experience", icon: Megaphone },
+  { id: "leasing", label: "Leasing", icon: Briefcase },
+  { id: "operations", label: "Operations", icon: Settings2 },
+  { id: "executive", label: "Executive", icon: TrendingUp },
+];
 
 export default function MyHqO() {
   const { demo } = useDemo();
   const demoConfig = getDemoConfig(demo);
   const { homepage } = demoConfig;
+  const [activeView, setActiveView] = useState<ViewType>("experience");
 
   return (
     <div className="space-y-6">
-      <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
-        {homepage.welcomeMessage}, {homepage.userName}
-      </h1>
+      {/* Header with Welcome and Views */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-[24px] font-medium text-gray-900 dark:text-gray-50">
+          {homepage.welcomeMessage}, {homepage.userName}
+        </h1>
+
+        {/* Views Selector - Linear Style */}
+        <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          {views.map((view) => {
+            const Icon = view.icon;
+            const isActive = activeView === view.id;
+            return (
+              <button
+                key={view.id}
+                onClick={() => setActiveView(view.id)}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
+                  isActive
+                    ? "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-50 shadow-sm"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+                )}
+              >
+                <Icon className="size-4" />
+                <span>{view.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
 
 

@@ -3,6 +3,7 @@
 import { Button } from "@/components/Button"
 import { cn, focusRing } from "@/lib/utils"
 import { MoreHorizontal } from "lucide-react"
+import Image from "next/image"
 
 import { DropdownUserProfile } from "./DropdownUserProfile"
 
@@ -24,12 +25,17 @@ export const UserProfileDesktop = ({ isCollapsed = false }: UserProfileDesktopPr
       >
         <span className={cn("flex items-center", isCollapsed ? "" : "gap-3")}>
           <span
-            className="flex size-8 shrink-0 items-center justify-center rounded-full border border-gray-300 bg-white text-xs text-gray-700 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300"
+            className="relative flex size-8 shrink-0 items-center justify-center rounded-full border border-gray-300 bg-white overflow-hidden dark:border-gray-800 dark:bg-gray-950"
             aria-hidden="true"
           >
-            EE
+            <Image
+              src="/drake.png"
+              alt="Drake Maye"
+              fill
+              className="object-cover"
+            />
           </span>
-          {!isCollapsed && <span>Ellie Edwards</span>}
+          {!isCollapsed && <span>Drake Maye</span>}
         </span>
         {!isCollapsed && (
           <MoreHorizontal
@@ -54,10 +60,15 @@ export const UserProfileMobile = () => {
         )}
       >
         <span
-          className="flex size-8 shrink-0 items-center justify-center rounded-full border border-gray-300 bg-white text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+          className="relative flex size-8 shrink-0 items-center justify-center rounded-full border border-gray-300 bg-white overflow-hidden dark:border-gray-700 dark:bg-gray-900"
           aria-hidden="true"
         >
-          EE
+          <Image
+            src="/drake.png"
+            alt="Drake Maye"
+            fill
+            className="object-cover"
+          />
         </span>
         <span className="sr-only">User menu</span>
       </Button>

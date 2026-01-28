@@ -23,9 +23,15 @@ export const siteConfig = {
       general: "/settings/general",
       billing: "/settings/billing",
     },
-    // Portfolio section
-    portfolio: {
-      overview: "/portfolio/overview",
+    // CRM section (formerly Portfolio)
+    crm: {
+      overview: "/crm/overview",
+    },
+    // Leasing section
+    leasing: {
+      transactionManagement: "/leasing/transaction-management",
+      leases: "/leasing/leases",
+      tours: "/leasing/tours",
     },
     // Experience Manager section
     experienceManager: {

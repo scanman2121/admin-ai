@@ -3,21 +3,21 @@
 import { Button } from "@/components/Button"
 import { Tooltip } from "@/components/Tooltip"
 import { cn, focusRing } from "@/lib/utils"
-import { HelpCircle, Search, Sparkles, X } from "lucide-react"
+import { HelpCircle, Search, Sparkles } from "lucide-react"
+import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { AIAssistantDrawer } from "../ai/AIAssistantDrawer"
 import { FullScreenAIAssistant } from "../ai/FullScreenAIAssistant"
 import { CreatePopover } from "../create/CreatePopover"
 import { FullScreenNotifications } from "../notifications/FullScreenNotifications"
-// import { NotificationsPopover } from "../notifications/NotificationsPopover" // Hidden for now
-// import { QRScannerModal } from "../qr/QRScannerModal" // Hidden for now
+import { CommandCenter } from "../search/CommandCenter"
 import { SupportDropdown } from "./SupportDropdown"
 import { UserProfileMobile as UserProfileHeader } from "./UserProfile"
 
 export function HeaderActions() {
-    const [isSearchOpen, setIsSearchOpen] = useState(false)
-    const [searchQuery, setSearchQuery] = useState("")
+    const [isCommandCenterOpen, setIsCommandCenterOpen] = useState(false)
     const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false)
+    const pathname = usePathname()
     const [isFullScreenAIOpen, setIsFullScreenAIOpen] = useState(false)
     const [isFullScreenNotificationsOpen, setIsFullScreenNotificationsOpen] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
@@ -38,18 +38,13 @@ export function HeaderActions() {
         return () => window.removeEventListener('resize', checkIfMobile)
     }, [])
 
-    // Set up global keyboard shortcuts for search
+    // Set up global keyboard shortcuts for command center
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            // Open search on Cmd+K or Ctrl+K
+            // Open command center on Cmd+K or Ctrl+K
             if ((event.metaKey || event.ctrlKey) && event.key === "k") {
                 event.preventDefault()
-                setIsSearchOpen(true)
-            }
-            // Close search on Escape
-            if (event.key === "Escape" && isSearchOpen) {
-                setIsSearchOpen(false)
-                setSearchQuery("")
+                setIsCommandCenterOpen(true)
             }
         }
 
@@ -58,16 +53,7 @@ export function HeaderActions() {
         return () => {
             document.removeEventListener("keydown", handleKeyDown)
         }
-    }, [isSearchOpen])
-
-    // Dynamically import the FullScreenSearch component to avoid server/client mismatch - Hidden for now
-    // const [FullScreenSearch, setFullScreenSearch] = useState<any>(null)
-
-    // useEffect(() => {
-    //     import("../search/FullScreenSearch").then((module) => {
-    //         setFullScreenSearch(() => module.FullScreenSearch)
-    //     })
-    // }, [])
+    }, [])
 
     // Handle QR scanner button click - Hidden for now
     // const handleQRScannerClick = () => {
@@ -93,31 +79,6 @@ export function HeaderActions() {
     const handleAIMinimize = () => {
         setIsFullScreenAIOpen(false)
         setIsAIDrawerOpen(true)
-    }
-
-    // Handle search functionality
-    const handleSearchToggle = () => {
-        setIsSearchOpen(!isSearchOpen)
-        if (!isSearchOpen) {
-            // Focus the input when opening
-            setTimeout(() => {
-                const searchInput = document.querySelector('#header-search-input') as HTMLInputElement
-                if (searchInput) {
-                    searchInput.focus()
-                }
-            }, 100)
-        } else {
-            setSearchQuery("")
-        }
-    }
-
-    const handleSearchSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (searchQuery.trim()) {
-            // Handle search logic here
-            console.log('Searching for:', searchQuery)
-            // You can add your search logic here
-        }
     }
 
     // Handle notifications button click - Hidden for now
@@ -157,72 +118,21 @@ export function HeaderActions() {
     return (
         <>
             <div className="flex items-center gap-x-1">
-                {/* QR Scanner Button - Hidden for now */}
-                {/* <Button
-                    variant="ghost"
-                    onClick={handleQRScannerClick}
-                    className={cn(
-                        "group flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
-                        focusRing
-                    )}
-                >
-                    <QrCode className="size-5" aria-hidden="true" />
-                    <span className="sr-only">Scan QR Code</span>
-                </Button> */}
-
-                {/* Animated Search Bar */}
-                <div className="relative flex items-center">
-                    {/* Search Input - slides in from right */}
-                    <div className={cn(
-                        "absolute right-12 top-1/2 -translate-y-1/2 transition-all duration-300 ease-out",
-                        "z-[100]", // Higher z-index to ensure it appears above everything
-                        isSearchOpen 
-                            ? "opacity-100 scale-100 translate-x-0" 
-                            : "opacity-0 scale-95 translate-x-4 pointer-events-none"
-                    )}>
-                        <form onSubmit={handleSearchSubmit} className="flex items-center">
-                            <div className="relative">
-                                <input
-                                    id="header-search-input"
-                                    type="text"
-                                    placeholder="Search..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className={cn(
-                                        "w-64 pl-3 pr-8 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md",
-                                        "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100",
-                                        "placeholder-gray-500 dark:placeholder-gray-400",
-                                        "focus:ring-2 focus:ring-primary focus:border-primary",
-                                        "shadow-lg"
-                                    )}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleSearchToggle}
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                                >
-                                    <X className="size-4" />
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    {/* Search Button */}
-                    <Tooltip content="Search (⌘K)" side="bottom" triggerAsChild>
-                        <Button
-                            variant="ghost"
-                            onClick={handleSearchToggle}
-                            className={cn(
-                                "group flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
-                                focusRing,
-                                isSearchOpen && "text-primary dark:text-primary"
-                            )}
-                        >
-                            <Search className="size-5" aria-hidden="true" />
-                            <span className="sr-only">Search</span>
-                        </Button>
-                    </Tooltip>
-                </div>
+                {/* Command Center Search Button */}
+                <Tooltip content="Command Center (⌘K)" side="bottom" triggerAsChild>
+                    <Button
+                        variant="ghost"
+                        onClick={() => setIsCommandCenterOpen(true)}
+                        className={cn(
+                            "group flex items-center rounded-md p-2 text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 hover:dark:text-gray-50 hover:dark:bg-gray-900",
+                            focusRing,
+                            isCommandCenterOpen && "text-primary dark:text-primary"
+                        )}
+                    >
+                        <Search className="size-5" aria-hidden="true" />
+                        <span className="sr-only">Command Center</span>
+                    </Button>
+                </Tooltip>
 
                 <Tooltip content="Support" side="bottom" triggerAsChild>
                     <SupportDropdown align="end">
@@ -288,24 +198,12 @@ export function HeaderActions() {
                 onClose={() => setIsFullScreenNotificationsOpen(false)}
             />
 
-            {/* Search and QR Modals - Hidden for now - Build fix */}
-            {/* {FullScreenSearch && isSearchOpen && (
-                <FullScreenSearch
-                    isOpen={isSearchOpen}
-                    onClose={() => setIsSearchOpen(false)}
-                />
-            )}
-
-            {isQRScannerOpen && (
-                <QRScannerModal
-                    isOpen={isQRScannerOpen}
-                    onClose={() => setIsQRScannerOpen(false)}
-                    onScan={(url) => {
-                        console.log('QR Code scanned:', url);
-                        setIsQRScannerOpen(false);
-                    }}
-                />
-            )} */}
+            {/* Command Center */}
+            <CommandCenter
+                isOpen={isCommandCenterOpen}
+                onClose={() => setIsCommandCenterOpen(false)}
+                currentPath={pathname}
+            />
         </>
     )
 } 
