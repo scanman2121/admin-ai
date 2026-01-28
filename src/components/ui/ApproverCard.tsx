@@ -259,33 +259,10 @@ export function ApproverCard({
             </div>
           )}
           {state === "pending" && (
-            <div className="flex items-baseline gap-2">
-              <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
-                <Hourglass className="size-4 inline-block align-[-2px] mr-1" />
-                {getInternalTitle()}
-              </span>
-              {onReopenForApproval && (
-                <div className="relative translate-y-1">
-                  <button
-                    onClick={handleKebabClick}
-                    onBlur={handleKebabBlur}
-                    className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
-                  >
-                    <MoreVertical className="size-4 text-gray-400" />
-                  </button>
-                  {showKebabMenu && (
-                    <div className="absolute top-full right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 min-w-[180px]">
-                      <button
-                        onClick={handleReopenForApproval}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                      >
-                        Reopen for Approval
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+            <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400">
+              <Hourglass className="size-4 inline-block align-[-2px] mr-1" />
+              {getInternalTitle()}
+            </span>
           )}
         </div>
 
