@@ -736,7 +736,7 @@ function ActivityHeatmap({ leaseStart, leaseEnd, activeFilters, onRangeChange }:
                             ))}
                         </div>
 
-                        {/* Range Brush */}
+                        {/* Range Brush - use pixel positioning to match heatmap grid */}
                         <div className="relative mt-3 h-8">
                             {/* Track background */}
                             <div className="absolute inset-x-0 top-3 h-2 bg-gray-100 dark:bg-gray-800 rounded-full" />
@@ -745,8 +745,8 @@ function ActivityHeatmap({ leaseStart, leaseEnd, activeFilters, onRangeChange }:
                             <div
                                 className="absolute top-3 h-2 bg-blue-200 dark:bg-blue-800 rounded-full cursor-move"
                                 style={{
-                                    left: `${(selectedRange[0] / totalWeeks) * 100}%`,
-                                    width: `${((selectedRange[1] - selectedRange[0] + 1) / totalWeeks) * 100}%`
+                                    left: `${selectedRange[0] * 12}px`,
+                                    width: `${(selectedRange[1] - selectedRange[0] + 1) * 12}px`
                                 }}
                                 onMouseDown={(e) => handleMouseDown(e, 'range')}
                             />
@@ -754,7 +754,7 @@ function ActivityHeatmap({ leaseStart, leaseEnd, activeFilters, onRangeChange }:
                             {/* Start handle */}
                             <div
                                 className="absolute top-1 w-4 h-6 bg-blue-500 rounded cursor-ew-resize flex items-center justify-center shadow-md hover:bg-blue-600 transition-colors"
-                                style={{ left: `calc(${(selectedRange[0] / totalWeeks) * 100}% - 8px)` }}
+                                style={{ left: `${selectedRange[0] * 12 - 8}px` }}
                                 onMouseDown={(e) => handleMouseDown(e, 'start')}
                             >
                                 <div className="w-0.5 h-3 bg-white rounded-full" />
@@ -763,7 +763,7 @@ function ActivityHeatmap({ leaseStart, leaseEnd, activeFilters, onRangeChange }:
                             {/* End handle */}
                             <div
                                 className="absolute top-1 w-4 h-6 bg-blue-500 rounded cursor-ew-resize flex items-center justify-center shadow-md hover:bg-blue-600 transition-colors"
-                                style={{ left: `calc(${((selectedRange[1] + 1) / totalWeeks) * 100}% - 8px)` }}
+                                style={{ left: `${(selectedRange[1] + 1) * 12 - 8}px` }}
                                 onMouseDown={(e) => handleMouseDown(e, 'end')}
                             >
                                 <div className="w-0.5 h-3 bg-white rounded-full" />
