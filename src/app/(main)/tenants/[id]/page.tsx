@@ -14,11 +14,12 @@ import {
     Calendar,
     ChevronRight,
     Copy,
+    DoorOpen,
     Edit2,
     Grid,
-    Key,
     List,
     Mail,
+    MessageCircle,
     MessageSquare,
     MoreVertical,
     NotepadText,
@@ -26,13 +27,14 @@ import {
     Search,
     Settings,
     User,
+    UserCheck,
     Users,
     X,
     Zap
 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 // Generate touchpoints heatmap data from lease start to lease end
 function generateTouchpointsData(leaseStart: Date, leaseEnd: Date, today: Date) {
@@ -362,6 +364,422 @@ function TouchpointsHeatmap({ leaseStart, leaseEnd }: TouchpointsHeatmapProps) {
     )
 }
 
+// Seeded random number generator for consistent activity data
+function seededRandom(seed: number): () => number {
+    return () => {
+        seed = (seed * 9301 + 49297) % 233280
+        return seed / 233280
+    }
+}
+
+// Generate activity heatmap data (combined from all activity types)
+// Activity GROWS over time (opposite of touchpoints which decay)
+function generateActivityData(leaseStart: Date, leaseEnd: Date, today: Date) {
+    const data: { date: Date; count: number }[] = []
+    const endDate = leaseEnd > today ? today : leaseEnd
+
+    const totalLeaseDays = Math.max(1, (endDate.getTime() - leaseStart.getTime()) / (1000 * 60 * 60 * 24))
+
+    // Use seeded random based on lease start for consistency
+    const random = seededRandom(leaseStart.getTime() % 10000)
+
+    const current = new Date(leaseStart)
+    while (current <= endDate) {
+        const daysIntoLease = (current.getTime() - leaseStart.getTime()) / (1000 * 60 * 60 * 24)
+        const leaseProgress = daysIntoLease / totalLeaseDays
+
+        // Growth factor: starts low (~0.3), grows to 1.0 by end of lease
+        // Using inverse exponential for natural growth
+        const growthFactor = 0.3 + 0.7 * (1 - Math.exp(-3 * leaseProgress))
+
+        const dayOfWeek = current.getDay()
+        const isWeekend = dayOfWeek === 0 || dayOfWeek === 6
+
+        // Activity increases over time - more engagement as tenant settles in
+        const baseChance = isWeekend ? 0.1 + 0.15 * growthFactor : 0.5 + 0.45 * growthFactor
+        const maxCount = isWeekend ? Math.round(1 + growthFactor) : Math.round(3 + 5 * growthFactor)
+
+        let count = 0
+        if (random() < baseChance) {
+            if (isWeekend) {
+                count = random() < 0.3 * growthFactor ? 2 : 1
+            } else {
+                const countChance = random()
+                if (countChance < 0.3 * growthFactor) {
+                    count = maxCount
+                } else if (countChance < 0.55 * growthFactor) {
+                    count = Math.max(2, maxCount - 2)
+                } else if (countChance < 0.8) {
+                    count = Math.max(1, Math.ceil(maxCount / 2))
+                } else {
+                    count = Math.max(1, Math.ceil(maxCount / 3))
+                }
+            }
+        }
+
+        data.push({ date: new Date(current), count })
+        current.setDate(current.getDate() + 1)
+    }
+
+    return data
+}
+
+// Activity Heatmap Component with Range Brush
+interface ActivityHeatmapProps {
+    leaseStart: Date
+    leaseEnd: Date
+    activeFilters: Set<string>
+    onRangeChange: (range: [Date, Date], metrics: { access: number; bookings: number; visitors: number; notes: number; responses: number; requests: number }) => void
+}
+
+// All 6 activity categories
+const ALL_CATEGORIES = ['access', 'bookings', 'visitors', 'notes', 'responses', 'requests'] as const
+
+function ActivityHeatmap({ leaseStart, leaseEnd, activeFilters, onRangeChange }: ActivityHeatmapProps) {
+    const today = useMemo(() => new Date(2026, 1, 26), [])
+    const activityData = useMemo(() => generateActivityData(leaseStart, leaseEnd, today), [leaseStart, leaseEnd, today])
+    const containerRef = useRef<HTMLDivElement>(null)
+    const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+    // Organize data into weeks
+    const weeks = useMemo(() => {
+        const result: { date: Date; count: number }[][] = []
+        let currentWeek: { date: Date; count: number }[] = []
+
+        const firstDayOfWeek = activityData[0]?.date.getDay() || 0
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            currentWeek.push({ date: new Date(0), count: -1 })
+        }
+
+        activityData.forEach((day) => {
+            currentWeek.push(day)
+            if (currentWeek.length === 7) {
+                result.push(currentWeek)
+                currentWeek = []
+            }
+        })
+
+        while (currentWeek.length > 0 && currentWeek.length < 7) {
+            currentWeek.push({ date: new Date(0), count: -1 })
+        }
+        if (currentWeek.length > 0) {
+            result.push(currentWeek)
+        }
+
+        return result
+    }, [activityData])
+
+    // Get months for header
+    const months = useMemo(() => {
+        const result: { name: string; weeks: number; startWeekIdx: number }[] = []
+        const endDate = leaseEnd > today ? today : leaseEnd
+
+        let currentMonth = leaseStart.getMonth()
+        let currentYear = leaseStart.getFullYear()
+        let weekCount = 0
+        let startWeekIdx = 0
+
+        const tempDate = new Date(leaseStart)
+        while (tempDate <= endDate) {
+            if (tempDate.getMonth() !== currentMonth || tempDate.getFullYear() !== currentYear) {
+                result.push({
+                    name: new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+                    weeks: Math.ceil(weekCount / 7),
+                    startWeekIdx
+                })
+                currentMonth = tempDate.getMonth()
+                currentYear = tempDate.getFullYear()
+                startWeekIdx += Math.ceil(weekCount / 7)
+                weekCount = 0
+            }
+            weekCount++
+            tempDate.setDate(tempDate.getDate() + 1)
+        }
+        result.push({
+            name: new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+            weeks: Math.ceil(weekCount / 7),
+            startWeekIdx
+        })
+
+        return result
+    }, [leaseStart, leaseEnd, today])
+
+    // Calculate default 90-day range (approximately 13 weeks)
+    const default90DayRange = useMemo((): [number, number] => {
+        const weeksFor90Days = Math.ceil(90 / 7) // ~13 weeks
+        const endWeekIdx = weeks.length - 1
+        const startWeekIdx = Math.max(0, endWeekIdx - weeksFor90Days + 1)
+        return [startWeekIdx, endWeekIdx]
+    }, [weeks.length])
+
+    // Range brush state (week indices) - default to last 90 days
+    const [selectedRange, setSelectedRange] = useState<[number, number]>(default90DayRange)
+    const [dragState, setDragState] = useState<{ type: 'start' | 'end' | 'range'; startX: number; startRange: [number, number] } | null>(null)
+    const [hasInitialized, setHasInitialized] = useState(false)
+
+    // Convert week index to date
+    const weekIndexToDate = useCallback((weekIdx: number, position: 'start' | 'end'): Date => {
+        if (weekIdx < 0) weekIdx = 0
+        if (weekIdx >= weeks.length) weekIdx = weeks.length - 1
+
+        const week = weeks[weekIdx]
+        if (!week) return leaseStart
+
+        if (position === 'start') {
+            // Find first valid date in week
+            for (const day of week) {
+                if (day.count >= 0) return day.date
+            }
+            return leaseStart
+        } else {
+            // Find last valid date in week
+            for (let i = week.length - 1; i >= 0; i--) {
+                if (week[i].count >= 0) return week[i].date
+            }
+            return today
+        }
+    }, [weeks, leaseStart, today])
+
+    // Calculate metrics for selected range using seeded random for distribution
+    const calculateRangeMetrics = useCallback((range: [number, number]) => {
+        let totalCount = 0
+
+        // Sum up activity counts in the selected range
+        for (let weekIdx = range[0]; weekIdx <= range[1]; weekIdx++) {
+            const week = weeks[weekIdx]
+            if (!week) continue
+            for (const day of week) {
+                if (day.count > 0) {
+                    totalCount += day.count
+                }
+            }
+        }
+
+        // Distribute total across categories using consistent ratios
+        // Access tends to be highest, then bookings, then visitors, etc.
+        const ratios = {
+            access: 0.30,
+            bookings: 0.22,
+            visitors: 0.18,
+            notes: 0.12,
+            responses: 0.10,
+            requests: 0.08
+        }
+
+        return {
+            access: Math.round(totalCount * ratios.access),
+            bookings: Math.round(totalCount * ratios.bookings),
+            visitors: Math.round(totalCount * ratios.visitors),
+            notes: Math.round(totalCount * ratios.notes),
+            responses: Math.round(totalCount * ratios.responses),
+            requests: Math.round(totalCount * ratios.requests)
+        }
+    }, [weeks])
+
+    // Notify parent of range changes with metrics
+    const notifyRangeChange = useCallback((range: [number, number]) => {
+        const startDate = weekIndexToDate(range[0], 'start')
+        const endDate = weekIndexToDate(range[1], 'end')
+        const metrics = calculateRangeMetrics(range)
+        onRangeChange([startDate, endDate], metrics)
+    }, [weekIndexToDate, calculateRangeMetrics, onRangeChange])
+
+    // Handle mouse events for range brush
+    const handleMouseDown = useCallback((e: React.MouseEvent, type: 'start' | 'end' | 'range') => {
+        e.preventDefault()
+        setDragState({ type, startX: e.clientX, startRange: [...selectedRange] as [number, number] })
+    }, [selectedRange])
+
+    const handleMouseMove = useCallback((e: MouseEvent) => {
+        if (!dragState || !containerRef.current) return
+
+        const cellWidth = 14 // 10px cell + 2px gap (adjusted for both sides)
+        const deltaX = e.clientX - dragState.startX
+        const deltaWeeks = Math.round(deltaX / cellWidth)
+
+        let newRange: [number, number] = [...dragState.startRange] as [number, number]
+
+        if (dragState.type === 'start') {
+            newRange[0] = Math.max(0, Math.min(dragState.startRange[0] + deltaWeeks, newRange[1] - 1))
+        } else if (dragState.type === 'end') {
+            newRange[1] = Math.min(weeks.length - 1, Math.max(dragState.startRange[1] + deltaWeeks, newRange[0] + 1))
+        } else if (dragState.type === 'range') {
+            const rangeSize = dragState.startRange[1] - dragState.startRange[0]
+            let newStart = dragState.startRange[0] + deltaWeeks
+            newStart = Math.max(0, Math.min(newStart, weeks.length - 1 - rangeSize))
+            newRange = [newStart, newStart + rangeSize]
+        }
+
+        setSelectedRange(newRange)
+        notifyRangeChange(newRange)
+    }, [dragState, weeks.length, notifyRangeChange])
+
+    const handleMouseUp = useCallback(() => {
+        setDragState(null)
+    }, [])
+
+    // Attach global mouse listeners for drag
+    useEffect(() => {
+        if (dragState) {
+            window.addEventListener('mousemove', handleMouseMove)
+            window.addEventListener('mouseup', handleMouseUp)
+            return () => {
+                window.removeEventListener('mousemove', handleMouseMove)
+                window.removeEventListener('mouseup', handleMouseUp)
+            }
+        }
+    }, [dragState, handleMouseMove, handleMouseUp])
+
+    // Auto-scroll to selected range on mount and notify parent
+    useEffect(() => {
+        if (!hasInitialized && scrollContainerRef.current && weeks.length > 0) {
+            const cellWidth = 14 // 10px cell + 2px gap
+            const scrollPosition = Math.max(0, selectedRange[0] * cellWidth - 50) // 50px offset for context
+            scrollContainerRef.current.scrollLeft = scrollPosition
+
+            // Notify parent of initial range
+            notifyRangeChange(selectedRange)
+            setHasInitialized(true)
+        }
+    }, [hasInitialized, weeks.length, selectedRange, notifyRangeChange])
+
+    // Calculate filter scale factor - when filters are active, scale down density
+    const filterScale = useMemo(() => {
+        // If no filters active, show full density (all categories)
+        if (activeFilters.size === 0) return 1
+        // Scale based on how many categories are selected (out of 6)
+        return activeFilters.size / ALL_CATEGORIES.length
+    }, [activeFilters.size])
+
+    const getColorClass = (count: number, weekIdx: number) => {
+        const isInRange = weekIdx >= selectedRange[0] && weekIdx <= selectedRange[1]
+        const opacity = isInRange ? '' : 'opacity-30'
+
+        if (count === -1) return 'bg-transparent'
+
+        // Scale the count based on active filters
+        const scaledCount = Math.round(count * filterScale)
+
+        if (scaledCount === 0) return cn('bg-gray-100 dark:bg-gray-800', opacity)
+        if (scaledCount <= 2) return cn('bg-blue-200 dark:bg-blue-900', opacity)
+        if (scaledCount <= 4) return cn('bg-blue-400 dark:bg-blue-700', opacity)
+        if (scaledCount <= 6) return cn('bg-blue-500 dark:bg-blue-600', opacity)
+        return cn('bg-blue-600 dark:bg-blue-500', opacity)
+    }
+
+    const totalWeeks = weeks.length
+    const heatmapWidth = totalWeeks * 12 + (totalWeeks - 1) * 2
+
+    // Format date range for display
+    const formatRangeLabel = (weekIdx: number): string => {
+        const date = weekIndexToDate(weekIdx, weekIdx === selectedRange[0] ? 'start' : 'end')
+        return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
+    }
+
+    return (
+        <Card className="p-6 mb-6 max-w-full overflow-hidden">
+            <div className="mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 leading-tight">Activity</h3>
+            </div>
+
+            {/* Heatmap container */}
+            <div className="flex mt-6" ref={containerRef}>
+                {/* Fixed day labels column */}
+                <div className="shrink-0 pr-2">
+                    <div className="h-5 mb-1" />
+                    <div className="flex flex-col gap-[2px] text-xs text-gray-500">
+                        {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, idx) => (
+                            <div key={idx} className="h-[10px] flex items-center justify-end w-7">
+                                {day}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Scrollable heatmap area */}
+                <div className="w-0 flex-1 overflow-x-auto" ref={scrollContainerRef}>
+                    <div style={{ width: `${heatmapWidth}px` }}>
+                        {/* Month labels */}
+                        <div className="flex h-5 mb-1">
+                            {months.map((month, idx) => (
+                                <div
+                                    key={idx}
+                                    className="text-xs text-gray-500"
+                                    style={{ width: `${month.weeks * 14}px`, minWidth: `${month.weeks * 14}px` }}
+                                >
+                                    {month.name}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Grid */}
+                        <div className="flex gap-[2px] relative">
+                            {weeks.map((week, weekIdx) => (
+                                <div key={weekIdx} className="flex flex-col gap-[2px]">
+                                    {[1, 2, 3, 4, 5, 6, 0].map((dayIndex) => {
+                                        const day = week[dayIndex]
+                                        if (!day) return <div key={dayIndex} className="w-[10px] h-[10px]" />
+                                        return (
+                                            <div
+                                                key={dayIndex}
+                                                className={cn(
+                                                    "w-[10px] h-[10px] rounded-[2px] transition-opacity",
+                                                    getColorClass(day.count, weekIdx)
+                                                )}
+                                                title={day.count >= 0 ? `${day.date.toLocaleDateString()}: ${day.count} activities` : ''}
+                                            />
+                                        )
+                                    })}
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Range Brush */}
+                        <div className="relative mt-3 h-8">
+                            {/* Track background */}
+                            <div className="absolute inset-x-0 top-3 h-2 bg-gray-100 dark:bg-gray-800 rounded-full" />
+
+                            {/* Selected range highlight */}
+                            <div
+                                className="absolute top-3 h-2 bg-blue-200 dark:bg-blue-800 rounded-full cursor-move"
+                                style={{
+                                    left: `${(selectedRange[0] / totalWeeks) * 100}%`,
+                                    width: `${((selectedRange[1] - selectedRange[0] + 1) / totalWeeks) * 100}%`
+                                }}
+                                onMouseDown={(e) => handleMouseDown(e, 'range')}
+                            />
+
+                            {/* Start handle */}
+                            <div
+                                className="absolute top-1 w-4 h-6 bg-blue-500 rounded cursor-ew-resize flex items-center justify-center shadow-md hover:bg-blue-600 transition-colors"
+                                style={{ left: `calc(${(selectedRange[0] / totalWeeks) * 100}% - 8px)` }}
+                                onMouseDown={(e) => handleMouseDown(e, 'start')}
+                            >
+                                <div className="w-0.5 h-3 bg-white rounded-full" />
+                            </div>
+
+                            {/* End handle */}
+                            <div
+                                className="absolute top-1 w-4 h-6 bg-blue-500 rounded cursor-ew-resize flex items-center justify-center shadow-md hover:bg-blue-600 transition-colors"
+                                style={{ left: `calc(${((selectedRange[1] + 1) / totalWeeks) * 100}% - 8px)` }}
+                                onMouseDown={(e) => handleMouseDown(e, 'end')}
+                            >
+                                <div className="w-0.5 h-3 bg-white rounded-full" />
+                            </div>
+                        </div>
+
+                        {/* Range labels */}
+                        <div className="flex justify-between mt-1 text-xs text-gray-500">
+                            <span>{formatRangeLabel(selectedRange[0])}</span>
+                            <span>{formatRangeLabel(selectedRange[1])}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Card>
+    )
+}
+
 // Type for building details
 interface BuildingDetail {
     rentedArea: string
@@ -402,6 +820,7 @@ interface TenantData {
         subtitle?: string
         date: string
         icon: string
+        category?: string
     }[]
     buildingDetails: Record<string, BuildingDetail>
     appConfigurations: {
@@ -418,11 +837,12 @@ interface TenantData {
         } | null
     }[]
     activityMetrics: {
-        access: string
-        bookings: string
-        visitors: string
-        notes: string
-        responses: string
+        access: number
+        bookings: number
+        visitors: number
+        notes: number
+        responses: number
+        requests: number
     }
 }
 
@@ -479,32 +899,133 @@ const tenantsData: Record<string, TenantData> = {
         activity: [
             {
                 id: "1",
-                type: "Work Order Requested",
-                title: "Taylor Kim requested a work order.",
-                subtitle: "No description provided",
-                date: "January 20, 2026 at 12:26 PM",
-                icon: "settings"
+                type: "Access",
+                title: "Alex Morgan accessed 200 Clarendon via mobile key",
+                date: "February 26, 2026 at 09:15 AM",
+                icon: "access",
+                category: "access"
             },
             {
                 id: "2",
-                type: "Note Added",
-                title: "Locked in the elevator.",
-                date: "December 03, 2025 at 03:07 PM",
-                icon: "note"
+                type: "Booking",
+                title: "Conference Room A booked for team meeting",
+                subtitle: "200 Clarendon - Floor 8, 2:00 PM - 4:00 PM",
+                date: "February 26, 2026 at 08:30 AM",
+                icon: "booking",
+                category: "bookings"
             },
             {
                 id: "3",
-                type: "Note Added",
-                title: "They went to the gym today.",
-                date: "September 04, 2025 at 02:55 PM",
-                icon: "note"
+                type: "Request",
+                title: "HVAC temperature adjustment requested",
+                subtitle: "Suite 801 - Pending review",
+                date: "February 25, 2026 at 04:45 PM",
+                icon: "request",
+                category: "requests"
             },
             {
                 id: "4",
+                type: "Visitor",
+                title: "Sarah Chen checked in as visitor",
+                subtitle: "Host: Jordan Lee - Prudential Tower",
+                date: "February 25, 2026 at 02:30 PM",
+                icon: "visitor",
+                category: "visitors"
+            },
+            {
+                id: "5",
+                type: "Access",
+                title: "Jordan Lee accessed Prudential Tower via badge",
+                date: "February 25, 2026 at 08:45 AM",
+                icon: "access",
+                category: "access"
+            },
+            {
+                id: "6",
+                type: "Response",
+                title: "Survey response submitted",
+                subtitle: "Q4 2025 Tenant Satisfaction Survey - Rating: 4.5/5",
+                date: "February 24, 2026 at 03:20 PM",
+                icon: "response",
+                category: "responses"
+            },
+            {
+                id: "7",
                 type: "Note Added",
-                title: "Test note",
-                date: "September 04, 2025 at 11:17 AM",
-                icon: "note"
+                title: "Discussed lease renewal options with Alex Morgan",
+                date: "February 24, 2026 at 11:00 AM",
+                icon: "note",
+                category: "notes"
+            },
+            {
+                id: "8",
+                type: "Booking",
+                title: "Wellness room reserved for yoga session",
+                subtitle: "Prudential Tower - Floor 4, 12:00 PM - 1:00 PM",
+                date: "February 24, 2026 at 09:15 AM",
+                icon: "booking",
+                category: "bookings"
+            },
+            {
+                id: "9",
+                type: "Request",
+                title: "Parking pass renewal submitted",
+                subtitle: "Employee: Michael Torres - Approved",
+                date: "February 23, 2026 at 02:00 PM",
+                icon: "request",
+                category: "requests"
+            },
+            {
+                id: "10",
+                type: "Access",
+                title: "15 employees accessed 111 Huntington Ave",
+                date: "February 23, 2026 at 09:00 AM",
+                icon: "access",
+                category: "access"
+            },
+            {
+                id: "11",
+                type: "Visitor",
+                title: "Client meeting visitors checked in (3 guests)",
+                subtitle: "Host: Alex Morgan - 200 Clarendon",
+                date: "February 22, 2026 at 10:00 AM",
+                icon: "visitor",
+                category: "visitors"
+            },
+            {
+                id: "12",
+                type: "Note Added",
+                title: "Locked in the elevator - maintenance notified",
+                date: "February 21, 2026 at 03:07 PM",
+                icon: "note",
+                category: "notes"
+            },
+            {
+                id: "13",
+                type: "Response",
+                title: "Event feedback received",
+                subtitle: "Holiday Party 2025 - Very satisfied",
+                date: "February 20, 2026 at 04:30 PM",
+                icon: "response",
+                category: "responses"
+            },
+            {
+                id: "14",
+                type: "Request",
+                title: "Office supplies request submitted",
+                subtitle: "Suite 901 - Delivered",
+                date: "February 20, 2026 at 10:45 AM",
+                icon: "request",
+                category: "requests"
+            },
+            {
+                id: "15",
+                type: "Booking",
+                title: "Training room booked for onboarding",
+                subtitle: "200 Clarendon - Floor 9, 9:00 AM - 5:00 PM",
+                date: "February 19, 2026 at 04:00 PM",
+                icon: "booking",
+                category: "bookings"
             }
         ],
         // Tenant-specific building details (rented area, employees, lease, floors)
@@ -571,11 +1092,12 @@ const tenantsData: Record<string, TenantData> = {
             }
         ],
         activityMetrics: {
-            access: "-",
-            bookings: "-",
-            visitors: "-",
-            notes: "-",
-            responses: "-"
+            access: 1247,
+            bookings: 89,
+            visitors: 156,
+            notes: 24,
+            responses: 18,
+            requests: 42
         }
     },
     "2": {
@@ -610,7 +1132,8 @@ const tenantsData: Record<string, TenantData> = {
                 type: "Note Added",
                 title: "Quarterly review meeting scheduled",
                 date: "September 01, 2025 at 10:30 AM",
-                icon: "note"
+                icon: "note",
+                category: "notes"
             }
         ],
         buildingDetails: {
@@ -625,11 +1148,12 @@ const tenantsData: Record<string, TenantData> = {
         },
         appConfigurations: [],
         activityMetrics: {
-            access: "-",
-            bookings: "-",
-            visitors: "-",
-            notes: "-",
-            responses: "-"
+            access: 534,
+            bookings: 45,
+            visitors: 78,
+            notes: 12,
+            responses: 8,
+            requests: 15
         }
     }
 }
@@ -640,16 +1164,46 @@ function ActivityIcon({ type }: { type: string }) {
     const containerClass = "size-8 rounded-full flex items-center justify-center shrink-0"
 
     switch (type) {
-        case "settings":
+        case "access":
             return (
-                <div className={cn(containerClass, "bg-purple-100 dark:bg-purple-900/30")}>
-                    <Settings className={cn(iconClass, "text-purple-600 dark:text-purple-400")} />
+                <div className={cn(containerClass, "bg-blue-100 dark:bg-blue-900/30")}>
+                    <DoorOpen className={cn(iconClass, "text-blue-600 dark:text-blue-400")} />
+                </div>
+            )
+        case "booking":
+            return (
+                <div className={cn(containerClass, "bg-green-100 dark:bg-green-900/30")}>
+                    <Calendar className={cn(iconClass, "text-green-600 dark:text-green-400")} />
+                </div>
+            )
+        case "visitor":
+            return (
+                <div className={cn(containerClass, "bg-yellow-100 dark:bg-yellow-900/30")}>
+                    <UserCheck className={cn(iconClass, "text-yellow-600 dark:text-yellow-400")} />
                 </div>
             )
         case "note":
             return (
-                <div className={cn(containerClass, "bg-green-100 dark:bg-green-900/30")}>
-                    <NotepadText className={cn(iconClass, "text-green-600 dark:text-green-400")} />
+                <div className={cn(containerClass, "bg-purple-100 dark:bg-purple-900/30")}>
+                    <NotepadText className={cn(iconClass, "text-purple-600 dark:text-purple-400")} />
+                </div>
+            )
+        case "response":
+            return (
+                <div className={cn(containerClass, "bg-red-100 dark:bg-red-900/30")}>
+                    <MessageSquare className={cn(iconClass, "text-red-600 dark:text-red-400")} />
+                </div>
+            )
+        case "request":
+            return (
+                <div className={cn(containerClass, "bg-orange-100 dark:bg-orange-900/30")}>
+                    <MessageCircle className={cn(iconClass, "text-orange-600 dark:text-orange-400")} />
+                </div>
+            )
+        case "settings":
+            return (
+                <div className={cn(containerClass, "bg-gray-100 dark:bg-gray-900/30")}>
+                    <Settings className={cn(iconClass, "text-gray-600 dark:text-gray-400")} />
                 </div>
             )
         default:
@@ -665,6 +1219,9 @@ export default function TenantDetailPage({ params }: { params: { id: string } })
     const [activeTab, setActiveTab] = useState("overview")
     const [contactViewMode, setContactViewMode] = useState<"list" | "grid">("list")
     const [searchQuery, setSearchQuery] = useState("")
+    const [activityFilters, setActivityFilters] = useState<Set<string>>(new Set())
+    const [activityDateRange, setActivityDateRange] = useState<[Date, Date] | null>(null)
+    const [activityMetrics, setActivityMetrics] = useState<{ access: number; bookings: number; visitors: number; notes: number; responses: number; requests: number } | null>(null)
     const { demo } = useDemo()
     const demoConfig = getDemoConfig(demo)
 
@@ -1104,49 +1661,116 @@ export default function TenantDetailPage({ params }: { params: { id: string } })
                 {/* Activity Tab */}
                 <TabsContent value="activity" className="mt-6">
                     <div className="space-y-6">
-                        {/* Date Range Selector */}
-                        <div className="flex justify-end">
-                            <Select defaultValue="30">
-                                <SelectTrigger className="w-40 bg-white dark:bg-gray-950">
-                                    <SelectValue placeholder="Select range" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="7">Last 7 Days</SelectItem>
-                                    <SelectItem value="30">Last 30 Days</SelectItem>
-                                    <SelectItem value="90">Last 90 Days</SelectItem>
-                                    <SelectItem value="365">Last Year</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                        {/* Activity Heatmap with Range Brush */}
+                        <ActivityHeatmap
+                            leaseStart={new Date(tenant.leaseStartDate)}
+                            leaseEnd={new Date(tenant.leaseEndDate)}
+                            activeFilters={activityFilters}
+                            onRangeChange={(range, metrics) => {
+                                setActivityDateRange(range)
+                                setActivityMetrics(metrics)
+                            }}
+                        />
 
-                        {/* Metrics Cards */}
-                        <div className="grid grid-cols-5 gap-4">
+                        {/* Metrics Cards - Clickable Filters */}
+                        <div className="grid grid-cols-6 gap-4">
                             {[
-                                { label: "Access", value: tenant.activityMetrics.access, icon: Key, color: "text-blue-600" },
-                                { label: "Bookings", value: tenant.activityMetrics.bookings, icon: Calendar, color: "text-green-600" },
-                                { label: "Visitors", value: tenant.activityMetrics.visitors, icon: Users, color: "text-yellow-600" },
-                                { label: "Notes", value: tenant.activityMetrics.notes, icon: NotepadText, color: "text-purple-600" },
-                                { label: "Responses", value: tenant.activityMetrics.responses, icon: MessageSquare, color: "text-red-600" }
-                            ].map((metric) => (
-                                <Card key={metric.label} className="p-4">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <metric.icon className={cn("size-4", metric.color)} />
-                                        <span className="text-sm text-gray-500">{metric.label}</span>
-                                    </div>
-                                    <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">{metric.value}</p>
-                                </Card>
-                            ))}
+                                { label: "Access", key: "access" as const, icon: DoorOpen, color: "text-blue-600", bgActive: "bg-blue-50 border-blue-200", category: "access" },
+                                { label: "Bookings", key: "bookings" as const, icon: Calendar, color: "text-green-600", bgActive: "bg-green-50 border-green-200", category: "bookings" },
+                                { label: "Visitors", key: "visitors" as const, icon: UserCheck, color: "text-yellow-600", bgActive: "bg-yellow-50 border-yellow-200", category: "visitors" },
+                                { label: "Notes", key: "notes" as const, icon: NotepadText, color: "text-purple-600", bgActive: "bg-purple-50 border-purple-200", category: "notes" },
+                                { label: "Responses", key: "responses" as const, icon: MessageSquare, color: "text-red-600", bgActive: "bg-red-50 border-red-200", category: "responses" },
+                                { label: "Requests", key: "requests" as const, icon: MessageCircle, color: "text-orange-600", bgActive: "bg-orange-50 border-orange-200", category: "requests" }
+                            ].map((metric) => {
+                                const isActive = activityFilters.has(metric.category)
+                                // Use metrics from brush selection, fall back to tenant data
+                                const value = activityMetrics ? activityMetrics[metric.key] : tenant.activityMetrics[metric.key]
+                                return (
+                                    <Card
+                                        key={metric.label}
+                                        className={cn(
+                                            "p-4 cursor-pointer transition-all border-2",
+                                            isActive
+                                                ? metric.bgActive
+                                                : "border-transparent hover:border-gray-200 dark:hover:border-gray-700"
+                                        )}
+                                        onClick={() => {
+                                            const newFilters = new Set(activityFilters)
+                                            if (isActive) {
+                                                newFilters.delete(metric.category)
+                                            } else {
+                                                newFilters.add(metric.category)
+                                            }
+                                            setActivityFilters(newFilters)
+                                        }}
+                                    >
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <metric.icon className={cn("size-4", metric.color)} />
+                                            <span className="text-sm text-gray-500">{metric.label}</span>
+                                        </div>
+                                        <p className="text-2xl font-semibold text-gray-900 dark:text-gray-50">{value}</p>
+                                    </Card>
+                                )
+                            })}
                         </div>
 
-                        {/* Activity Search */}
-                        <div className="relative w-64">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
-                            <Input placeholder="Search activity events" className="pl-9" />
+                        {/* Activity Search and Filters */}
+                        <div className="flex items-center gap-4">
+                            <div className="relative w-64">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                                <Input placeholder="Search activity events" className="pl-9" />
+                            </div>
+                            {activityFilters.size > 0 && (
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm text-gray-500">Filtering by:</span>
+                                    {Array.from(activityFilters).map(filter => (
+                                        <span
+                                            key={filter}
+                                            className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300"
+                                        >
+                                            {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                                            <button
+                                                onClick={() => {
+                                                    const newFilters = new Set(activityFilters)
+                                                    newFilters.delete(filter)
+                                                    setActivityFilters(newFilters)
+                                                }}
+                                                className="hover:text-gray-900 dark:hover:text-gray-100"
+                                            >
+                                                <X className="size-3" />
+                                            </button>
+                                        </span>
+                                    ))}
+                                    <button
+                                        onClick={() => setActivityFilters(new Set())}
+                                        className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                                    >
+                                        Clear all
+                                    </button>
+                                </div>
+                            )}
                         </div>
 
                         {/* Activity List */}
                         <div className="space-y-3">
-                            {tenant.activity.map((activity) => (
+                            {tenant.activity
+                                .filter(activity => {
+                                    // Filter by category
+                                    if (activityFilters.size > 0) {
+                                        if (!('category' in activity) || !activityFilters.has(activity.category as string)) {
+                                            return false
+                                        }
+                                    }
+                                    // Filter by date range if set
+                                    if (activityDateRange) {
+                                        const activityDate = new Date(activity.date)
+                                        if (activityDate < activityDateRange[0] || activityDate > activityDateRange[1]) {
+                                            return false
+                                        }
+                                    }
+                                    return true
+                                })
+                                .map((activity) => (
                                 <Card key={activity.id} className="p-4">
                                     <div className="flex items-start gap-3">
                                         <ActivityIcon type={activity.icon} />
