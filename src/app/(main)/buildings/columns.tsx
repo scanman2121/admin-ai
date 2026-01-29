@@ -15,14 +15,15 @@ import Image from "next/image";
 interface Building {
   id: string;
   name: string;
+  address: string;
   imageUrl: string;
   location: string;
   type: string;
   floors: number;
   tenants: number;
+  population: number;
   ths?: number;
   status: string;
-  lastUpdated: string;
 }
 
 export const buildingsColumns: ColumnDef<Building>[] = [
@@ -31,6 +32,7 @@ export const buildingsColumns: ColumnDef<Building>[] = [
     header: "Building Name",
     cell: ({ row }) => {
       const name = row.getValue("name") as string;
+      const address = row.original.address as string;
       const imageUrl = row.original.imageUrl as string;
 
       return (
@@ -43,7 +45,10 @@ export const buildingsColumns: ColumnDef<Building>[] = [
               className="object-cover"
             />
           </div>
-          <span>{name}</span>
+          <div className="flex flex-col">
+            <span className="font-medium text-gray-900 dark:text-gray-50">{name}</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{address}</span>
+          </div>
         </div>
       );
     },
@@ -63,6 +68,18 @@ export const buildingsColumns: ColumnDef<Building>[] = [
   {
     accessorKey: "tenants",
     header: "Tenants",
+  },
+  {
+    accessorKey: "population",
+    header: "Population",
+    cell: ({ row }) => {
+      const population = row.getValue("population") as number;
+      return (
+        <span className="text-gray-900 dark:text-gray-50">
+          {population.toLocaleString()}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "ths",
@@ -93,20 +110,15 @@ export const buildingsColumns: ColumnDef<Building>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
       return (
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${status === "Active"
+        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+          status === "Active"
             ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
             : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-            }`}
-        >
+        }`}>
           {status}
         </span>
       );
     },
-  },
-  {
-    accessorKey: "lastUpdated",
-    header: "Last Updated",
   },
   {
     id: "actions",

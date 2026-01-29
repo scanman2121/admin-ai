@@ -54,9 +54,9 @@ function MainLayoutContent({
           collapsed ? "lg:ml-16" : "lg:ml-64"
         )}>
           <Header />
-          <main id="main-content" className="relative flex-1 overflow-y-auto focus:outline-none">
+          <main id="main-content" className="relative flex-1 overflow-y-auto overflow-x-hidden focus:outline-none">
             <div className="py-6">
-              <div className="px-4 sm:px-6 md:px-8">{children}</div>
+              <div className="px-4 sm:px-6 md:px-8 min-w-0">{children}</div>
             </div>
           </main>
           <CommunicationsTab />
