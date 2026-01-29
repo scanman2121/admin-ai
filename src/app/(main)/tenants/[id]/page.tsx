@@ -366,9 +366,11 @@ function TouchpointsHeatmap({ leaseStart, leaseEnd }: TouchpointsHeatmapProps) {
 
 // Seeded random number generator for consistent activity data
 function seededRandom(seed: number): () => number {
+    // Use a better LCG with larger period
+    let state = seed
     return () => {
-        seed = (seed * 9301 + 49297) % 233280
-        return seed / 233280
+        state = (state * 1103515245 + 12345) & 0x7fffffff
+        return state / 0x7fffffff
     }
 }
 
